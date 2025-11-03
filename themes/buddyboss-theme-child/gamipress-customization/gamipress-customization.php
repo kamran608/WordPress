@@ -1,65 +1,229 @@
 <?php
+/**
+ * GamiPress Leaderboard Customization
+ * 
+ * This file contains customizations for GamiPress Leaderboards including
+ * custom column options and shortcode functionality.
+ * 
+ * @package GamiPress_Leaderboard_Customization
+ * @version 1.0.0
+ */
 
-// Shortcode: [gamipress_average_points user_id=1 type=points]
-// Supports: type="all" to include all point types
-function gamipress_average_points_shortcode( $atts ) {
+// Prevent direct access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
-    $atts = shortcode_atts( array(
-        'user_id' => get_current_user_id(),
-        'type'    => 'points',
-    ), $atts, 'gamipress_average_points' );
+/**
+ * GamiPress Leaderboard Customization Class
+ * 
+ * Handles all customizations for GamiPress Leaderboards using OOP principles
+ */
+class GamiPress_Leaderboard_Customization {
 
-    $user_id = intval( $atts['user_id'] );
-    $type    = sanitize_text_field( $atts['type'] );
-    $type = 'energiepunkte';
+    /**
+     * Instance of this class
+     * 
+     * @var GamiPress_Leaderboard_Customization
+     */
+    private static $instance = null;
 
-    if ( ! $user_id ) {
-        return 'User not found.';
+    /**
+     * Custom column key for daily average
+     * 
+     * @var string
+     */
+    const DAILY_AVERAGE_COLUMN = 'daily_average_30_days';
+
+    /**
+     * Get singleton instance
+     * 
+     * @return GamiPress_Leaderboard_Customization
+     */
+    public static function get_instance() {
+        if ( null === self::$instance ) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 
-    global $wpdb;
-    $log_table = $wpdb->prefix . 'gamipress_logs';
-
-    // Date range (last 30 days)
-    $end_date   = date( 'Y-m-d', current_time( 'timestamp' ) );
-    $start_date = date( 'Y-m-d', strtotime( '-30 days', current_time( 'timestamp' ) ) );
-
-    // Allowed types that represent earning points
-    $earning_types = array( 'points_award', 'points_earn' );
-    $types_in_sql  = "'" . implode( "','", $earning_types ) . "'";
-
-    if ( strtolower( $type ) === 'all' ) {
-        // All point types
-        $sql = $wpdb->prepare("
-            SELECT SUM(points)
-            FROM {$log_table}
-            WHERE user_id = %d
-            AND type IN ($types_in_sql)
-            AND DATE(date) BETWEEN %s AND %s
-        ", $user_id, $start_date, $end_date );
-    } else {
-        // Specific point type
-        $sql = $wpdb->prepare("
-            SELECT SUM(points)
-            FROM {$log_table}
-            WHERE user_id = %d
-            AND type IN ($types_in_sql)
-            AND points_type = %s
-            AND DATE(date) BETWEEN %s AND %s
-        ", $user_id, $type, $start_date, $end_date );
+    /**
+     * Constructor - Initialize hooks
+     */
+    private function __construct() {
+        $this->init_hooks();
     }
 
-    $total_points = floatval( $wpdb->get_var( $sql ) );
-    $average = $total_points / 30;
+    /**
+     * Initialize WordPress hooks
+     */
+    private function init_hooks() {
+        // Add custom column to leaderboard options
+        add_filter( 'gamipress_leaderboards_columns_options', array( $this, 'add_custom_column_option' ) );
+        
+        // Ensure custom column is included in frontend display
+        add_filter( 'gamipress_leaderboards_leaderboard_columns_info', array( $this, 'include_custom_column_in_frontend' ), 10, 3 );
+        
+        // Handle custom column rendering
+        add_filter( 'gamipress_leaderboards_leaderboard_column_' . self::DAILY_AVERAGE_COLUMN, array( $this, 'render_daily_average_column' ), 10, 6 );
+        
+        // Register shortcode
+        add_shortcode( 'gamipress_average_points', array( $this, 'gamipress_average_points_shortcode' ) );
+    }
 
-    if (floor($average) == $average) {
-        return number_format($average, 0);
-    } else {
-        return number_format($average, 2);
+    /**
+     * Add custom column option to leaderboard settings
+     * 
+     * @param array $columns_options Existing column options
+     * @return array Modified column options
+     */
+    public function add_custom_column_option( $columns_options ) {
+        // Add our custom column option
+        $columns_options[ self::DAILY_AVERAGE_COLUMN ] = __( '30-Day Daily Avg', 'gamipress-leaderboards' );
+        
+        return $columns_options;
+    }
+
+    /**
+     * Include custom column in frontend leaderboard display
+     * 
+     * This method ensures our custom column appears in the frontend even though
+     * it's not part of the metrics system.
+     * 
+     * @param array $final_columns The final columns array
+     * @param int $leaderboard_id The leaderboard ID
+     * @param object $leaderboard_table The leaderboard table object
+     * @return array Modified final columns array
+     */
+    public function include_custom_column_in_frontend( $final_columns, $leaderboard_id, $leaderboard_table ) {
+        // Get the selected columns from the leaderboard settings
+        $selected_columns = $leaderboard_table->get_columns();
+        
+        // Check if our custom column is selected
+        if ( in_array( self::DAILY_AVERAGE_COLUMN, $selected_columns ) ) {
+            // Get the column options to get the proper label
+            $columns_options = gamipress_leaderboards_get_columns_options();
+            
+            // Add our custom column to the final columns array
+            $final_columns[ self::DAILY_AVERAGE_COLUMN ] = $columns_options[ self::DAILY_AVERAGE_COLUMN ];
+        }
+        
+        return $final_columns;
+    }
+
+    /**
+     * Render the daily average column content
+     * 
+     * @param string $output The column output
+     * @param int $leaderboard_id The leaderboard ID
+     * @param int $position The user position
+     * @param array $item The user item data
+     * @param string $column_name The column name
+     * @param object $leaderboard_table The leaderboard table object
+     * @return string The rendered column content
+     */
+    public function render_daily_average_column( $output, $leaderboard_id, $position, $item, $column_name, $leaderboard_table ) {
+        // Get user ID from the item
+        $user_id = isset( $item['user_id'] ) ? intval( $item['user_id'] ) : 0;
+        
+        if ( ! $user_id ) {
+            return '0';
+        }
+
+        // Use our shortcode to get the daily average
+        $daily_average = $this->calculate_daily_average( $user_id );
+        
+        return $daily_average;
+    }
+
+    /**
+     * Calculate daily average points for a user over the last 30 days
+     * 
+     * @param int $user_id The user ID
+     * @param string $type The points type (default: 'energiepunkte')
+     * @return string Formatted daily average
+     */
+    private function calculate_daily_average( $user_id, $type = 'energiepunkte' ) {
+        if ( ! $user_id ) {
+            return '0';
+        }
+
+        global $wpdb;
+        $log_table = $wpdb->prefix . 'gamipress_logs';
+
+        // Date range (last 30 days)
+        $end_date   = date( 'Y-m-d', current_time( 'timestamp' ) );
+        $start_date = date( 'Y-m-d', strtotime( '-30 days', current_time( 'timestamp' ) ) );
+
+        // Allowed types that represent earning points
+        $earning_types = array( 'points_award', 'points_earn' );
+        $types_in_sql  = "'" . implode( "','", $earning_types ) . "'";
+
+        if ( strtolower( $type ) === 'all' ) {
+            // All point types
+            $sql = $wpdb->prepare("
+                SELECT SUM(points)
+                FROM {$log_table}
+                WHERE user_id = %d
+                AND type IN ($types_in_sql)
+                AND DATE(date) BETWEEN %s AND %s
+            ", $user_id, $start_date, $end_date );
+        } else {
+            // Specific point type
+            $sql = $wpdb->prepare("
+                SELECT SUM(points)
+                FROM {$log_table}
+                WHERE user_id = %d
+                AND type IN ($types_in_sql)
+                AND points_type = %s
+                AND DATE(date) BETWEEN %s AND %s
+            ", $user_id, $type, $start_date, $end_date );
+        }
+
+        $total_points = floatval( $wpdb->get_var( $sql ) );
+        $average = $total_points / 30;
+
+        // Format the average
+        if ( floor( $average ) == $average ) {
+            return number_format( $average, 0 );
+        } else {
+            return number_format( $average, 2 );
+        }
+    }
+
+    /**
+     * Shortcode handler for gamipress_average_points
+     * 
+     * Usage: [gamipress_average_points user_id=1 type=points]
+     * Supports: type="all" to include all point types
+     * 
+     * @param array $atts Shortcode attributes
+     * @return string The calculated average points
+     */
+    public function gamipress_average_points_shortcode( $atts ) {
+        $atts = shortcode_atts( array(
+            'user_id' => get_current_user_id(),
+            'type'    => 'energiepunkte',
+        ), $atts, 'gamipress_average_points' );
+
+        $user_id = intval( $atts['user_id'] );
+        $type    = sanitize_text_field( $atts['type'] );
+
+        if ( ! $user_id ) {
+            return __( 'User not found.', 'gamipress-leaderboards' );
+        }
+
+        $average = $this->calculate_daily_average( $user_id, $type );
+
+        return sprintf(
+            '<div class="gamipress-daily-practice">%s</div>',
+            sprintf(
+                __( 'Your daily practice over the last 30 days: %s minutes', 'gamipress-leaderboards' ),
+                $average
+            )
+        );
     }
 }
-add_shortcode( 'gamipress_average_points', 'gamipress_average_points_shortcode' );
 
-
-
-
+// Initialize the customization class
+GamiPress_Leaderboard_Customization::get_instance();
