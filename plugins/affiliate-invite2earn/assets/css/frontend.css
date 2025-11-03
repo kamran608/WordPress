@@ -1,0 +1,144 @@
+html {
+    scroll-behavior: smooth;
+}
+
+.aie-form-container {
+    max-width: 60%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #13112e;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Style form heading */
+.aie-form-container .aie-heading {
+    color: #FFCC03;
+    font-size: 24px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* Style form labels */
+.aie-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #fff;
+}
+
+/* Style form input fields */
+.aie-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #222;
+}
+.aie-payment-info-box, .aie-button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #FFCC03;
+}
+.aie-form-container .aie-submit-button {
+    background-color: #FFCC03;
+    width: 100%;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    color: #fff;
+    font-weight: 600;
+}
+/* Style payment details */
+.aie-payment-details {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #fff;
+    padding-bottom: 20px;
+    font-weight: 600;
+}
+.input-file {
+ visibility: hidden;
+ position: absolute;
+}
+.aie-icon {
+    color:#FFCC03 ;
+    line-height: 2.2;
+}
+.aie-form-container .aie-form-control {
+    padding: 6px;
+    border-radius: 5px;
+	width: 43%;
+}
+.aie-form-container .aie-file-wrapper {
+    margin-bottom: 20px;
+}
+.aie-form-container .ai-upload {
+    padding: 10px;
+    border-radius: 5px;
+}
+.aie-participate-message {
+    font-size: 16px;
+    font-weight: 600;
+    font-style: italic;
+}
+.aie-limit-text {
+    font-style: italic;
+}
+.affiliate-content {
+    border: 2px solid #3498db;
+    background: aliceblue;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+.aie-affiliate-earning,
+.aie-affiliate-link,
+.aie-withdrawal-option {
+    margin-bottom: 20px;
+}
+.aie-earning-label,
+.aie-link-label,
+.aie-withdraw-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.aie-earning-amount,
+.aie-link-url {
+    font-size: 18px;
+}
+.aie-withdraw-link {
+    background: #1a204af7;
+    width: fit-content;
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: not-allowed;
+    margin-top: 10px;
+}
+.aie-earning-amount {
+    font-size: 30px;
+    padding: 16px;
+    font-style: oblique;
+    font-family: cursive;
+}
+.fas {
+    margin-right: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    .aie-form-container {
+        max-width: 100%;
+    }
+}

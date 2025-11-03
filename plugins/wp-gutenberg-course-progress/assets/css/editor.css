@@ -1,0 +1,91 @@
+body {
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.course-card {
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.course-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.course-icon img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.course-title h2 {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.course-title h3 {
+    font-size: 1.2em;
+    color: #666;
+    margin: 0;
+}
+
+.progress-bar {
+    background-color: #e6e6e6;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 20px;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.progress-info {
+    font-size: 0.9em;
+    color: #333;
+}
+
+.lesson-list {
+    list-style: none;
+    padding: 0;
+}
+
+.lesson-list li {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.progress-circle-container {
+    margin-left: auto;
+}
+
+.progress-circle {
+    display: inline-block;
+}
+
+.checkmark-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lpc-course-progress-block {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+}

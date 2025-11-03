@@ -1,0 +1,14 @@
+.lcp-setting-wrap .form-table th {
+    width: 200px;
+}
+
+.lcp-setting-wrap pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.lcp-setting-wrap .form-table input[type="text"], 
+.lcp-setting-wrap .form-table select {
+    width: 300px;
+}

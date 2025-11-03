@@ -1,0 +1,161 @@
+/**
+ * Collapsible Sections for LearnDash - Frontend Styles
+ * 
+ * @package CollapsibleSectionsLearnDash
+ * @version 1.0
+ */
+
+.custom-section-item {
+    border: 2px solid #e2e7ed;
+    border-radius: 6px;
+    margin: 1em 0;
+    background: rgba(146,164,183,.05);
+    position: relative; /* Allow proper positioning for child elements */
+    z-index: 1; /* Base z-index for section items */
+}
+
+.custom-section-toggle-btn {
+    background: transparent;
+    color: var(--bb-headings-color); /* Match exact LearnDash section heading color */
+    padding: 20px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 16px; /* Match exact LearnDash default section heading font size */
+    font-weight: 800;
+    transition: opacity 0.3s ease;
+    margin: 0;
+    border-radius: 6px;
+    letter-spacing: 0.6px; /* Match LearnDash section heading letter-spacing */
+    text-transform: capitalize; /* Less aggressive than uppercase per client request */
+}
+
+.custom-section-toggle-btn:hover {
+    color: var(--bb-headings-color); /* Match exact LearnDash section heading color */
+    opacity: 0.85;
+}
+
+.custom-section-toggle-btn:focus {
+    outline: none;
+    opacity: 0.75;
+}
+
+.custom-section-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.custom-toggle-icon {
+    /* Smart approach - arrow-right/arrow-down, no rotation needed */
+    background: #093b7d; /* Default LearnDash blue background - will be overridden by dynamic CSS */
+    color: #a3a5a9; /* LearnDash white icon */
+    border-radius: 100%; /* LearnDash circular shape */
+    width: 18px; /* LearnDash exact size */
+    height: 18px; /* LearnDash exact size */
+    flex: 0 0 18px; /* LearnDash flex sizing */
+    padding: 2px; /* LearnDash padding */
+    line-height: 1; /* Clean line height for dashicons */
+    text-align: center;
+    font-weight: bold; /* LearnDash font weight */
+    transition: color 0.3s ease, background 0.3s ease; /* Smooth transitions, no transform needed */
+    margin-right: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px; /* Icon font-size instead of width/height approach */
+}
+
+.custom-toggle-text {
+    padding-left: 0.5em;
+    flex: 1;
+    text-align: left;
+    font-weight: 500;
+    font-size: 16px; /* Match exact LearnDash default section heading font size */
+    color: var(--bb-headings-color); /* Match exact LearnDash section heading color */
+    letter-spacing: 0.6px; /* Match LearnDash section heading letter-spacing */
+    text-transform: capitalize; /* Less aggressive than uppercase per client request */
+}
+
+/* Expanded state - No rotation needed, JavaScript will change icon class */
+/* .custom-section-toggle-btn.expanded .custom-toggle-icon - handled by JavaScript */
+
+/* Section content styling */
+.custom-section-content {
+    margin-left: 26px;
+    border-left: 2px solid #e2e7ed;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    overflow: visible; /* Allow tooltips to show outside container */
+    transition: all 0.3s ease;
+    background-color: #ffffff; /* Default background - will be overridden by dynamic CSS */
+}
+
+.ld-section-wrapper {
+    margin-bottom: 20px;
+}
+
+.custom-section-heading-wrapper {
+    margin-bottom: 0;
+}
+
+/* Ensure proper spacing for lessons within sections */
+.custom-section-content .ld-item-list-item {
+    margin: 1em 0;
+}
+
+/* Remove extra borders from nested lessons */
+.custom-section-content .ld-item-list-item {
+    border-left: none;
+    margin-left: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .custom-section-toggle-btn {
+        text-align: left;
+        padding: 15px;
+    }
+    
+    .custom-toggle-text {
+        font-size: 14px; /* Slightly smaller on mobile but still readable */
+    }
+}
+
+/* Course page specific styles - only show custom toggle icons on course pages */
+body.single-sfwd-courses .custom-toggle-icon {
+    display: flex;
+}
+
+/* Hide custom toggle icons on non-course pages */
+body:not(.single-sfwd-courses) .custom-toggle-icon {
+    display: none !important;
+}
+
+/* TOOLTIP VISIBILITY FIX: Ensure tooltips display properly above section containers */
+.custom-section-content .ld-item-list-item {
+    position: relative; /* Allow proper positioning for tooltips */
+    z-index: 10; /* Higher z-index for lesson items to show tooltips */
+}
+
+/* Ensure tooltips have highest z-index */
+.custom-section-content .ld-item-list-item .tooltip,
+.custom-section-content .ld-item-list-item [class*="tooltip"],
+.custom-section-content .ld-item-list-item .ld-status-tooltip,
+.custom-section-content .ld-item-list-item [data-tooltip],
+.custom-section-content .ld-item-list-item .bb-tooltip {
+    z-index: 9999 !important; /* Highest z-index for all tooltip types */
+    position: relative !important; /* Ensure proper positioning */
+}
+
+/* Fix for BuddyBoss/LearnDash specific tooltip containers */
+.ld-item-list-item-preview .ld-status-tooltip,
+.ld-item-list-item .ld-status-tooltip {
+    z-index: 9999 !important;
+    position: absolute !important;
+}

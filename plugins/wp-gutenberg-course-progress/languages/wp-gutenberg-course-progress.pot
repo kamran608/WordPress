@@ -1,0 +1,20 @@
+msgid "The Course ID is required to display the course progress."
+msgstr ""
+
+msgid "You are not enrolled in this course."
+msgstr ""
+
+msgid "lessons"
+msgstr ""
+
+msgid "Topics"
+msgstr ""
+
+msgid "Quizzes"
+msgstr ""
+
+msgid "Course"
+msgstr ""
+
+msgid "Course Progress"
+msgstr ""

@@ -1,0 +1,346 @@
+/**
+ * Collapsible Sections for LearnDash - Modern Admin Styles (v2.0)
+ */
+
+.csld-admin-wrap {
+    max-width: 1200px;
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    color: #1e1e1e;
+    line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+.csld-admin-wrap .csld-admin-header {
+    padding: 15px 0;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.csld-admin-wrap .csld-admin-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 5px;
+}
+
+.csld-admin-wrap .csld-admin-header p {
+    color: #64748b;
+    font-size: 15px;
+}
+
+/* ===== LAYOUT ===== */
+.csld-admin-wrap .csld-admin-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* ===== MAIN SETTINGS PANEL ===== */
+.csld-admin-wrap .csld-settings-panel {
+    flex: 2;
+    min-width: 600px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.csld-admin-wrap .csld-settings-panel:hover {
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+    transform: translateY(-2px);
+}
+
+.csld-admin-wrap .csld-settings-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 14px 14px 0 0;
+    background: linear-gradient(90deg, #2563eb, #3b82f6, #06b6d4);
+}
+
+/* ===== SIDE INFO BOXES ===== */
+.csld-admin-wrap .csld-info-panel {
+    flex: 1;
+    min-width: 300px;
+}
+
+.csld-admin-wrap .csld-info-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s ease;
+}
+
+.csld-admin-wrap .csld-info-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.csld-admin-wrap .csld-info-box h3 {
+    margin: 0 0 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.csld-admin-wrap .csld-info-box p,
+.csld-admin-wrap .csld-info-box li {
+    color: #475569;
+    font-size: 14px;
+}
+
+.csld-admin-wrap .csld-info-box ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+/* ===== STATUS ===== */
+.csld-admin-wrap .csld-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.csld-admin-wrap .csld-status-item:last-child {
+    border-bottom: none;
+}
+
+.csld-admin-wrap .csld-status-label {
+    font-weight: 500;
+    color: #334155;
+}
+
+.csld-admin-wrap .csld-status-success {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.csld-admin-wrap .csld-status-error {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.csld-admin-wrap .csld-settings-panel .form-table {
+    width: 100%;
+    border-spacing: 0 12px;
+}
+
+.csld-admin-wrap .csld-settings-panel .form-table th {
+    width: 220px;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.csld-admin-wrap .csld-settings-panel .form-table td {
+    vertical-align: middle;
+}
+
+/* ===== DROPDOWNS ===== */
+.csld-admin-wrap select {
+    padding: 10px 40px 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    color: #0f172a;
+    background-color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.csld-admin-wrap select:hover {
+    border-color: #3b82f6;
+}
+
+.csld-admin-wrap select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    outline: none;
+}
+
+/* ===== COLOR PICKER ===== */
+.csld-admin-wrap .wp-picker-container .wp-color-result {
+    height: 36px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.csld-admin-wrap .wp-picker-container .wp-color-result:hover {
+    transform: scale(1.05);
+}
+
+/* ===== TOGGLE SWITCH ===== */
+.csld-admin-wrap .csld-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+.csld-admin-wrap .csld-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.csld-admin-wrap .csld-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cbd5e1;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.csld-admin-wrap .csld-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: 0.4s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.csld-admin-wrap .csld-toggle-switch input:checked + .csld-toggle-slider {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+.csld-admin-wrap .csld-toggle-switch input:checked + .csld-toggle-slider:before {
+    transform: translateX(22px);
+}
+
+/* ===== BUTTONS ===== */
+.csld-admin-wrap .csld-form-actions {
+    margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.csld-admin-wrap .csld-form-actions .button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.csld-admin-wrap .csld-form-actions .button-primary {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border: none;
+    color: #fff;
+}
+
+.csld-admin-wrap .csld-form-actions .button-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    transform: translateY(-1px);
+}
+
+.csld-admin-wrap .csld-form-actions .button-secondary {
+    background: #f3f4f6;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+}
+
+.csld-admin-wrap .csld-form-actions .button-secondary:hover {
+    background: #e5e7eb;
+}
+
+/* ===== MESSAGES ===== */
+.csld-admin-wrap .csld-message {
+    padding: 12px 16px;
+    margin: 18px 0;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.csld-admin-wrap .csld-message-success {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.csld-admin-wrap .csld-message-error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+/* ===== LOADING STATE & BLUR EFFECT ===== */
+.csld-admin-wrap .csld-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.csld-admin-wrap .csld-loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 14px;
+    z-index: 10;
+}
+
+.csld-admin-wrap .csld-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #2563eb;
+    border-radius: 50%;
+    animation: csld-spin 1s linear infinite;
+    z-index: 11;
+}
+
+@keyframes csld-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Loading state for buttons */
+.csld-admin-wrap .button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .csld-admin-wrap .csld-admin-content {
+        flex-direction: column;
+    }
+    .csld-admin-wrap .csld-settings-panel {
+        min-width: auto;
+    }
+}

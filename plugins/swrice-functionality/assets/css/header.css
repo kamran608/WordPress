@@ -1,0 +1,351 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: poppins;
+}
+.swrice-header-wrapper{
+	width: 100%;
+	background: #fff;
+	box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+.swrice-header-wrapper .swrice-header-wrap {
+	display: flex;
+}
+.swrice-header-wrapper i {
+	font-size: 16px;
+	cursor: pointer;
+	margin-left: 6px;
+}
+.swrice-header-wrapper .swrice-menu-hover a:hover {
+	color: #0D4B6F;
+	font-weight: 400;
+}
+.swrice-header-wrapper .swrice-menu-bar-icon {
+	color: #0D4B6F;
+}
+.swrice-header-wrapper .swrice-logo-wrapper{
+	width: 20%;
+	padding: 20px 0px 20px 50px;
+	z-index: 11;
+}
+.swrice-header-wrapper .swrice-logo-wrapper img{
+	width: 128px;
+}
+.swrice-header-wrapper .swrice-menu-list-wrap {
+	width:60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 40px;
+    gap: 60px;
+}
+.swrice-header-wrapper .swrice-menu-handler {
+	display: flex;
+    align-items: center;
+}
+.swrice-header-wrapper .swrice-menu-list-wrap li {
+	list-style: none;
+}
+.swrice-header-wrapper .swrice-menu-list-wrap a {
+	text-decoration: none;
+	font-size: 17px;
+	color: #404040;
+	display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.swrice-header-wrapper .swrice-menu-list-wrap .swrice-menu-hover:hover .swrice-bottom-content {
+    display: block;
+}
+.swrice-header-wrapper .swrice-header-sub-section {
+	width: 100%;
+    border-right: 1px;
+    font-size: 28px;
+    background: #fff;
+}
+.swrice-submenu-content-holder {
+	width: 100%;
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.1)0px 4px 4px;
+    padding-bottom: 20px;
+}
+.swrice-header-wrapper .swrice-bottom-content {
+	display: none;
+	position: absolute;
+	width: 100%;
+	left: 0;
+	z-index: 10;
+}
+.swrice-header-wrapper .swrice-header-bottom-grid {
+	display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    padding-top: 0px;
+    background: #fff;
+    margin-top: 33px;
+}
+.swrice-header-wrapper .swrice-header-grid {
+	border-right: 1px;
+}
+.swrice-header-wrapper .swrice-submenu-heading {
+	width: 100%;
+	background: #28357be0 ;
+	color: #fff;
+	font-size: 20px;
+	font-weight: 400;
+	padding: 20px;
+	border-right: 1px solid #fff;
+}
+body .swrice-header-wrapper .swrice-submenu-heading a {
+    color: #fff;
+}
+body .swrice-header-wrapper .swrice-submenu-heading a:hover {
+    color: #fff;
+}
+.swrice-header-wrapper .swrice-submenu-list-item {
+	display: flex;
+    align-items: center;
+    margin-top: 10px;
+    padding: 10px;
+}
+.swrice-header-wrapper .swrice-submenu-list-item a {
+	font-size: 16px;
+	margin-left: 5px;
+	width: 90%;
+}
+.swrice-header-wrapper .swrice-submenu-list-item img {
+	width: 40px;
+	height: 40px;
+}
+.swrice-header-wrapper .swrice-submenu-content {
+	padding-left: 10px;
+}
+.swrice-header-wrapper .swrice-submenu-list-item:hover {
+	background-color: #060a4a0f;
+    color: #0d4b6f !important;
+    border-radius: 6px;
+}
+
+.swrice-header-wrapper .swrice-menu-bar-icon-wrapper {
+	display: none;
+}
+.swrice-order-list:hover a {
+	color: #0D4B6F;
+}
+.swrice-header-wrapper .swrice-header-mob-wrapper {
+  display: none;
+}
+/*********Responsive Design******************
+ */
+@media screen and (max-width: 800px) {
+	/*body {
+		overflow: hidden;
+	}*/
+	.swrice-header-wrapper .swrice-bottom-content {
+		position: unset;
+	}
+	.swrice-header-wrapper .swrice-menu-bar-icon-mob {
+		font-size: 24px;
+		margin-top: 10px;
+	}
+	.swrice-header-wrapper .swrice-header-mob-wrapper {
+		display: flex;
+		align-items: center;
+		padding: 10px 20px 20px 20px;
+		border-bottom: 1px solid #d4d4d4;
+		box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+		margin-bottom: 20px;
+	}
+	.swrice-header-mob-wrapper .swrice-logo-wrapper-mob img {
+		width: 130px;
+	}
+	.swrice-logo-wrapper-mob {
+		width: 50%;
+	}
+	.swrice-menu-icon-wrapper-mob {
+		width: 50%;
+		text-align: right;
+		padding-right: 10px;
+	}
+	.swrice-header-wrapper .swrice-submenu-content {
+		padding: 10px;
+	}
+	.swrice-header-wrapper .swrice-menu-list-wrap .swrice-menu-hover:hover .swrice-bottom-content {
+	    display: none;
+	}
+	.swrice-header-wrapper .swrice-bottom-content {
+		background: #fff;
+	}
+	.swrice-header-wrapper .swrice-menu-handler {
+		width: 100%;
+	}
+	.swrice-header-wrapper .ld-menu-active {
+		display: block !important;
+		margin-top: 20px;
+	}
+	.swrice-header-wrapper .swrice-bottom-menu{
+		width: 90%;
+	}
+	.swrice-header-wrapper .swrice-down-arrow-icon {
+		width: 10%;
+		color: #404040;
+		text-align: right;
+		padding-right: 10px;
+	}
+	.swrice-header-wrapper .swrice-header-wrap {
+		position: relative;
+	}
+	.swrice-header-wrapper .swrice-logo-wrapper{
+		z-index: 0;
+	}
+	.swrice-header-wrapper .swrice-menu-list-wrap {
+		  display: block;
+	    position: fixed;
+	    left: -100%;
+	    background: #fff;
+	    width: 100%;
+	    height: 100%;
+	    top: 0;
+	    z-index: 9999999;
+	    overflow: auto;
+	    padding-right: 0;
+	}
+	.swrice-header-wrapper .swrice-header-bottom-grid {
+		display: block;
+		background-color: #0D4B6F;
+	}
+	.swrice-header-wrapper .swrice-header-sub-section {
+    	width: 100%;
+    	background: #fff;
+	}
+	.swrice-header-wrapper .swrice-order-list {
+		width: 100%;
+	}
+	.swrice-order-list:hover a {
+		color: #0D4B6F ;
+	}
+	.swrice-header-wrapper .swrice-menu-bar-icon-wrapper {
+		position: relative;
+		display: block;
+		width: 100%;
+		z-index: 2;
+		height: 66px;
+	}
+	.swrice-header-wrapper .swrice-menu-icon-holder {
+		position: absolute;
+	    right: 30px;
+	    top: 30px;
+	}
+	.swrice-header-wrapper .swrice-order-list a {
+		text-decoration: none;
+	    font-size: 17px;
+	    color: #404040;
+	    display: flex;
+	    align-items: center;
+	    gap: 5px;
+	}
+	.swrice-header-wrapper .swrice-submenu-list-item a{
+		color: #0D4B6F;
+		display: inline-block;
+		margin: 0;
+	}
+	.swrice-header-wrapper .swrice-submenu-list-item span{
+		color: #0D4B6F;
+	}
+	.swrice-header-wrapper .swrice-menu-bar-icon.fa-xmark {
+		color: #404040;
+		z-index: 999999999;
+		font-size: 18px;
+		padding: 0 20px;
+	}
+	.swrice-submenu-content-holder {
+	    display: block;
+	}
+	.swrice-header-wrapper .swrice-menu-list-wrap li {
+		padding: 10px 20px 20px 20px; ;
+		display: inline-block;
+	}
+	.swrice-header-wrapper .swrice-order-list a i {
+		margin-right: 75%;
+	}
+	.swrice-header-wrapper .swrice-header-bottom-grid {
+		display: unset;
+	}
+}
+@media screen and ( min-width : 801px) {
+	.swrice-header-wrapper .swrice-menu-list-wrap {
+		display: flex !important;
+	}
+}
+@media screen and ( max-width : 1024px ){
+	.swrice-header-wrapper .ld-menu-active {
+		display: block !important;
+	}
+	.swrice-header-wrapper .swrice-menu-list-wrap .swrice-menu-hover:hover .swrice-bottom-content {
+	    display: none;
+	}
+}
+@media screen and ( max-width: 1200px) {
+	.swrice-social-icons {
+		display: none !important;
+	}
+	.swrice-header-wrapper .swrice-menu-list-wrap {
+	    width: 100%;
+	    display: flex;
+	    align-items: center;
+	    justify-content: flex-end;
+	    gap: 60px;
+	}
+}
+@media screen and ( max-width: 1200px) and ( min-width: 800px ) {
+	.swrice-social-icons {
+		display: none !important;
+	}
+	.swrice-header-wrapper .swrice-menu-list-wrap {
+	    padding-right: 40px;
+	}
+}
+.swrice-social-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: right;
+    width: 20%;
+    padding-right: 50px
+}
+.social-icons {
+	display: flex;
+    gap: 10px;
+}
+.social-icons a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #e76a2f; /* Orange color for icons */
+    font-size: 18px;
+}
+.social-icons a:hover {
+	color: #060A4A !important;
+}
+.swr-subscribe-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #e76a2f; /* Orange background color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+}
+.subscribe-button:hover {
+	background: #060A4A;
+	color: #fff!important
+}
