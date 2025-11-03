@@ -79,7 +79,7 @@ class GamiPress_Leaderboard_Customization {
      */
     public function add_custom_column_option( $columns_options ) {
         // Add our custom column option
-        $columns_options[ self::DAILY_AVERAGE_COLUMN ] = __( 'Daily Average over the last 30 days', 'gamipress-leaderboards' );
+        $columns_options[ self::DAILY_AVERAGE_COLUMN ] = __( '30-Day Daily Avg', 'gamipress-leaderboards' );
         
         return $columns_options;
     }
@@ -213,7 +213,15 @@ class GamiPress_Leaderboard_Customization {
             return __( 'User not found.', 'gamipress-leaderboards' );
         }
 
-        return $this->calculate_daily_average( $user_id, $type );
+        $average = $this->calculate_daily_average( $user_id, $type );
+
+        return sprintf(
+            '<div class="gamipress-daily-practice">%s</div>',
+            sprintf(
+                __( 'Your daily practice over the last 30 days: %s minutes', 'gamipress-leaderboards' ),
+                $average
+            )
+        );
     }
 }
 
