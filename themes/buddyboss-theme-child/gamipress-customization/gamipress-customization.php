@@ -61,6 +61,9 @@ class GamiPress_Leaderboard_Customization {
         // Add custom column to leaderboard options
         add_filter( 'gamipress_leaderboards_columns_options', array( $this, 'add_custom_column_option' ) );
         
+        // Ensure custom column is included in frontend display
+        add_filter( 'gamipress_leaderboards_leaderboard_columns_info', array( $this, 'include_custom_column_in_frontend' ), 10, 3 );
+        
         // Handle custom column rendering
         add_filter( 'gamipress_leaderboards_leaderboard_column_' . self::DAILY_AVERAGE_COLUMN, array( $this, 'render_daily_average_column' ), 10, 6 );
         
@@ -79,6 +82,33 @@ class GamiPress_Leaderboard_Customization {
         $columns_options[ self::DAILY_AVERAGE_COLUMN ] = __( 'Daily Average over the last 30 days', 'gamipress-leaderboards' );
         
         return $columns_options;
+    }
+
+    /**
+     * Include custom column in frontend leaderboard display
+     * 
+     * This method ensures our custom column appears in the frontend even though
+     * it's not part of the metrics system.
+     * 
+     * @param array $final_columns The final columns array
+     * @param int $leaderboard_id The leaderboard ID
+     * @param object $leaderboard_table The leaderboard table object
+     * @return array Modified final columns array
+     */
+    public function include_custom_column_in_frontend( $final_columns, $leaderboard_id, $leaderboard_table ) {
+        // Get the selected columns from the leaderboard settings
+        $selected_columns = $leaderboard_table->get_columns();
+        
+        // Check if our custom column is selected
+        if ( in_array( self::DAILY_AVERAGE_COLUMN, $selected_columns ) ) {
+            // Get the column options to get the proper label
+            $columns_options = gamipress_leaderboards_get_columns_options();
+            
+            // Add our custom column to the final columns array
+            $final_columns[ self::DAILY_AVERAGE_COLUMN ] = $columns_options[ self::DAILY_AVERAGE_COLUMN ];
+        }
+        
+        return $final_columns;
     }
 
     /**
@@ -189,4 +219,3 @@ class GamiPress_Leaderboard_Customization {
 
 // Initialize the customization class
 GamiPress_Leaderboard_Customization::get_instance();
-
