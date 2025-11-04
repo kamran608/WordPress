@@ -144,18 +144,42 @@ class GamiPress_Leaderboard_Customization {
      * @return string Formatted daily average
      */
     private function calculate_daily_average( $user_id, $type = 'energiepunkte' ) {
+        
         if ( ! $user_id ) {
             return '0';
         }
 
         global $wpdb;
         $log_table = $wpdb->prefix . 'gamipress_logs';
+        $achievement_id = 4669;
 
-        // Date range (last 30 days)
-        $end_date   = date( 'Y-m-d', current_time( 'timestamp' ) );
+        // Try to get achievement earned date
+        $result = $wpdb->get_row( $wpdb->prepare(
+            "SELECT date 
+            FROM {$wpdb->prefix}gamipress_user_earnings 
+            WHERE post_id = %d AND user_id = %d
+            ORDER BY user_earning_id DESC 
+            LIMIT 1",
+            $achievement_id,
+            $user_id
+        ) );
+
+        $current_date = date( 'Y-m-d', current_time( 'timestamp' ) );
         $start_date = date( 'Y-m-d', strtotime( '-30 days', current_time( 'timestamp' ) ) );
+        $end_date   = $current_date;
+        $days_for_average = 30;
 
-        // Allowed types that represent earning points
+        if ( ! empty( $result ) && ! empty( $result->date ) ) {
+
+            $achievement_earned_date = date( 'Y-m-d', strtotime( $result->date ) );
+            $days_since_earned = floor( ( strtotime( $current_date ) - strtotime( $achievement_earned_date ) ) / DAY_IN_SECONDS ) + 1;
+
+            if ( $days_since_earned < 30 ) {
+                $start_date = $achievement_earned_date;
+                $days_for_average = max( 1, floor( $days_since_earned ) );
+            }
+        }
+
         $earning_types = array( 'points_award', 'points_earn' );
         $types_in_sql  = "'" . implode( "','", $earning_types ) . "'";
 
@@ -181,9 +205,8 @@ class GamiPress_Leaderboard_Customization {
         }
 
         $total_points = floatval( $wpdb->get_var( $sql ) );
-        $average = $total_points / 30;
+        $average = $total_points / $days_for_average;
 
-        // Format the average
         if ( floor( $average ) == $average ) {
             return number_format( $average, 0 );
         } else {
