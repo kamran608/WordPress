@@ -239,9 +239,9 @@ class GamiPress_Leaderboard_Customization {
         $average = $this->calculate_daily_average( $user_id, $type );
 
         return sprintf(
-            '<div class="gamipress-daily-practice">%s</div>',
+            '<div class="gamipress-daily-practice" style="text-align:center; font-weight:bold; font-size:1.5em; color:#333;">%s</div>',
             sprintf(
-                __( 'Your daily practice over the last 30 days: %s minutes', 'gamipress-leaderboards' ),
+                __( 'Deine durchschnittliche tägliche Trainingsdauer der letzten 30 Tage: %s Minuten', 'gamipress-leaderboards' ),
                 $average
             )
         );
