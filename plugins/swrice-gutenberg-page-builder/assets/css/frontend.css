@@ -1239,10 +1239,6 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 24px;
-    background: none !important;
-    border: none !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
 }
 
 .sppm-main-screenshot-container {
@@ -1318,23 +1314,16 @@
 }
 
 .sppm-nav-arrow:active {
-    background: rgba(255, 255, 255, 0.95) !important;
-    color: #333 !important;
-    border-color: rgba(0,0,0,0.15) !important;
-    transform: translateY(-50%) !important;
-}
-
-.sppm-nav-arrow:focus {
-    background: rgba(255, 255, 255, 0.95) !important;
-    color: #333 !important;
-    border-color: rgba(0,0,0,0.15) !important;
-    outline: none;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    border-color: rgba(0,0,0,0.15);
+    transform: translateY(-50%);
 }
 
 .sppm-nav-arrow svg {
-    width: 32px !important;
-    height: 32px !important;
-    stroke-width: 3 !important;
+    width: 28px;
+    height: 28px;
+    stroke-width: 2.5;
 }
 
 .sppm-nav-prev { 
@@ -1708,8 +1697,8 @@
     }
     
     .sppm-nav-arrow svg {
-        width: 28px !important;
-        height: 28px !important;
+        width: 24px;
+        height: 24px;
     }
     
     .sppm-nav-prev { 
@@ -1755,8 +1744,8 @@
     }
     
     .sppm-nav-arrow svg {
-        width: 26px !important;
-        height: 26px !important;
+        width: 22px;
+        height: 22px;
     }
     
     .sppm-nav-prev { 
