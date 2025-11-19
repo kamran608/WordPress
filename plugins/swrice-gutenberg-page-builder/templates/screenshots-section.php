@@ -27,16 +27,16 @@ $total_slides = count($screenshot_items);
         <?php endif; ?>
     </div>
 
-    <div class="sppm-screenshots-slider" id="<?php echo esc_attr($gallery_id); ?>" data-slider="simple" data-total="<?php echo intval($total_slides); ?>">
-        <!-- Screenshots Container -->
-        <div class="sppm-slider-container">
-            <div class="sppm-slides-track">
+    <div class="sppm-screenshots-gallery" id="<?php echo esc_attr($gallery_id); ?>" data-gallery="wordpress-style" data-total="<?php echo intval($total_slides); ?>">
+        <!-- Main Screenshot Display -->
+        <div class="sppm-main-screenshot-container">
+            <div class="sppm-main-screenshot">
                 <?php foreach ($screenshot_items as $index => $screenshot): ?>
                     <?php if (!empty($screenshot['imageUrl'])): ?>
-                    <div class="sppm-slide<?php echo $index === 0 ? ' active' : ''; ?>" data-index="<?php echo $index; ?>">
+                    <div class="sppm-screenshot-slide<?php echo $index === 0 ? ' active' : ''; ?>" data-index="<?php echo $index; ?>">
                         <img src="<?php echo esc_url($screenshot['imageUrl']); ?>" 
                              alt="<?php echo esc_attr(isset($screenshot['title']) ? $screenshot['title'] : 'Screenshot'); ?>"
-                             class="sppm-slide-image" />
+                             class="sppm-screenshot-image" />
                     </div>
                     <?php endif; ?>
                 <?php endforeach; ?>
@@ -44,17 +44,34 @@ $total_slides = count($screenshot_items);
             
             <!-- Navigation Arrows -->
             <?php if ($total_slides > 1): ?>
-            <button class="sppm-arrow sppm-arrow-left" type="button" aria-label="Previous screenshot">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="sppm-nav-arrow sppm-nav-prev" type="button" aria-label="Previous screenshot">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="15,18 9,12 15,6"></polyline>
                 </svg>
             </button>
-            <button class="sppm-arrow sppm-arrow-right" type="button" aria-label="Next screenshot">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="sppm-nav-arrow sppm-nav-next" type="button" aria-label="Next screenshot">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="9,18 15,12 9,6"></polyline>
                 </svg>
             </button>
             <?php endif; ?>
         </div>
+
+        <!-- Thumbnail Preview Strip (WordPress.org style) -->
+        <?php if ($total_slides > 1): ?>
+        <div class="sppm-thumbnails-strip">
+            <?php foreach ($screenshot_items as $index => $screenshot): ?>
+                <?php if (!empty($screenshot['imageUrl'])): ?>
+                <button class="sppm-thumbnail<?php echo $index === 0 ? ' active' : ''; ?>" 
+                        type="button"
+                        data-index="<?php echo $index; ?>"
+                        aria-label="View screenshot <?php echo $index + 1; ?>">
+                    <img src="<?php echo esc_url($screenshot['imageUrl']); ?>" 
+                         alt="<?php echo esc_attr(isset($screenshot['title']) ? $screenshot['title'] : 'Screenshot thumbnail'); ?>" />
+                </button>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
     </div>
 </section>

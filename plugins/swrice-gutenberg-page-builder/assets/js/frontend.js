@@ -73,46 +73,60 @@
 
     // Initialize all functionality when DOM is ready
 
-    // Simple Screenshots Slider with Arrow Navigation
+    // WordPress-style Screenshots Gallery
     function initScreenshotsGallery() {
-        const sliders = document.querySelectorAll('.sppm-screenshots-slider[data-slider="simple"]');
+        const galleries = document.querySelectorAll('.sppm-screenshots-gallery[data-gallery="wordpress-style"]');
         
-        sliders.forEach(slider => {
-            const slides = Array.from(slider.querySelectorAll('.sppm-slide'));
-            const arrowLeft = slider.querySelector('.sppm-arrow-left');
-            const arrowRight = slider.querySelector('.sppm-arrow-right');
+        galleries.forEach(gallery => {
+            const slides = Array.from(gallery.querySelectorAll('.sppm-screenshot-slide'));
+            const thumbnails = Array.from(gallery.querySelectorAll('.sppm-thumbnail'));
+            const prevArrow = gallery.querySelector('.sppm-nav-prev');
+            const nextArrow = gallery.querySelector('.sppm-nav-next');
             const totalSlides = slides.length;
 
             if (totalSlides <= 1) return; // No navigation needed for single image
 
             let currentIndex = 0;
 
-            // Update active slide
-            function updateSlide() {
+            // Update active slide and thumbnail
+            function updateGallery() {
                 slides.forEach((slide, index) => {
                     slide.classList.toggle('active', index === currentIndex);
+                });
+                thumbnails.forEach((thumb, index) => {
+                    thumb.classList.toggle('active', index === currentIndex);
                 });
             }
 
             // Navigation functions
+            function goToSlide(index) {
+                currentIndex = index;
+                updateGallery();
+            }
+
             function nextImage() {
                 currentIndex = (currentIndex + 1) % totalSlides;
-                updateSlide();
+                updateGallery();
             }
 
             function prevImage() {
                 currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-                updateSlide();
+                updateGallery();
             }
 
             // Event listeners for arrows
-            if (arrowLeft) {
-                arrowLeft.addEventListener('click', prevImage);
+            if (prevArrow) {
+                prevArrow.addEventListener('click', prevImage);
             }
 
-            if (arrowRight) {
-                arrowRight.addEventListener('click', nextImage);
+            if (nextArrow) {
+                nextArrow.addEventListener('click', nextImage);
             }
+
+            // Event listeners for thumbnails
+            thumbnails.forEach((thumbnail, index) => {
+                thumbnail.addEventListener('click', () => goToSlide(index));
+            });
         });
     }
 
