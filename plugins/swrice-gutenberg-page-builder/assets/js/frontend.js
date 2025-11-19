@@ -73,129 +73,196 @@
 
     // Initialize all functionality when DOM is ready
 
-    // Screenshots Slider - per-instance, responsive
-    function initScreenshotsSliders() {
-        const sliders = document.querySelectorAll('.sppm-screenshots-container[data-slider="sppm"]');
-        sliders.forEach(container => {
-            const viewport = container.querySelector('.sppm-screenshots-viewport');
-            const track = container.querySelector('.sppm-screenshots-track');
-            const slides = Array.from(container.querySelectorAll('.sppm-screenshot-slide'));
-            const prevBtn = container.querySelector('.sppm-arrow-left');
-            const nextBtn = container.querySelector('.sppm-arrow-right');
-            const dots = Array.from(container.querySelectorAll('.sppm-dot'));
+    // Professional Screenshots Gallery with Lightbox
+    function initScreenshotsGallery() {
+        const galleries = document.querySelectorAll('.sppm-screenshots-gallery[data-gallery="professional"]');
+        
+        galleries.forEach(gallery => {
+            const mainDisplay = gallery.querySelector('[data-main-display]');
+            const mainImage = gallery.querySelector('.sppm-main-image');
+            const thumbnails = Array.from(gallery.querySelectorAll('.sppm-thumbnail'));
+            const thumbnailsTrack = gallery.querySelector('[data-thumbnails-track]');
+            const expandBtn = gallery.querySelector('.sppm-expand-btn');
+            const lightbox = gallery.querySelector('[data-lightbox]');
+            const lightboxImage = gallery.querySelector('.sppm-lightbox-image');
+            const lightboxClose = gallery.querySelectorAll('[data-lightbox-close]');
+            const lightboxPrev = gallery.querySelector('.sppm-lightbox-prev');
+            const lightboxNext = gallery.querySelector('.sppm-lightbox-next');
+            const navPrev = gallery.querySelector('.sppm-nav-prev');
+            const navNext = gallery.querySelector('.sppm-nav-next');
 
-            if (!viewport || !track || slides.length === 0) return;
+            let currentIndex = 0;
+            let thumbnailOffset = 0;
+            const thumbnailsPerView = 4;
 
-            let index = 0;
-            let slideWidth = 0;
-            let isDragging = false;
-            let startX = 0;
-            let currentTranslate = 0;
-            let prevTranslate = 0;
-            let animationID = 0;
+            // Update main image
+            function updateMainImage(index) {
+                const thumbnail = thumbnails[index];
+                if (!thumbnail) return;
 
-            function setPositionByIndex() {
-                currentTranslate = -index * slideWidth;
-                setSliderPosition();
-                updateActiveStates();
+                const fullSrc = thumbnail.getAttribute('data-full-src');
+                const alt = thumbnail.querySelector('img').alt;
+
+                mainImage.src = fullSrc;
+                mainImage.alt = alt;
+                mainImage.setAttribute('data-full-src', fullSrc);
+
+                // Update active thumbnail
+                thumbnails.forEach((thumb, i) => {
+                    thumb.classList.toggle('active', i === index);
+                });
+
+                currentIndex = index;
             }
 
-            function setSliderPosition() {
-                track.style.transform = `translateX(${currentTranslate}px)`;
+            // Thumbnail navigation
+            function updateThumbnailsPosition() {
+                if (!thumbnailsTrack) return;
+                const thumbnailWidth = 120; // Including gap
+                const translateX = -thumbnailOffset * thumbnailWidth;
+                thumbnailsTrack.style.transform = `translateX(${translateX}px)`;
+                
+                // Update nav buttons
+                if (navPrev) navPrev.disabled = thumbnailOffset === 0;
+                if (navNext) navNext.disabled = thumbnailOffset >= thumbnails.length - thumbnailsPerView;
             }
 
-            function updateActiveStates() {
-                slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
-                dots.forEach((d, i) => {
-                    d.classList.toggle('active', i === index);
-                    d.setAttribute('aria-selected', String(i === index));
+            // Lightbox functions
+            function openLightbox(index = currentIndex) {
+                if (!lightbox) return;
+                
+                const thumbnail = thumbnails[index];
+                const fullSrc = thumbnail.getAttribute('data-full-src');
+                const alt = thumbnail.querySelector('img').alt;
+
+                lightboxImage.src = fullSrc;
+                lightboxImage.alt = alt;
+                lightbox.setAttribute('aria-hidden', 'false');
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                currentIndex = index;
+            }
+
+            function closeLightbox() {
+                if (!lightbox) return;
+                
+                lightbox.setAttribute('aria-hidden', 'true');
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function navigateLightbox(direction) {
+                const newIndex = direction === 'next' 
+                    ? (currentIndex + 1) % thumbnails.length
+                    : (currentIndex - 1 + thumbnails.length) % thumbnails.length;
+                
+                const thumbnail = thumbnails[newIndex];
+                const fullSrc = thumbnail.getAttribute('data-full-src');
+                const alt = thumbnail.querySelector('img').alt;
+
+                lightboxImage.src = fullSrc;
+                lightboxImage.alt = alt;
+                currentIndex = newIndex;
+                
+                // Update main gallery too
+                updateMainImage(newIndex);
+            }
+
+            // Event listeners
+            thumbnails.forEach((thumbnail, index) => {
+                thumbnail.addEventListener('click', () => updateMainImage(index));
+            });
+
+            if (expandBtn) {
+                expandBtn.addEventListener('click', () => openLightbox());
+            }
+
+            lightboxClose.forEach(btn => {
+                btn.addEventListener('click', closeLightbox);
+            });
+
+            if (lightboxPrev) {
+                lightboxPrev.addEventListener('click', () => navigateLightbox('prev'));
+            }
+
+            if (lightboxNext) {
+                lightboxNext.addEventListener('click', () => navigateLightbox('next'));
+            }
+
+            if (navPrev) {
+                navPrev.addEventListener('click', () => {
+                    thumbnailOffset = Math.max(0, thumbnailOffset - 1);
+                    updateThumbnailsPosition();
                 });
             }
 
-            function recalc() {
-                slideWidth = viewport.clientWidth;
-                slides.forEach(s => { s.style.width = `${slideWidth}px`; });
-                track.style.width = `${slideWidth * slides.length}px`;
-                setPositionByIndex();
+            if (navNext) {
+                navNext.addEventListener('click', () => {
+                    thumbnailOffset = Math.min(thumbnails.length - thumbnailsPerView, thumbnailOffset + 1);
+                    updateThumbnailsPosition();
+                });
             }
 
-            function next() {
-                index = (index + 1) % slides.length;
-                setPositionByIndex();
-            }
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!lightbox.classList.contains('active')) return;
+                
+                switch(e.key) {
+                    case 'Escape':
+                        closeLightbox();
+                        break;
+                    case 'ArrowLeft':
+                        navigateLightbox('prev');
+                        break;
+                    case 'ArrowRight':
+                        navigateLightbox('next');
+                        break;
+                }
+            });
 
-            function prev() {
-                index = (index - 1 + slides.length) % slides.length;
-                setPositionByIndex();
-            }
-
-            function animation() {
-                setSliderPosition();
-                if (isDragging) requestAnimationFrame(animation);
-            }
-
-            function touchStart(e) {
-                isDragging = true;
-                startX = getPositionX(e);
-                prevTranslate = currentTranslate;
-                track.classList.add('is-grabbing');
-                animationID = requestAnimationFrame(animation);
-            }
-
-            function touchMove(e) {
-                if (!isDragging) return;
-                const currentPosition = getPositionX(e);
-                const diff = currentPosition - startX;
-                currentTranslate = prevTranslate + diff;
-            }
-
-            function touchEnd() {
-                cancelAnimationFrame(animationID);
-                isDragging = false;
-                track.classList.remove('is-grabbing');
-                const movedBy = currentTranslate - prevTranslate;
-
-                if (movedBy < -50) index = Math.min(index + 1, slides.length - 1);
-                if (movedBy > 50) index = Math.max(index - 1, 0);
-                setPositionByIndex();
-            }
-
-            function getPositionX(e) {
-                return e.type.startsWith('mouse') ? e.pageX : (e.touches ? e.touches[0].clientX : e.clientX);
-            }
-
-            // Events
-            if (prevBtn) prevBtn.addEventListener('click', prev);
-            if (nextBtn) nextBtn.addEventListener('click', next);
-            dots.forEach((dot, i) => dot.addEventListener('click', () => { index = i; setPositionByIndex(); }));
-
-            // Touch/Mouse drag
-            track.addEventListener('touchstart', touchStart, { passive: true });
-            track.addEventListener('touchmove', touchMove, { passive: true });
-            track.addEventListener('touchend', touchEnd);
-            track.addEventListener('mousedown', touchStart);
-            track.addEventListener('mousemove', touchMove);
-            track.addEventListener('mouseup', touchEnd);
-            track.addEventListener('mouseleave', () => { if (isDragging) touchEnd(); });
-
-            window.addEventListener('resize', recalc);
-            recalc();
+            // Initialize
+            updateThumbnailsPosition();
         });
     }
 
-    // Video embed loader with custom play overlay
-    function initVideoEmbeds() {
-        document.querySelectorAll('.sppm-video-embed[data-embed-url]').forEach(container => {
-            const thumbnail = container.querySelector('.sppm-video-thumbnail');
-            const iframe = container.querySelector('.sppm-video-iframe');
-            if (!thumbnail || !iframe) return;
-            const baseUrl = container.getAttribute('data-embed-url');
+    // Premium Video Player
+    function initPremiumVideoPlayers() {
+        const players = document.querySelectorAll('[data-video-player="premium"]');
+        
+        players.forEach(player => {
+            const embedContainer = player.querySelector('.sppm-video-embed-premium');
+            if (!embedContainer) return;
 
-            thumbnail.addEventListener('click', () => {
-                const sep = baseUrl.includes('?') ? '&' : '?';
-                iframe.src = `${baseUrl}${sep}autoplay=1`;
+            const thumbnail = embedContainer.querySelector('.sppm-video-thumbnail-premium');
+            const playButton = embedContainer.querySelector('.sppm-play-button-premium');
+            const iframe = embedContainer.querySelector('.sppm-video-iframe-premium');
+            const embedUrl = embedContainer.getAttribute('data-embed-url');
+
+            if (!playButton || !iframe || !embedUrl) return;
+
+            // Play button click handler
+            playButton.addEventListener('click', () => {
+                // Add autoplay parameter
+                const separator = embedUrl.includes('?') ? '&' : '?';
+                const autoplayUrl = `${embedUrl}${separator}autoplay=1&rel=0&modestbranding=1`;
+                
+                // Load iframe
+                iframe.src = autoplayUrl;
                 iframe.style.display = 'block';
-                thumbnail.style.display = 'none';
+                
+                // Hide thumbnail
+                thumbnail.style.opacity = '0';
+                setTimeout(() => {
+                    thumbnail.style.display = 'none';
+                }, 300);
+            });
+
+            // Add ripple effect
+            playButton.addEventListener('click', (e) => {
+                const ripple = playButton.querySelector('.sppm-play-ripple');
+                ripple.style.animation = 'none';
+                ripple.offsetHeight; // Trigger reflow
+                ripple.style.animation = 'sppm-ripple 0.6s ease-out';
             });
         });
     }
@@ -205,8 +272,8 @@
         initSmoothScrolling();
         initButtonEffects();
         initScrollAnimations();
-        initScreenshotsSliders();
-        initVideoEmbeds();
+        initScreenshotsGallery();
+        initPremiumVideoPlayers();
     });
 
 })(jQuery);
