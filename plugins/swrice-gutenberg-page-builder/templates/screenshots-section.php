@@ -45,12 +45,12 @@ $total_slides = count($screenshot_items);
             <!-- Navigation Arrows -->
             <?php if ($total_slides > 1): ?>
             <button class="sppm-nav-arrow sppm-nav-prev" type="button" aria-label="Previous screenshot">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="15,18 9,12 15,6"></polyline>
                 </svg>
             </button>
             <button class="sppm-nav-arrow sppm-nav-next" type="button" aria-label="Next screenshot">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <polyline points="9,18 15,12 9,6"></polyline>
                 </svg>
             </button>
