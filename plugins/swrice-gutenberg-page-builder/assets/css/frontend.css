@@ -1230,35 +1230,53 @@
     }
 }
 
-/* WordPress.org Style Screenshots Gallery */
+/* HIDE ANY OLD SLIDER ELEMENTS */
+.sppm-screenshots-slider,
+.sppm-slides-track,
+.sppm-arrow,
+.sppm-arrow-left,
+.sppm-arrow-right {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* WordPress.org Style Screenshots Gallery - FORCE OVERRIDE */
 .sppm-screenshots-section {
-    background: var(--soft); /* Light background like other sections */
+    background: var(--soft) !important; /* Light background like other sections */
 }
 
 .sppm-screenshots-gallery {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 24px;
+    max-width: 900px !important;
+    margin: 0 auto !important;
+    padding: 24px !important;
     background: none !important;
     border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+    /* Override any old slider styles */
+    display: block !important;
+    position: relative !important;
 }
 
 .sppm-main-screenshot-container {
-    position: relative;
-    margin-bottom: 16px;
+    position: relative !important;
+    margin-bottom: 16px !important;
+    /* Override any old slider container styles */
+    width: 100% !important;
+    overflow: visible !important;
 }
 
 .sppm-main-screenshot {
-    position: relative;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f8f9fa;
-    border-radius: 6px;
-    border: 1px solid rgba(0,0,0,0.08);
+    position: relative !important;
+    height: 400px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #f8f9fa !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(0,0,0,0.08) !important;
+    /* Override any old slider track styles */
+    overflow: hidden !important;
 }
 
 .sppm-screenshot-slide {
@@ -1289,24 +1307,29 @@
     border-radius: 4px;
 }
 
-/* Prominent Navigation Arrows */
+/* Prominent Navigation Arrows - FORCE OVERRIDE */
 .sppm-nav-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 2px solid rgba(0,0,0,0.15);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: #333;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 50px !important;
+    height: 50px !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid rgba(0,0,0,0.15) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    color: #333 !important;
+    z-index: 10 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    /* Override any old arrow styles */
+    font-size: inherit !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    outline: none !important;
 }
 
 .sppm-nav-arrow:hover {
