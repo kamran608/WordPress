@@ -73,155 +73,46 @@
 
     // Initialize all functionality when DOM is ready
 
-    // Professional Screenshots Gallery with Lightbox
+    // Simple Screenshots Slider with Arrow Navigation
     function initScreenshotsGallery() {
-        const galleries = document.querySelectorAll('.sppm-screenshots-gallery[data-gallery="professional"]');
+        const sliders = document.querySelectorAll('.sppm-screenshots-slider[data-slider="simple"]');
         
-        galleries.forEach(gallery => {
-            const mainDisplay = gallery.querySelector('[data-main-display]');
-            const mainImage = gallery.querySelector('.sppm-main-image');
-            const thumbnails = Array.from(gallery.querySelectorAll('.sppm-thumbnail'));
-            const thumbnailsTrack = gallery.querySelector('[data-thumbnails-track]');
-            const expandBtn = gallery.querySelector('.sppm-expand-btn');
-            const lightbox = gallery.querySelector('[data-lightbox]');
-            const lightboxImage = gallery.querySelector('.sppm-lightbox-image');
-            const lightboxClose = gallery.querySelectorAll('[data-lightbox-close]');
-            const lightboxPrev = gallery.querySelector('.sppm-lightbox-prev');
-            const lightboxNext = gallery.querySelector('.sppm-lightbox-next');
-            const navPrev = gallery.querySelector('.sppm-nav-prev');
-            const navNext = gallery.querySelector('.sppm-nav-next');
+        sliders.forEach(slider => {
+            const slides = Array.from(slider.querySelectorAll('.sppm-slide'));
+            const arrowLeft = slider.querySelector('.sppm-arrow-left');
+            const arrowRight = slider.querySelector('.sppm-arrow-right');
+            const totalSlides = slides.length;
+
+            if (totalSlides <= 1) return; // No navigation needed for single image
 
             let currentIndex = 0;
-            let thumbnailOffset = 0;
-            const thumbnailsPerView = 4;
 
-            // Update main image
-            function updateMainImage(index) {
-                const thumbnail = thumbnails[index];
-                if (!thumbnail) return;
-
-                const fullSrc = thumbnail.getAttribute('data-full-src');
-                const alt = thumbnail.querySelector('img').alt;
-
-                mainImage.src = fullSrc;
-                mainImage.alt = alt;
-                mainImage.setAttribute('data-full-src', fullSrc);
-
-                // Update active thumbnail
-                thumbnails.forEach((thumb, i) => {
-                    thumb.classList.toggle('active', i === index);
-                });
-
-                currentIndex = index;
-            }
-
-            // Thumbnail navigation
-            function updateThumbnailsPosition() {
-                if (!thumbnailsTrack) return;
-                const thumbnailWidth = 120; // Including gap
-                const translateX = -thumbnailOffset * thumbnailWidth;
-                thumbnailsTrack.style.transform = `translateX(${translateX}px)`;
-                
-                // Update nav buttons
-                if (navPrev) navPrev.disabled = thumbnailOffset === 0;
-                if (navNext) navNext.disabled = thumbnailOffset >= thumbnails.length - thumbnailsPerView;
-            }
-
-            // Lightbox functions
-            function openLightbox(index = currentIndex) {
-                if (!lightbox) return;
-                
-                const thumbnail = thumbnails[index];
-                const fullSrc = thumbnail.getAttribute('data-full-src');
-                const alt = thumbnail.querySelector('img').alt;
-
-                lightboxImage.src = fullSrc;
-                lightboxImage.alt = alt;
-                lightbox.setAttribute('aria-hidden', 'false');
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                currentIndex = index;
-            }
-
-            function closeLightbox() {
-                if (!lightbox) return;
-                
-                lightbox.setAttribute('aria-hidden', 'true');
-                lightbox.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-
-            function navigateLightbox(direction) {
-                const newIndex = direction === 'next' 
-                    ? (currentIndex + 1) % thumbnails.length
-                    : (currentIndex - 1 + thumbnails.length) % thumbnails.length;
-                
-                const thumbnail = thumbnails[newIndex];
-                const fullSrc = thumbnail.getAttribute('data-full-src');
-                const alt = thumbnail.querySelector('img').alt;
-
-                lightboxImage.src = fullSrc;
-                lightboxImage.alt = alt;
-                currentIndex = newIndex;
-                
-                // Update main gallery too
-                updateMainImage(newIndex);
-            }
-
-            // Event listeners
-            thumbnails.forEach((thumbnail, index) => {
-                thumbnail.addEventListener('click', () => updateMainImage(index));
-            });
-
-            if (expandBtn) {
-                expandBtn.addEventListener('click', () => openLightbox());
-            }
-
-            lightboxClose.forEach(btn => {
-                btn.addEventListener('click', closeLightbox);
-            });
-
-            if (lightboxPrev) {
-                lightboxPrev.addEventListener('click', () => navigateLightbox('prev'));
-            }
-
-            if (lightboxNext) {
-                lightboxNext.addEventListener('click', () => navigateLightbox('next'));
-            }
-
-            if (navPrev) {
-                navPrev.addEventListener('click', () => {
-                    thumbnailOffset = Math.max(0, thumbnailOffset - 1);
-                    updateThumbnailsPosition();
+            // Update active slide
+            function updateSlide() {
+                slides.forEach((slide, index) => {
+                    slide.classList.toggle('active', index === currentIndex);
                 });
             }
 
-            if (navNext) {
-                navNext.addEventListener('click', () => {
-                    thumbnailOffset = Math.min(thumbnails.length - thumbnailsPerView, thumbnailOffset + 1);
-                    updateThumbnailsPosition();
-                });
+            // Navigation functions
+            function nextImage() {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateSlide();
             }
 
-            // Keyboard navigation
-            document.addEventListener('keydown', (e) => {
-                if (!lightbox.classList.contains('active')) return;
-                
-                switch(e.key) {
-                    case 'Escape':
-                        closeLightbox();
-                        break;
-                    case 'ArrowLeft':
-                        navigateLightbox('prev');
-                        break;
-                    case 'ArrowRight':
-                        navigateLightbox('next');
-                        break;
-                }
-            });
+            function prevImage() {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateSlide();
+            }
 
-            // Initialize
-            updateThumbnailsPosition();
+            // Event listeners for arrows
+            if (arrowLeft) {
+                arrowLeft.addEventListener('click', prevImage);
+            }
+
+            if (arrowRight) {
+                arrowRight.addEventListener('click', nextImage);
+            }
         });
     }
 
