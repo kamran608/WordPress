@@ -1500,8 +1500,7 @@ registerBlockType('swrice/screenshots-section', {
         screenshotsHeading: { type: 'string', default: 'Screenshots' },
         screenshotsIcon: { type: 'string', default: '📸' },
         screenshotsDescription: { type: 'string', default: 'Take a look at our plugin in action' },
-        screenshotItems: { type: 'array', default: [] },
-        screenshotsBackgroundColor: { type: 'string', default: '#f0f8ff' },
+        screenshotItems: { type: 'array', default: [] }
     },
     edit: (props) => {
         const { attributes, setAttributes } = props;
@@ -1529,12 +1528,6 @@ registerBlockType('swrice/screenshots-section', {
                         rows: 3,
                         help: 'Brief description of the screenshots section'
                     })
-                    }),
-                    createElement(TextControl, {
-                        label: 'Background Color',
-                        value: getAttr('screenshotsBackgroundColor'),
-                        onChange: (val) => setAttributes({ screenshotsBackgroundColor: val }),
-                        help: 'Background color for the screenshots section (e.g., #f0f8ff)'
                 ),
                 createElement(PanelBody, { title: 'Screenshot Gallery', initialOpen: false },
                     // Custom Screenshots Repeater with Media Library Support
@@ -1701,7 +1694,7 @@ registerBlockType('swrice/screenshots-section', {
             // Block Preview
             createElement('div', { className: 'sgpb-plugin-page-editor' },
                 createElement('div', { className: 'sppm-plugin-page' },
-                    createElement('section', { className: 'sppm-section sppm-screenshots', style: { backgroundColor: getAttr('screenshotsBackgroundColor', '#f0f8ff') } },
+                    createElement('section', { className: 'sppm-section sppm-screenshots' },
                         getAttr('screenshotsHeading') ?
                             createElement('h2', { className: 'sppm-section-title' },
                                 getAttr('screenshotsIcon') ? 
@@ -1777,8 +1770,7 @@ registerBlockType('swrice/video-tutorial-section', {
         videoUrl: { type: 'string', default: '' },
         videoTitle: { type: 'string', default: 'Plugin Tutorial' },
         videoDuration: { type: 'string', default: '' },
-        videoThumbnailUrl: { type: 'string', default: '' },
-        videoTutorialBackgroundColor: { type: 'string', default: '#fff5f5' },
+        videoThumbnailUrl: { type: 'string', default: '' }
     },
     edit: (props) => {
         const { attributes, setAttributes } = props;
@@ -1806,12 +1798,6 @@ registerBlockType('swrice/video-tutorial-section', {
                         rows: 3,
                         help: 'Brief description of the video tutorial'
                     })
-                    }),
-                    createElement(TextControl, {
-                        label: 'Background Color',
-                        value: getAttr('videoTutorialBackgroundColor'),
-                        onChange: (val) => setAttributes({ videoTutorialBackgroundColor: val }),
-                        help: 'Background color for the video tutorial section (e.g., #fff5f5)'
                 ),
                 createElement(PanelBody, { title: 'Video Settings', initialOpen: false },
                     createElement(TextControl, {
@@ -1847,7 +1833,7 @@ registerBlockType('swrice/video-tutorial-section', {
             // Block Preview
             createElement('div', { className: 'sgpb-plugin-page-editor' },
                 createElement('div', { className: 'sppm-plugin-page' },
-                    createElement('section', { className: 'sppm-section sppm-video-tutorial', style: { backgroundColor: getAttr('videoTutorialBackgroundColor', '#fff5f5') } },
+                    createElement('section', { className: 'sppm-section sppm-video-tutorial' },
                         getAttr('videoTutorialHeading') ?
                             createElement('h2', { className: 'sppm-section-title' },
                                 getAttr('videoTutorialIcon') ? 

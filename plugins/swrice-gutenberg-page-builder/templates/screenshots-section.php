@@ -9,6 +9,7 @@ $screenshots_heading = isset($attributes['screenshotsHeading']) ? $attributes['s
 $screenshots_icon = isset($attributes['screenshotsIcon']) ? $attributes['screenshotsIcon'] : '📸';
 $screenshots_description = isset($attributes['screenshotsDescription']) ? $attributes['screenshotsDescription'] : '';
 $screenshot_items = isset($attributes['screenshotItems']) ? $attributes['screenshotItems'] : array();
+$screenshots_bg_color = isset($attributes['screenshotsBackgroundColor']) ? $attributes['screenshotsBackgroundColor'] : '#f0f8ff';
 
 if (empty($screenshot_items) || !is_array($screenshot_items)) return;
 
@@ -16,7 +17,7 @@ $gallery_id = uniqid('sppm-gallery-');
 $total_slides = count($screenshot_items);
 ?>
 
-<section class="sppm-section sppm-screenshots-section">
+<section class="sppm-section sppm-screenshots-section" style="background-color: <?php echo esc_attr($screenshots_bg_color); ?>">
     <div class="sppm-section-header">
         <h2 class="sppm-section-title">
             <?php if ($screenshots_icon): ?><span class="sppm-section-icon"><?php echo $screenshots_icon; ?></span><?php endif; ?>
