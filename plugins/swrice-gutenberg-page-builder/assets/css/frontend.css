@@ -1756,3 +1756,19 @@
         gap: 8px;
     }
 }
+
+/* Screenshots Section */
+.sppm-screenshots-section {
+    background: linear-gradient(135deg, #f0f8ff 0%, #ffffff 100%);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+}
+
+/* Video Tutorial Section */
+.sppm-video-tutorial-section {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+}
