@@ -12,7 +12,6 @@ $video_url = isset($attributes['videoUrl']) ? $attributes['videoUrl'] : '';
 $video_title = isset($attributes['videoTitle']) ? $attributes['videoTitle'] : 'Plugin Tutorial';
 $video_duration = isset($attributes['videoDuration']) ? $attributes['videoDuration'] : '';
 $video_thumbnail = isset($attributes['videoThumbnailUrl']) ? $attributes['videoThumbnailUrl'] : '';
-$video_bg_color = isset($attributes['videoTutorialBackgroundColor']) ? $attributes['videoTutorialBackgroundColor'] : '#fff5f5';
 
 if (empty($video_url)) return;
 
@@ -44,7 +43,7 @@ if (strpos($video_url, 'youtube.com') !== false || strpos($video_url, 'youtu.be'
 $vid_container_id = uniqid('sppm-video-');
 ?>
 
-<section class="sppm-section sppm-video-tutorial-section" style="background-color: <?php echo esc_attr($video_bg_color); ?>">
+<section class="sppm-section sppm-video-tutorial-section">
     <div class="sppm-section-header">
         <h2 class="sppm-section-title">
             <?php if ($video_icon): ?><span class="sppm-section-icon"><?php echo $video_icon; ?></span><?php endif; ?>
@@ -136,3 +135,4 @@ $vid_container_id = uniqid('sppm-video-');
         </div>
     </div>
 </section>
+
