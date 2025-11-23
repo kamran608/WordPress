@@ -44,14 +44,16 @@ $total_slides = count($screenshot_items);
             
             <!-- Navigation Arrows -->
             <?php if ($total_slides > 1): ?>
-            <button class="sppm-nav-arrow sppm-nav-prev" type="button" aria-label="Previous screenshot">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="15,18 9,12 15,6"></polyline>
+            <button class="sppm-nav-arrow sppm-nav-prev" type="button" aria-label="Previous screenshot"
+                    style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:4px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;z-index:10;">
+                <svg class="sppm-icon sppm-icon-arrow" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M15 18 L9 12 L15 6"></path>
                 </svg>
             </button>
-            <button class="sppm-nav-arrow sppm-nav-next" type="button" aria-label="Next screenshot">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="9,18 15,12 9,6"></polyline>
+            <button class="sppm-nav-arrow sppm-nav-next" type="button" aria-label="Next screenshot"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;padding:4px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;z-index:10;">
+                <svg class="sppm-icon sppm-icon-arrow" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M9 6 L15 12 L9 18"></path>
                 </svg>
             </button>
             <?php endif; ?>
