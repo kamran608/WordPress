@@ -32,6 +32,9 @@ class Swrice_Gutenberg_Page_Builder {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_assets'));
         add_action('enqueue_block_editor_assets', array($this, 'enqueue_editor_assets'));
         add_filter('block_categories_all', array($this, 'add_block_categories'), 10, 2);
+        
+        // Add Yoast SEO integration
+        add_filter('wpseo_pre_analysis_post_content', array($this, 'add_swrice_content_to_yoast'), 10, 2);
     }
     
     /**
@@ -60,6 +63,15 @@ class Swrice_Gutenberg_Page_Builder {
             SGPB_VERSION,
             true
         );
+        
+        // Enqueue Yoast SEO integration script
+        wp_enqueue_script(
+            'swrice-yoast-seo-integration',
+            SGPB_PLUGIN_URL . 'assets/js/yoast-seo-integration.js',
+            array('jquery'),
+            SGPB_VERSION,
+            true
+        );
     }
     
     /**
@@ -71,6 +83,15 @@ class Swrice_Gutenberg_Page_Builder {
             SGPB_PLUGIN_URL . 'assets/css/editor.css',
             array(),
             SGPB_VERSION . '-' . time() // Cache busting for development
+        );
+        
+        // Enqueue Yoast SEO integration script for editor
+        wp_enqueue_script(
+            'swrice-yoast-seo-integration-editor',
+            SGPB_PLUGIN_URL . 'assets/js/yoast-seo-integration.js',
+            array('wp-blocks', 'wp-element', 'wp-data'),
+            SGPB_VERSION,
+            true
         );
     }
     
@@ -363,6 +384,103 @@ class Swrice_Gutenberg_Page_Builder {
                 'pluginPrice' => array('type' => 'string', 'default' => '29')
             )
         ));
+    }
+    
+    /**
+     * Add Swrice block content to Yoast SEO analysis
+     * 
+     * @param string $content The current post content
+     * @param WP_Post $post The post object
+     * @return string Modified content with Swrice block data
+     */
+    public function add_swrice_content_to_yoast($content, $post) {
+        // Only process if we have a post
+        if (!$post || !isset($post->ID)) {
+            return $content;
+        }
+        
+        // Get the post content and parse blocks
+        $post_content = get_post_field('post_content', $post->ID);
+        
+        if (empty($post_content)) {
+            return $content;
+        }
+        
+        // Parse Gutenberg blocks
+        $blocks = parse_blocks($post_content);
+        $swrice_content = '';
+        
+        // Extract content from Swrice blocks
+        foreach ($blocks as $block) {
+            if (isset($block['blockName']) && strpos($block['blockName'], 'swrice/') === 0) {
+                $swrice_content .= ' ' . $this->extract_block_content($block);
+            }
+        }
+        
+        // Add the extracted content to the original content
+        if (!empty($swrice_content)) {
+            $content .= ' ' . trim($swrice_content);
+        }
+        
+        return $content;
+    }
+    
+    /**
+     * Extract text content from a Swrice block
+     * 
+     * @param array $block The block data
+     * @return string Extracted text content
+     */
+    private function extract_block_content($block) {
+        $content = '';
+        
+        if (!isset($block['attrs']) || !is_array($block['attrs'])) {
+            return $content;
+        }
+        
+        $attributes = $block['attrs'];
+        
+        // Common text attributes to extract
+        $text_attributes = array(
+            'pluginName', 'heroSubtitle', 'problemHeading', 'solutionHeading',
+            'featuresHeading', 'faqHeading', 'howItWorksHeading', 'testimonialsHeading',
+            'bonusesHeading', 'guaranteeHeading', 'whyChooseHeading', 'aboutHeading',
+            'finalCtaHeading', 'screenshotsHeading', 'videoTutorialHeading',
+            'versionChangelogHeading', 'content', 'description', 'text', 'ctaTitle',
+            'aboutDescription', 'guaranteeDescription', 'solutionDescription'
+        );
+        
+        // Extract text from string attributes
+        foreach ($text_attributes as $attr) {
+            if (isset($attributes[$attr]) && is_string($attributes[$attr])) {
+                $content .= ' ' . strip_tags($attributes[$attr]);
+            }
+        }
+        
+        // Extract text from array attributes
+        $array_attributes = array(
+            'problemItems', 'features', 'faqItems', 'howItWorksSteps',
+            'testimonials', 'bonuses', 'whyChooseItems', 'screenshots'
+        );
+        
+        foreach ($array_attributes as $attr) {
+            if (isset($attributes[$attr]) && is_array($attributes[$attr])) {
+                foreach ($attributes[$attr] as $item) {
+                    if (is_string($item)) {
+                        $content .= ' ' . strip_tags($item);
+                    } elseif (is_array($item)) {
+                        // Extract text from object properties
+                        foreach ($item as $value) {
+                            if (is_string($value)) {
+                                $content .= ' ' . strip_tags($value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return trim($content);
     }
     
     // Render callbacks for individual blocks
