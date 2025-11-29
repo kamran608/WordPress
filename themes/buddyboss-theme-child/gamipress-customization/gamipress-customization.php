@@ -224,6 +224,7 @@ class GamiPress_Leaderboard_Customization {
      * @return string The calculated average points
      */
     public function gamipress_average_points_shortcode( $atts ) {
+
         $atts = shortcode_atts( array(
             'user_id' => get_current_user_id(),
             'type'    => 'energiepunkte',
@@ -238,12 +239,38 @@ class GamiPress_Leaderboard_Customization {
 
         $average = $this->calculate_daily_average( $user_id, $type );
 
+        // Determine grade based on average
+        if ( $average < 5 ) {
+            $grade = 0;
+        } elseif ( $average < 10 ) {
+            $grade = 1;
+        } elseif ( $average < 15 ) {
+            $grade = 2;
+        } elseif ( $average < 20 ) {
+            $grade = 3;
+        } elseif ( $average < 25 ) {
+            $grade = 4;
+        } elseif ( $average < 30 ) {
+            $grade = 5;
+        } elseif ( $average < 35 ) {
+            $grade = 6;
+        } else {
+            $grade = 7;
+        }
+
+        // Image URL
+        $image_url = get_stylesheet_directory_uri() . '/assets/images/grade-' . $grade . '.png';
+
+        // Output
         return sprintf(
-            '<div class="gamipress-daily-practice" style="text-align:center; font-weight:bold; font-size:1.5em; color:#333;">%s</div>',
-            sprintf(
-                __( 'Deine durchschnittliche tägliche Trainingsdauer der letzten 30 Tage: %s Minuten', 'gamipress-leaderboards' ),
-                $average
-            )
+            '<div class="gamipress-daily-practice" style="text-align:center; font-weight:bold; font-size:1.5em; color:#333;">
+                <div style="margin-bottom:5px;">Deine durchschnittliche tägliche Trainingsdauer der letzten 30 Tage</div>
+                <div style="font-size: 32px; margin: 16px auto 30px auto; font-weight: bold; color: #3e0810; border-bottom: 3px solid black; width: max-content;">%s Minuten</div>
+                <img src="%s" alt="Grade %d">
+            </div>',
+            $average,
+            esc_url( $image_url ),
+            $grade
         );
     }
 }
