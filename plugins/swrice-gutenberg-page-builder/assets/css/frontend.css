@@ -27,10 +27,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.45;
-    margin: 0;
-    padding: 0;
+    margin: 20px 0;
+    padding: 0 50px;
 }
-
 /* Ensure all elements use Inter font */
 .sppm-plugin-page * {
     font-family: inherit;
@@ -71,11 +70,6 @@
 .wp-block-swrice-about-section *,
 .wp-block-swrice-final-cta-section * {
     font-family: inherit;
-}
-
-.sppm-container {
-    margin: 20px 0;
-    padding: 0 50px;
 }
 
 /* Hero Section */
@@ -302,7 +296,8 @@
 .sppm-feature-desc {
     margin: 0;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 /* Sidebar */
@@ -512,6 +507,7 @@
 /* Section Headers */
 .sppm-section-header {
     text-align: center;
+    margin-bottom: 40px;
 }
 .sppm-section-title {
     font-size: 32px;
@@ -595,6 +591,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 32px;
+    margin-top: 30px;
 }
 
 .sppm-step-card {
@@ -700,13 +697,6 @@
 
 .sppm-feature-card-body {
     /* No additional styling needed */
-}
-
-.sppm-feature-desc {
-    color: var(--muted);
-    margin: 0;
-    line-height: 1.5;
-    font-size: 14px;
 }
 
 /* Testimonials Section */
@@ -1226,6 +1216,10 @@
     .sppm-faq-title {
         font-size: 20px;
     }
+    .sppm-hero-ctas {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 /* WordPress.org Style Screenshots Gallery */
@@ -1705,6 +1699,15 @@
     
     .sppm-video-title {
         font-size: 16px;
+    }
+    .sppm-container {
+        padding: 0;
+    }
+    .sppm-plugin-page {
+        padding: 0 20px;
+    }
+    .sppm-section-title {
+        flex-direction: column;
     }
 }
 

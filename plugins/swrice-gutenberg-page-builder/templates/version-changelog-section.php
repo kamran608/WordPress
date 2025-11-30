@@ -142,22 +142,6 @@ $changelog_items = isset($attributes['changelogItems']) ? $attributes['changelog
     overflow: hidden;
 }
 
-.sppm-current-version-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: shimmer 4s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(180deg); }
-}
-
 .sppm-version-header {
     display: flex;
     align-items: center;

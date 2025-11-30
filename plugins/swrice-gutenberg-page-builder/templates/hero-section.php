@@ -15,7 +15,7 @@ $hero_image = isset($attributes['heroImageUrl']) ? $attributes['heroImageUrl'] :
 ?>
 
 <!-- HERO SECTION - EXACT MATCH WITH ORIGINAL -->
-<div class="sppm-plugin-page">
+<div class="sppm-plugin-page-hero">
     <div class="sppm-container">
         <section class="sppm-hero">
     <div class="sppm-hero-left">
