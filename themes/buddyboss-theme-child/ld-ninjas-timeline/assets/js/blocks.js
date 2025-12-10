@@ -8,7 +8,7 @@
     'use strict';
 
     const { registerBlockType } = wp.blocks;
-    const { InspectorControls } = wp.blockEditor;
+    const { InspectorControls, MediaUpload, MediaUploadCheck } = wp.blockEditor;
     const { PanelBody, TextControl, TextareaControl, SelectControl, Button } = wp.components;
     const { Fragment, createElement: el } = wp.element;
     const { __ } = wp.i18n;
@@ -20,28 +20,40 @@
             title: 'You\'re moving forward — but something feels off',
             content: 'You\'re getting things done — work, family, responsibilities. But deep down, something feels misaligned. Your life is moving, but not in the direction your heart truly longs for.',
             position: 'left',
-            icon: '<svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 00-5 5v1H6a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2v-6a2 2 0 00-2-2h-1V7a5 5 0 00-5-5z"/></svg>'
+            iconType: 'svg',
+            icon: '<svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 00-5 5v1H6a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2v-6a2 2 0 00-2-2h-1V7a5 5 0 00-5-5z"/></svg>',
+            iconId: 0,
+            iconUrl: ''
         },
         {
             id: 2,
             title: 'Feeling "off" is about disconnection',
             content: 'That misalignment starts in one place: disconnection from Allah. Real connection begins by knowing Him — not just knowing about Him — and letting that knowledge shape how you think, work, and live.',
             position: 'right',
-            icon: '<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 3a6 6 0 110 12 6 6 0 010-12z"/></svg>'
+            iconType: 'svg',
+            icon: '<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 3a6 6 0 110 12 6 6 0 010-12z"/></svg>',
+            iconId: 0,
+            iconUrl: ''
         },
         {
             id: 3,
             title: 'Connecting with Allah starts with His Names',
             content: 'If you want to know someone, you start with their name. Allah has revealed over 100 Names for Himself — each one a gateway to understanding Him. Your heart will find peace in knowing Him — and aligning your life around that knowing.',
             position: 'left',
-            icon: '<svg viewBox="0 0 24 24"><path d="M3 5h18v2H3zM3 11h18v2H3zM3 17h18v2H3z"/></svg>'
+            iconType: 'svg',
+            icon: '<svg viewBox="0 0 24 24"><path d="M3 5h18v2H3zM3 11h18v2H3zM3 17h18v2H3z"/></svg>',
+            iconId: 0,
+            iconUrl: ''
         },
         {
             id: 4,
             title: 'One Name, One course, One transformation at a time',
             content: 'Each course is logically structured — with pauses and reflections to let you absorb and believe. As you progress, your heart begins to change. Belief becomes transformation. Automatically.',
             position: 'right',
-            icon: '<svg viewBox="0 0 24 24"><path d="M12 2l3 6 6 .5-4.5 3.75L19 20l-7-4-7 4 1.5-7.75L3 8.5 9 8z"/></svg>'
+            iconType: 'svg',
+            icon: '<svg viewBox="0 0 24 24"><path d="M12 2l3 6 6 .5-4.5 3.75L19 20l-7-4-7 4 1.5-7.75L3 8.5 9 8z"/></svg>',
+            iconId: 0,
+            iconUrl: ''
         }
     ];
 
@@ -98,7 +110,10 @@
                     title: 'New Timeline Item',
                     content: 'Add your content here...',
                     position: timelineItems.length % 2 === 0 ? 'left' : 'right',
-                    icon: availableIcons.circle
+                    iconType: 'svg',
+                    icon: availableIcons.circle,
+                    iconId: 0,
+                    iconUrl: ''
                 };
                 setAttributes({ timelineItems: [...timelineItems, newItem] });
             };
@@ -127,22 +142,29 @@
 
             // Render timeline preview
             const renderTimelinePreview = () => {
-                return el('div', { className: 'ld-timeline-wrapper' },
-                    el('div', { className: 'ld-center-line' }),
+                return el('div', { className: 'timeline-wrapper' },
+                    el('div', { className: 'center-line' }),
                     timelineItems.map((item, index) => 
                         el('div', { 
                             key: item.id, 
-                            className: `ld-timeline-item ${item.position}` 
+                            className: `timeline-item ${item.position}` 
                         },
-                            el('div', { className: 'ld-card' },
+                            el('div', { className: 'card' },
                                 el('h3', {}, item.title),
                                 el('p', {}, item.content)
                             ),
-                            el('div', { className: 'ld-icon' },
+                            el('div', { className: 'icon' },
                                 el('div', { 
-                                    className: 'ld-icon-inner',
-                                    dangerouslySetInnerHTML: { __html: item.icon }
-                                })
+                                    className: 'icon-inner'
+                                },
+                                    item.iconType === 'image' && item.iconUrl ? 
+                                        el('img', { 
+                                            src: item.iconUrl, 
+                                            alt: item.title,
+                                            style: { width: '28px', height: '28px', objectFit: 'contain' }
+                                        }) :
+                                        el('div', { dangerouslySetInnerHTML: { __html: item.icon } })
+                                )
                             )
                         )
                     )
@@ -185,14 +207,66 @@
                                         onChange: (value) => updateTimelineItem(index, 'position', value)
                                     }),
                                     el(SelectControl, {
-                                        label: __('Icon', 'ld-ninjas-timeline'),
-                                        value: Object.keys(availableIcons).find(key => availableIcons[key] === item.icon) || 'circle',
-                                        options: Object.keys(availableIcons).map(key => ({
-                                            label: key.charAt(0).toUpperCase() + key.slice(1),
-                                            value: key
-                                        })),
-                                        onChange: (value) => updateTimelineItem(index, 'icon', availableIcons[value])
+                                        label: __('Icon Type', 'ld-ninjas-timeline'),
+                                        value: item.iconType || 'svg',
+                                        options: [
+                                            { label: __('SVG Icon', 'ld-ninjas-timeline'), value: 'svg' },
+                                            { label: __('Upload Image', 'ld-ninjas-timeline'), value: 'image' }
+                                        ],
+                                        onChange: (value) => updateTimelineItem(index, 'iconType', value)
                                     }),
+                                    item.iconType === 'svg' ? 
+                                        el(SelectControl, {
+                                            label: __('SVG Icon', 'ld-ninjas-timeline'),
+                                            value: Object.keys(availableIcons).find(key => availableIcons[key] === item.icon) || 'circle',
+                                            options: Object.keys(availableIcons).map(key => ({
+                                                label: key.charAt(0).toUpperCase() + key.slice(1),
+                                                value: key
+                                            })),
+                                            onChange: (value) => updateTimelineItem(index, 'icon', availableIcons[value])
+                                        }) :
+                                        el(MediaUploadCheck, {},
+                                            el(MediaUpload, {
+                                                onSelect: (media) => {
+                                                    updateTimelineItem(index, 'iconId', media.id);
+                                                    updateTimelineItem(index, 'iconUrl', media.url);
+                                                },
+                                                allowedTypes: ['image'],
+                                                value: item.iconId,
+                                                render: ({ open }) => (
+                                                    el('div', {},
+                                                        el('p', {}, __('Icon Image', 'ld-ninjas-timeline')),
+                                                        item.iconUrl ? 
+                                                            el('div', {},
+                                                                el('img', { 
+                                                                    src: item.iconUrl, 
+                                                                    alt: item.title,
+                                                                    style: { width: '50px', height: '50px', objectFit: 'contain', marginBottom: '10px' }
+                                                                }),
+                                                                el('br'),
+                                                                el(Button, {
+                                                                    onClick: open,
+                                                                    isSecondary: true
+                                                                }, __('Change Image', 'ld-ninjas-timeline')),
+                                                                el('br'),
+                                                                el(Button, {
+                                                                    onClick: () => {
+                                                                        updateTimelineItem(index, 'iconId', 0);
+                                                                        updateTimelineItem(index, 'iconUrl', '');
+                                                                    },
+                                                                    isDestructive: true,
+                                                                    isSmall: true,
+                                                                    style: { marginTop: '5px' }
+                                                                }, __('Remove Image', 'ld-ninjas-timeline'))
+                                                            ) :
+                                                            el(Button, {
+                                                                onClick: open,
+                                                                isPrimary: true
+                                                            }, __('Select Image', 'ld-ninjas-timeline'))
+                                                    )
+                                                )
+                                            })
+                                        ),
                                     el('div', { className: 'timeline-item-actions' },
                                         el(Button, {
                                             isSmall: true,

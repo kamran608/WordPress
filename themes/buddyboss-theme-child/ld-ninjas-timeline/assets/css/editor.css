@@ -8,7 +8,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* Editor preview styles - same as frontend but with editor-specific adjustments */
-.wp-block-ld-ninjas-timeline .ld-timeline-wrapper {
+.wp-block-ld-ninjas-timeline .timeline-wrapper {
     width: 100%;
     max-width: 100%;
     margin: 40px 0;
@@ -19,7 +19,7 @@
     border-radius: 20px;
 }
 
-.wp-block-ld-ninjas-timeline .ld-center-line {
+.wp-block-ld-ninjas-timeline .center-line {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -31,13 +31,13 @@
     z-index: 1;
 }
 
-.wp-block-ld-ninjas-timeline .ld-timeline-item {
+.wp-block-ld-ninjas-timeline .timeline-item {
     width: 100%;
     position: relative;
     margin: 120px 0;
 }
 
-.wp-block-ld-ninjas-timeline .ld-card {
+.wp-block-ld-ninjas-timeline .card {
     width: 430px;
     background: white;
     padding: 28px 34px;
@@ -48,7 +48,7 @@
     z-index: 10;
 }
 
-.wp-block-ld-ninjas-timeline .ld-card h3 {
+.wp-block-ld-ninjas-timeline .card h3 {
     margin: 0 0 12px 0;
     font-size: 20px;
     font-weight: 700;
@@ -56,7 +56,7 @@
     font-family: "Inter", sans-serif;
 }
 
-.wp-block-ld-ninjas-timeline .ld-card p {
+.wp-block-ld-ninjas-timeline .card p {
     margin: 0;
     color: #495063;
     line-height: 1.65;
@@ -64,15 +64,15 @@
     font-family: "Inter", sans-serif;
 }
 
-.wp-block-ld-ninjas-timeline .ld-timeline-item.left .ld-card {
+.wp-block-ld-ninjas-timeline .left .card {
     margin-left: 28px;
 }
 
-.wp-block-ld-ninjas-timeline .ld-timeline-item.right .ld-card {
+.wp-block-ld-ninjas-timeline .right .card {
     margin-left: calc(50% + 70px);
 }
 
-.wp-block-ld-ninjas-timeline .ld-card:after {
+.wp-block-ld-ninjas-timeline .card:after {
     content: "";
     position: absolute;
     top: 50%;
@@ -85,15 +85,15 @@
     z-index: 5;
 }
 
-.wp-block-ld-ninjas-timeline .ld-timeline-item.left .ld-card:after { 
+.wp-block-ld-ninjas-timeline .left .card:after { 
     right: -32px; 
 }
 
-.wp-block-ld-ninjas-timeline .ld-timeline-item.right .ld-card:after { 
+.wp-block-ld-ninjas-timeline .right .card:after { 
     left: -32px; 
 }
 
-.wp-block-ld-ninjas-timeline .ld-icon {
+.wp-block-ld-ninjas-timeline .icon {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -110,7 +110,7 @@
     box-shadow: 0 6px 20px rgba(12, 22, 56, 0.10);
 }
 
-.wp-block-ld-ninjas-timeline .ld-icon-inner {
+.wp-block-ld-ninjas-timeline .icon-inner {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -120,10 +120,16 @@
     justify-content: center;
 }
 
-.wp-block-ld-ninjas-timeline .ld-icon svg {
+.wp-block-ld-ninjas-timeline .icon svg {
     width: 28px;
     height: 28px;
     fill: #7B40C9;
+}
+
+.wp-block-ld-ninjas-timeline .icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
 }
 
 /* Editor-specific styles */
@@ -193,32 +199,32 @@
 
 /* Editor responsive adjustments */
 @media (max-width: 768px) {
-    .wp-block-ld-ninjas-timeline .ld-timeline-wrapper {
+    .wp-block-ld-ninjas-timeline .timeline-wrapper {
         margin: 20px 0;
         padding: 20px 15px;
     }
     
-    .wp-block-ld-ninjas-timeline .ld-card {
+    .wp-block-ld-ninjas-timeline .card {
         width: 100%;
         max-width: 300px;
     }
     
-    .wp-block-ld-ninjas-timeline .ld-timeline-item.left .ld-card,
-    .wp-block-ld-ninjas-timeline .ld-timeline-item.right .ld-card {
+    .wp-block-ld-ninjas-timeline .left .card,
+    .wp-block-ld-ninjas-timeline .right .card {
         margin-left: 60px;
     }
     
-    .wp-block-ld-ninjas-timeline .ld-center-line {
+    .wp-block-ld-ninjas-timeline .center-line {
         left: 30px;
         transform: none;
     }
     
-    .wp-block-ld-ninjas-timeline .ld-icon {
+    .wp-block-ld-ninjas-timeline .icon {
         left: 30px;
         transform: translateY(-50%);
     }
     
-    .wp-block-ld-ninjas-timeline .ld-card:after {
+    .wp-block-ld-ninjas-timeline .card:after {
         display: none;
     }
 }
