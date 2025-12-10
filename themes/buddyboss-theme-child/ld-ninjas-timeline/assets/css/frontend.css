@@ -9,14 +9,12 @@
 
 /* MAIN WRAPPER */
 .timeline-wrapper {
-    width: 100% !important;
-    max-width: 1200px !important;
-    margin: 120px auto !important;
-    position: relative !important;
-    font-family: "Inter", sans-serif !important;
-    padding: 0 !important; /* Ensure no padding */
-    box-sizing: border-box !important;
-    overflow: visible !important;
+    width: 100%;
+    max-width: 1200px;
+    margin: 120px auto;
+    position: relative;
+    font-family: "Inter", sans-serif;
+    padding: 0;
 }
 
 /* GOLDEN LINE (TOP & BOTTOM EXACT LIKE IMAGE) */
@@ -37,19 +35,19 @@
     width: 100%;
     position: relative;
     margin: 120px 0;
+    min-height: 200px; /* Ensure space for absolutely positioned cards */
 }
 
 /* CARD */
 .card {
-    width: 430px !important;
-    background: white !important;
-    padding: 28px 34px !important;
-    border-radius: 14px !important;
-    box-shadow: 0 6px 18px rgba(2, 16, 40, 0.06) !important;
-    border: 1px solid rgba(2,16,40,0.08) !important;
-    position: relative !important;
-    z-index: 10 !important;
-    box-sizing: border-box !important;
+    max-width: 430px;
+    background: white;
+    padding: 28px 34px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(2, 16, 40, 0.06);
+    border: 1px solid rgba(2,16,40,0.08);
+    position: relative;
+    z-index: 10;
 }
 
 .card h3 {
@@ -70,14 +68,16 @@
 
 /* LEFT CARD */
 .left .card {
-    margin-right: calc(50% + 70px);
-    margin-left: 0 !important;
+    position: absolute;
+    left: 0;
+    right: calc(50% + 70px);
 }
 
 /* RIGHT CARD */
 .right .card {
-    margin-left: calc(50% + 70px);
-    margin-right: 0 !important;
+    position: absolute;
+    right: 0;
+    left: calc(50% + 70px);
 }
 
 /* SMALL CONNECTOR BAR */
