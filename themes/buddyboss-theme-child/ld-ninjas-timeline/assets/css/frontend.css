@@ -14,6 +14,7 @@
     margin: 120px auto;
     position: relative;
     font-family: "Inter", sans-serif;
+    padding: 0; /* Ensure no padding */
 }
 
 /* GOLDEN LINE (TOP & BOTTOM EXACT LIKE IMAGE) */
@@ -66,7 +67,8 @@
 
 /* LEFT CARD */
 .left .card {
-    /* No margin-left for left cards - they should align to the left naturally */
+    margin-right: calc(50% + 70px);
+    margin-left: 0;
 }
 
 /* RIGHT CARD */

@@ -65,7 +65,8 @@
 }
 
 .wp-block-ld-ninjas-timeline .left .card {
-    /* No margin-left for left cards - they should align to the left naturally */
+    margin-right: calc(50% + 70px);
+    margin-left: 0;
 }
 
 .wp-block-ld-ninjas-timeline .right .card {
