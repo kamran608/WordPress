@@ -9,12 +9,14 @@
 
 /* MAIN WRAPPER */
 .timeline-wrapper {
-    width: 100%;
-    max-width: 1200px;
-    margin: 120px auto;
-    position: relative;
-    font-family: "Inter", sans-serif;
-    padding: 0; /* Ensure no padding */
+    width: 100% !important;
+    max-width: 1200px !important;
+    margin: 120px auto !important;
+    position: relative !important;
+    font-family: "Inter", sans-serif !important;
+    padding: 0 !important; /* Ensure no padding */
+    box-sizing: border-box !important;
+    overflow: visible !important;
 }
 
 /* GOLDEN LINE (TOP & BOTTOM EXACT LIKE IMAGE) */
@@ -39,14 +41,15 @@
 
 /* CARD */
 .card {
-    width: 430px;
-    background: white;
-    padding: 28px 34px;
-    border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(2, 16, 40, 0.06);
-    border: 1px solid rgba(2,16,40,0.08);
-    position: relative;
-    z-index: 10;
+    width: 430px !important;
+    background: white !important;
+    padding: 28px 34px !important;
+    border-radius: 14px !important;
+    box-shadow: 0 6px 18px rgba(2, 16, 40, 0.06) !important;
+    border: 1px solid rgba(2,16,40,0.08) !important;
+    position: relative !important;
+    z-index: 10 !important;
+    box-sizing: border-box !important;
 }
 
 .card h3 {
@@ -68,12 +71,13 @@
 /* LEFT CARD */
 .left .card {
     margin-right: calc(50% + 70px);
-    margin-left: 0;
+    margin-left: 0 !important;
 }
 
 /* RIGHT CARD */
 .right .card {
     margin-left: calc(50% + 70px);
+    margin-right: 0 !important;
 }
 
 /* SMALL CONNECTOR BAR */
