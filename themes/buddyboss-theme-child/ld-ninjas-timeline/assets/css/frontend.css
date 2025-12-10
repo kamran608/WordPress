@@ -66,7 +66,7 @@
 
 /* LEFT CARD */
 .left .card {
-    margin-left: 28px;
+    /* No margin-left for left cards - they should align to the left naturally */
 }
 
 /* RIGHT CARD */
