@@ -39,6 +39,16 @@ class LD_Ninjas_Timeline_Block {
      * Register the timeline block
      */
     public function register_block() {
+        // First register the blocks script (following Swrice plugin pattern)
+        wp_register_script(
+            'ld-ninjas-timeline-blocks',
+            get_stylesheet_directory_uri() . '/ld-ninjas-timeline/assets/js/blocks.js',
+            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+            '1.0.0',
+            true
+        );
+        
+        // Then register the block type
         register_block_type('ld-ninjas/timeline', array(
             'editor_script' => 'ld-ninjas-timeline-blocks',
             'render_callback' => array($this, 'render_timeline_block'),
@@ -140,14 +150,6 @@ class LD_Ninjas_Timeline_Block {
      * Enqueue editor assets
      */
     public function enqueue_editor_assets() {
-        wp_enqueue_script(
-            'ld-ninjas-timeline-blocks',
-            get_stylesheet_directory_uri() . '/ld-ninjas-timeline/assets/js/blocks.js',
-            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
-            '1.0.0',
-            true
-        );
-        
         wp_enqueue_style(
             'ld-ninjas-timeline-editor',
             get_stylesheet_directory_uri() . '/ld-ninjas-timeline/assets/css/editor.css',
@@ -161,14 +163,14 @@ class LD_Ninjas_Timeline_Block {
      */
     public function add_block_category($categories, $post) {
         return array_merge(
-            $categories,
             array(
                 array(
                     'slug' => 'ld-ninjas',
-                    'title' => 'LD Ninjas',
+                    'title' => __('LD Ninjas', 'ld-ninjas-timeline'),
                     'icon' => 'clock'
                 )
-            )
+            ),
+            $categories
         );
     }
 }
