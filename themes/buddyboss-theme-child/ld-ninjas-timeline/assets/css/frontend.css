@@ -1,0 +1,185 @@
+/**
+ * LD Ninjas Timeline - Frontend Styles
+ * 
+ * Exact copy of the provided HTML/CSS styling
+ */
+
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* MAIN WRAPPER */
+.timeline-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 120px auto;
+    position: relative;
+    font-family: "Inter", sans-serif;
+    padding: 0;
+}
+
+/* GOLDEN LINE (TOP & BOTTOM EXACT LIKE IMAGE) */
+.center-line {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    top: 80px;            /* EXACT OFFSET FROM TOP */
+    bottom: 80px;         /* EXACT OFFSET FROM BOTTOM */
+    background: #D9A441;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+/* TIMELINE ITEM */
+.timeline-item {
+    width: 100%;
+    position: relative;
+    margin: 120px 0;
+}
+
+/* CARD */
+.card {
+    width: 430px;
+    background: white;
+    padding: 28px 34px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(2, 16, 40, 0.06);
+    border: 1px solid rgba(2,16,40,0.08);
+    position: relative;
+    z-index: 10;
+}
+
+.card h3 {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #082F59;
+    font-family: "Inter", sans-serif;
+}
+
+.card p {
+    margin: 0;
+    color: #495063;
+    line-height: 1.65;
+    font-size: 15px;
+    font-family: "Inter", sans-serif;
+}
+
+/* LEFT CARD */
+.left .card {
+    margin-right: calc(50% + 70px);
+    margin-left: 0;
+}
+
+/* RIGHT CARD */
+.right .card {
+    margin-left: calc(50% + 70px);
+    margin-right: 0;
+}
+
+/* SMALL CONNECTOR BAR */
+.card:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 32px;
+    height: 6px;
+    background: #D9A441;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px rgba(2,16,40,0.07);
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
+.left .card:after { 
+    right: -32px; 
+}
+
+.right .card:after { 
+    left: -32px; 
+}
+
+/* ICON CIRCLE (EXACT CENTERED) */
+.icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 78px;
+    height: 82px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #7B40C9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.icon-inner {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon svg {
+    width: 100%;
+    height: 100%;
+    fill: #7B40C9;
+}
+
+.icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .timeline-wrapper {
+        margin: 60px auto;
+        padding: 20px 15px;
+    }
+    
+    .timeline-item {
+        margin: 80px 0;
+    }
+    
+    .card {
+        width: 100%;
+        max-width: 350px;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .left .card,
+    .right .card {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .center-line {
+        left: 30px;
+        transform: none;
+        top: 40px;
+        bottom: 40px;
+    }
+    
+    .icon {
+        left: 30px;
+        transform: translateY(-50%);
+    }
+    
+    .card:after {
+        display: none;
+    }
+    
+    .left .card,
+    .right .card {
+        margin-left: 80px;
+    }
+}
