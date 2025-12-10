@@ -1,0 +1,180 @@
+/**
+ * LD Ninjas Timeline - Frontend Styles
+ * 
+ * Exact copy of the provided HTML/CSS styling
+ */
+
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* MAIN WRAPPER */
+.ld-timeline-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 120px auto;
+    position: relative;
+    font-family: "Inter", sans-serif;
+    background: linear-gradient(180deg, #F1F7FF 0%, #E8F1FF 100%);
+    padding: 40px 20px;
+    border-radius: 20px;
+}
+
+/* GOLDEN LINE (TOP & BOTTOM EXACT LIKE IMAGE) */
+.ld-center-line {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    top: 80px;            /* EXACT OFFSET FROM TOP */
+    bottom: 80px;         /* EXACT OFFSET FROM BOTTOM */
+    background: #D9A441;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+/* TIMELINE ITEM */
+.ld-timeline-item {
+    width: 100%;
+    position: relative;
+    margin: 120px 0;
+}
+
+/* CARD */
+.ld-card {
+    width: 430px;
+    background: white;
+    padding: 28px 34px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(2, 16, 40, 0.06);
+    border: 1px solid rgba(2,16,40,0.08);
+    position: relative;
+    z-index: 10;
+}
+
+.ld-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #082F59;
+    font-family: "Inter", sans-serif;
+}
+
+.ld-card p {
+    margin: 0;
+    color: #495063;
+    line-height: 1.65;
+    font-size: 15px;
+    font-family: "Inter", sans-serif;
+}
+
+/* LEFT CARD */
+.ld-timeline-item.left .ld-card {
+    margin-left: 28px;
+}
+
+/* RIGHT CARD */
+.ld-timeline-item.right .ld-card {
+    margin-left: calc(50% + 70px);
+}
+
+/* SMALL CONNECTOR BAR */
+.ld-card:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 32px;
+    height: 6px;
+    background: #D9A441;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px rgba(2,16,40,0.07);
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
+.ld-timeline-item.left .ld-card:after { 
+    right: -32px; 
+}
+
+.ld-timeline-item.right .ld-card:after { 
+    left: -32px; 
+}
+
+/* ICON CIRCLE (EXACT CENTERED) */
+.ld-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 78px;
+    height: 85px;
+    border-radius: 50%;
+    background: white;
+    border: 6px solid #7B40C9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    box-shadow: 0 6px 20px rgba(12, 22, 56, 0.10);
+}
+
+.ld-icon-inner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ld-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: #7B40C9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .ld-timeline-wrapper {
+        margin: 60px auto;
+        padding: 20px 15px;
+    }
+    
+    .ld-timeline-item {
+        margin: 80px 0;
+    }
+    
+    .ld-card {
+        width: 100%;
+        max-width: 350px;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .ld-timeline-item.left .ld-card,
+    .ld-timeline-item.right .ld-card {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .ld-center-line {
+        left: 30px;
+        transform: none;
+        top: 40px;
+        bottom: 40px;
+    }
+    
+    .ld-icon {
+        left: 30px;
+        transform: translateY(-50%);
+    }
+    
+    .ld-card:after {
+        display: none;
+    }
+    
+    .ld-timeline-item.left .ld-card,
+    .ld-timeline-item.right .ld-card {
+        margin-left: 80px;
+    }
+}

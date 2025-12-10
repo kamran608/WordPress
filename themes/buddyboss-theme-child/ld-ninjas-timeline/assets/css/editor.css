@@ -1,0 +1,224 @@
+/**
+ * LD Ninjas Timeline - Editor Styles
+ * 
+ * Styles for the Gutenberg editor interface
+ */
+
+/* Import Inter font for editor */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Editor preview styles - same as frontend but with editor-specific adjustments */
+.wp-block-ld-ninjas-timeline .ld-timeline-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin: 40px 0;
+    position: relative;
+    font-family: "Inter", sans-serif;
+    background: linear-gradient(180deg, #F1F7FF 0%, #E8F1FF 100%);
+    padding: 40px 20px;
+    border-radius: 20px;
+}
+
+.wp-block-ld-ninjas-timeline .ld-center-line {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    top: 80px;
+    bottom: 80px;
+    background: #D9A441;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.wp-block-ld-ninjas-timeline .ld-timeline-item {
+    width: 100%;
+    position: relative;
+    margin: 120px 0;
+}
+
+.wp-block-ld-ninjas-timeline .ld-card {
+    width: 430px;
+    background: white;
+    padding: 28px 34px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(2, 16, 40, 0.06);
+    border: 1px solid rgba(2,16,40,0.08);
+    position: relative;
+    z-index: 10;
+}
+
+.wp-block-ld-ninjas-timeline .ld-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #082F59;
+    font-family: "Inter", sans-serif;
+}
+
+.wp-block-ld-ninjas-timeline .ld-card p {
+    margin: 0;
+    color: #495063;
+    line-height: 1.65;
+    font-size: 15px;
+    font-family: "Inter", sans-serif;
+}
+
+.wp-block-ld-ninjas-timeline .ld-timeline-item.left .ld-card {
+    margin-left: 28px;
+}
+
+.wp-block-ld-ninjas-timeline .ld-timeline-item.right .ld-card {
+    margin-left: calc(50% + 70px);
+}
+
+.wp-block-ld-ninjas-timeline .ld-card:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 32px;
+    height: 6px;
+    background: #D9A441;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px rgba(2,16,40,0.07);
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
+.wp-block-ld-ninjas-timeline .ld-timeline-item.left .ld-card:after { 
+    right: -32px; 
+}
+
+.wp-block-ld-ninjas-timeline .ld-timeline-item.right .ld-card:after { 
+    left: -32px; 
+}
+
+.wp-block-ld-ninjas-timeline .ld-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 78px;
+    height: 85px;
+    border-radius: 50%;
+    background: white;
+    border: 6px solid #7B40C9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    box-shadow: 0 6px 20px rgba(12, 22, 56, 0.10);
+}
+
+.wp-block-ld-ninjas-timeline .ld-icon-inner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wp-block-ld-ninjas-timeline .ld-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: #7B40C9;
+}
+
+/* Editor-specific styles */
+.ld-ninjas-timeline-controls {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e1e5e9;
+}
+
+.ld-ninjas-timeline-controls h4 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.timeline-item-control {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.timeline-item-control:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-item-control h5 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.timeline-item-control .components-text-control__input,
+.timeline-item-control .components-textarea-control__input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.timeline-item-control .components-select-control__input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.timeline-item-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.timeline-item-actions .components-button {
+    font-size: 12px;
+}
+
+.add-timeline-item {
+    margin-top: 15px;
+}
+
+.add-timeline-item .components-button {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Editor responsive adjustments */
+@media (max-width: 768px) {
+    .wp-block-ld-ninjas-timeline .ld-timeline-wrapper {
+        margin: 20px 0;
+        padding: 20px 15px;
+    }
+    
+    .wp-block-ld-ninjas-timeline .ld-card {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .wp-block-ld-ninjas-timeline .ld-timeline-item.left .ld-card,
+    .wp-block-ld-ninjas-timeline .ld-timeline-item.right .ld-card {
+        margin-left: 60px;
+    }
+    
+    .wp-block-ld-ninjas-timeline .ld-center-line {
+        left: 30px;
+        transform: none;
+    }
+    
+    .wp-block-ld-ninjas-timeline .ld-icon {
+        left: 30px;
+        transform: translateY(-50%);
+    }
+    
+    .wp-block-ld-ninjas-timeline .ld-card:after {
+        display: none;
+    }
+}
