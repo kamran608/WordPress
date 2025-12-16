@@ -1,0 +1,112 @@
+/* Progress bar preview */
+.gamipress-progress-preview-bar .gamipress-progress-bar {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+}
+
+.gamipress-progress-preview-bar .gamipress-progress-bar .gamipress-progress-bar-completed {
+    min-height: 1rem;
+    text-align: center;
+}
+
+.gamipress-progress-preview-bar .gamipress-progress-bar .gamipress-progress-bar-completed.gamipress-progress-bar-striped {
+    background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    background-image: -o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    -webkit-background-size: 1rem 1rem;
+    background-size: 1rem 1rem;
+}
+
+
+.gamipress-progress-preview-bar .gamipress-progress-bar .gamipress-progress-bar-completed.gamipress-progress-bar-striped.gamipress-progress-bar-animated {
+    -webkit-animation: gamipress-progress-bar-stripes 1s linear infinite;
+    -o-animation: gamipress-progress-bar-stripes 1s linear infinite;
+    animation: gamipress-progress-bar-stripes 1s linear infinite;
+}
+
+@-webkit-keyframes gamipress-gamipress-progress-bar-stripes {
+    from {
+        background-position: 1rem 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+@-o-keyframes gamipress-progress-bar-stripes {
+    from {
+        background-position: 1rem 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+@keyframes gamipress-progress-bar-stripes {
+    from {
+        background-position: 1rem 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+/* Radial bar preview */
+.gamipress-progress-preview-radial-bar .gamipress-progress-radial-bar {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 50%;
+}
+
+.gamipress-progress-preview-radial-bar .gamipress-progress-radial-bar .gamipress-progress-radial-bar-overlay {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+}
+
+/* Image preview */
+.gamipress-progress-image-placeholder {
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+    text-align: center;
+    background: #e9e9e9;
+}
+
+.gamipress-progress-image-placeholder i {
+    line-height: 40px;
+}
+.gamipress-progress-complete-image-placeholder i {
+    color: #888;
+}
+
+.gamipress-progress-incomplete-image-placeholder i {
+    color: #ccc;
+}
+
+/* Preview on widgets area */
+.widget .gamipress-progress-preview {
+    background: transparent;
+    border: none;
+}
+
+/* Shortcode Form */
+.gamipress-shortcode-form .cmb-row.gamipress-progress-preview,
+.gamipress-shortcode-form .cmb-row.gamipress-progress-type {
+    width: 100% !important;
+    border: none !important;
+}

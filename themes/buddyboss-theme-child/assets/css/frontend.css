@@ -1,0 +1,307 @@
+.floating-mini-dashboard {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+}
+.fmd-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.fmd-title {
+    font-weight: 600;
+    color: #333;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 10px;
+}
+.fmd-xp {
+    color: #666;
+}
+.fmd-progress-bar {
+    width: 100%;
+    height: 22px;
+    background: #eee;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+.fmd-progress-fill {
+    height: 100%;
+    background-color: #910000; /* Optional: replace with PHP echo of theme accent */
+}
+.fmd-progress-numbers {
+    text-align: center;
+    line-height: 1.4;
+    font-size: 15px;
+    position: absolute;
+    z-index: 1;
+    bottom: 0px;
+    width: 100%;
+}
+.fmd-percentage {
+    text-align: right;
+    font-size: 12px;
+    margin-top: 5px;
+    color: #888;
+}
+.fmd-top-icon-xp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-right: 20px;
+}
+
+.fmd-top-icon {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.fmd-top-xp {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+.fmd-wrapper {
+    width: 100%;
+}
+
+.user-point-and-levels {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+#item-header-content .bb-user-content-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10%;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+.swr-item-header-content .swr-item-single-flex {
+    flex-flow: column !important;
+}
+.user-point-and-levels .srw-label {
+    margin-bottom: 10px;
+}
+.user-gamipress-tracker .floating-mini-dashboard {
+    background: unset;
+    box-shadow: unset;
+}
+.swr-leaderboard-selectbox {
+    width: 200px;
+}
+.swr-leaderboard-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.leaderboard-results .gamipress-leaderboard-title {
+    display: none;
+}
+.gamipress-leaderboard-table .column-display_name a {
+    color: inherit;
+    font-weight: 600;
+}
+
+@media screen and (max-width: 600px) {
+    .floating-mini-dashboard {
+        top: auto;
+        bottom: 10px;
+        right: 10px;
+        width: 90%;
+    }
+}
+
+
+/* Remove table header on mobile */
+@media (max-width: 500px) {
+.gamipress-leaderboard-table {
+    border: none !important;
+}
+
+.gamipress-leaderboard-table thead {
+    display: none !important;
+}
+
+.gamipress-leaderboard-table tr {
+    display: block !important;
+    background: #fff !important;
+    margin-bottom: 15px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08) !important;
+    overflow: hidden !important;
+}
+
+.gamipress-leaderboard-table td {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+    border-bottom: 1px solid #eee !important;
+    position: relative !important;
+}
+
+.gamipress-leaderboard-table td:last-child {
+    border-bottom: none !important;
+}
+
+/* Column labels */
+
+.gamipress-leaderboard-table .column-level::before {
+    content: "Level" !important;
+}
+
+.gamipress-leaderboard-table .column-avatar::before {
+    content: "Avatar" !important;
+}
+
+.gamipress-leaderboard-table .column-display_name::before {
+    content: "Name" !important;
+}
+
+.gamipress-leaderboard-table .column-points::before {
+    content: "Points" !important;
+}
+
+.gamipress-leaderboard-table td::before {
+    font-weight: bold !important;
+    flex: 0 0 90px !important;
+    color: #333 !important;
+    margin-right: 10px !important;
+    text-align: left !important;
+}
+
+/* Avatar styling */
+.gamipress-leaderboard-table .column-avatar img {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+}
+
+/* Name styling */
+.gamipress-leaderboard-table .column-display_name {
+    font-weight: 600 !important;
+}
+
+/* Points styling */
+.gamipress-leaderboard-table .column-points {
+    /* color: #007bff !important; */
+    font-weight: bold !important;
+}
+}
+
+/* Desktop and tablet */
+@media (min-width: 500px) {
+.gamipress-leaderboard-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+.gamipress-leaderboard-table td,
+.gamipress-leaderboard-table th {
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+    text-align: left !important;
+}
+
+.gamipress-leaderboard-table .column-avatar img {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50% !important;
+}
+}
+
+
+/* Widget leaderboard style */
+.widget .gamipress-leaderboard-table {
+    border: none !important;
+}
+
+.widget .gamipress-leaderboard-table thead {
+    display: none !important;
+}
+
+.widget .gamipress-leaderboard-table tr {
+    display: block !important;
+    background: #fff !important;
+    margin-bottom: 15px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08) !important;
+    overflow: hidden !important;
+}
+
+.widget .gamipress-leaderboard-table td {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+    border-bottom: 1px solid #eee !important;
+    position: relative !important;
+}
+
+.widget .gamipress-leaderboard-table td:last-child {
+    border-bottom: none !important;
+}
+
+/* Column labels */
+
+.widget .gamipress-leaderboard-table .column-level::before {
+    content: "Level" !important;
+}
+
+.widget .gamipress-leaderboard-table .column-avatar::before {
+    content: "Avatar" !important;
+}
+
+.widget .gamipress-leaderboard-table .column-display_name::before {
+    content: "Name" !important;
+}
+
+.widget .gamipress-leaderboard-table .column-points::before {
+    content: "Points" !important;
+}
+
+.widget .gamipress-leaderboard-table td::before {
+    font-weight: bold !important;
+    flex: 0 0 90px !important;
+    color: #333 !important;
+    margin-right: 10px !important;
+    text-align: left !important;
+}
+
+/* Avatar styling */
+.widget .gamipress-leaderboard-table .column-avatar img {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+}
+
+/* Name styling */
+.widget .gamipress-leaderboard-table .column-display_name {
+    font-weight: 600 !important;
+}
+
+/* Points styling */
+.widget .gamipress-leaderboard-table .column-points {
+    /* color: #007bff !important; */
+    font-weight: bold !important;
+}
+.widget.widget_block p {
+    display: none;
+}
+/* Widget Leaderboard style */

@@ -1,0 +1,175 @@
+== Changelog ==
+
+= 1.2.9 =
+
+* **New Features**
+* Added the ability to show the current user ranks progress on Progress shortcode, block and widget.
+
+= 1.2.8 =
+
+* **Improvements**
+* Prevent Javascript errors on blocks editor.
+* Ensure to enqueue wp-color-picker dependency.
+
+= 1.2.7 =
+
+* **Improvements**
+* Added an empty option on Progress block type selects to correctly trigger the field change.
+
+= 1.2.6 =
+
+* **Improvements**
+* Make sure to don't calculate requirement progress for upcoming ranks.
+
+= 1.2.5 =
+
+* **Bug Fixes**
+* Fixed a wrong check that causes rank requirements progress doesn't gets calculated correctly.
+
+= 1.2.4 =
+
+* **Bug Fixes**
+* Fixed requirement trigger type for requirements that requires unlock all achievements of a type.
+
+= 1.2.3 =
+
+* **Bug Fixes**
+* Fixed progress calculation for requirements that requires unlock all achievements of a type.
+
+= 1.2.2 =
+
+* **Improvements**
+* Make use of GamiPress network functions for maximum compatibility on multisites.
+
+= 1.2.1 =
+
+* **New Features**
+* Added support to GamiPress 1.8.0.
+* **Bug Fixes**
+* Fixed progress completion calculation on steps from achievements that can be awarded multiples times.
+
+= 1.2.0 =
+
+* **Bug Fixes**
+* Fixed progress completion calculation on step and rank requirements that user already earned.
+* **Developer Notes**
+* Moved changelog to changelog.txt
+
+= 1.1.9 =
+
+* **Improvements**
+* Improvements on the requirements progress calculation.
+* **Developer Notes**
+* Ensure requirements progress is always filtered.
+
+= 1.1.8 =
+
+* **New Features**
+* Added the shortcode [gamipress_progress].
+* Added the block Progress.
+* Added the widget GamiPress: Progress.
+* **Bug Fixes**
+* Fixed typo on "Radial Bar Size" field.
+* **Improvements**
+* Force complete and incomplete image fit configured dimensions.
+
+= 1.1.7 =
+
+* **New Features**
+* Added support to progress completion calculation based on user points on "Reach a points balance" event.
+* Added support to GamiPress 1.7.0.
+* Added support to the import/export setup tool external images import (for progress complete and incomplete images).
+* **Improvements**
+* Removed built-in color picker and use GamiPress color picker instead.
+
+= 1.1.6 =
+
+* **Bug Fixes**
+* Fixed wrong progress completion calculation on points types.
+* **Improvements**
+* Prevent NaN progress operations result.
+* Prevent division by zero on bar and radial bar.
+
+= 1.1.5 =
+
+* **Bug Fixes**
+* Fixed wrong progress completion calculation on requirements limited by a period of time (daily, weekly, monthly or yearly).
+
+= 1.1.4 =
+
+* **Bug Fixes**
+* Fixed wrong progress completion calculation on sequential achievements steps and sequential rank requirements.
+
+= 1.1.3 =
+
+* **Bug Fixes**
+* Fixed wrong default value of progress attribute on achievement and rank shortcodes.
+
+= 1.1.2 =
+
+* **New features**
+* Added the field "How progress should be calculated?" on achievements and ranks progress ([More information](https://gamipress.com/docs/gamipress-progress/how-progress-will-be-calculated/)).
+* **Improvements**
+* Improved progress completion calculation on points based requirements (like steps based on earn/expend an amount of points).
+
+= 1.1.1 =
+
+* **Bug Fixes**
+* Fixed wrong priority when overwriting a template.
+* **Improvements**
+* Added extra checks to ensure progress output on achievements and ranks if title is not shown.
+* Improvements on achievement and rank completion calculation.
+
+= 1.1.0 =
+
+* **Bug Fixes**
+* Fixed wrong field name on rank requirements progress fields.
+* Fixed progress display on rank requirements.
+* **Developer Notes**
+* Moved changelog to changelog.txt
+
+= 1.0.9 =
+
+* Improvements on rank requirements completion checks.
+
+= 1.0.8 =
+
+* Fixed default rank completion calculation.
+* Improvements on rank completion calculation.
+
+= 1.0.7 =
+
+* Added support for GamiPress Points Deductions.
+* Improvements on rank completion calculation.
+
+= 1.0.6 =
+
+* Updated color picker.
+
+= 1.0.5 =
+
+* Fixed wrong check to determine if progress is enabled on achievements/ranks.
+
+= 1.0.4 =
+
+* Added support for GamiPress ranks.
+* Added progress for ranks and rank requirements.
+* Added completion calculation for achievements earned by rank.
+
+= 1.0.3 =
+
+* Added progress bar text format.
+* Added progress radial bar text format.
+* Improvements on achievement completion calculation when achievement is earned by a required points amount.
+
+= 1.0.2 =
+
+* Fixed wrong achievement completion calculation.
+
+= 1.0.1 =
+
+* Improvements on achievement completion calculation.
+
+= 1.0.0 =
+
+* Initial release.

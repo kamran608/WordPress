@@ -1,0 +1,502 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GamiPress Progress\n"
+"Report-Msgid-Bugs-To: https://gamipress.com/\n"
+"POT-Creation-Date: 2021-01-20 17:55+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"Last-Translator: GamiPress (https://gamipress.com/)\n"
+"Language-Team: GamiPress <contact@gamipress.com>\n"
+"X-Generator: Poedit 2.4.2\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ..\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: libraries\n"
+
+#: gamipress-progress.php:142
+#, php-format
+msgid "GamiPress - Progress requires %s (%s or higher) in order to work. Please install and activate them."
+msgstr ""
+
+#: includes/admin.php:43
+msgid "GamiPress Progress"
+msgstr ""
+
+#: includes/admin.php:46
+msgid "License"
+msgstr ""
+
+#: includes/admin.php:70 includes/shortcodes/gamipress_progress.php:21
+msgid "Progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:25
+msgid "Show progress of points types"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:26
+msgid "Check this option to show a progress of all points awards completed."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:35
+msgid "Points Type Progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:45
+msgid "Show progress of points awards"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:46
+msgid "Check this option to show a progress on each points award."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:55
+msgid "Points Awards Progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:65
+msgid "Show progress of points deductions"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:66
+msgid "Check this option to show a progress on each points deduction."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:75
+msgid "Points Deducts Progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:88
+msgid "Show progress of achievement"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:89
+msgid "Check this option to show a progress of all steps completed."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:95 includes/admin/meta-boxes.php:152
+msgid "How progress should be calculated?"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:96
+msgid "<strong>Steps completed:</strong> Progress will be calculated based on the number of steps completed, for example, if rank has 3 steps and user has completed 2 of this steps then achievement progress will be 2/3."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:97
+msgid "<strong>Steps progress:</strong> Progress will be calculated based on the steps progress, for example, if rank has 3 steps related to comment on a post 3 times (3*3=9) and user has commented 5 times then achievement progress will be 5/9."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:100
+msgid "Steps completed"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:101
+msgid "Steps progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:111
+msgid "Achievement Progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:119
+msgid "Show progress of steps"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:120
+msgid "Check this option to show a progress on each step."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:131
+msgid "Achievement Steps Progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:145
+msgid "Show progress of rank"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:146
+msgid "Check this option to show a progress of all requirements completed."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:153
+msgid "<strong>Rank requirements completed:</strong> Progress will be calculated based on the number of rank requirements completed, for example, if rank has 3 requirements and user has completed 2 of this requirements then rank progress will be 2/3."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:154
+msgid "<strong>Rank requirements progress:</strong> Progress will be calculated based on the rank requirements progress, for example, if rank has 3 requirements related to comment on a post 3 times (3*3=9) and user has commented 5 times then rank progress will be 5/9."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:157
+msgid "Rank requirements completed"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:158
+msgid "Rank requirements progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:168
+msgid "Rank Progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:178
+msgid "Show progress of requirements"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:179
+msgid "Check this option to show a progress on each requirement."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:188
+msgid "Rank Requirements Progress"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:213
+msgid "Preview"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:222
+msgid "Choose the progress type"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:227
+msgid "Text"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:228
+msgid "Progress Bar"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:229
+msgid "Radial Progress Bar"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:230
+msgid "Image"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:241
+msgid "Pattern"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:242
+msgid "Available template tags:"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:259 includes/admin/meta-boxes.php:320
+msgid "Progress Bar Color"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:267
+msgid "Background Color"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:275 includes/admin/meta-boxes.php:336
+msgid "Show Progress Text"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:280 includes/admin/meta-boxes.php:341
+msgid "Progress Text Color"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:288 includes/admin/meta-boxes.php:349
+msgid "Progress Text Format"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:291 includes/admin/meta-boxes.php:352
+msgid "Percent (60%)"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:292 includes/admin/meta-boxes.php:353
+msgid "Fraction (3/5)"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:299
+msgid "Stripe Style"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:304
+msgid "Animate Stripe"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:328
+msgid "Progress Bar Background Color"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:360
+msgid "Progress Percent Background Color"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:368
+msgid "Radial Bar Size"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:369
+msgid "Maximum dimensions for the radial bar."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:386
+msgid "Complete Image"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:394
+msgid "Complete Image Size"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:395
+msgid "Maximum dimensions for the complete image."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:401
+msgid "Incomplete Image"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:409
+msgid "incomplete Image Size"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:410
+msgid "Maximum dimensions for the incomplete image."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:436
+msgid "Complete Image URL"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:441
+msgid "Complete Image Width"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:442
+msgid "Maximum width for the complete image."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:451
+msgid "Complete Image Height"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:452
+msgid "Maximum height for the complete image."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:461
+msgid "Incomplete Image URL"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:466
+msgid "Incomplete Image Width"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:467
+msgid "Maximum width for the incomplete image."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:476
+msgid "Incomplete Image Height"
+msgstr ""
+
+#: includes/admin/meta-boxes.php:477
+msgid "Maximum height for the incomplete image."
+msgstr ""
+
+#: includes/admin/meta-boxes.php:707
+msgid "This preview renders a sample progress of 3 of 5."
+msgstr ""
+
+#: includes/shortcodes.php:26 includes/shortcodes.php:68
+#: includes/shortcodes.php:92
+msgid "Show Progress"
+msgstr ""
+
+#: includes/shortcodes.php:27
+msgid "Display the configured progress on the achievement and in their steps."
+msgstr ""
+
+#: includes/shortcodes.php:69
+msgid "Display the configured progress on each points type(s) and in their points awards."
+msgstr ""
+
+#: includes/shortcodes.php:93
+msgid "Display the configured progress on the rank and in their requirements."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:22
+msgid "Render progress of a desired element or progress of a custom goal."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:28
+msgid "General"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:43
+msgid "Style"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:49
+msgid "From"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:50
+msgid "Choose from progress will be calculated."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:53
+msgid "Choose an option"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:54
+#: includes/shortcodes/gamipress_progress.php:74
+msgid "Points Type"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:55
+msgid "Points"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:56
+#: includes/shortcodes/gamipress_progress.php:87
+msgid "Achievement Type"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:57
+#: includes/shortcodes/gamipress_progress.php:100
+msgid "Achievement"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:58
+#: includes/shortcodes/gamipress_progress.php:113
+msgid "Rank Type"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:59
+#: includes/shortcodes/gamipress_progress.php:126
+msgid "Rank"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:60
+msgid "Current User Rank"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:65
+msgid "Points amount"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:66
+msgid "Set the points amount."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:75
+msgid "Choose the points type."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:79
+msgid "Select a points type"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:88
+msgid "Choose the achievement type."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:92
+msgid "Select an achievement type"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:101
+msgid "The achievement to render progress."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:102
+msgid "The ID of the achievement to render progress."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:107
+msgid "Select an achievement"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:114
+msgid "Choose the rank type."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:118
+msgid "Select a rank type"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:127
+msgid "The rank to render progress."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:128
+msgid "The ID of the rank to render progress."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:133
+msgid "Select a rank"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:140
+msgid "Current User"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:141
+msgid "Show progress of current logged in user."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:147
+msgid "User"
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:148
+msgid "Show progress of a specific user."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:226
+#: includes/shortcodes/gamipress_progress.php:252
+msgid "Please, provide a valid points type."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:233
+msgid "Points type provided has not been configured a the progress to show."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:269
+msgid "Please, provide a valid achievement type."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:292
+msgid "Achievement provided has not been configured a progress to show."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:311
+#: includes/shortcodes/gamipress_progress.php:363
+msgid "Please, provide a valid rank type."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:344
+msgid "Rank provided has not been configured a progress to show."
+msgstr ""
+
+#: includes/shortcodes/gamipress_progress.php:375
+msgid "Current rank has not been configured a progress to show."
+msgstr ""
+
+#: includes/template-functions.php:66
+msgid "Current progress"
+msgstr ""
+
+#: includes/template-functions.php:67
+msgid "Total progress"
+msgstr ""
+
+#: includes/widgets/progress-widget.php:23
+msgid "GamiPress: Progress"
+msgstr ""
+
+#: includes/widgets/progress-widget.php:24
+msgid "Display progress of a desired element or progress of a custom goal."
+msgstr ""

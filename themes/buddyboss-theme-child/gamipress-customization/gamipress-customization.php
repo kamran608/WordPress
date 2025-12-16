@@ -69,6 +69,80 @@ class GamiPress_Leaderboard_Customization {
         
         // Register shortcode
         add_shortcode( 'gamipress_average_points', array( $this, 'gamipress_average_points_shortcode' ) );
+
+        add_shortcode('swr_gamipress_user_progress', [ $this, 'custom_gamipress_floating_dashboard' ]);
+
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_custom_styles' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_custom_styles' ) );
+    }
+
+    /**
+     * Enqueue custom styles for the floating dashboard
+     */
+    public function enqueue_custom_styles() {
+
+        $random_version = rand( 1000, 9999 );
+        wp_enqueue_style( 'gamipress-custom-floating-dashboard', get_stylesheet_directory_uri() . '/assets/css/frontend.css', array(), $random_version );
+    }
+
+    /**
+     * Custom shortcode to display progress in a floating dashboard
+     */
+    public function custom_gamipress_floating_dashboard( $atts ) {
+
+        ob_start();
+
+        $user_id = isset( $atts['user_id'] ) ? intval( $atts['user_id'] ) : get_current_user_id();
+        if ( ! $user_id ) return '';
+
+        $points_type        = isset( $atts['points_type'] ) ? $atts['points_type'] : '';
+        $level_type         = isset( $atts['level_type'] ) ? $atts['level_type'] : '';
+        $points_type_id     = gamipress_get_points_type_id( $points_type );
+        $next_level_id      = gamipress_get_next_user_rank_id( $user_id, $level_type );
+        $next_rank_title    = get_the_title( $next_level_id );
+        $requirements 	    = gamipress_get_rank_requirements($next_level_id);
+        $xp_needed 	  	    = get_post_meta($requirements[0]->ID, '_gamipress_points_required', true);
+        $current_rank_id    = gamipress_get_user_rank_id( $user_id, $level_type );
+        $current_rank_title = get_the_title($current_rank_id);
+        $user_current_xp    = gamipress_get_user_points($user_id, $points_type);
+
+        /* Get current rank point required */
+        $current_requirements       = gamipress_get_rank_requirements($current_rank_id);
+        $was_current_xp_needed 	    = intval( get_post_meta($current_requirements[0]->ID, '_gamipress_points_required', true) );
+        // $current_rank_sub_points    = intval( $user_current_xp ) - $was_current_xp_needed;
+        // $next_rank_required_points  = intval( $xp_needed ) - $was_current_xp_needed;
+        // $completion = round($current_rank_sub_points / $next_rank_required_points * 100,0);
+
+        $current_rank_sub_points    = max( 0, intval( $user_current_xp ) - $was_current_xp_needed );
+        $next_rank_required_points = max( 1, intval( $xp_needed ) - $was_current_xp_needed );
+        $completion = min( 100, round( ( $current_rank_sub_points / $next_rank_required_points ) * 100 ) );
+
+
+        $text_color = ($completion > 50) ? '#fff' : '#333';
+
+        ?>
+        <div class="floating-mini-dashboard">
+            <div class="fmd-top-icon-xp">
+                <img src="<?php echo get_the_post_thumbnail_url( $next_level_id ); ?>" alt="XP Icon" class="fmd-top-icon" />
+            </div>
+            <div class="fmd-wrapper">
+                <div class="fmd-header">
+                    <h2 class="fmd-title">Aktuelle Moksha-Stufe: <?php echo esc_html( str_replace( 'Moksha-Stufe', '', $current_rank_title ) ); ?></h2>
+                    <h2 class="fmd-title fmd-xp">Nächste Moksha-Stufe: <?php echo esc_html( str_replace( 'Moksha-Stufe', '', $next_rank_title ) ); ?></h2>
+                </div>
+                <div class="fmd-progress">
+                    <div class="fmd-progress-bar">
+                        <div class="fmd-progress-fill" style="width: <?php echo esc_attr( $completion ); ?>%;"></div>
+                        <div class="fmd-progress-numbers" style="color: <?php echo esc_attr( $text_color ); ?>;">
+                            <?php echo esc_html( $current_rank_sub_points . ' / ' . $next_rank_required_points ); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+
+        return ob_get_clean();
     }
 
     /**
@@ -239,25 +313,57 @@ class GamiPress_Leaderboard_Customization {
 
         $average = $this->calculate_daily_average( $user_id, $type );
 
-        // Determine grade based on average
-        if ( $average < 5 ) {
-            $grade = 0;
-        } elseif ( $average < 10 ) {
-            $grade = 1;
-        } elseif ( $average < 15 ) {
-            $grade = 2;
-        } elseif ( $average < 20 ) {
-            $grade = 3;
-        } elseif ( $average < 25 ) {
-            $grade = 4;
-        } elseif ( $average < 30 ) {
-            $grade = 5;
-        } elseif ( $average < 35 ) {
-            $grade = 6;
-        } else {
-            $grade = 7;
+        $user_rank = gamipress_get_user_rank( $user_id, 'moksha-stufe' );
+        $rank_count = isset( $user_rank->post_title ) ? intval( str_replace( 'Moksha-Stufe', '', $user_rank->post_title ) ) : 0;
+
+        $rank_count = isset( $user_rank->post_title ) 
+            ? intval( str_replace( 'Moksha-Stufe', '', $user_rank->post_title ) ) 
+            : 0;
+
+        $grade = 0; // Default
+
+        // LEVEL 1 - 15 (Table 1)
+        if ( $rank_count >= 0 && $rank_count <= 15 ) {
+
+            if ( $average <= 5 )        $grade = 0;
+            elseif ( $average <= 10 )   $grade = 1;
+            elseif ( $average <= 15 )   $grade = 2;
+            elseif ( $average <= 20 )   $grade = 3;
+            elseif ( $average <= 25 )   $grade = 4;
+            elseif ( $average <= 30 )   $grade = 5;
+            elseif ( $average <= 35 )   $grade = 6;
+            else                        $grade = 7;
+
         }
 
+        // LEVEL 16 - 30 (Table 2)
+        elseif ( $rank_count >= 16 && $rank_count <= 30 ) {
+
+            if ( $average <= 6 )        $grade = 0;
+            elseif ( $average <= 13 )   $grade = 1;
+            elseif ( $average <= 20 )   $grade = 2;
+            elseif ( $average <= 27 )   $grade = 3;
+            elseif ( $average <= 34 )   $grade = 4;
+            elseif ( $average <= 41 )   $grade = 5;
+            elseif ( $average <= 48 )   $grade = 6;
+            else                        $grade = 7;
+
+        }
+
+        // LEVEL > 30 (Table 3)
+        elseif ( $rank_count > 30 ) {
+
+            if ( $average <= 7 )        $grade = 0;
+            elseif ( $average <= 15 )   $grade = 1;
+            elseif ( $average <= 23 )   $grade = 2;
+            elseif ( $average <= 31 )   $grade = 3;
+            elseif ( $average <= 39 )   $grade = 4;
+            elseif ( $average <= 47 )   $grade = 5;
+            elseif ( $average <= 55 )   $grade = 6;
+            else                        $grade = 7;
+
+        }
+        
         // Image URL
         $image_url = get_stylesheet_directory_uri() . '/assets/images/grade-' . $grade . '.png';
 
