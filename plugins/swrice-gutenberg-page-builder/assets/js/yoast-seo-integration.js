@@ -111,7 +111,7 @@ class SwriceYoastSEOIntegration {
                 mutations.forEach((mutation) => {
                     if (mutation.type === 'childList') {
                         mutation.addedNodes.forEach((node) => {
-                            if (node.nodeType === 1 && (node.className && node.className.includes('sppm-'))) {
+                            if (node.nodeType === 1 && this.hasSwriceClass(node)) {
                                 hasSwriceChanges = true;
                             }
                         });
@@ -139,6 +139,40 @@ class SwriceYoastSEOIntegration {
         const currSwriceBlocks = this.filterSwriceBlocks(currentBlocks);
         
         return JSON.stringify(prevSwriceBlocks) !== JSON.stringify(currSwriceBlocks);
+    }
+    
+    /**
+     * Safely check if a DOM node has Swrice-related classes
+     * Handles different className types (string, SVGAnimatedString, etc.)
+     */
+    hasSwriceClass(node) {
+        try {
+            // Check if node has className property
+            if (!node.className) {
+                return false;
+            }
+            
+            // Handle different className types
+            let classNameStr = '';
+            
+            if (typeof node.className === 'string') {
+                // Regular HTML elements
+                classNameStr = node.className;
+            } else if (node.className.baseVal !== undefined) {
+                // SVG elements (SVGAnimatedString)
+                classNameStr = node.className.baseVal;
+            } else if (node.className.toString) {
+                // Fallback: try to convert to string
+                classNameStr = node.className.toString();
+            }
+            
+            // Check if the class string contains 'sppm-'
+            return classNameStr.includes('sppm-');
+        } catch (error) {
+            // If any error occurs, safely return false
+            console.warn('Swrice SEO Integration: Error checking node className', error);
+            return false;
+        }
     }
     
     /**
