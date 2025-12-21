@@ -63,11 +63,13 @@ class SwriceYoastSEOIntegration {
         }
         
         try {
-            // Register content modification for SEO analysis
+            // Register single content modification that handles all analysis types
             YoastSEO.app.registerModification("content", this.addContent.bind(this), "SwriceYoastSEOIntegration", 10);
             
-            // Register content modification for readability analysis
-            YoastSEO.app.registerModification("content", this.addContentForReadability.bind(this), "SwriceYoastSEOIntegration", 10);
+            // Register data modification for highlighting support
+            if (typeof YoastSEO.app.registerModification === "function") {
+                YoastSEO.app.registerModification("data", this.addDataForHighlighting.bind(this), "SwriceYoastSEOIntegration", 10);
+            }
             
             console.log('Swrice SEO Integration: Content modifications registered successfully');
         } catch (error) {
@@ -158,13 +160,13 @@ class SwriceYoastSEOIntegration {
     }
 
     /**
-     * Adds content from Swrice blocks for SEO analysis.
+     * Adds content from Swrice blocks for all analysis types.
      * 
      * @param {string} data The current data string.
      * @returns {string} The data string parameter with the added content.
      */
     addContent(data) {
-        const cacheKey = 'seo_content';
+        const cacheKey = 'unified_content';
         
         // Check cache first
         if (this.contentCache.has(cacheKey)) {
@@ -172,8 +174,8 @@ class SwriceYoastSEOIntegration {
             return data + " " + cachedContent;
         }
         
-        // Get all Swrice blocks content optimized for SEO analysis
-        const swriceContent = this.extractSwriceBlocksContent('seo');
+        // Get all Swrice blocks content with proper structure for readability
+        const swriceContent = this.extractSwriceBlocksContentForReadability();
         
         if (swriceContent) {
             this.contentCache.set(cacheKey, swriceContent);
@@ -184,29 +186,296 @@ class SwriceYoastSEOIntegration {
     }
     
     /**
-     * Adds content from Swrice blocks for readability analysis.
+     * Adds data modification for highlighting support.
+     * This ensures Yoast can map content back to DOM elements for highlighting.
      * 
-     * @param {string} data The current data string.
-     * @returns {string} The data string parameter with the added content.
+     * @param {Object} data The current data object.
+     * @returns {Object} The data object with Swrice content mapping.
      */
-    addContentForReadability(data) {
-        const cacheKey = 'readability_content';
-        
-        // Check cache first
-        if (this.contentCache.has(cacheKey)) {
-            const cachedContent = this.contentCache.get(cacheKey);
-            return data + " " + cachedContent;
-        }
-        
-        // Get all Swrice blocks content optimized for readability analysis
-        const swriceContent = this.extractSwriceBlocksContent('readability');
-        
-        if (swriceContent) {
-            this.contentCache.set(cacheKey, swriceContent);
-            data += " " + swriceContent;
+    addDataForHighlighting(data) {
+        try {
+            // Add Swrice block elements to the data for highlighting
+            const swriceElements = document.querySelectorAll('[class*="sppm-"]');
+            
+            if (swriceElements.length > 0) {
+                // Create a mapping of Swrice content to DOM elements
+                const swriceMapping = [];
+                
+                swriceElements.forEach((element, index) => {
+                    const textContent = this.getTextContentForHighlighting(element);
+                    if (textContent.trim()) {
+                        swriceMapping.push({
+                            element: element,
+                            content: textContent,
+                            id: `swrice-block-${index}`
+                        });
+                    }
+                });
+                
+                // Add to data object for Yoast highlighting
+                if (!data.swriceBlocks) {
+                    data.swriceBlocks = swriceMapping;
+                }
+            }
+        } catch (error) {
+            console.warn('Swrice SEO Integration: Failed to add highlighting data', error);
         }
         
         return data;
+    }
+
+    /**
+     * Extracts text content from all Swrice Gutenberg blocks optimized for readability analysis.
+     * This method preserves paragraph structure and heading hierarchy.
+     * 
+     * @returns {string} Combined text content from all Swrice blocks with proper structure.
+     */
+    extractSwriceBlocksContentForReadability() {
+        let content = "";
+        
+        // Get all Swrice block elements from the page
+        const swriceBlocks = document.querySelectorAll('[class*="sppm-"]');
+        
+        swriceBlocks.forEach(block => {
+            // Extract structured text content for readability
+            const textContent = this.getStructuredTextFromElement(block);
+            if (textContent.trim()) {
+                content += "\n\n" + textContent.trim() + "\n\n";
+            }
+        });
+
+        // Also try to get content from Gutenberg editor if we're in the editor
+        if (typeof wp !== "undefined" && wp.data && wp.data.select) {
+            const editorContent = this.getGutenbergEditorContentForReadability();
+            if (editorContent) {
+                content += "\n\n" + editorContent + "\n\n";
+            }
+        }
+        
+        return content.trim();
+    }
+
+    /**
+     * Get text content optimized for highlighting functionality
+     */
+    getTextContentForHighlighting(element) {
+        // Clone the element to avoid modifying the original
+        const clone = element.cloneNode(true);
+        
+        // Remove script and style elements
+        const scriptsAndStyles = clone.querySelectorAll('script, style');
+        scriptsAndStyles.forEach(el => el.remove());
+        
+        // Get clean text content
+        let text = clone.textContent || clone.innerText || '';
+        
+        // Clean up whitespace but preserve basic structure
+        text = text.replace(/\s+/g, ' ').trim();
+        
+        return text;
+    }
+
+    /**
+     * Extract structured text from an element optimized for readability analysis.
+     * This method preserves semantic structure and proper spacing.
+     * 
+     * @param {Element} element The DOM element to extract structured text from
+     * @returns {string} The extracted structured text
+     */
+    getStructuredTextFromElement(element) {
+        // Clone the element to avoid modifying the original
+        const clone = element.cloneNode(true);
+        
+        // Remove script and style elements
+        const scriptsAndStyles = clone.querySelectorAll('script, style');
+        scriptsAndStyles.forEach(el => el.remove());
+        
+        let structuredText = '';
+        
+        // Process different content types in order of importance for readability
+        
+        // 1. Extract headings with proper hierarchy
+        const headings = clone.querySelectorAll('h1, h2, h3, h4, h5, h6, .sppm-heading, .sppm-title');
+        headings.forEach(heading => {
+            const headingText = (heading.textContent || heading.innerText || '').trim();
+            if (headingText) {
+                structuredText += headingText + '\n\n';
+            }
+        });
+        
+        // 2. Extract paragraphs and descriptions
+        const paragraphs = clone.querySelectorAll('p, .sppm-description, .sppm-content, .sppm-text');
+        paragraphs.forEach(paragraph => {
+            const paragraphText = (paragraph.textContent || paragraph.innerText || '').trim();
+            if (paragraphText && !this.isHeadingText(paragraphText, headings)) {
+                // Split long paragraphs into sentences for better readability analysis
+                const sentences = this.splitIntoSentences(paragraphText);
+                sentences.forEach(sentence => {
+                    if (sentence.trim()) {
+                        structuredText += sentence.trim() + ' ';
+                    }
+                });
+                structuredText += '\n\n';
+            }
+        });
+        
+        // 3. Extract list items
+        const lists = clone.querySelectorAll('ul, ol, .sppm-list');
+        lists.forEach(list => {
+            const listItems = list.querySelectorAll('li, .sppm-list-item');
+            listItems.forEach(item => {
+                const itemText = (item.textContent || item.innerText || '').trim();
+                if (itemText) {
+                    structuredText += itemText + '. ';
+                }
+            });
+            if (listItems.length > 0) {
+                structuredText += '\n\n';
+            }
+        });
+        
+        // 4. Extract any remaining text content not captured above
+        const remainingText = clone.textContent || clone.innerText || '';
+        const cleanRemainingText = remainingText.replace(/\s+/g, ' ').trim();
+        
+        // Only add remaining text if it's not already included
+        if (cleanRemainingText && !structuredText.includes(cleanRemainingText.substring(0, 50))) {
+            structuredText += cleanRemainingText + '\n\n';
+        }
+        
+        return structuredText.trim();
+    }
+    
+    /**
+     * Check if text is already captured as a heading
+     */
+    isHeadingText(text, headings) {
+        const cleanText = text.trim().toLowerCase();
+        for (let heading of headings) {
+            const headingText = (heading.textContent || heading.innerText || '').trim().toLowerCase();
+            if (headingText && cleanText.includes(headingText)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Split text into sentences for better readability analysis
+     */
+    splitIntoSentences(text) {
+        // Simple sentence splitting - can be enhanced for better accuracy
+        return text.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0);
+    }
+
+    /**
+     * Gets content from Gutenberg editor blocks optimized for readability analysis.
+     * 
+     * @returns {string} Content from Swrice blocks in the editor with proper structure.
+     */
+    getGutenbergEditorContentForReadability() {
+        try {
+            const blocks = wp.data.select('core/block-editor').getBlocks();
+            let content = "";
+            
+            blocks.forEach(block => {
+                if (block.name && block.name.startsWith('swrice/')) {
+                    const blockContent = this.extractBlockAttributesForReadability(block);
+                    if (blockContent.trim()) {
+                        content += "\n\n" + blockContent.trim() + "\n\n";
+                    }
+                }
+            });
+            
+            return content.trim();
+        } catch (error) {
+            console.warn('Swrice SEO Integration: Failed to get Gutenberg editor content for readability', error);
+            return "";
+        }
+    }
+
+    /**
+     * Extracts text content from block attributes optimized for readability analysis.
+     * 
+     * @param {Object} block The Gutenberg block object.
+     * @returns {string} Extracted text content with proper structure for readability.
+     */
+    extractBlockAttributesForReadability(block) {
+        let content = "";
+        
+        if (block.attributes) {
+            // Extract headings first with proper spacing
+            const headingAttributes = [
+                'pluginName', 'heroSubtitle', 'problemHeading', 'solutionHeading',
+                'featuresHeading', 'faqHeading', 'howItWorksHeading', 'testimonialsHeading',
+                'bonusesHeading', 'guaranteeHeading', 'whyChooseHeading', 'aboutHeading',
+                'finalCtaHeading', 'screenshotsHeading', 'videoTutorialHeading',
+                'versionChangelogHeading'
+            ];
+            
+            headingAttributes.forEach(attr => {
+                if (block.attributes[attr] && typeof block.attributes[attr] === 'string') {
+                    const headingText = block.attributes[attr].trim();
+                    if (headingText) {
+                        content += headingText + '\n\n';
+                    }
+                }
+            });
+            
+            // Extract descriptions and content with paragraph structure
+            const contentAttributes = [
+                'content', 'description', 'text', 'ctaTitle',
+                'aboutDescription', 'guaranteeDescription', 'solutionDescription'
+            ];
+            
+            contentAttributes.forEach(attr => {
+                if (block.attributes[attr] && typeof block.attributes[attr] === 'string') {
+                    const contentText = block.attributes[attr].trim();
+                    if (contentText) {
+                        // Split into sentences for better readability analysis
+                        const sentences = this.splitIntoSentences(contentText);
+                        sentences.forEach(sentence => {
+                            if (sentence.trim()) {
+                                content += sentence.trim() + '. ';
+                            }
+                        });
+                        content += '\n\n';
+                    }
+                }
+            });
+            
+            // Extract array attributes with proper structure
+            const arrayAttributes = [
+                'problemItems', 'features', 'faqItems', 'howItWorksSteps',
+                'testimonials', 'bonuses', 'whyChooseItems', 'screenshots'
+            ];
+            
+            arrayAttributes.forEach(attr => {
+                if (block.attributes[attr] && Array.isArray(block.attributes[attr])) {
+                    block.attributes[attr].forEach(item => {
+                        if (typeof item === 'string') {
+                            const itemText = item.trim();
+                            if (itemText) {
+                                content += itemText + '. ';
+                            }
+                        } else if (typeof item === 'object') {
+                            // Extract text from object properties
+                            Object.values(item).forEach(value => {
+                                if (typeof value === 'string') {
+                                    const valueText = value.trim();
+                                    if (valueText) {
+                                        content += valueText + '. ';
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    content += '\n\n';
+                }
+            });
+        }
+        
+        return content.trim();
     }
 
     /**
