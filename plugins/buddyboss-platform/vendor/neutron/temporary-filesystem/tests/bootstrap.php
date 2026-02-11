@@ -1,4 +1,6 @@
 <?php
 
-$loader = require __DIR__ . '/../vendor/autoload.php';
-$loader->add('Neutron\TemporaryFilesystem\Tests', __DIR__ . '/../tests');
+namespace BuddyBossPlatform;
+
+$loader = (require __DIR__ . '/../vendor/autoload.php');
+$loader->add('BuddyBossPlatform\\Neutron\\TemporaryFilesystem\\Tests', __DIR__ . '/../tests');

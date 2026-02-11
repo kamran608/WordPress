@@ -1,9 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class CiviCrmInstaller extends BaseInstaller
+class CiviCrmInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'ext'    => 'ext/{$name}/'
-    );
+    protected $locations = array('ext' => 'ext/{$name}/');
 }

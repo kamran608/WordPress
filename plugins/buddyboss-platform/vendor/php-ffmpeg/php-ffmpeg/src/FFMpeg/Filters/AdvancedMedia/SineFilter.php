@@ -1,9 +1,8 @@
 <?php
 
-namespace FFMpeg\Filters\AdvancedMedia;
+namespace BuddyBossPlatform\FFMpeg\Filters\AdvancedMedia;
 
-use FFMpeg\Media\AdvancedMedia;
-
+use BuddyBossPlatform\FFMpeg\Media\AdvancedMedia;
 /**
  * @see https://ffmpeg.org/ffmpeg-filters.html#sine
  */
@@ -13,27 +12,22 @@ class SineFilter extends AbstractComplexFilter
      * @var int|null
      */
     private $frequency;
-
     /**
      * @var string|null
      */
     private $beep_factor;
-
     /**
      * @var int|null
      */
     private $sample_rate;
-
     /**
      * @var string
      */
     private $duration;
-
     /**
      * @var string|null
      */
     private $samples_per_frame;
-
     /**
      * SineComplexFilter constructor.
      *
@@ -53,7 +47,6 @@ class SineFilter extends AbstractComplexFilter
         $this->sample_rate = $sample_rate;
         $this->samples_per_frame = $samples_per_frame;
     }
-
     /**
      * Get name of the filter.
      *
@@ -63,7 +56,6 @@ class SineFilter extends AbstractComplexFilter
     {
         return 'sine';
     }
-
     /**
      * Get minimal version of ffmpeg starting with which this filter is supported.
      *
@@ -73,7 +65,6 @@ class SineFilter extends AbstractComplexFilter
     {
         return '2.0';
     }
-
     /**
      * Apply the complex filter to the given media.
      *
@@ -83,15 +74,6 @@ class SineFilter extends AbstractComplexFilter
      */
     public function applyComplex(AdvancedMedia $media)
     {
-        return array(
-            '-filter_complex',
-            $this->getName() . $this->buildFilterOptions(array(
-                'frequency' => $this->frequency,
-                'beep_factor' => $this->beep_factor,
-                'sample_rate' => $this->sample_rate,
-                'duration' => $this->duration,
-                'samples_per_frame' => $this->samples_per_frame,
-            ))
-        );
+        return array('-filter_complex', $this->getName() . $this->buildFilterOptions(array('frequency' => $this->frequency, 'beep_factor' => $this->beep_factor, 'sample_rate' => $this->sample_rate, 'duration' => $this->duration, 'samples_per_frame' => $this->samples_per_frame)));
     }
 }

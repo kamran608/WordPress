@@ -8,18 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\FFProbe\DataMapping;
+namespace BuddyBossPlatform\FFMpeg\FFProbe\DataMapping;
 
 abstract class AbstractData implements \Countable
 {
     private $properties;
-
     public function __construct(array $properties)
     {
         $this->properties = $properties;
     }
-
     /**
      * Returns true if data has property.
      *
@@ -30,7 +27,6 @@ abstract class AbstractData implements \Countable
     {
         return isset($this->properties[$property]);
     }
-
     /**
      * Returns the property value given its name.
      *
@@ -44,10 +40,8 @@ abstract class AbstractData implements \Countable
         if (!isset($this->properties[$property])) {
             return $default;
         }
-
         return $this->properties[$property];
     }
-
     /**
      * Sets the property value given its name.
      *
@@ -59,10 +53,8 @@ abstract class AbstractData implements \Countable
     public function set($property, $value)
     {
         $this->properties[$property] = $value;
-
         return $this;
     }
-
     /**
      * Returns all property names.
      *
@@ -70,9 +62,8 @@ abstract class AbstractData implements \Countable
      */
     public function keys()
     {
-        return array_keys($this->properties);
+        return \array_keys($this->properties);
     }
-
     /**
      * Returns all properties and their values.
      *
@@ -82,12 +73,11 @@ abstract class AbstractData implements \Countable
     {
         return $this->properties;
     }
-
     /**
      * {@inheritdoc}
      */
     public function count()
     {
-        return count($this->properties);
+        return \count($this->properties);
     }
 }

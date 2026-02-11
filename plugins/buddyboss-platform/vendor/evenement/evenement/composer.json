@@ -1,7 +1,10 @@
 {
-    "name": "evenement/evenement",
-    "description": "Événement is a very simple event dispatching library for PHP",
-    "keywords": ["event-dispatcher", "event-emitter"],
+    "name": "evenement\/evenement",
+    "description": "\u00c9v\u00e9nement is a very simple event dispatching library for PHP",
+    "keywords": [
+        "event-dispatcher",
+        "event-emitter"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -13,17 +16,19 @@
         "php": ">=7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9 || ^6"
+        "phpunit\/phpunit": "^9 || ^6"
     },
     "autoload": {
         "psr-4": {
-            "Evenement\\": "src/"
+            "BuddyBossPlatform\\Evenement\\": "src\/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Evenement\\Tests\\": "tests/"
+            "BuddyBossPlatform\\Evenement\\Tests\\": "tests\/"
         },
-        "files": ["tests/functions.php"]
+        "files": [
+            "tests\/functions.php"
+        ]
     }
 }

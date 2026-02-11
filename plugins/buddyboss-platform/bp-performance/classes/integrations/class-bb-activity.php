@@ -31,11 +31,12 @@ class BB_Activity extends Integration_Abstract {
 		$this->register( 'bp-activity' );
 
 		$purge_events = array(
-			'bp_activity_add',              // Any Activity add.
-			'bp_activity_after_save',       // Any activity privacy update.
-			'bp_activity_delete',           // Any Activity deleted.
-			'bp_activity_delete_comment',   // Any Activity comment deleted.
-			'bb_activity_pin_unpin_post',   // Any Activity pin/unpin.
+			'bp_activity_add',                    // Any Activity add.
+			'bp_activity_after_save',             // Any activity privacy update.
+			'bp_activity_delete',                 // Any Activity deleted.
+			'bp_activity_delete_comment',         // Any Activity comment deleted.
+			'bb_activity_pin_unpin_post',         // Any Activity pin/unpin.
+			'bb_activity_close_unclose_comments', // Any Activity closed/unclosed comment.
 
 			// Added moderation support.
 			'bp_suspend_activity_suspended',           // Any Activity Suspended.
@@ -44,7 +45,20 @@ class BB_Activity extends Integration_Abstract {
 			'bp_suspend_activity_comment_unsuspended', // Any Activity Comment Unsuspended.
 
 			'bp_moderation_after_save',     // Hide activity when member blocked.
-			'bb_moderation_after_delete'    // Unhide activity when member unblocked.
+			'bb_moderation_after_delete',    // Unhide activity when member unblocked.
+
+			'bb_poll_after_add_poll',     // Add/Update poll
+			'bb_poll_after_remove_poll',     // Remove poll
+			'bb_poll_after_add_poll_option', // Add poll options
+			'bb_poll_after_remove_poll_options', // Remove poll options
+			'bb_poll_after_add_poll_vote',   // Add a poll vote
+			'bb_poll_after_remove_poll_votes', // Remove poll votes
+
+			'bb_activity_topic_relationship_after_add', // Add a activity topic relationship.
+			'bb_activity_topic_relationship_after_update', // Update a activity topic relationship If the same topic is already assigned
+			'bb_after_update_activity_topic_relationship', // Update a activity topic relationship.
+			'bb_after_delete_activity_topic_relationship', // Delete a activity topic relationship.
+			'bb_after_migrate_topic', // Migrate a activity topic relationship.
 		);
 
 		$this->purge_event( 'bp-activity', $purge_events );
@@ -67,6 +81,7 @@ class BB_Activity extends Integration_Abstract {
 			'bp_activity_add_user_favorite'           => 1, // if activity added in user favorite list.
 			'bp_activity_remove_user_favorite'        => 1, // if activity remove from user favorite list.
 			'bb_activity_pin_unpin_post'              => 1, // Any Activity pin/unpin.
+			'bb_activity_close_unclose_comments'      => 1, // Any Activity close/unclose comment.
 
 			// Added Moderation Support.
 			'bp_suspend_activity_suspended'           => 1, // Any Activity Suspended.
@@ -74,23 +89,38 @@ class BB_Activity extends Integration_Abstract {
 			'bp_suspend_activity_unsuspended'         => 1, // Any Activity Unsuspended.
 			'bp_suspend_activity_comment_unsuspended' => 1, // Any Activity Comment Unsuspended.
 
-			'bp_moderation_after_save'                => 1, // Hide activity when member blocked.
-			'bb_moderation_after_delete'              => 1, // Unhide activity when member unblocked.
+			'bp_moderation_after_save'                    => 1, // Hide activity when member blocked.
+			'bb_moderation_after_delete'                  => 1, // Unhide activity when member unblocked.
 
 			// Add Author Embed Support.
-			'profile_update'                          => 1, // User updated on site.
-			'deleted_user'                            => 1, // User deleted on site.
-			'xprofile_avatar_uploaded'                => 1, // User avatar photo updated.
-			'bp_core_delete_existing_avatar'          => 1, // User avatar photo deleted.
+			'profile_update'                              => 1, // User updated on site.
+			'deleted_user'                                => 1, // User deleted on site.
+			'xprofile_avatar_uploaded'                    => 1, // User avatar photo updated.
+			'bp_core_delete_existing_avatar'              => 1, // User avatar photo deleted.
 
 			// When change/update the reaction settings.
-			'update_option_bb_all_reactions'          => 3, // When enabled/disabled the reactions.
-			'update_option_bb_reaction_mode'          => 3, // When change/update the reaction mode.
-			'deleted_post'                            => 2, // When delete the emotion.
+			'update_option_bb_all_reactions'              => 3, // When enabled/disabled the reactions.
+			'update_option_bb_reaction_mode'              => 3, // When change/update the reaction mode.
+			'deleted_post'                                => 2, // When delete the emotion.
 
 			// When create user reaction via reaction API.
 			'bb_reaction_after_add_user_item_reaction'    => 2, // When enabled/disabled the reactions.
 			'bb_reaction_after_remove_user_item_reaction' => 3, // When enabled/disabled the reactions.
+
+			'bb_poll_after_add_poll'            => 1, // Add/Update poll.
+			'bb_poll_after_remove_poll'         => 1, // Remove poll.
+			'bb_poll_after_add_poll_option'     => 2, // Add poll options.
+			'bb_poll_after_remove_poll_options' => 2, // Remove poll options.
+			'bb_poll_after_add_poll_vote'       => 2, // Add a poll vote.
+			'bb_poll_after_remove_poll_votes'   => 2, // Remove poll votes.
+
+			'bb_activity_topic_relationship_after_add'    => 3, // Add a activity topic relationship.
+			'bb_activity_topic_relationship_after_update' => 3, // Update a activity topic relationship If the same topic is already assigned
+			'bb_after_update_activity_topic_relationship' => 3, // Update a activity topic relationship.
+			'bb_after_delete_activity_topic_relationship' => 3, // Delete a activity topic relationship.
+			'bb_after_migrate_topic'                      => 6, // Migrate a activity topic relationship.
+
+			'updated_option' => 3, // When change/update the activity CPT settings.
 		);
 
 		$this->purge_single_events( $purge_single_events );
@@ -101,9 +131,12 @@ class BB_Activity extends Integration_Abstract {
 
 		if ( $cache_bb_activity ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/activity',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => 'id',
 				),
@@ -112,7 +145,7 @@ class BB_Activity extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/activity/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);
@@ -445,5 +478,231 @@ class BB_Activity extends Integration_Abstract {
 	 */
 	public function prepare_activity_deeplink( $activity_id ) {
 		return 'bbapp-deeplinking_' . untrailingslashit( bp_activity_get_permalink( $activity_id ) );
+	}
+
+	/**
+	 * Close/Unclose Activity Comments.
+	 *
+	 * @param int $activity_id Activity id.
+	 */
+	public function event_bb_activity_close_unclose_comments( $activity_id ) {
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Update poll.
+	 *
+	 * @param int $poll_id Poll id.
+	 */
+	public function event_bb_poll_after_add_poll( $poll_id ) {
+		$activity_id = $this->get_activity_id_by_poll_id( $poll_id );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Remove poll.
+	 *
+	 * @param int $poll_id Poll id.
+	 */
+	public function event_bb_poll_after_remove_poll( $poll_id ) {
+		$activity_id = $this->get_activity_id_by_poll_id( $poll_id );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Add/Update a poll option.
+	 *
+	 * @param int   $option_id Option id.
+	 * @param array $args      Arguments array.
+	 */
+	public function event_bb_poll_after_add_poll_option( $option_id, $args ) {
+		if ( empty( $args['poll_id'] ) ) {
+			return;
+		}
+
+		$activity_id = $this->get_activity_id_by_poll_id( $args['poll_id'] );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Remove a poll option.
+	 *
+	 * @param int   $option_id Option id.
+	 * @param array $args      Arguments array.
+	 */
+	public function event_bb_poll_after_remove_poll_options( $option_id, $args ) {
+		if ( empty( $args['poll_id'] ) ) {
+			return;
+		}
+
+		$activity_id = $this->get_activity_id_by_poll_id( $args['poll_id'] );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Add/Update a poll vote.
+	 *
+	 * @param int   $vote_id Vote id.
+	 * @param array $args    Arguments array.
+	 */
+	public function event_bb_poll_after_add_poll_vote( $vote_id, $args ) {
+		if ( empty( $args['poll_id'] ) ) {
+			return;
+		}
+
+		$activity_id = $this->get_activity_id_by_poll_id( $args['poll_id'] );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Remove a poll vote.
+	 *
+	 * @param int   $vote_id Vote id.
+	 * @param array $args    Arguments array.
+	 */
+	public function event_bb_poll_after_remove_poll_votes( $vote_id, $args ) {
+		if ( empty( $args['poll_id'] ) ) {
+			return;
+		}
+
+		$activity_id = $this->get_activity_id_by_poll_id( $args['poll_id'] );
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $activity_id );
+	}
+
+	/**
+	 * Get Activity id based on poll ID.
+	 *
+	 * @param int $poll_id Poll ID.
+	 *
+	 * @return string
+	 */
+	private function get_activity_id_by_poll_id( $poll_id ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_var( $wpdb->prepare( "SELECT activity_id FROM {$bp->activity->table_name_meta} WHERE meta_key = %s AND meta_value = %d", "bb_poll_id", $poll_id ) );
+	}
+
+	/**
+	 * When activity CPT settings updated.
+	 *
+	 * @param string $option    Name of the updated option.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 */
+	public function event_updated_option( $option, $old_value, $value ) {
+		// Check if the option name contains 'bp-feed-custom-post-type' and if the option value has changed.
+		if ( false !== strpos( $option, 'bp-feed-custom-post-type' ) && $old_value !== $value ) {
+			Cache::instance()->purge_by_component( 'bp-activity' );
+		}
+	}
+
+	/**
+	 * When a activity topic relationship is added.
+	 *
+	 * @param int   $updated Topic relationship id.
+	 * @param array $data    Data array.
+	 * @param array $r Arguments array.
+	 */
+	public function event_bb_activity_topic_relationship_after_add( $updated, $data, $r ) {
+		if ( empty( $data['activity_id'] ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $data['activity_id'] );
+	}
+
+	/**
+	 * When a activity topic relationship is updated if the same topic is already assigned.
+	 *
+	 * @param int   $updated Topic relationship id.
+	 * @param array $data    Data array.
+	 * @param array $r Arguments array.
+	 */
+	public function event_bb_activity_topic_relationship_after_update( $updated, $data, $r ) {
+		if ( empty( $data['activity_id'] ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $data['activity_id'] );
+	}
+
+	/**
+	 * When a activity topic relationship is updated.
+	 *
+	 * @param int   $updated Topic relationship id.
+	 * @param array $data    Data array.
+	 * @param array $r       Arguments array.
+	 */
+	public function event_bb_after_update_activity_topic_relationship( $updated, $data, $r ) {
+		if ( empty( $data['activity_id'] ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $data['activity_id'] );
+	}
+
+	/**
+	 * When a activity topic relationship is deleted.
+	 *
+	 * @param int   $deleted Topic relationship id.
+	 * @param array $data    Data array.
+	 * @param array $r       Arguments array.
+	 */
+	public function event_bb_after_delete_activity_topic_relationship( $deleted, $data, $r ) {
+		if ( empty( $data['activity_id'] ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_id( $data['activity_id'] );
+	}
+
+	/**
+	 * When a activity topic relationship is migrated.
+	 *
+	 * @param object $topic        The topic object.
+	 * @param int    $old_topic_id The ID of the old topic.
+	 * @param int    $new_topic_id The ID of the new topic.
+	 * @param int    $item_id      The ID of the item.
+	 * @param string $item_type    The type of item.
+	 * @param array  $migrated_activity_ids The IDs of the activities.
+	 */
+	public function event_bb_after_migrate_topic( $topic, $old_topic_id, $new_topic_id, $item_id, $item_type, $migrated_activity_ids ) {
+		if ( empty( $migrated_activity_ids ) ) {
+			return;
+		}
+
+		$this->purge_item_cache_by_item_ids( $migrated_activity_ids );
 	}
 }

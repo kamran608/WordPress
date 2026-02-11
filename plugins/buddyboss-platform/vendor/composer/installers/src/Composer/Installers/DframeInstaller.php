@@ -2,9 +2,7 @@
 
 namespace Composer\Installers;
 
-class DframeInstaller extends BaseInstaller
+class DframeInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'module'  => 'modules/{$vendor}/{$name}/',
-    );
+    protected $locations = array('module' => 'modules/{$vendor}/{$name}/');
 }

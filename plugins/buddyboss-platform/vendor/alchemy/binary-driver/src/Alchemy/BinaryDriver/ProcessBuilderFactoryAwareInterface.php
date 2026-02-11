@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Alchemy\BinaryDriver;
+namespace BuddyBossPlatform\Alchemy\BinaryDriver;
 
 interface ProcessBuilderFactoryAwareInterface
 {
@@ -19,7 +18,6 @@ interface ProcessBuilderFactoryAwareInterface
      * @return ProcessBuilderFactoryInterface
      */
     public function getProcessBuilderFactory();
-
     /**
      * Set a process builder factory
      *

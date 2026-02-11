@@ -57,6 +57,16 @@ function bp_core_install( $active_components = false ) {
 	// Install item subscriptions.
 	bb_core_install_subscription();
 
+	// Install background process logs.
+	if ( class_exists( 'BB_BG_Process_Log' ) ) {
+		BB_BG_Process_Log::instance()->create_table();
+	}
+
+	// Install activity topics manager table.
+	if ( function_exists( 'bb_topics_manager_instance' ) ) {
+		bb_topics_manager_instance()->create_tables();
+	}
+
 	// Notifications.
 	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();
@@ -199,13 +209,16 @@ function bp_core_install_activity_streams() {
 				item_id bigint(20) NOT NULL,
 				secondary_item_id bigint(20) DEFAULT NULL,
 				date_recorded datetime NOT NULL,
+				date_updated datetime NOT NULL,
 				hide_sitewide bool DEFAULT 0,
 				mptt_left int(11) NOT NULL DEFAULT 0,
 				mptt_right int(11) NOT NULL DEFAULT 0,
 				is_spam tinyint(1) NOT NULL DEFAULT 0,
 				privacy varchar(75) NOT NULL DEFAULT 'public',
+				status varchar(20) NOT NULL DEFAULT 'published',
 				PRIMARY KEY  (id),
 				KEY date_recorded (date_recorded),
+				KEY date_updated (date_updated),
 				KEY user_id (user_id),
 				KEY item_id (item_id),
 				KEY secondary_item_id (secondary_item_id),
@@ -214,7 +227,8 @@ function bp_core_install_activity_streams() {
 				KEY mptt_left (mptt_left),
 				KEY mptt_right (mptt_right),
 				KEY hide_sitewide (hide_sitewide),
-				KEY is_spam (is_spam)
+				KEY is_spam (is_spam),
+				KEY activity_type_is_spam (type,is_spam)
 			) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_activity_meta (
@@ -475,6 +489,7 @@ function bp_core_install_extended_profiles() {
 
 	dbDelta( $sql );
 
+	bb_core_install_xprofile_visibility();
 	bp_core_install_default_profiles_fields();
 }
 
@@ -527,7 +542,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$base_group_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-base-group-id', $base_group_id );
+				update_site_option( 'bp-xprofile-base-group-id', $base_group_id );
 			}
 		}
 	}
@@ -553,7 +568,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$first_name_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+					update_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 				}
 			}
 		}
@@ -573,7 +588,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$first_name_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+				update_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 			}
 		}
 	}
@@ -598,7 +613,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$last_name_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+					update_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 				}
 			}
 		}
@@ -618,7 +633,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$last_name_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+				update_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 			}
 		}
 	}
@@ -643,7 +658,7 @@ function bp_core_install_default_profiles_fields() {
 			if ( $result ) {
 				$nickname_id = $wpdb->insert_id;
 				if ( $is_multisite ) {
-					add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+					update_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
 				}
 			}
 		}
@@ -663,7 +678,7 @@ function bp_core_install_default_profiles_fields() {
 		if ( $result ) {
 			$nickname_id = $wpdb->insert_id;
 			if ( $is_multisite ) {
-				add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+				update_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
 			}
 		}
 	}
@@ -762,6 +777,7 @@ function bp_core_install_media() {
 		privacy varchar(50) NULL DEFAULT 'public',
 		type varchar(50) NULL DEFAULT 'photo',
 		menu_order bigint(20) NULL DEFAULT 0 ,
+		status varchar(20) NOT NULL DEFAULT 'published',
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
 		KEY attachment_id (attachment_id),
@@ -822,6 +838,7 @@ function bp_core_install_document() {
 		message_id bigint(20) NULL DEFAULT 0 ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		menu_order bigint(20) NULL DEFAULT 0 ,
+		status varchar(20) NOT NULL DEFAULT 'published',
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		date_modified datetime NULL DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
@@ -1223,7 +1240,11 @@ function bp_core_install_suspend() {
 	   PRIMARY KEY  (id),
 	   KEY suspend_item_id (item_id,item_type,blog_id),
 	   KEY suspend_item (item_id,item_type),
-	   KEY item_id (item_id)
+	   KEY item_id (item_id),
+	   KEY user_suspended (user_suspended),
+	   KEY hide_parent (hide_parent),
+	   KEY hide_sitewide (hide_sitewide),
+	   KEY suspend_conditions (user_suspended, hide_parent, hide_sitewide)
     ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details (
@@ -1231,8 +1252,19 @@ function bp_core_install_suspend() {
 	   suspend_id bigint(20) NOT NULL,
 	   user_id bigint(20) NOT NULL,
 	   PRIMARY KEY  (id),
-	   KEY suspend_details_id (suspend_id,user_id)
+	   KEY suspend_details_id (suspend_id,user_id),
+	   KEY user_id (user_id)
     ) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_meta (
+		id bigint(20) NOT NULL AUTO_INCREMENT,
+		suspend_id bigint(20) NOT NULL,
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		PRIMARY KEY  (id),
+		KEY suspend_id (suspend_id),
+		KEY meta_key (meta_key(191))
+	) {$charset_collate};";
 
 	dbDelta( $sql );
 }
@@ -1366,4 +1398,47 @@ function bb_core_install_subscription() {
    	) {$charset_collate};";
 
 	dbDelta( $sql );
+}
+
+/**
+ * Install database tables for the xprofile visibility new structure.
+ *
+ * @since BuddyBoss 2.6.50
+ *
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
+ */
+function bb_core_install_xprofile_visibility() {
+	global $wpdb;
+
+	$bp_prefix = bp_core_get_table_prefix();
+	
+	// Install bb_xprofile_visibility table if already not exists.
+	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bb_xprofile_visibility' ) );
+	if ( ! $table_exists ) {
+		$sql             = array();
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql[] = "CREATE TABLE {$bp_prefix}bb_xprofile_visibility (
+					id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+					field_id bigint(20) unsigned NOT NULL,
+					user_id bigint(20) unsigned NOT NULL,
+					value varchar(20) DEFAULT NULL,
+					last_updated datetime NOT NULL,
+					PRIMARY KEY (id),
+					KEY field_id (field_id),
+					KEY user_id (user_id),
+					KEY value (value),
+					UNIQUE KEY unique_field_id_user_id (field_id,user_id)
+				) {$charset_collate};";
+
+		dbDelta( $sql );
+	}
+
+	/**
+	 * Fires after BuddyBoss adds the xprofile visibility table.
+	 *
+	 * @since BuddyBoss 2.6.50
+	 */
+	do_action( 'bb_core_install_xprofile_visibility' );
 }

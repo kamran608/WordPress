@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Media;
+namespace BuddyBossPlatform\FFMpeg\Media;
 
 interface MediaTypeInterface
 {
@@ -17,7 +16,6 @@ interface MediaTypeInterface
      * Returns the available filters.
      */
     public function filters();
-
     /**
      * @return string
      */

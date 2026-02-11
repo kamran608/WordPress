@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of PHP-FFmpeg.
  *
@@ -7,14 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Video;
 
-namespace FFMpeg\Filters\Video;
-
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Coordinate\Point;
-use FFMpeg\Format\VideoInterface;
-use FFMpeg\Media\Video;
-
+use BuddyBossPlatform\FFMpeg\Coordinate\Dimension;
+use BuddyBossPlatform\FFMpeg\Coordinate\Point;
+use BuddyBossPlatform\FFMpeg\Format\VideoInterface;
+use BuddyBossPlatform\FFMpeg\Media\Video;
 class CropFilter implements VideoFilterInterface
 {
     /** @var integer */
@@ -23,14 +22,12 @@ class CropFilter implements VideoFilterInterface
     protected $dimension;
     /** @var Point */
     protected $point;
-
     public function __construct(Point $point, Dimension $dimension, $priority = 0)
     {
         $this->priority = $priority;
         $this->dimension = $dimension;
         $this->point = $point;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -38,7 +35,6 @@ class CropFilter implements VideoFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -50,11 +46,6 @@ class CropFilter implements VideoFilterInterface
                 $stream->set('height', $this->dimension->getHeight());
             }
         }
-
-        return array(
-            '-filter:v',
-            'crop=' .
-            $this->dimension->getWidth() .':' . $this->dimension->getHeight() . ':' . $this->point->getX() . ':' . $this->point->getY()
-        );
+        return array('-filter:v', 'crop=' . $this->dimension->getWidth() . ':' . $this->dimension->getHeight() . ':' . $this->point->getX() . ':' . $this->point->getY());
     }
 }

@@ -8,24 +8,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Video;
 
-namespace FFMpeg\Filters\Video;
-
-use FFMpeg\Coordinate\Point;
-use FFMpeg\Media\Video;
-use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Coordinate\FrameRate;
-use FFMpeg\Filters\Audio\AudioResamplableFilter;
-use FFMpeg\Filters\Audio\AudioFilters;
-
+use BuddyBossPlatform\FFMpeg\Coordinate\Point;
+use BuddyBossPlatform\FFMpeg\Media\Video;
+use BuddyBossPlatform\FFMpeg\Coordinate\TimeCode;
+use BuddyBossPlatform\FFMpeg\Coordinate\Dimension;
+use BuddyBossPlatform\FFMpeg\Coordinate\FrameRate;
+use BuddyBossPlatform\FFMpeg\Filters\Audio\AudioResamplableFilter;
+use BuddyBossPlatform\FFMpeg\Filters\Audio\AudioFilters;
 class VideoFilters extends AudioFilters
 {
     public function __construct(Video $media)
     {
         parent::__construct($media);
     }
-
     /**
      * Resizes a video to a given dimension.
      *
@@ -35,13 +32,11 @@ class VideoFilters extends AudioFilters
      *
      * @return VideoFilters
      */
-    public function resize(Dimension $dimension, $mode = ResizeFilter::RESIZEMODE_FIT, $forceStandards = true)
+    public function resize(Dimension $dimension, $mode = ResizeFilter::RESIZEMODE_FIT, $forceStandards = \true)
     {
         $this->media->addFilter(new ResizeFilter($dimension, $mode, $forceStandards));
-
         return $this;
     }
-
     /**
      * Changes the video framerate.
      *
@@ -53,10 +48,8 @@ class VideoFilters extends AudioFilters
     public function framerate(FrameRate $framerate, $gop)
     {
         $this->media->addFilter(new FrameRateFilter($framerate, $gop));
-
         return $this;
     }
-
     /**
      * Extract multiple frames from the video
      *
@@ -68,10 +61,8 @@ class VideoFilters extends AudioFilters
     public function extractMultipleFrames($frameRate = ExtractMultipleFramesFilter::FRAMERATE_EVERY_2SEC, $destinationFolder = __DIR__)
     {
         $this->media->addFilter(new ExtractMultipleFramesFilter($frameRate, $destinationFolder));
-
         return $this;
     }
-
     /**
      * Synchronizes audio and video.
      *
@@ -80,10 +71,8 @@ class VideoFilters extends AudioFilters
     public function synchronize()
     {
         $this->media->addFilter(new SynchronizeFilter());
-
         return $this;
     }
-
     /**
      * Clips (cuts) the video.
      *
@@ -95,10 +84,8 @@ class VideoFilters extends AudioFilters
     public function clip($start, $duration = null)
     {
         $this->media->addFilter(new ClipFilter($start, $duration));
-
         return $this;
     }
-
     /**
      * Resamples the audio file.
      *
@@ -109,10 +96,8 @@ class VideoFilters extends AudioFilters
     public function audioResample($rate)
     {
         $this->media->addFilter(new AudioResamplableFilter($rate));
-
         return $this;
     }
-
     /**
      * Adds padding (black bars) to a video.
      *
@@ -123,17 +108,13 @@ class VideoFilters extends AudioFilters
     public function pad(Dimension $dimension)
     {
         $this->media->addFilter(new PadFilter($dimension));
-
         return $this;
     }
-
     public function rotate($angle)
     {
         $this->media->addFilter(new RotateFilter($angle, 30));
-
         return $this;
     }
-
     /**
      * Crops the video
      *
@@ -145,10 +126,8 @@ class VideoFilters extends AudioFilters
     public function crop(Point $point, Dimension $dimension)
     {
         $this->media->addFilter(new CropFilter($point, $dimension));
-
         return $this;
     }
-
     /**
      * @param string $imagePath
      * @param array  $coordinates
@@ -158,10 +137,8 @@ class VideoFilters extends AudioFilters
     public function watermark($imagePath, array $coordinates = array())
     {
         $this->media->addFilter(new WatermarkFilter($imagePath, $coordinates));
-
         return $this;
     }
-
     /**
      * Applies a custom filter: -vf foo bar
      *
@@ -172,7 +149,6 @@ class VideoFilters extends AudioFilters
     public function custom($parameters)
     {
         $this->media->addFilter(new CustomFilter($parameters));
-
         return $this;
     }
 }

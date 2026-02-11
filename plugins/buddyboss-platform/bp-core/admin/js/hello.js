@@ -9,14 +9,15 @@
 	 * Open the Hello BuddyBoss modal.
 	 */
 	var bp_hello_open_modal = function( event ) {
-		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-		  modal    = document.querySelector( '#bp-hello-container.bb-onload-modal' );
+		var backdrop = document.querySelector('#bp-hello-backdrop, #bb-hello-backdrop');
+		var modal = document.querySelector('#bp-hello-container.bb-onload-modal, #bb-hello-container.bb-onload-modal');
 
 		if ( null === backdrop ) {
 			return;
 		}
 		
 		if (
+			modal &&
 			modal.classList.contains( 'bb-update-modal' ) &&
 			'undefined' !== typeof BP_HELLO &&
 			'1' !== BP_HELLO.bb_display_auto_popup &&
@@ -25,7 +26,10 @@
 			return;
 		}
 
-		if ( modal.classList.contains( 'bb-onload-modal' ) ) {
+		if (
+			modal &&
+			modal.classList.contains( 'bb-onload-modal' )
+		) {
 			document.body.classList.add( 'bp-disable-scroll' );
 
 			// Show modal and overlay.
@@ -49,7 +53,9 @@
 		}
 
 		// Events.
-		modal.addEventListener( 'keydown', bp_hello_handle_keyboard_events );
+		if ( modal ) {
+			modal.addEventListener( 'keydown', bp_hello_handle_keyboard_events );
+		}
 		backdrop.addEventListener( 'click', bp_hello_close_modal );
 	};
 
@@ -61,8 +67,8 @@
 	document.addEventListener(
 		'click',
 		function( event ) {
-			var backdrop = document.getElementById( 'bp-hello-backdrop' );
-			if ( ! backdrop || ! document.getElementById( 'bp-hello-container' ) ) {
+			var backdrop = document.querySelector('#bp-hello-backdrop, #bb-hello-backdrop');
+			if ( !backdrop || ( !document.getElementById( 'bp-hello-container' ) && !document.getElementById( 'bb-hello-container' ) ) ) {
 				return;
 			}
 
@@ -83,8 +89,14 @@
 	 */
 	var bp_hello_close_modal = function() {
 
-		document.getElementById( 'bp-hello-container' ).setAttribute( 'style', 'display:none' );
-		document.getElementById( 'bp-hello-backdrop' ).setAttribute('style', 'display:none' );
+		var containers = document.querySelectorAll( '#bp-hello-container, #bb-hello-container' );
+		containers.forEach( function( container ) {
+			container.setAttribute( 'style', 'display:none' );
+		} );
+		var backdrops = document.querySelectorAll( '#bp-hello-backdrop, #bb-hello-backdrop' );
+		backdrops.forEach( function( backdrop ) {
+			backdrop.setAttribute( 'style', 'display:none' );
+		} );
 		document.body.className = document.body.className.replace('bp-disable-scroll','');
 		// Close model then video should also stop.
 		var iframeSelector = document.querySelector( '.bb-hello-tabs_content iframe' );
@@ -101,8 +113,8 @@
 	 * @param {Event} event - A keyboard focus event.
 	 */
 	var bp_hello_handle_keyboard_events = function( event ) {
-		var modal          = document.getElementById( 'bp-hello-container' ),
-			focus_targets  = Array.prototype.slice.call(
+		var modal = document.querySelector( '#bp-hello-container, #bb-hello-container' );
+		var	focus_targets  = Array.prototype.slice.call(
 				modal.querySelectorAll( 'a[href], button' )
 			),
 			first_tab_stop = focus_targets[0],
@@ -134,7 +146,10 @@
 		'keyup',
 		function( event ) {
 			if ( event.keyCode === 27 ) {
-				if ( ! document.getElementById( 'bp-hello-backdrop' ) || ! document.getElementById( 'bp-hello-container' ) ) {
+				if (
+					( !document.getElementById( 'bp-hello-backdrop' ) && !document.getElementById( 'bb-hello-backdrop' ) ) ||
+					( !document.getElementById( 'bp-hello-container' ) && !document.getElementById( 'bb-hello-container' ) )
+				) {
 					return;
 				}
 

@@ -8,26 +8,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Video;
 
-namespace FFMpeg\Filters\Video;
-
-use FFMpeg\Coordinate\FrameRate;
-use FFMpeg\Media\Video;
-use FFMpeg\Format\VideoInterface;
-
+use BuddyBossPlatform\FFMpeg\Coordinate\FrameRate;
+use BuddyBossPlatform\FFMpeg\Media\Video;
+use BuddyBossPlatform\FFMpeg\Format\VideoInterface;
 class FrameRateFilter implements VideoFilterInterface
 {
     private $rate;
     private $gop;
     private $priority;
-
     public function __construct(FrameRate $rate, $gop, $priority = 0)
     {
         $this->rate = $rate;
         $this->gop = $gop;
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -35,7 +31,6 @@ class FrameRateFilter implements VideoFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * Returns the frame rate.
      *
@@ -45,7 +40,6 @@ class FrameRateFilter implements VideoFilterInterface
     {
         return $this->rate;
     }
-
     /**
      * Returns the GOP size.
      *
@@ -57,14 +51,12 @@ class FrameRateFilter implements VideoFilterInterface
     {
         return $this->gop;
     }
-
     /**
      * {@inheritdoc}
      */
     public function apply(Video $video, VideoInterface $format)
     {
         $commands = array('-r', $this->rate->getValue());
-
         /**
          * @see http://sites.google.com/site/linuxencoding/x264-ffmpeg-mapping
          */
@@ -76,7 +68,6 @@ class FrameRateFilter implements VideoFilterInterface
             $commands[] = '-g';
             $commands[] = $this->gop;
         }
-
         return $commands;
     }
 }

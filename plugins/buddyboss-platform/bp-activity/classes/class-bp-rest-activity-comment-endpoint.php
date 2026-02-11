@@ -25,6 +25,13 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	protected $activity_endpoint;
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -59,7 +66,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -67,7 +75,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			$activity_endpoint . '/comment/(?P<comment_id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'comment_id' => array(
 						'description' => __( 'A unique numeric ID for the activity comment.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -96,7 +104,8 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 	}
@@ -135,7 +144,27 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $activity->children ) ) {
-			$request->set_param( 'context', 'view' );
+
+			if ( empty( $request->get_param( 'context' ) ) ) {
+				$request->set_param( 'context', 'view' );
+			}
+
+			$comments_count = BP_Activity_Activity::bb_get_all_activity_comment_children_count(
+				array(
+					'spam'     => 'ham_only',
+					'activity' => $activity,
+				)
+			);
+			if ( ! empty( $comments_count ) ) {
+				$retval['comment_count']       = $comments_count['all_child_count'];
+				$retval['level_comment_count'] = $comments_count['top_level_count'];
+			}
+
+			$request->set_param( 'parent_comment', $activity );
+			if ( empty( $request->get_param( 'parent_comment_id' ) ) ) {
+				$request->set_param( 'parent_comment_id', $activity->id );
+			}
+
 			$retval['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 		}
 
@@ -181,6 +210,16 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
 				array(
 					'status' => '404',
+				)
+			);
+		}
+
+		if ( true === $retval && ! $this->can_see( $request ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you cannot view the activity comment.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -235,7 +274,9 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$request->set_param( 'context', 'view' );
+		if ( empty( $request->get_param( 'context' ) ) ) {
+			$request->set_param( 'context', 'view' );
+		}
 		$comments = $this->prepare_activity_comments( array( $activity_comment ), $request );
 		$retval  = ! empty( $comments[0] ) ? $comments[0] : $comments;
 
@@ -494,6 +535,18 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 						'status' => 404,
 					)
 				);
+			} elseif (
+				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
+				bb_is_close_activity_comments_enabled() &&
+				bb_is_activity_comments_closed( $activity->id )
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to create an activity comment. The comments are closed for the activity.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
 			}
 		}
 
@@ -652,6 +705,19 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					__( 'Invalid activity comment ID.', 'buddyboss' ),
 					array(
 						'status' => 404,
+					)
+				);
+			} elseif (
+				! empty( $request['id'] ) &&
+				function_exists( 'bb_is_close_activity_comments_enabled' ) &&
+				bb_is_close_activity_comments_enabled() &&
+				bb_is_activity_comments_closed( $request['id'] )
+			) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to update this activity comment. The comments are closed for the activity.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
 					)
 				);
 			} elseif (
@@ -894,7 +960,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		$params['id'] = array(
 			'description' => __( 'A unique numeric ID for the activity.', 'buddyboss' ),
 			'type'        => 'integer',
-			'reqiured'    => true,
+			'required'    => true,
 		);
 
 		$params['display_comments'] = array(
@@ -955,10 +1021,29 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			return $data;
 		}
 
+		$comment_load_limit = false;
+
+		if ( ! empty( $request->get_param( 'apply_limit' ) ) ) {
+			$comment_load_limit = bb_get_activity_comment_loading();
+		}
+
+		$comment_loaded_count = 0;
 		foreach ( $comments as $comment ) {
+
+			if (
+				false !== $comment_load_limit &&
+				(
+					$comment_loaded_count === $comment_load_limit
+				)
+			) {
+				break;
+			}
+
 			$data[] = $this->activity_endpoint->prepare_response_for_collection(
 				$this->activity_endpoint->prepare_item_for_response( $comment, $request )
 			);
+
+			$comment_loaded_count++;
 		}
 
 		/**
@@ -1076,6 +1161,22 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	protected function can_see( $request ) {
+
+		// Check if the user can read the activity as per privacy settings.
+		if ( ! empty( $request['id'] ) && function_exists( 'bb_validate_activity_privacy' ) ) {
+			$privacy_check = bb_validate_activity_privacy(
+				array(
+					'activity_id'     => $request['id'],
+					'validate_action' => 'view_activity',
+					'user_id'         => bp_loggedin_user_id(),
+				)
+			);
+
+			if ( is_wp_error( $privacy_check ) ) {
+				return false;
+			}
+		}
+
 		$activity_comment = $this->get_activity_comment_object( $request );
 
 		return ( ! empty( $activity_comment ) && bp_activity_user_can_read( $activity_comment, bp_loggedin_user_id() ) );

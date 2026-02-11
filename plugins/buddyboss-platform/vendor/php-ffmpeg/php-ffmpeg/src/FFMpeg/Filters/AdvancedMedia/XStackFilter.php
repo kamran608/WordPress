@@ -1,9 +1,8 @@
 <?php
 
-namespace FFMpeg\Filters\AdvancedMedia;
+namespace BuddyBossPlatform\FFMpeg\Filters\AdvancedMedia;
 
-use FFMpeg\Media\AdvancedMedia;
-
+use BuddyBossPlatform\FFMpeg\Media\AdvancedMedia;
 /**
  * "xstack" filter.
  * This filter helps you to create a collage from the given videos.
@@ -18,17 +17,14 @@ class XStackFilter extends AbstractComplexFilter
     const LAYOUT_1X4 = '0_0|0_h0|0_h0+h1|0_h0+h1+h2';
     const LAYOUT_3X3 = '0_0|0_h0|0_h0+h1|w0_0|w0_h0|w0_h0+h1|w0+w3_0|w0+w3_h0|w0+w3_h0+h1';
     const LAYOUT_4X4 = '0_0|0_h0|0_h0+h1|0_h0+h1+h2|w0_0|w0_h0|w0_h0+h1|w0_h0+h1+h2|w0+w4_0|w0+w4_h0|w0+w4_h0+h1|w0+w4_h0+h1+h2|w0+w4+w8_0|w0+w4+w8_h0|w0+w4+w8_h0+h1|w0+w4+w8_h0+h1+h2';
-
     /**
      * @var string
      */
     private $layout;
-
     /**
      * @var int
      */
     private $inputsCount;
-
     /**
      * CustomComplexFilter constructor.
      *
@@ -42,7 +38,6 @@ class XStackFilter extends AbstractComplexFilter
         $this->layout = $layout;
         $this->inputsCount = $inputsCount;
     }
-
     /**
      * @param int $count
      *
@@ -56,7 +51,6 @@ class XStackFilter extends AbstractComplexFilter
         }
         return $result;
     }
-
     /**
      * Get name of the filter.
      *
@@ -66,7 +60,6 @@ class XStackFilter extends AbstractComplexFilter
     {
         return 'xstack';
     }
-
     /**
      * Get minimal version of ffmpeg starting with which this filter is supported.
      *
@@ -76,18 +69,11 @@ class XStackFilter extends AbstractComplexFilter
     {
         return '4.1';
     }
-
     /**
      * {@inheritdoc}
      */
     public function applyComplex(AdvancedMedia $media)
     {
-        return array(
-            '-filter_complex',
-            $this->getName() . $this->buildFilterOptions(array(
-                'inputs' => $this->inputsCount,
-                'layout' => $this->layout
-            ))
-        );
+        return array('-filter_complex', $this->getName() . $this->buildFilterOptions(array('inputs' => $this->inputsCount, 'layout' => $this->layout)));
     }
 }

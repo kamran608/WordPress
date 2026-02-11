@@ -8,14 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\Alchemy\BinaryDriver;
 
-namespace Alchemy\BinaryDriver;
-
-use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
-use Psr\Log\LoggerAwareInterface;
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\ExecutionFailureException;
+use BuddyBossPlatform\Psr\Log\LoggerAwareInterface;
 use SplObjectStorage;
-use Symfony\Component\Process\Process;
-
+use BuddyBossPlatform\Symfony\Component\Process\Process;
 interface ProcessRunnerInterface extends LoggerAwareInterface
 {
     /**

@@ -8,18 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Alchemy\BinaryDriver;
+namespace BuddyBossPlatform\Alchemy\BinaryDriver;
 
 class Configuration implements ConfigurationInterface
 {
     private $data;
-
     public function __construct(array $data = array())
     {
         $this->data = $data;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -27,7 +24,6 @@ class Configuration implements ConfigurationInterface
     {
         return new \ArrayIterator($this->data);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -35,25 +31,21 @@ class Configuration implements ConfigurationInterface
     {
         return isset($this->data[$key]) ? $this->data[$key] : $default;
     }
-
     /**
      * {@inheritdoc}
      */
     public function set($key, $value)
     {
         $this->data[$key] = $value;
-
         return $this;
     }
-
     /**
      * {@inheritdoc}
      */
     public function has($key)
     {
-        return array_key_exists($key, $this->data);
+        return \array_key_exists($key, $this->data);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -61,10 +53,8 @@ class Configuration implements ConfigurationInterface
     {
         $value = $this->get($key);
         unset($this->data[$key]);
-
         return $value;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -72,7 +62,6 @@ class Configuration implements ConfigurationInterface
     {
         return $this->data;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -80,7 +69,6 @@ class Configuration implements ConfigurationInterface
     {
         return $this->has($offset);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -88,7 +76,6 @@ class Configuration implements ConfigurationInterface
     {
         return $this->get($offset);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -96,7 +83,6 @@ class Configuration implements ConfigurationInterface
     {
         $this->set($offset, $value);
     }
-
     /**
      * {@inheritdoc}
      */

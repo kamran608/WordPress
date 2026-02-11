@@ -37,6 +37,13 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	protected $members_endpoint;
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -58,7 +65,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<group_id>[\d]+)/members',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'group_id' => array(
 						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -76,7 +83,8 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_method( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -84,7 +92,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<group_id>[\d]+)/members/(?P<user_id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'group_id' => array(
 						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -106,7 +114,8 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_method( WP_REST_Server::DELETABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 	}
@@ -399,12 +408,38 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 
 				$loggedin_user_id = bp_loggedin_user_id();
 
+				if ( 'private' === $group->status ) {
+					$get_selected_member_type_join   = array();
+					$get_requesting_user_member_type = '';
+
+					if (
+						true === bp_member_type_enable_disable() &&
+						true === bp_disable_group_type_creation()
+					) {
+						$group_type                      = function_exists( 'bp_groups_get_group_type' ) ? bp_groups_get_group_type( $group->id ) : '';
+						$group_type_id                   = bp_group_get_group_type_id( $group_type );
+						$get_selected_member_type_join   = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+						$get_selected_member_type_join   = ( isset( $get_selected_member_type_join ) && ! empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
+						$get_requesting_user_member_type = bp_get_member_type( $loggedin_user_id );
+					}
+				}
+
+				// Check if user can join based on member type restrictions for private groups.
+				$can_join_by_member_type = (
+					'private' === $group->status &&
+					! empty( $get_selected_member_type_join ) &&
+					is_array( $get_selected_member_type_join ) &&
+					! empty( $get_requesting_user_member_type ) &&
+					in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true )
+				);
+
 				// Users may only freely join public groups.
 				if (
-					! bp_current_user_can( 'groups_join_group', array( 'group_id' => $group->id ) )
+					( ! bp_current_user_can( 'groups_join_group', array( 'group_id' => $group->id ) ) && ! $can_join_by_member_type )
 					|| groups_is_user_member( $loggedin_user_id, $group->id ) // As soon as they are not already members.
 					|| groups_is_user_banned( $loggedin_user_id, $group->id ) // And as soon as they are not banned from it.
 					|| $loggedin_user_id !== $user->ID // You can only add yourself to a group.
+					|| ( 'private' === $group->status && ! $can_join_by_member_type )
 				) {
 					$retval = new WP_Error(
 						'bp_rest_group_member_failed_to_join',

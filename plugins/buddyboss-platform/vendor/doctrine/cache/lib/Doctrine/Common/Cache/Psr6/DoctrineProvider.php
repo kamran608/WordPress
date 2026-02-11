@@ -8,17 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\Doctrine\Common\Cache\Psr6;
 
-namespace Doctrine\Common\Cache\Psr6;
-
-use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Cache\CacheProvider;
-use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\Cache\Adapter\DoctrineAdapter as SymfonyDoctrineAdapter;
-use Symfony\Contracts\Service\ResetInterface;
-
+use BuddyBossPlatform\Doctrine\Common\Cache\Cache;
+use BuddyBossPlatform\Doctrine\Common\Cache\CacheProvider;
+use BuddyBossPlatform\Psr\Cache\CacheItemPoolInterface;
+use BuddyBossPlatform\Symfony\Component\Cache\Adapter\DoctrineAdapter as SymfonyDoctrineAdapter;
+use BuddyBossPlatform\Symfony\Contracts\Service\ResetInterface;
 use function rawurlencode;
-
 /**
  * This class was copied from the Symfony Framework, see the original copyright
  * notice above. The code is distributed subject to the license terms in
@@ -28,55 +25,44 @@ final class DoctrineProvider extends CacheProvider
 {
     /** @var CacheItemPoolInterface */
     private $pool;
-
-    public static function wrap(CacheItemPoolInterface $pool): Cache
+    public static function wrap(CacheItemPoolInterface $pool) : Cache
     {
         if ($pool instanceof CacheAdapter) {
             return $pool->getCache();
         }
-
         if ($pool instanceof SymfonyDoctrineAdapter) {
             $getCache = function () {
                 // phpcs:ignore Squiz.Scope.StaticThisUsage.Found
                 return $this->provider;
             };
-
             return $getCache->bindTo($pool, SymfonyDoctrineAdapter::class)();
         }
-
         return new self($pool);
     }
-
     private function __construct(CacheItemPoolInterface $pool)
     {
         $this->pool = $pool;
     }
-
     /** @internal */
-    public function getPool(): CacheItemPoolInterface
+    public function getPool() : CacheItemPoolInterface
     {
         return $this->pool;
     }
-
-    public function reset(): void
+    public function reset() : void
     {
         if ($this->pool instanceof ResetInterface) {
             $this->pool->reset();
         }
-
         $this->setNamespace($this->getNamespace());
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doFetch($id)
     {
         $item = $this->pool->getItem(rawurlencode($id));
-
-        return $item->isHit() ? $item->get() : false;
+        return $item->isHit() ? $item->get() : \false;
     }
-
     /**
      * {@inheritdoc}
      *
@@ -86,7 +72,6 @@ final class DoctrineProvider extends CacheProvider
     {
         return $this->pool->hasItem(rawurlencode($id));
     }
-
     /**
      * {@inheritdoc}
      *
@@ -95,14 +80,11 @@ final class DoctrineProvider extends CacheProvider
     protected function doSave($id, $data, $lifeTime = 0)
     {
         $item = $this->pool->getItem(rawurlencode($id));
-
         if (0 < $lifeTime) {
             $item->expiresAfter($lifeTime);
         }
-
         return $this->pool->save($item->set($data));
     }
-
     /**
      * {@inheritdoc}
      *
@@ -112,7 +94,6 @@ final class DoctrineProvider extends CacheProvider
     {
         return $this->pool->deleteItem(rawurlencode($id));
     }
-
     /**
      * {@inheritdoc}
      *
@@ -122,7 +103,6 @@ final class DoctrineProvider extends CacheProvider
     {
         return $this->pool->clear();
     }
-
     /**
      * {@inheritdoc}
      *

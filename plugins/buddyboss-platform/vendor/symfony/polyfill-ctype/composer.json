@@ -1,9 +1,14 @@
 {
-    "name": "symfony/polyfill-ctype",
+    "name": "symfony\/polyfill-ctype",
     "type": "library",
     "description": "Symfony polyfill for ctype functions",
-    "keywords": ["polyfill", "compatibility", "portable", "ctype"],
-    "homepage": "https://symfony.com",
+    "keywords": [
+        "polyfill",
+        "compatibility",
+        "portable",
+        "ctype"
+    ],
+    "homepage": "https:\/\/symfony.com",
     "license": "MIT",
     "authors": [
         {
@@ -12,18 +17,22 @@
         },
         {
             "name": "Symfony Community",
-            "homepage": "https://symfony.com/contributors"
+            "homepage": "https:\/\/symfony.com\/contributors"
         }
     ],
     "require": {
-        "php": ">=7.1"
+        "php": ">=7.2"
     },
     "provide": {
         "ext-ctype": "*"
     },
     "autoload": {
-        "psr-4": { "Symfony\\Polyfill\\Ctype\\": "" },
-        "files": [ "bootstrap.php" ]
+        "psr-4": {
+            "BuddyBossPlatform\\Symfony\\Polyfill\\Ctype\\": ""
+        },
+        "files": [
+            "bootstrap.php"
+        ]
     },
     "suggest": {
         "ext-ctype": "For best performance"
@@ -31,8 +40,8 @@
     "minimum-stability": "dev",
     "extra": {
         "thanks": {
-            "name": "symfony/polyfill",
-            "url": "https://github.com/symfony/polyfill"
+            "name": "symfony\/polyfill",
+            "url": "https:\/\/github.com\/symfony\/polyfill"
         }
     }
 }

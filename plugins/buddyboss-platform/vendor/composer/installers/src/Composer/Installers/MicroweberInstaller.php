@@ -1,17 +1,10 @@
 <?php
+
 namespace Composer\Installers;
 
-class MicroweberInstaller extends BaseInstaller
+class MicroweberInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'module' => 'userfiles/modules/{$install_item_dir}/',
-        'module-skin' => 'userfiles/modules/{$install_item_dir}/templates/',
-        'template' => 'userfiles/templates/{$install_item_dir}/',
-        'element' => 'userfiles/elements/{$install_item_dir}/',
-        'vendor' => 'vendor/{$install_item_dir}/',
-        'components' => 'components/{$install_item_dir}/'
-    );
-
+    protected $locations = array('module' => 'userfiles/modules/{$install_item_dir}/', 'module-skin' => 'userfiles/modules/{$install_item_dir}/templates/', 'template' => 'userfiles/templates/{$install_item_dir}/', 'element' => 'userfiles/elements/{$install_item_dir}/', 'vendor' => 'vendor/{$install_item_dir}/', 'components' => 'components/{$install_item_dir}/');
     /**
      * Format package name.
      *
@@ -22,8 +15,6 @@ class MicroweberInstaller extends BaseInstaller
      */
     public function inflectPackageVars($vars)
     {
-
-
         if ($this->package->getTargetDir()) {
             $vars['install_item_dir'] = $this->package->getTargetDir();
         } else {
@@ -53,67 +44,51 @@ class MicroweberInstaller extends BaseInstaller
                 return $this->inflectElementVars($vars);
             }
         }
-
-
         return $vars;
     }
-
     protected function inflectTemplateVars($vars)
     {
-        $vars['install_item_dir'] = preg_replace('/-template$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/template-$/', '', $vars['install_item_dir']);
-
+        $vars['install_item_dir'] = \preg_replace('/-template$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/template-$/', '', $vars['install_item_dir']);
         return $vars;
     }
-
     protected function inflectTemplatesVars($vars)
     {
-        $vars['install_item_dir'] = preg_replace('/-templates$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/templates-$/', '', $vars['install_item_dir']);
-
+        $vars['install_item_dir'] = \preg_replace('/-templates$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/templates-$/', '', $vars['install_item_dir']);
         return $vars;
     }
-
     protected function inflectCoreVars($vars)
     {
-        $vars['install_item_dir'] = preg_replace('/-providers$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/-provider$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/-adapter$/', '', $vars['install_item_dir']);
-
+        $vars['install_item_dir'] = \preg_replace('/-providers$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/-provider$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/-adapter$/', '', $vars['install_item_dir']);
         return $vars;
     }
-
     protected function inflectModuleVars($vars)
     {
-        $vars['install_item_dir'] = preg_replace('/-module$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/module-$/', '', $vars['install_item_dir']);
-
+        $vars['install_item_dir'] = \preg_replace('/-module$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/module-$/', '', $vars['install_item_dir']);
         return $vars;
     }
-
     protected function inflectModulesVars($vars)
     {
-        $vars['install_item_dir'] = preg_replace('/-modules$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/modules-$/', '', $vars['install_item_dir']);
-
+        $vars['install_item_dir'] = \preg_replace('/-modules$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/modules-$/', '', $vars['install_item_dir']);
         return $vars;
     }
-
     protected function inflectSkinVars($vars)
     {
-        $vars['install_item_dir'] = preg_replace('/-skin$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/skin-$/', '', $vars['install_item_dir']);
-
+        $vars['install_item_dir'] = \preg_replace('/-skin$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/skin-$/', '', $vars['install_item_dir']);
         return $vars;
     }
-
     protected function inflectElementVars($vars)
     {
-        $vars['install_item_dir'] = preg_replace('/-elements$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/elements-$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/-element$/', '', $vars['install_item_dir']);
-        $vars['install_item_dir'] = preg_replace('/element-$/', '', $vars['install_item_dir']);
-
+        $vars['install_item_dir'] = \preg_replace('/-elements$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/elements-$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/-element$/', '', $vars['install_item_dir']);
+        $vars['install_item_dir'] = \preg_replace('/element-$/', '', $vars['install_item_dir']);
         return $vars;
     }
 }

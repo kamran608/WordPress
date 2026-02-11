@@ -1,28 +1,24 @@
 <?php
 
-namespace Alchemy\Tests\BinaryDriver;
+namespace BuddyBossPlatform\Alchemy\Tests\BinaryDriver;
 
-use Alchemy\BinaryDriver\ProcessBuilderFactory;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\ProcessBuilderFactory;
 class LTSProcessBuilderFactoryTest extends AbstractProcessBuilderFactoryTest
 {
     public function setUp()
     {
-        if (!class_exists('Symfony\Component\Process\ProcessBuilder')) {
+        if (!\class_exists('BuddyBossPlatform\\Symfony\\Component\\Process\\ProcessBuilder')) {
             $this->markTestSkipped('ProcessBuilder is not available.');
             return;
         }
-
         parent::setUp();
     }
-
     protected function getProcessBuilderFactory($binary)
     {
         $factory = new ProcessBuilderFactory($binary);
         $factory->setBuilder(new LTSProcessBuilder());
-        ProcessBuilderFactory::$emulateSfLTS = false;
+        ProcessBuilderFactory::$emulateSfLTS = \false;
         $factory->useBinary($binary);
-
         return $factory;
     }
 }

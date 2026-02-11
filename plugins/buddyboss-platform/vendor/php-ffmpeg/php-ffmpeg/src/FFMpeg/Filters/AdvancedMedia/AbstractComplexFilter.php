@@ -1,6 +1,6 @@
 <?php
 
-namespace FFMpeg\Filters\AdvancedMedia;
+namespace BuddyBossPlatform\FFMpeg\Filters\AdvancedMedia;
 
 abstract class AbstractComplexFilter implements ComplexCompatibleFilter
 {
@@ -8,7 +8,6 @@ abstract class AbstractComplexFilter implements ComplexCompatibleFilter
      * @var int
      */
     protected $priority;
-
     /**
      * AbstractComplexFilter constructor.
      *
@@ -18,7 +17,6 @@ abstract class AbstractComplexFilter implements ComplexCompatibleFilter
     {
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -26,7 +24,6 @@ abstract class AbstractComplexFilter implements ComplexCompatibleFilter
     {
         return $this->priority;
     }
-
     /**
      * Get minimal version of ffmpeg starting with which this filter is supported.
      *
@@ -36,7 +33,6 @@ abstract class AbstractComplexFilter implements ComplexCompatibleFilter
     {
         return '0.3';
     }
-
     /**
      * Generate the config of the filter.
      *
@@ -52,11 +48,9 @@ abstract class AbstractComplexFilter implements ComplexCompatibleFilter
                 $config[] = $paramName . '=' . $paramValue;
             }
         }
-
         if (!empty($config)) {
-            return '=' . implode(':', $config);
+            return '=' . \implode(':', $config);
         }
-
         return '';
     }
 }

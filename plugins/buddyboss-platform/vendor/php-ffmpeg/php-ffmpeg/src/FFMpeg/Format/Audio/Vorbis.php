@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Format\Audio;
+namespace BuddyBossPlatform\FFMpeg\Format\Audio;
 
 /**
  * The Vorbis audio format
@@ -20,7 +19,6 @@ class Vorbis extends DefaultAudio
     {
         $this->audioCodec = 'vorbis';
     }
-
     /**
      * {@inheritdoc}
      */
@@ -28,7 +26,6 @@ class Vorbis extends DefaultAudio
     {
         return array('-strict', '-2');
     }
-
     /**
      * {@inheritDoc}
      */

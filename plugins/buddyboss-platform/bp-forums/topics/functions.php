@@ -174,7 +174,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	/** Discussion Title */
 
 	if ( ! empty( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = sanitize_text_field( $_POST['bbp_topic_title'] );
+		$topic_title = sanitize_text_field( wp_unslash( $_POST['bbp_topic_title'] ) );
 	}
 
 	// Filter and sanitize.
@@ -669,7 +669,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	/** Discussion Title */
 
 	if ( ! empty( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = esc_attr( strip_tags( $_POST['bbp_topic_title'] ) );
+		$topic_title = sanitize_text_field( wp_unslash( $_POST['bbp_topic_title'] ) );
 	}
 
 	// Filter and sanitize.
@@ -2231,8 +2231,16 @@ function bbp_get_topic_types( $topic_id = 0 ) {
  * @return array IDs of sticky topics of a forum or super stickies
  */
 function bbp_get_stickies( $forum_id = 0 ) {
-	$stickies = empty( $forum_id ) ? bbp_get_super_stickies() : get_post_meta( $forum_id, '_bbp_sticky_topics', true );
-	$stickies = ( empty( $stickies ) || ! is_array( $stickies ) ) ? array() : $stickies;
+
+	$cache_key = 'bb_stickies_forum_' . $forum_id;
+	$stickies  = wp_cache_get( $cache_key, 'bbpress' );
+
+	if ( false === $stickies ) {
+		$stickies = empty( $forum_id ) ? bbp_get_super_stickies() : get_post_meta( $forum_id, '_bbp_sticky_topics', true );
+		$stickies = ( empty( $stickies ) || ! is_array( $stickies ) ) ? array() : $stickies;
+
+		wp_cache_set( $cache_key, $stickies, 'bbpress_posts' );
+	}
 
 	return apply_filters( 'bbp_get_stickies', $stickies, (int) $forum_id );
 }
@@ -2247,8 +2255,18 @@ function bbp_get_stickies( $forum_id = 0 ) {
  * @return array IDs of super sticky topics
  */
 function bbp_get_super_stickies() {
-	$stickies = get_option( '_bbp_super_sticky_topics', array() );
-	$stickies = ( empty( $stickies ) || ! is_array( $stickies ) ) ? array() : $stickies;
+
+	// Try to get super stickies from cache first.
+	$cache_key = 'bb_super_sticky_topics';
+	$stickies  = wp_cache_get( $cache_key, 'bbpress_posts' );
+
+	// If not in cache, get from database and cache it.
+	if ( false === $stickies ) {
+		$stickies = get_option( '_bbp_super_sticky_topics', array() );
+		$stickies = ( empty( $stickies ) || ! is_array( $stickies ) ) ? array() : $stickies;
+
+		wp_cache_set( $cache_key, $stickies, 'bbpress_posts' );
+	}
 
 	return apply_filters( 'bbp_get_super_stickies', $stickies );
 }
@@ -2321,8 +2339,22 @@ function bbp_toggle_topic_handler( $action = '' ) {
 
 	// What is the user doing here?.
 	if ( ! current_user_can( 'edit_topic', $topic->ID ) || ( 'bbp_toggle_topic_trash' === $action && ! current_user_can( 'delete_topic', $topic->ID ) ) ) {
-		bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that.', 'buddyboss' ) );
-		return;
+
+		if ( 'bbp_toggle_topic_trash' === $action && bp_is_active( 'groups' ) ) {
+			$author_id    = bbp_get_topic_author_id( $topic->ID );
+			$forum_id     = bbp_get_topic_forum_id( $topic->ID );
+			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$allow_delete = bb_moderator_can_delete_topic_reply( $topic, $args );
+			if ( ! $allow_delete ) {
+				bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+				return;
+			}
+		} else {
+			bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
+
+			return;
+		}
 	}
 
 	// What action are we trying to perform?.
@@ -3306,6 +3338,14 @@ function bbp_stick_topic( $topic_id = 0, $super = false ) {
 	$stickies = array_values( $stickies );
 	$success  = ! empty( $super ) ? update_option( '_bbp_super_sticky_topics', $stickies ) : update_post_meta( $forum_id, '_bbp_sticky_topics', $stickies );
 
+	if ( $success ) {
+		if ( $super ) {
+			wp_cache_delete( 'bb_super_sticky_topics', 'bbpress_posts' );
+		} else {
+			wp_cache_delete( 'bb_stickies_forum_' . $forum_id, 'bbpress_posts' );
+		}
+	}
+
 	do_action( 'bbp_sticked_topic', $topic_id, $super, $success );
 
 	return (bool) $success;
@@ -3350,6 +3390,14 @@ function bbp_unstick_topic( $topic_id = 0 ) {
 			$success = ! empty( $super ) ? delete_option( '_bbp_super_sticky_topics' ) : delete_post_meta( $forum_id, '_bbp_sticky_topics' );
 		} else {
 			$success = ! empty( $super ) ? update_option( '_bbp_super_sticky_topics', $stickies ) : update_post_meta( $forum_id, '_bbp_sticky_topics', $stickies );
+		}
+	}
+
+	if ( $success ) {
+		if ( $super ) {
+			wp_cache_delete( 'bb_super_sticky_topics', 'bbpress_posts' );
+		} else {
+			wp_cache_delete( 'bb_stickies_forum_' . $forum_id, 'bbpress_posts' );
 		}
 	}
 
@@ -3650,7 +3698,7 @@ function bbp_get_topic_tag_names( $topic_id = 0, $sep = ', ' ) {
 function bbp_topic_content_autoembed() {
 	global $wp_embed;
 
-	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
+	if ( is_a( $wp_embed, 'WP_Embed' ) ) {
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
 		add_filter( 'bbp_get_topic_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
 	}

@@ -412,7 +412,9 @@ function bp_has_groups( $args = '' ) {
 	if (
 		( empty( $args['scope'] ) || ( ! empty( $args['scope'] ) && 'all' === $args['scope'] ) ) &&
 		! bp_is_user_groups() && ! bp_is_group_subgroups() &&
-		( wp_doing_ajax() && empty( $group_type ) )
+		empty( $group_type ) &&
+		( ! is_admin() || wp_doing_ajax() ) &&
+		! bb_is_elementor_maintenance_mode_enabled()
 	) {
 		// get all excluded group types.
 		$bp_group_type_ids = bp_groups_get_excluded_group_types();
@@ -488,15 +490,6 @@ function bp_has_groups( $args = '' ) {
 		'update_meta_cache'  => (bool) $r['update_meta_cache'],
 		'update_admin_cache' => (bool) $r['update_admin_cache'],
 	);
-
-	if ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) {
-		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
-		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
-		$args['include']     = $ids;
-		$args['slug']        = '';
-		$args['type']        = '';
-		$args['show_hidden'] = true;
-	}
 
 	// Setup the Groups template global.
 	$groups_template = new BP_Groups_Template( $args );
@@ -773,17 +766,17 @@ function bp_get_group_type( $group = false ) {
 		if ( 'public' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Public', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Hidden', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
 			$group_visibility = esc_html__( 'Private', 'buddyboss' );
-			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . ' </span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="group-type bb-current-group-' . esc_attr( $type_slug ) . '">' . $group_type . '</span>' : '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
 
 		} else {
 			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
@@ -1251,9 +1244,10 @@ function bp_get_group_link( $group = null ) {
 	}
 
 	$link = sprintf(
-		'<a href="%s" class="bp-group-home-link %s-home-link">%s</a>',
+		'<a href="%s" class="bp-group-home-link %s-home-link" data-bb-hp-group="%s">%s</a>',
 		esc_url( bp_get_group_permalink( $group ) ),
 		esc_attr( bp_get_group_slug( $group ) ),
+		esc_attr( $group->id ),
 		esc_html( bp_get_group_name( $group ) )
 	);
 
@@ -1971,6 +1965,11 @@ function bp_group_list_admins( $group = false ) {
 				?>
 				<li>
 					<a href="<?php echo esc_url( bp_get_group_permalink( $group ) . 'members' ); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="+
+						<?php
+						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
+						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
+						?>
+						" aria-label="+
 						<?php
 						$organizer_text = ( $member_count > 1 ) ? get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) : get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' );
 						printf( '%s ' . esc_attr( $organizer_text ), esc_attr( $member_count ) );
@@ -5713,7 +5712,7 @@ function bp_group_creation_tabs() {
 				<?php
 			}
 
-				echo $counter . '. ' . $step['name'];
+			echo apply_filters( 'bb_group_creation_tab_number', $counter . '. ', $counter ) . $step['name'];
 
 			if ( $is_enabled ) {
 				?>
@@ -7977,7 +7976,7 @@ function bb_platform_group_headers_element_enable( $element ) {
  *
  * @since 1.9.1
  *
- * @param bool $default Optional. Fallback value if not found in the database.
+ * @param string $default Optional. Fallback value if not found in the database.
  *                      Default: left.
  *
  * @return string grid style for group directory
@@ -8013,7 +8012,7 @@ function bb_platform_group_element_enable( $element ) {
  *
  * @since 1.9.1
  *
- * @param bool $default Optional. Fallback value if not found in the database.
+ * @param string $default Optional. Fallback value if not found in the database.
  *                      Default: left.
  *
  * @return string grid style for group directory
@@ -8025,4 +8024,72 @@ function bb_platform_group_grid_style( $default = 'left' ) {
 	}
 
 	return $default;
+}
+
+/**
+ * Return true when there are more group members' items to be shown than currently appear.
+ *
+ * @since BuddyBoss 2.9.30
+ *
+ * @global object $members_template {@link BP_Members_Template}
+ *
+ * @return bool $has_more_items True if more items, false if not.
+ */
+function bb_group_members_has_more_items() {
+	global $members_template;
+
+	if ( ! empty( $members_template->has_more_items ) ) {
+		$has_more_items = true;
+	} else {
+		$remaining_pages = 0;
+
+		if ( ! empty( $members_template->pag_page ) ) {
+			$remaining_pages = floor( ( $members_template->total_member_count - 1 ) / ( $members_template->pag_num * $members_template->pag_page ) );
+		}
+
+		$has_more_items = (int) $remaining_pages > 0;
+	}
+
+	/**
+	 * Filters whether there are more group members' items to display.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param bool $has_more_items Whether or not there are more members' items to display.
+	 */
+	return apply_filters( 'bb_group_members_has_more_items', $has_more_items );
+}
+
+/**
+ * Output the URL for the Load More link.
+ *
+ * @since BuddyBoss 2.9.30
+ */
+function bb_groups_members_load_more_link() {
+	echo esc_url( bb_get_groups_members_load_more_link() );
+}
+
+/**
+ * Get the URL for the Load More link.
+ *
+ * @since BuddyBoss 2.9.30
+ *
+ * @return string $link
+ */
+function bb_get_groups_members_load_more_link() {
+	global $members_template;
+
+	$url  = bp_get_requested_url();
+	$link = add_query_arg( $members_template->pag_arg, $members_template->pag_page + 1, $url );
+
+	/**
+	 * Filters the Load More link URL.
+	 *
+	 * @since BuddyBoss 2.9.30
+	 *
+	 * @param string $link                The "Load More" link URL with appropriate query args.
+	 * @param string $url                 The original URL.
+	 * @param object $members_template The members template loop global.
+	 */
+	return apply_filters( 'bb_get_groups_members_load_more_link', $link, $url, $members_template );
 }

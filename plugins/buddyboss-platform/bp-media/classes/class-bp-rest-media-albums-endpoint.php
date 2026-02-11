@@ -23,6 +23,13 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	protected $media_endpoint;
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -55,7 +62,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -63,7 +71,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'A unique numeric ID for the album.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -87,7 +95,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -1241,7 +1250,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	public function bp_rest_create_media_album( $args ) {
 		$upload_ids = ( ! empty( $args['upload_ids'] ) ? $args['upload_ids'] : '' );
 		$privacy    = $args['privacy'];
-		$title      = $args['title'];
+		$title      = sanitize_text_field( wp_unslash( $args['title'] ) );
 		$user_id    = ( ! empty( $args['user_id'] ) ? (int) $args['user_id'] : get_current_user_id() );
 		$group_id   = ( ! empty( $args['group_id'] ) ? (int) $args['group_id'] : false );
 		$id         = ( ! empty( $args['id'] ) ? (int) $args['id'] : false );

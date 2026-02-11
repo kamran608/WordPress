@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Coordinate;
 
-namespace FFMpeg\Coordinate;
-
-use FFMpeg\Exception\InvalidArgumentException;
-
+use BuddyBossPlatform\FFMpeg\Exception\InvalidArgumentException;
 /**
  * Dimension object, used for manipulating width and height couples
  */
@@ -20,7 +18,6 @@ class Dimension
 {
     private $width;
     private $height;
-
     /**
      * @param integer $width
      * @param integer $height
@@ -32,11 +29,9 @@ class Dimension
         if ($width <= 0 || $height <= 0) {
             throw new InvalidArgumentException('Width and height should be positive integer');
         }
-
         $this->width = (int) $width;
         $this->height = (int) $height;
     }
-
     /**
      * Returns width.
      *
@@ -46,7 +41,6 @@ class Dimension
     {
         return $this->width;
     }
-
     /**
      * Returns height.
      *
@@ -56,7 +50,6 @@ class Dimension
     {
         return $this->height;
     }
-
     /**
      * Returns the ratio.
      *
@@ -64,7 +57,7 @@ class Dimension
      *
      * @return AspectRatio
      */
-    public function getRatio($forceStandards = true)
+    public function getRatio($forceStandards = \true)
     {
         return AspectRatio::create($this, $forceStandards);
     }

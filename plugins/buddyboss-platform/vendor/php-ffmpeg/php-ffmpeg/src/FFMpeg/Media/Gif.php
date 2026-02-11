@@ -8,18 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Media;
 
-namespace FFMpeg\Media;
-
-use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
-use FFMpeg\Filters\Gif\GifFilterInterface;
-use FFMpeg\Filters\Gif\GifFilters;
-use FFMpeg\Driver\FFMpegDriver;
-use FFMpeg\FFProbe;
-use FFMpeg\Exception\RuntimeException;
-use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\Coordinate\Dimension;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\ExecutionFailureException;
+use BuddyBossPlatform\FFMpeg\Filters\Gif\GifFilterInterface;
+use BuddyBossPlatform\FFMpeg\Filters\Gif\GifFilters;
+use BuddyBossPlatform\FFMpeg\Driver\FFMpegDriver;
+use BuddyBossPlatform\FFMpeg\FFProbe;
+use BuddyBossPlatform\FFMpeg\Exception\RuntimeException;
+use BuddyBossPlatform\FFMpeg\Coordinate\TimeCode;
+use BuddyBossPlatform\FFMpeg\Coordinate\Dimension;
 class Gif extends AbstractMediaType
 {
     /** @var TimeCode */
@@ -30,7 +28,6 @@ class Gif extends AbstractMediaType
     private $duration;
     /** @var Video */
     private $video;
-
     public function __construct(Video $video, FFMpegDriver $driver, FFProbe $ffprobe, TimeCode $timecode, Dimension $dimension, $duration = null)
     {
         parent::__construct($video->getPathfile(), $driver, $ffprobe);
@@ -39,7 +36,6 @@ class Gif extends AbstractMediaType
         $this->duration = $duration;
         $this->video = $video;
     }
-
     /**
      * Returns the video related to the gif.
      *
@@ -49,7 +45,6 @@ class Gif extends AbstractMediaType
     {
         return $this->video;
     }
-
     /**
      * {@inheritdoc}
      *
@@ -59,7 +54,6 @@ class Gif extends AbstractMediaType
     {
         return new GifFilters($this);
     }
-
     /**
      * {@inheritdoc}
      *
@@ -68,10 +62,8 @@ class Gif extends AbstractMediaType
     public function addFilter(GifFilterInterface $filter)
     {
         $this->filters->add($filter);
-
         return $this;
     }
-
     /**
      * @return TimeCode
      */
@@ -79,7 +71,6 @@ class Gif extends AbstractMediaType
     {
         return $this->timecode;
     }
-
     /**
      * @return Dimension
      */
@@ -87,7 +78,6 @@ class Gif extends AbstractMediaType
     {
         return $this->dimension;
     }
-
     /**
      * Saves the gif in the given filename.
      *
@@ -102,15 +92,11 @@ class Gif extends AbstractMediaType
         /**
          * @see http://ffmpeg.org/ffmpeg.html#Main-options
          */
-        $commands = array(
-            '-ss', (string)$this->timecode
-        );
-
-        if(null !== $this->duration) {
+        $commands = array('-ss', (string) $this->timecode);
+        if (null !== $this->duration) {
             $commands[] = '-t';
-            $commands[] = (string)$this->duration;
+            $commands[] = (string) $this->duration;
         }
-
         $commands[] = '-i';
         $commands[] = $this->pathfile;
         $commands[] = '-vf';
@@ -118,20 +104,16 @@ class Gif extends AbstractMediaType
         $commands[] = '-gifflags';
         $commands[] = '+transdiff';
         $commands[] = '-y';
-
         foreach ($this->filters as $filter) {
-            $commands = array_merge($commands, $filter->apply($this));
+            $commands = \array_merge($commands, $filter->apply($this));
         }
-
-        $commands = array_merge($commands, array($pathfile));
-
+        $commands = \array_merge($commands, array($pathfile));
         try {
             $this->driver->command($commands);
         } catch (ExecutionFailureException $e) {
             $this->cleanupTemporaryFile($pathfile);
             throw new RuntimeException('Unable to save gif', $e->getCode(), $e);
         }
-
         return $this;
     }
 }

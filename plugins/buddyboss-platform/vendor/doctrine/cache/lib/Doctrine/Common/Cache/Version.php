@@ -1,6 +1,6 @@
 <?php
 
-namespace Doctrine\Common\Cache;
+namespace BuddyBossPlatform\Doctrine\Common\Cache;
 
 /**
  * @deprecated Deprecated without replacement in doctrine/cache 1.11. This class will be dropped in 2.0

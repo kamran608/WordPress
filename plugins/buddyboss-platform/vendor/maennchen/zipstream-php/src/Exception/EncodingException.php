@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace BuddyBossPlatform\ZipStream\Exception;
 
-namespace ZipStream\Exception;
-
-use ZipStream\Exception;
-
+use BuddyBossPlatform\ZipStream\Exception;
 /**
  * This Exception gets invoked if file or comment encoding is incorrect
  */

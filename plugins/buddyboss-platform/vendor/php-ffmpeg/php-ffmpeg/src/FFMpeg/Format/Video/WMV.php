@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Format\Video;
+namespace BuddyBossPlatform\FFMpeg\Format\Video;
 
 /**
  * The WMV video format
@@ -18,19 +17,15 @@ class WMV extends DefaultVideo
 {
     public function __construct($audioCodec = 'wmav2', $videoCodec = 'wmv2')
     {
-        $this
-            ->setAudioCodec($audioCodec)
-            ->setVideoCodec($videoCodec);
+        $this->setAudioCodec($audioCodec)->setVideoCodec($videoCodec);
     }
-
     /**
      * {@inheritDoc}
      */
     public function supportBFrames()
     {
-        return false;
+        return \false;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -38,7 +33,6 @@ class WMV extends DefaultVideo
     {
         return array('wmav2');
     }
-
     /**
      * {@inheritDoc}
      */

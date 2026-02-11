@@ -1,10 +1,9 @@
 <?php
 
-namespace Doctrine\Common\Cache\Psr6;
+namespace BuddyBossPlatform\Doctrine\Common\Cache\Psr6;
 
 use InvalidArgumentException;
-use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
-
+use BuddyBossPlatform\Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
 /**
  * @internal
  */

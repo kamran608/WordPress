@@ -289,6 +289,14 @@ function bp_nouveau_ajax_media_save() {
 		ob_end_clean();
 	}
 
+	if ( empty( $media ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem saving media.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
 	$media_personal_count = 0;
 	$media_group_count    = 0;
 	$media_all_count      = 0;
@@ -457,12 +465,7 @@ function bp_nouveau_ajax_media_delete() {
 				<?php
 			}
 		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? esc_html_e( 'Sorry, no photos or videos were found.', 'buddyboss' ) : esc_html_e( 'Sorry, no photos were found.', 'buddyboss' ); ?></p>
-			</aside>
-			<?php
+			bp_get_template_part( 'media/no-media' );
 		}
 
 		$media_html_content = ob_get_clean();
@@ -500,12 +503,7 @@ function bp_nouveau_ajax_media_delete() {
 				<?php
 			}
 		} else {
-			?>
-			<aside class="bp-feedback bp-messages info">
-				<span class="bp-icon" aria-hidden="true"></span>
-				<p><?php ( bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() && bp_is_user_albums() ) || ( bp_is_group_video_support_enabled() && bp_is_group_albums() ) ) ? esc_html_e( 'Sorry, no photos & videos were found.', 'buddyboss' ) : esc_html_e( 'Sorry, no photos were found.', 'buddyboss' ); ?></p>
-			</aside>
-			<?php
+			bp_get_template_part( 'media/no-media' );
 		}
 
 		$group_media_html_content = ob_get_clean();
@@ -677,7 +675,7 @@ function bp_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$title = bb_filter_input_string( INPUT_POST, 'title' );
+	$title = sanitize_text_field( wp_unslash( $_POST['title'] ) );
 
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
@@ -1072,7 +1070,7 @@ function bp_nouveau_ajax_media_description_save() {
 	}
 
 	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
-	$description   = bb_filter_input_string( INPUT_POST, 'description' );
+	$description   = sanitize_textarea_field( wp_unslash( $_POST['description'] ) );
 
 	// check description empty.
 	if ( empty( $description ) ) {
@@ -1306,6 +1304,29 @@ function bp_nouveau_ajax_media_get_media_description() {
 		if ( $can_view ) {
 			?>
 			<li class="activity activity_update activity-item mini ">
+				<?php
+				if ( $can_download_btn && ! empty( $media_id ) && ! empty( $attachment_id ) ) {
+					$download_url = bp_media_download_link( $attachment_id, $media_id );
+					if ( $download_url ) {
+						?>
+						<div class="bb-activity-more-options-wrap action">
+								<span class="bb-activity-more-options-action" data-balloon-pos="up" data-balloon="<?php echo esc_html__( 'More Options', 'buddyboss' ); ?>">
+									<i class="bb-icon-f bb-icon-ellipsis-h"></i>
+								</span>
+							<div class="bb-activity-more-options bb_more_dropdown">
+								<?php bp_get_template_part( 'common/more-options-view' ); ?>
+								<div class="generic-button">
+									<a id="activity-media-download-<?php echo esc_attr( $attachment_id ); ?>" href="<?php echo esc_url( $download_url ); ?>" class="button item-button bp-secondary-action activity-media-download download-activity">
+										<span class="bp-screen-reader-text"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+										<span class="download-label"><?php echo esc_html__( 'Download', 'buddyboss' ); ?></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<?php
+					}
+				}
+				?>
 				<div class="bp-activity-head">
 					<div class="activity-avatar item-avatar">
 						<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
@@ -1341,30 +1362,54 @@ function bp_nouveau_ajax_media_get_media_description() {
 					}
 					?>
 				</div>
-				<?php
-				if ( ! empty( $media_id ) && $can_download_btn ) {
-					$download_url = bp_media_download_link( $attachment_id, $media_id );
-					if ( $download_url ) {
-						?>
-						<a class="download-media" href="<?php echo esc_url( $download_url ); ?>">
-							<?php esc_html_e( 'Download', 'buddyboss' ); ?>
-						</a>
-						<?php
-					}
-				}
-				?>
 			</li>
 			<?php
 			$media_description = ob_get_contents();
 			ob_end_clean();
+
+			/**
+			 * Filter the media description HTML.
+			 *
+			 * @since BuddyBoss 2.9.00
+			 *
+			 * @param string $media_description The media description HTML.
+			 * @param object $media             Media object.
+			 * @param int    $media_id          Media ID.
+			 * @param int    $attachment_id     Attachment ID.
+			 * @param bool   $can_edit_btn      Whether the user can edit.
+			 * @param bool   $can_download_btn  Whether the user can download.
+			 *
+			 * @return string The modified document description HTML.
+			 */
+			$media_description = apply_filters(
+				'bp_nouveau_get_media_description_html',
+				$media_description,
+				$media,
+				$media_id,
+				$attachment_id,
+				$can_edit_btn,
+				$can_download_btn
+			);
 		}
 	}
 
-	wp_send_json_success(
+	/**
+	 * Filter the media description response data.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $response_data The response data to be sent.
+	 */
+	$response_data = apply_filters(
+		'bp_nouveau_media_description_response_data',
 		array(
 			'description' => $media_description,
+			'type'        => 'media',
+			'activity_id' => isset( $media->activity_id ) ? $media->activity_id : 0,
 		)
 	);
+
+	wp_send_json_success( $response_data );
 }
 
 /**

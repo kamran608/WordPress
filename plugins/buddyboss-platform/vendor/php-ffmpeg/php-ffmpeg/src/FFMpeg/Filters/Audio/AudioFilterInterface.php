@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Audio;
 
-namespace FFMpeg\Filters\Audio;
-
-use FFMpeg\Filters\FilterInterface;
-use FFMpeg\Format\AudioInterface;
-use FFMpeg\Media\Audio;
-
+use BuddyBossPlatform\FFMpeg\Filters\FilterInterface;
+use BuddyBossPlatform\FFMpeg\Format\AudioInterface;
+use BuddyBossPlatform\FFMpeg\Media\Audio;
 interface AudioFilterInterface extends FilterInterface
 {
     /**

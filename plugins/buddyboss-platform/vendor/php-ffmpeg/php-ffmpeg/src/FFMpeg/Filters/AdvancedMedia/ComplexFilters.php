@@ -1,19 +1,17 @@
 <?php
 
-namespace FFMpeg\Filters\AdvancedMedia;
+namespace BuddyBossPlatform\FFMpeg\Filters\AdvancedMedia;
 
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Filters\Video\PadFilter;
-use FFMpeg\Filters\Video\WatermarkFilter;
-use FFMpeg\Media\AdvancedMedia;
-
+use BuddyBossPlatform\FFMpeg\Coordinate\Dimension;
+use BuddyBossPlatform\FFMpeg\Filters\Video\PadFilter;
+use BuddyBossPlatform\FFMpeg\Filters\Video\WatermarkFilter;
+use BuddyBossPlatform\FFMpeg\Media\AdvancedMedia;
 class ComplexFilters
 {
     /**
      * @var AdvancedMedia
      */
     protected $media;
-
     /**
      * ComplexFilters constructor.
      *
@@ -23,7 +21,6 @@ class ComplexFilters
     {
         $this->media = $media;
     }
-
     /**
      * @param string $in
      * @param string $parameters
@@ -36,7 +33,6 @@ class ComplexFilters
         $this->media->addFilter($in, new CustomComplexFilter($parameters), $out);
         return $this;
     }
-
     /**
      * Adds padding (black bars) to a video.
      *
@@ -51,7 +47,6 @@ class ComplexFilters
         $this->media->addFilter($in, new PadFilter($dimension), $out);
         return $this;
     }
-
     /**
      * Adds a watermark image to a video.
      *
@@ -67,7 +62,6 @@ class ComplexFilters
         $this->media->addFilter($in, new WatermarkFilter($imagePath, $coordinates), $out);
         return $this;
     }
-
     /**
      * Apply "xstack" filter.
      * Warning: this filter is supported starting from 4.1 ffmpeg version.
@@ -85,7 +79,6 @@ class ComplexFilters
         $this->media->addFilter($in, new XStackFilter($layout, $inputsCount), $out);
         return $this;
     }
-
     /**
      * This filter build various types of computed inputs.
      *
@@ -103,23 +96,11 @@ class ComplexFilters
      * @return ComplexFilters
      * @see https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc
      */
-    public function testSrc(
-        $out,
-        $type = TestSrcFilter::TESTSRC,
-        $size = '320x240',
-        $duration = null,
-        $sar = null,
-        $rate = null,
-        $level = null,
-        $color = null,
-        $alpha = null,
-        $decimals = null
-    ) {
-        $this->media->addFilter('',
-            new TestSrcFilter($type, $size, $duration, $sar, $rate, $level, $color, $alpha, $decimals), $out);
+    public function testSrc($out, $type = TestSrcFilter::TESTSRC, $size = '320x240', $duration = null, $sar = null, $rate = null, $level = null, $color = null, $alpha = null, $decimals = null)
+    {
+        $this->media->addFilter('', new TestSrcFilter($type, $size, $duration, $sar, $rate, $level, $color, $alpha, $decimals), $out);
         return $this;
     }
-
     /**
      * Apply "anullsrc" filter.
      *
@@ -131,16 +112,11 @@ class ComplexFilters
      * @return ComplexFilters
      * @see https://ffmpeg.org/ffmpeg-filters.html#anullsrc
      */
-    public function aNullSrc(
-        $out,
-        $channelLayout = null,
-        $sampleRate = null,
-        $nbSamples = null
-    ) {
+    public function aNullSrc($out, $channelLayout = null, $sampleRate = null, $nbSamples = null)
+    {
         $this->media->addFilter('', new ANullSrcFilter($channelLayout, $sampleRate, $nbSamples), $out);
         return $this;
     }
-
     /**
      * Apply "sine" filter.
      *
@@ -154,16 +130,9 @@ class ComplexFilters
      * @return $this
      * @see https://ffmpeg.org/ffmpeg-filters.html#sine
      */
-    public function sine(
-        $out,
-        $duration,
-        $frequency = null,
-        $beep_factor = null,
-        $sample_rate = null,
-        $samples_per_frame = null
-    ) {
-        $this->media->addFilter('',
-            new SineFilter($duration, $frequency, $beep_factor, $sample_rate, $samples_per_frame), $out);
+    public function sine($out, $duration, $frequency = null, $beep_factor = null, $sample_rate = null, $samples_per_frame = null)
+    {
+        $this->media->addFilter('', new SineFilter($duration, $frequency, $beep_factor, $sample_rate, $samples_per_frame), $out);
         return $this;
     }
 }

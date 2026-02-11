@@ -17,7 +17,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support for LearnDash & bbPress Integration
 	 */
-	if ( in_array( 'learndash-bbpress/learndash-bbpress.php', $bp_plugins ) ) {
+	if ( class_exists( 'Learndash_BBPress' ) ) {
 
 			/**
 			 * Remove bbPress Integration admin init hook action
@@ -26,7 +26,7 @@ function bp_helper_plugins_loaded_callback() {
 			 */
 			remove_action( 'admin_init', 'wdm_activation_dependency_check' );
 
-		if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
+		if ( empty( bp_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
 			deactivate_plugins( 'learndash-bbpress/learndash-bbpress.php' );
 
 			add_action( 'admin_notices', 'bp_core_learndash_bbpress_notices' );
@@ -39,7 +39,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Rank Math SEO
 	 */
-	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
+	if ( class_exists( 'RankMath' ) && interface_exists( 'RankMath\Paper\IPaper' ) && ! is_admin() ) {
 		require buddypress()->compatibility_dir . '/bp-rankmath-plugin-helpers.php';
 	}
 
@@ -48,7 +48,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Elementor
 	 */
-	if ( in_array( 'elementor/elementor.php', $bp_plugins ) ) {
+	if ( class_exists( '\Elementor\Plugin' ) ) {
 		require buddypress()->compatibility_dir . '/bp-elementor-plugin-helpers.php';
 	}
 
@@ -57,7 +57,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Co-Authors Plus
 	 */
-	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
+	if ( class_exists( 'CoAuthors_Plus' ) ) {
 		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus', 100, 2 );
 	}
 
@@ -66,7 +66,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support MemberPress + BuddyPress Integration
 	 */
-	if ( in_array( 'memberpress-buddypress/main.php', $bp_plugins ) ) {
+	if ( class_exists( 'MpBuddyPress' ) ) {
 		/**
 		 * This action is use when admin bar is Enable
 		 */
@@ -83,7 +83,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support WPML Multilingual CMS
 	 */
-	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
+	if ( class_exists( 'SitePress' ) && class_exists( 'WPML_Fix_Links_In_Display_As_Translated_Content' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-wpml-helpers.php';
 	}
 
@@ -92,14 +92,14 @@ function bp_helper_plugins_loaded_callback() {
      *
 	 * @since BuddyBoss 1.5.4
 	 */
-	if ( in_array( 'wishlist-member/wpm.php', $bp_plugins ) ) {
+	if ( class_exists( 'WishListMember' ) ) {
 		global $WishListMemberInstance;
 		remove_filter( 'user_request_action_email_content', array( &$WishListMemberInstance, 'privacy_user_request_email' ), 10 );
 		remove_filter( 'user_request_action_email_subject', array( &$WishListMemberInstance, 'privacy_user_request_email_subject' ), 10 );
 		remove_filter( 'wp_privacy_personal_data_email_content', array( &$WishListMemberInstance, 'privacy_personal_data_email' ), 10 );
 	}
 
-	if ( in_array( 'instructor-role/instructor.php', $bp_plugins, true ) ) {
+	if ( class_exists( '\InstructorRole\Includes\Instructor_Role' ) ) {
 
 		/**
 		 * Function to exclude group type post to prevent group role overriding.
@@ -121,7 +121,7 @@ function bp_helper_plugins_loaded_callback() {
 		add_filter( 'wdmir_exclude_post_types', 'bp_core_instructor_role_post_exclude', 10, 1 );
 	}
 
-	if ( in_array( 'geodirectory/geodirectory.php', $bp_plugins, true ) ) {
+	if ( class_exists( 'GeoDirectory' ) ) {
 
 		/**
 		 * Function to deregister some scripts and styles from bp component pages
@@ -183,7 +183,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support The Events Calendar.
 	 */
-	if ( in_array( 'the-events-calendar/the-events-calendar.php', $bp_plugins, true ) ) {
+	if ( class_exists( 'Tribe__Events__Main' ) ) {
 		require buddypress()->compatibility_dir . '/class-bb-the-events-calendar-helpers.php';
 	}
 
@@ -219,6 +219,14 @@ function bp_helper_plugins_loaded_callback() {
 				return $builder_load_requests;
 			}
 		);
+
+		add_filter( 'et_builder_load_actions',
+			function ( $actions ) {
+				$actions[] = 'bp_search_ajax';
+
+				return $actions;
+			}
+		);
 	}
 
 	/**
@@ -226,7 +234,7 @@ function bp_helper_plugins_loaded_callback() {
 	 *
 	 * Support Memberpress
 	 */
-	if ( in_array( 'memberpress/memberpress.php', $bp_plugins ) ) {
+	if ( class_exists( 'MeprAppCtrl' ) ) {
 		add_filter( 'mepr_design_style_handle_prefixes', function ( $allowed_handle_prefixes ) {
 			$allowed_handle_prefixes[] = 'admin-bar';
 			$allowed_handle_prefixes[] = 'bp-';
@@ -234,6 +242,70 @@ function bp_helper_plugins_loaded_callback() {
 
 			return $allowed_handle_prefixes;
 		} );
+	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * Support Instructor Role.
+	 *
+	 * @since BuddyBoss 2.5.60
+	 */
+	if ( class_exists( '\InstructorRole\Includes\Instructor_Role' ) ) {
+		add_filter( 'ir_filter_remove_private_protected_from_titles', function ( $is_prepend, $prepend, $post ) {
+			$post_types = array();
+
+			if ( function_exists( 'bbp_get_forum_post_type' ) ) {
+				$post_types[] = bbp_get_forum_post_type();
+			}
+
+			if ( function_exists( 'bbp_get_topic_post_type' ) ) {
+				$post_types[] = bbp_get_topic_post_type();
+			}
+
+			if ( function_exists( 'bbp_get_reply_post_type' ) ) {
+				$post_types[] = bbp_get_reply_post_type();
+			}
+
+			if ( ! empty( $post_types ) && in_array( $post->post_type, $post_types, true ) ) {
+				return true;
+			}
+
+			return $is_prepend;
+		}, 10, 3 );
+	}
+
+	/**
+	 * Include compatible file when the plugin is activated.
+	 * Support CDN Enabler.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 */
+	if ( in_array( 'cdn-enabler/cdn-enabler.php', $bp_plugins ) && class_exists( 'CDN_Enabler_Engine' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-cdn-helpers.php';
+	}
+
+	/**
+	 * Include plugin when plugin is activated.
+	 * - Fixed the issue with user register and issue with clear API cache.
+	 *
+	 * Support AffiliateWP.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 */
+	if ( function_exists( 'affwp_do_actions' ) ) {
+		remove_action( 'init', 'affwp_do_actions', 9 );
+		add_action( 'init', 'affwp_do_actions', 10 );
+	}
+
+	/**
+	 * Tutor plugin is activated.
+	 */
+	if ( function_exists( 'tutor' ) ) {
+		require buddypress()->compatibility_dir . '/class-bb-tutor-helpers.php';
+	}
+
+	if ( class_exists( 'LifterLMS' ) ) {
+		add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_llms_courses', 20, 1 );
 	}
 }
 
@@ -392,7 +464,7 @@ function bp_core_update_group_fields_id_in_db() {
 				foreach ( $results as $result ) {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
-						add_site_option( 'bp-xprofile-firstname-field-id', $id );
+						update_site_option( 'bp-xprofile-firstname-field-id', $id );
 						$count ++;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
@@ -410,7 +482,7 @@ function bp_core_update_group_fields_id_in_db() {
 				foreach ( $results as $result ) {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
-						add_site_option( 'bp-xprofile-lastname-field-id', $id );
+						update_site_option( 'bp-xprofile-lastname-field-id', $id );
 						$count ++;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
@@ -428,7 +500,7 @@ function bp_core_update_group_fields_id_in_db() {
 				foreach ( $results as $result ) {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
-						add_site_option( 'bp-xprofile-nickname-field-id', $id );
+						update_site_option( 'bp-xprofile-nickname-field-id', $id );
 						$count ++;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
@@ -437,7 +509,7 @@ function bp_core_update_group_fields_id_in_db() {
 			}
 		}
 
-		add_site_option( 'bp-xprofile-field-ids-updated', 1 );
+		update_site_option( 'bp-xprofile-field-ids-updated', 1 );
 	}
 }
 add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
@@ -516,7 +588,7 @@ add_action( 'mepr-signup', 'bb_core_add_support_mepr_signup_map_user_fields', 10
 function bp_core_learndash_bbpress_notices() {
 	global $bp_plugins;
 
-	if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
+	if ( empty( bp_is_active( 'forums' ) ) || ! class_exists( 'SFWD_LMS' ) ) {
 		$links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
 
 		$text     = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
@@ -1087,3 +1159,147 @@ function bb_wp_gravity_forms_compatibility_helper() {
 
 }
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
+
+/**
+ * Enqueue the BuddyBoss Platform styles for the MemberPress Classroom.
+ *
+ * @since BuddyBoss 2.6.60
+ *
+ * @param array $allow_handle Allowed handles.
+ *
+ * @return array
+ */
+function mpcs_add_buddyboss_style( $allow_handle ) {
+	if ( class_exists( 'memberpress\courses\controllers\Classroom' ) ) {
+		$allow_handle[] = 'bp-nouveau';
+	}
+
+	return $allow_handle;
+
+}
+
+add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );
+
+/**
+ * Helper function to check if Elementor Maintenance Mode is enabled.
+ *
+ * @return bool
+ */
+function bb_is_elementor_maintenance_mode_enabled() {
+	if ( ! defined( 'ELEMENTOR_VERSION' ) || ! class_exists( '\Elementor\Plugin' ) ) {
+		return false;
+	}
+
+	static $user = null;
+
+	if ( isset( $_GET['elementor-preview'] ) && get_the_ID() === (int) $_GET['elementor-preview'] ) {
+		return false;
+	}
+
+	$is_login_page = apply_filters( 'elementor/maintenance_mode/is_login_page', false );
+
+	if ( $is_login_page ) {
+		return false;
+	}
+
+	if ( null === $user ) {
+		$user = wp_get_current_user();
+	}
+
+	$exclude_mode = get_option( 'elementor_maintenance_mode_exclude_mode' );
+
+	if ( 'logged_in' === $exclude_mode && is_user_logged_in() ) {
+		return false;
+	}
+
+	if ( 'custom' === $exclude_mode ) {
+		$exclude_roles = get_option( 'elementor_maintenance_mode_exclude_roles' );
+		$user_roles    = $user->roles;
+
+		if ( is_multisite() && is_super_admin() ) {
+			$user_roles[] = 'super_admin';
+		}
+
+		$compare_roles = array_intersect( $user_roles, $exclude_roles );
+
+		if ( ! empty( $compare_roles ) ) {
+			return false;
+		}
+	}
+
+	$mode = get_option( 'elementor_maintenance_mode_mode' );
+
+	if ( 'maintenance' === $mode || 'coming_soon' === $mode ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Function to get the user enrolled course or all courses.
+ *
+ * This function retrieves the courses a user is enrolled in using the LifterLMS plugin.
+ * It fetches the courses for the logged-in user and returns an array containing course details.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args Arguments.
+ *
+ * @return array $args User enrolled courses with course details.
+ */
+function bb_readylaunch_middle_content_llms_courses( $args = array() ) {
+
+	$course_data['integration'] = 'lifterlms';
+
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_courses'] ) {
+		$user_id = bp_loggedin_user_id();
+		if ( $user_id ) {
+			// Get enrolled courses for the logged-in user.
+			$student = llms_get_student( bp_loggedin_user_id() );
+			if ( ! $student ) {
+				return $args;
+			}
+
+			$results = $student->get_courses(
+				array(
+					'status' => 'enrolled',
+					'limit'  => 5,
+				)
+			);
+		} else {
+			// Get all published courses if no user is logged in.
+			$query_args = array(
+				'post_type'      => 'course',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'nopaging'       => false,
+				'posts_per_page' => 5,
+			);
+
+			$query              = new WP_Query( $query_args );
+			$results['results'] = ! empty( $query->posts ) ? $query->posts : array();
+		}
+
+		// Prepare course data.
+		if ( ! empty( $results['results'] ) ) {
+			foreach ( $results['results'] as $post_id ) {
+				$thumbnail_url = '';
+				if ( has_post_thumbnail( $post_id ) ) {
+					$thumbnail_url = get_the_post_thumbnail( $post_id, 'full' );
+				}
+
+				$course_data['items'][ $post_id ] = array(
+					'title'     => get_the_title( $post_id ),
+					'permalink' => get_the_permalink( $post_id ),
+					'thumbnail' => $thumbnail_url,
+				);
+			}
+		}
+	}
+	$args['courses'] = $course_data;
+
+	return $args;
+}

@@ -992,6 +992,7 @@ window.bp = window.bp || {};
 			}
 
 			$( event.currentTarget ).closest( '.message_action__list' ).removeClass( 'open' ).closest( '.message_actions' ).removeClass( 'open' );
+			$( 'body' ).removeClass( 'message_more_option_open' );
 
 			var is_current_thread = 'no';
 			if ( parseInt( thread_id ) === parseInt( $( event.currentTarget ).closest( '#bp-message-thread-header' ).find( '.message_action__list' ).data( 'bp-thread-id' ) ) || $( event.currentTarget ).closest( '.thread-item' ).hasClass( 'current' ) ) {
@@ -3360,9 +3361,14 @@ window.bp = window.bp || {};
 				var bgNo   = Math.floor( Math.random() * (6 - 1 + 1) ) + 1,
 					images = this.model.get( 'images' );
 
+				var strictWidth = window.innerWidth > 768 ? 140 : 130;
+				var originalWidth = images.original.width;
+				var originalHeight = images.original.height;
+				var relativeHeight = (strictWidth * originalHeight) / originalWidth;
+
 				this.$el.html( this.template( this.model.toJSON() ) );
 				this.el.classList.add( 'bg' + bgNo );
-				this.el.style.height = images.fixed_width.height + 'px';
+				this.el.style.height = relativeHeight + 'px';
 
 				return this;
 			}
@@ -3801,8 +3807,6 @@ window.bp = window.bp || {};
 					{
 						placeholder: '',
 						minimumInputLength: 1,
-						dropdownCssClass: 'bb-select-dropdown bb-compose-input',
-						containerCssClass: 'bb-select-container',
 						language: {
 							errorLoading: function() {
 								return bp_select2.i18n.errorLoading;
@@ -3886,6 +3890,25 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+
+				// Apply CSS classes after initialization
+				$input.on('select2:open', function() {
+					// Add class to dropdown
+					$('.select2-dropdown').addClass('bb-select-dropdown bb-compose-input');
+					
+					// Add aria-label to search field for accessibility.
+					setTimeout( function() {
+						$( '.select2-search__field' ).attr( 'aria-label', BP_Nouveau.messages.i18n.search_recipients );
+					}, 0 );
+				});
+				
+				// Add aria-label to search field after initialization (for initial load).
+				setTimeout( function() {
+					$( '.select2-search__field' ).attr( 'aria-label', BP_Nouveau.messages.i18n.search_recipients );
+				}, 100 );
+				
+				// Add class to container immediately after initialization
+				$input.next('.select2-container').addClass('bb-select-container');
 
 				// Add element into the Arrdata array.
 				$input.on(
@@ -4902,7 +4925,9 @@ window.bp = window.bp || {};
 						if ( $( event.target ).hasClass( 'message_action__anchor' ) || $( event.target ).parent().hasClass( 'message_action__anchor' ) ) {
 							return event;
 						} else {
-							$( '.message_action__list.open' ).removeClass( 'open' ).closest( '.message_actions' ).removeClass( 'open' );
+							$( '.message_actions.open' ).removeClass( 'open' );
+							$( '.message_action__list.open' ).removeClass( 'open' );
+							$( 'body' ).removeClass( 'message_more_option_open' );
 						}
 
 					}
@@ -4924,6 +4949,7 @@ window.bp = window.bp || {};
 				event.preventDefault();
 				var currentTarget = event.currentTarget;
 				$( currentTarget ).siblings( '.message_action__list' ).toggleClass( 'open' ).closest( '.message_actions' ).toggleClass( 'open' );
+				$( 'body' ).addClass( 'message_more_option_open' );
 			},
 
 		}

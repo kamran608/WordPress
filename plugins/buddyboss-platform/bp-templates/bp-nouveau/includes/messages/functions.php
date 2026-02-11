@@ -77,21 +77,12 @@ function bp_nouveau_messages_enqueue_scripts() {
 		return;
 	}
 
+	wp_enqueue_script( 'wp-embed' );
 	wp_enqueue_script( 'bp-nouveau-messages' );
 	wp_enqueue_script( 'bp-select2' );
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
-
-	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
-		bp_get_template_part( 'media/theatre' );
-	}
-	if ( bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() ) {
-		bp_get_template_part( 'video/theatre' );
-	}
-	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
-		bp_get_template_part( 'document/theatre' );
-	}
 
 	/**
 	 * Split each js template to its own file. Easier for child theme to
@@ -162,6 +153,9 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 	}
 
 	$params['messages'] = array(
+		'i18n'                       => array(
+			'search_recipients' => __( 'Search members', 'buddyboss' ),
+		),
 		'errors'                     => array(
 			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
 			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),

@@ -1,16 +1,14 @@
 <?php
 
-namespace FFMpeg\Filters\AdvancedMedia;
+namespace BuddyBossPlatform\FFMpeg\Filters\AdvancedMedia;
 
-use FFMpeg\Media\AdvancedMedia;
-
+use BuddyBossPlatform\FFMpeg\Media\AdvancedMedia;
 class CustomComplexFilter extends AbstractComplexFilter
 {
     /**
      * @var string
      */
     private $filter;
-
     /**
      * CustomComplexFilter constructor.
      *
@@ -22,7 +20,6 @@ class CustomComplexFilter extends AbstractComplexFilter
         parent::__construct($priority);
         $this->filter = $filter;
     }
-
     /**
      * Get name of the filter.
      *
@@ -32,7 +29,6 @@ class CustomComplexFilter extends AbstractComplexFilter
     {
         return 'custom_filter';
     }
-
     /**
      * {@inheritdoc}
      */

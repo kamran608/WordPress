@@ -8,18 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace FFMpeg\Filters\Audio;
+namespace BuddyBossPlatform\FFMpeg\Filters\Audio;
 
-use FFMpeg\Format\AudioInterface;
-use FFMpeg\Media\Audio;
-
+use BuddyBossPlatform\FFMpeg\Format\AudioInterface;
+use BuddyBossPlatform\FFMpeg\Media\Audio;
 class CustomFilter implements AudioFilterInterface
 {
     /** @var string */
     private $filter;
     /** @var integer */
     private $priority;
-
     /**
      * A custom filter, useful if you want to build complex filters
      *
@@ -31,7 +29,6 @@ class CustomFilter implements AudioFilterInterface
         $this->filter = $filter;
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -39,14 +36,12 @@ class CustomFilter implements AudioFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * {@inheritdoc}
      */
     public function apply(Audio $audio, AudioInterface $format)
     {
         $commands = array('-af', $this->filter);
-
         return $commands;
     }
 }

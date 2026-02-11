@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\Alchemy\BinaryDriver;
 
-namespace Alchemy\BinaryDriver;
-
-use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\InvalidArgumentException;
+use BuddyBossPlatform\Symfony\Component\Process\Process;
+use BuddyBossPlatform\Symfony\Component\Process\ProcessBuilder;
 class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
 {
     /**
@@ -23,14 +21,12 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
      * @var String
      */
     protected $binary;
-
     /**
      * The timeout for the generated processes
      *
      * @var integer|float
      */
     private $timeout;
-
     /**
      * An internal ProcessBuilder.
      *
@@ -40,7 +36,6 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
      * @var ProcessBuilder
      */
     private $builder;
-
     /**
      * Tells whether Symfony LTS ProcessBuilder should be emulated or not.
      *
@@ -49,7 +44,6 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
      * @var Boolean
      */
     public static $emulateSfLTS;
-
     /**
      * Constructor
      *
@@ -60,14 +54,11 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     public function __construct($binary)
     {
         $this->detectEmulation();
-
         if (!self::$emulateSfLTS) {
             $this->builder = new ProcessBuilder();
         }
-
         $this->useBinary($binary);
     }
-
     /**
      * Covenient method for unit testing
      *
@@ -77,7 +68,6 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     {
         return $this->builder;
     }
-
     /**
      * Covenient method for unit testing
      *
@@ -87,10 +77,8 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     public function setBuilder(ProcessBuilder $builder)
     {
         $this->builder = $builder;
-
         return $this;
     }
-
     /**
      * @inheritdoc
      */
@@ -98,39 +86,31 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     {
         return $this->binary;
     }
-
     /**
      * @inheritdoc
      */
     public function useBinary($binary)
     {
-        if (!is_executable($binary)) {
-            throw new InvalidArgumentException(sprintf('`%s` is not an executable binary', $binary));
+        if (!\is_executable($binary)) {
+            throw new InvalidArgumentException(\sprintf('`%s` is not an executable binary', $binary));
         }
-
         $this->binary = $binary;
-
         if (!static::$emulateSfLTS) {
             $this->builder->setPrefix($binary);
         }
-
         return $this;
     }
-
     /**
      * @inheritdoc
      */
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
-
         if (!static::$emulateSfLTS) {
             $this->builder->setTimeout($this->timeout);
         }
-
         return $this;
     }
-
     /**
      * @inheritdoc
      */
@@ -138,7 +118,6 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
     {
         return $this->timeout;
     }
-
     /**
      * @inheritdoc
      */
@@ -147,40 +126,31 @@ class ProcessBuilderFactory implements ProcessBuilderFactoryInterface
         if (null === $this->binary) {
             throw new InvalidArgumentException('No binary set');
         }
-
-        if (!is_array($arguments)) {
+        if (!\is_array($arguments)) {
             $arguments = array($arguments);
         }
-
         if (static::$emulateSfLTS) {
-            array_unshift($arguments, $this->binary);
-            if (method_exists('Symfony\Component\Process\ProcessUtils', 'escapeArgument')) {
-                $script = implode(' ', array_map(array('Symfony\Component\Process\ProcessUtils', 'escapeArgument'), $arguments));
+            \array_unshift($arguments, $this->binary);
+            if (\method_exists('BuddyBossPlatform\\Symfony\\Component\\Process\\ProcessUtils', 'escapeArgument')) {
+                $script = \implode(' ', \array_map(array('Symfony\\Component\\Process\\ProcessUtils', 'escapeArgument'), $arguments));
             } else {
                 $script = $arguments;
             }
-
-            $env = array_replace($_ENV, $_SERVER);
-            $env = array_filter($env, function ($value) {
-                return !is_array($value);
+            $env = \array_replace($_ENV, $_SERVER);
+            $env = \array_filter($env, function ($value) {
+                return !\is_array($value);
             });
-
             return new Process($script, null, $env, null, $this->timeout);
         } else {
-            return $this->builder
-                ->setArguments($arguments)
-                ->getProcess();
+            return $this->builder->setArguments($arguments)->getProcess();
         }
     }
-
     private function detectEmulation()
     {
         if (null !== static::$emulateSfLTS) {
             return $this;
         }
-
-        static::$emulateSfLTS = !method_exists('Symfony\Component\Process\ProcessBuilder', 'setPrefix');
-
+        static::$emulateSfLTS = !\method_exists('BuddyBossPlatform\\Symfony\\Component\\Process\\ProcessBuilder', 'setPrefix');
         return $this;
     }
 }

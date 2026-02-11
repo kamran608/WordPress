@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.0.0
  */
+#[\AllowDynamicProperties]
 class BP_Activity_Activity {
 
 	/** Properties ************************************************************/
@@ -101,6 +102,14 @@ class BP_Activity_Activity {
 	var $date_recorded;
 
 	/**
+	 * The date the activity item was recorded, in 'Y-m-d h:i:s' format.
+	 *
+	 * @since BuddyBoss 2.8.20
+	 * @var string
+	 */
+	var $date_updated;
+
+	/**
 	 * Whether the item should be hidden in sitewide streams.
 	 *
 	 * @since BuddyPress 1.1.0
@@ -157,6 +166,15 @@ class BP_Activity_Activity {
 	 * @var string
 	 */
 	public $error_type = 'bool';
+
+	/**
+	 * Status of the current item.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @var string
+	 */
+	public $status;
 
 	/**
 	 * Constructor method.
@@ -222,11 +240,13 @@ class BP_Activity_Activity {
 		$this->action            = $row->action;
 		$this->content           = $row->content;
 		$this->date_recorded     = $row->date_recorded;
+		$this->date_updated      = $row->date_updated;
 		$this->hide_sitewide     = (int) $row->hide_sitewide;
 		$this->mptt_left         = (int) $row->mptt_left;
 		$this->mptt_right        = (int) $row->mptt_right;
 		$this->is_spam           = (int) $row->is_spam;
 		$this->privacy           = $row->privacy;
+		$this->status            = $row->status;
 
 		// Generate dynamic 'action' when possible.
 		if ( ! empty( $row->action ) ) {
@@ -260,11 +280,13 @@ class BP_Activity_Activity {
 		$this->action            = ! empty( $this->action ) ? apply_filters_ref_array( 'bp_activity_action_before_save', array( $this->action, &$this ) ) : '';
 		$this->content           = ! empty( $this->content ) ? apply_filters_ref_array( 'bp_activity_content_before_save', array( $this->content, &$this ) ) : '';
 		$this->date_recorded     = apply_filters_ref_array( 'bp_activity_date_recorded_before_save', array( $this->date_recorded, &$this ) );
+		$this->date_updated      = apply_filters_ref_array( 'bp_activity_date_updated_before_save', array( $this->date_updated, &$this ) );
 		$this->hide_sitewide     = apply_filters_ref_array( 'bp_activity_hide_sitewide_before_save', array( $this->hide_sitewide, &$this ) );
 		$this->mptt_left         = apply_filters_ref_array( 'bp_activity_mptt_left_before_save', array( $this->mptt_left, &$this ) );
 		$this->mptt_right        = apply_filters_ref_array( 'bp_activity_mptt_right_before_save', array( $this->mptt_right, &$this ) );
 		$this->is_spam           = apply_filters_ref_array( 'bp_activity_is_spam_before_save', array( $this->is_spam, &$this ) );
 		$this->privacy           = apply_filters_ref_array( 'bp_activity_privacy_before_save', array( $this->privacy, &$this ) );
+		$this->status            = apply_filters_ref_array( 'bb_activity_status_before_save', array( $this->status, &$this ) );
 
 		/**
 		 * Fires before the current activity item gets saved.
@@ -295,11 +317,16 @@ class BP_Activity_Activity {
 			}
 		}
 
+		$prev_activity_status = '';
+
 		// If we have an existing ID, update the activity item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->id );
+
+			$prev_activity_status = self::bb_get_activity_status( $this->id );
+
+			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, date_updated = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s, status = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, item_id, secondary_item_id, hide_sitewide, is_spam, privacy ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, date_updated, item_id, secondary_item_id, hide_sitewide, is_spam, privacy, status ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->date_updated, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->status );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -311,9 +338,16 @@ class BP_Activity_Activity {
 			$this->id = $wpdb->insert_id;
 
 			// If an existing activity item, prevent any changes to the content generating new @mention notifications.
-		} else {
+		} elseif (
+			bb_get_activity_scheduled_status() === $prev_activity_status &&
+			bb_get_activity_published_status() === $this->status
+		) {
+			add_filter( 'bp_activity_at_name_do_notifications', '__return_true' );
+		} elseif ( ! in_array( $this->privacy, array( 'media', 'video', 'document' ), true ) ) {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
+
+		bb_activity_update_date_updated_and_clear_cache( $this, $this->date_updated );
 
 		/**
 		 * Fires after an activity item has been saved to the database.
@@ -422,6 +456,7 @@ class BP_Activity_Activity {
 				'spam'              => 'ham_only',      // Spam status.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
+				'status'            => false,           // Filter by status.
 			),
 			'bb_get_activities'
 		);
@@ -438,6 +473,32 @@ class BP_Activity_Activity {
 
 		// Excluded types.
 		$excluded_types = array();
+
+		if (
+			! empty( $r['scope'] ) &&
+			'unanswered' === $r['scope']
+		) {
+			if ( bb_is_rest() ) {
+				global $bb_rest_request;
+				$r['scope'] = BP_REST_Activity_Endpoint::bp_rest_activity_default_scope(
+					'all',
+					( $bb_rest_request['user_id'] ? $bb_rest_request['user_id'] : 0 ),
+					( $bb_rest_request['group_id'] ? $bb_rest_request['group_id'] : 0 ),
+					isset( $bb_rest_request['component'] ) ? $bb_rest_request['component'] : '',
+					( $bb_rest_request['primary_id'] ? $bb_rest_request['primary_id'] : 0 )
+				);
+			} else {
+				$r['scope'] = bp_activity_default_scope();
+			}
+
+			// Ensure filter array is initialized.
+			if ( ! isset( $r['filter'] ) || ! is_array( $r['filter'] ) ) {
+				$r['filter'] = array();
+			}
+
+			// Set the flag for unanswered activities.
+			$r['filter']['unanswered_only'] = true;
+		}
 
 		// Scope takes precedence.
 		if ( ! empty( $r['scope'] ) ) {
@@ -462,6 +523,10 @@ class BP_Activity_Activity {
 			}
 		}
 
+		if ( isset( $r['filter'] ) && is_array( $r['filter'] ) && ! empty( $r['order_by'] ) ) {
+			$r['filter']['since_date_column'] = $r['order_by'];
+		}
+
 		// Regular filtering.
 		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
 			$where_conditions['filter_sql'] = $filter_sql;
@@ -480,7 +545,7 @@ class BP_Activity_Activity {
 			$where_conditions['search_sql'] = $wpdb->prepare( 'ExtractValue( a.content, "//text()" ) LIKE %s', $search_terms_like );
 
 			// Allow search CPT's post title in the activity feed.
-			$join_sql .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
+			$join_sql                       .= "LEFT JOIN {$bp->activity->table_name_meta} m ON ( m.activity_id = a.id )";
 			$where_conditions['search_sql'] .= $wpdb->prepare( ' OR ( m.meta_key = %s AND m.meta_value LIKE %s ) ', 'post_title', $search_terms_like );
 
 			/**
@@ -518,6 +583,7 @@ class BP_Activity_Activity {
 			case 'item_id':
 			case 'secondary_item_id':
 			case 'date_recorded':
+			case 'date_updated':
 			case 'hide_sitewide':
 			case 'mptt_left':
 			case 'mptt_right':
@@ -558,13 +624,13 @@ class BP_Activity_Activity {
 			}
 
 			if ( ! empty( $pinned_id ) ) {
-				$order_by = $wpdb->prepare( 'CASE WHEN a.id = %d THEN 1 ELSE 0 END DESC, %s', (int) $pinned_id, $order_by );
-
+				$order_by = $wpdb->prepare( 'CASE WHEN a.id = %d THEN 1 ELSE 0 END DESC, ', (int) $pinned_id ) . $order_by;
 				if ( ! empty( $where_conditions['filter_sql'] ) ) {
 					$where_conditions['filter_sql'] = '(' . $where_conditions['filter_sql'] . ' OR ' . $wpdb->prepare( 'a.id = %d', $pinned_id ) . ')';
 				}
 			}
 		}
+		$r['pinned_id'] = $pinned_id;
 
 		// Hide Hidden Items?
 		if ( ! $r['show_hidden'] ) {
@@ -583,10 +649,20 @@ class BP_Activity_Activity {
 			$where_conditions['in'] = "a.id IN ({$in})";
 		}
 
-		// The filter activities by their privacy
+		// The filter activities by their privacy.
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions['privacy'] = "a.privacy IN ({$privacy})";
+		}
+
+		// Check the status of items.
+		if ( ! empty( $r['status'] ) ) {
+			if ( is_array( $r['status'] ) ) {
+				$status                     = "'" . implode( "', '", $r['status'] ) . "'";
+				$where_conditions['status'] = "a.status IN ({$status})";
+			} else {
+				$where_conditions['status'] = "a.status = '{$r['status']}'";
+			}
 		}
 
 		// Process meta_query into SQL.
@@ -806,7 +882,7 @@ class BP_Activity_Activity {
 			}
 
 			if ( $activities && $r['display_comments'] ) {
-				$activities = self::append_comments( $activities, $r['spam'] );
+				$activities = self::append_comments( $activities, $r['spam'], true );
 			}
 
 			// Pre-fetch data associated with activity users and other objects.
@@ -902,10 +978,10 @@ class BP_Activity_Activity {
 				$activity->mptt_left         = (int) $activity->mptt_left;
 				$activity->mptt_right        = (int) $activity->mptt_right;
 				$activity->is_spam           = (int) $activity->is_spam;
-			}
 
-			if ( empty( $activity->action ) ) {
-				$activity->action = bp_activity_generate_action_string( $activity );
+				if ( empty( $activity->action ) ) {
+					$activity->action = bp_activity_generate_action_string( $activity );
+				}
 			}
 
 			$activities[] = $activity;
@@ -1228,9 +1304,10 @@ class BP_Activity_Activity {
 	 * @param string $action            Action to filter by.
 	 * @param string $content           Content to filter by.
 	 * @param string $date_recorded     Date to filter by.
+	 * @param string $date_updated      Date to filter by.
 	 * @return int|false Activity ID on success, false if none is found.
 	 */
-	public static function get_id( $user_id, $component, $type, $item_id, $secondary_item_id, $action, $content, $date_recorded ) {
+	public static function get_id( $user_id, $component, $type, $item_id, $secondary_item_id, $action, $content, $date_recorded, $date_updated ) {
 		global $wpdb;
 
 		$bp = buddypress();
@@ -1267,6 +1344,10 @@ class BP_Activity_Activity {
 
 		if ( ! empty( $date_recorded ) ) {
 			$where_args[] = $wpdb->prepare( 'date_recorded = %s', $date_recorded );
+		}
+
+		if ( ! empty( $date_updated ) ) {
+			$where_args[] = $wpdb->prepare( 'date_updated = %s', $date_updated );
 		}
 
 		if ( ! empty( $where_args ) ) {
@@ -1319,7 +1400,9 @@ class BP_Activity_Activity {
 				'item_id'           => false,
 				'secondary_item_id' => false,
 				'date_recorded'     => false,
+				'date_updated'      => false,
 				'hide_sitewide'     => false,
+				'status'            => false,
 			)
 		);
 
@@ -1376,9 +1459,19 @@ class BP_Activity_Activity {
 			$where_args[] = $wpdb->prepare( 'date_recorded = %s', $r['date_recorded'] );
 		}
 
+		// Date Updated.
+		if ( ! empty( $r['date_updated'] ) ) {
+			$where_args[] = $wpdb->prepare( 'date_updated = %s', $r['date_updated'] );
+		}
+
 		// Hidden sitewide.
 		if ( ! empty( $r['hide_sitewide'] ) ) {
 			$where_args[] = $wpdb->prepare( 'hide_sitewide = %d', $r['hide_sitewide'] );
+		}
+
+		// Status.
+		if ( ! empty( $r['status'] ) ) {
+			$where_args[] = $wpdb->prepare( 'status = %s', $r['status'] );
 		}
 
 		// Bail if no where arguments.
@@ -1521,32 +1614,28 @@ class BP_Activity_Activity {
 	 * @param string $spam       Optional. 'ham_only' (default), 'spam_only' or 'all'.
 	 * @return array The updated activities with nested comments.
 	 */
-	public static function append_comments( $activities, $spam = 'ham_only' ) {
+	public static function append_comments( $activities, $spam = 'ham_only', $exclude_childrens = false, $args = array() ) {
 		$activity_comments = array();
 
 		// Now fetch the activity comments and parse them into the correct position in the activities array.
 		foreach ( (array) $activities as $activity ) {
 			$top_level_parent_id                = 'activity_comment' == $activity->type ? $activity->item_id : 0;
-			$activity_comments[ $activity->id ] = self::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $spam, $top_level_parent_id );
+			$activity_comments[ $activity->id ] = self::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $spam, $top_level_parent_id, $exclude_childrens, $args );
 		}
 
 		// Merge the comments with the activity items.
 		foreach ( (array) $activities as $key => $activity ) {
-			if ( isset( $activity_comments[ $activity->id ] ) ) {
+			if ( ! empty( $activity ) && isset( $activity_comments[ $activity->id ] ) ) {
 
-				// Apply condition for non group activity.
-				// Logged-in member CAN’T see comments by the member in other member’s posts of is/has blocked users.
-				if (
-					bp_is_active( 'moderation' ) &&
-					is_user_logged_in() &&
-					'groups' !== $activity->component &&
-					! empty( $activity_comments[ $activity->id ] ) &&
-					get_current_user_id() !== $activity->user_id
-				) {
-					$activity_comments[ $activity->id ] = self::get_filtered_activity_comments( $activity_comments[ $activity->id ] );
-				}
-
-				$activities[ $key ]->children = $activity_comments[ $activity->id ];
+				$activities[ $key ]->children        = $activity_comments[ $activity->id ];
+				$comments_count                      = self::bb_get_all_activity_comment_children_count(
+					array(
+						'spam'     => $spam,
+						'activity' => $activity,
+					)
+				);
+				$activities[ $key ]->all_child_count = $comments_count['all_child_count'] ?? 0;
+				$activities[ $key ]->top_level_count = $comments_count['top_level_count'] ?? 0;
 			}
 		}
 
@@ -1567,16 +1656,42 @@ class BP_Activity_Activity {
 	 * @param int    $top_level_parent_id Optional. The id of the root-level parent activity item.
 	 * @return array The updated activities with nested comments.
 	 */
-	public static function get_activity_comments( $activity_id, $left, $right, $spam = 'ham_only', $top_level_parent_id = 0 ) {
+	public static function get_activity_comments( $activity_id, $left, $right, $spam = 'ham_only', $top_level_parent_id = 0, $exclude_childrens = false, $args = array() ) {
 		global $wpdb;
-
 		$function_args = func_get_args();
+
+		if (
+			bp_is_single_activity() ||
+			(
+				bb_is_rest() &&
+				! isset( $_GET['apply_limit'] )
+			)
+		) {
+			$exclude_childrens = false;
+		}
 
 		if ( empty( $top_level_parent_id ) ) {
 			$top_level_parent_id = $activity_id;
 		}
 
-		$comments = wp_cache_get( $activity_id, 'bp_activity_comments' );
+		if (
+			bb_is_rest() &&
+			isset( $_GET['apply_limit'] ) &&
+			! empty( (bool) $_GET['apply_limit'] ) &&
+			! empty( $_GET['last_comment_id'] ) &&
+			! empty( $_GET['last_comment_timestamp'] )
+		) {
+			$args['last_comment_id']        = intval( $_GET['last_comment_id'] );
+			$args['last_comment_timestamp'] = sanitize_text_field( $_GET['last_comment_timestamp'] );
+			$args['comment_order_by']       = apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' );
+		}
+
+		if ( bp_is_single_activity() || ( bb_is_rest() && empty( $_GET['apply_limit'] ) ) ) {
+			$comments = wp_cache_get( $activity_id, 'bp_activity_comments' );
+		} else {
+			// No caching for paginated comments.
+			$comments = array();
+		}
 
 		// We store the string 'none' to cache the fact that the
 		// activity item has no comments.
@@ -1624,7 +1739,7 @@ class BP_Activity_Activity {
 				$sql['select'] = "SELECT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name{$fullname_select} ";
 				$sql['from']   = "FROM {$bp->activity->table_name} a, {$wpdb->users} u{$fullname_from} ";
 				$sql['where']  = "WHERE u.ID = a.user_id {$fullname_where} AND a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d AND a.mptt_left > %d AND a.mptt_left < %d";
-				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+				$sql['misc']   = 'ORDER BY a.date_recorded ASC';
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
@@ -1632,7 +1747,6 @@ class BP_Activity_Activity {
 				 * @since BuddyPress 2.0.0
 				 *
 				 * @param string $from Activity Comment from query
-				 *
 				 */
 				$sql['from'] = apply_filters( 'bp_activity_comments_get_join_sql', $sql['from'] );
 
@@ -1642,10 +1756,8 @@ class BP_Activity_Activity {
 				 * @since BuddyPress 2.0.0
 				 *
 				 * @param string $where Activity Comment from query
-				 *
 				 */
 				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
-
 
 				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
 
@@ -1668,10 +1780,14 @@ class BP_Activity_Activity {
 				// descendants to the correct part of the tree.
 			} else {
 
-				$sql['select'] = "SELECT a.id";
+				$sql['select'] = 'SELECT a.id';
 				$sql['from']   = "FROM {$bp->activity->table_name} a";
-				$sql['where']  = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d";
-				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+				if ( true === $exclude_childrens ) {
+					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
+				} else {
+					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
+				}
+				$sql['misc'] = 'ORDER BY a.date_recorded ASC';
 
 				/**
 				 * Filters the MySQL From query for legacy activity comment.
@@ -1690,7 +1806,9 @@ class BP_Activity_Activity {
 				 * @param string $where Activity Comment from query
 				 */
 				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
-
+				if ( is_array( $sql['where'] ) ) {
+					$sql['where'] = 'WHERE ' . join( ' AND ', $sql['where'] );
+				}
 				/**
 				 * Filters the MySQL From query for order by activity comment.
 				 *
@@ -1700,8 +1818,62 @@ class BP_Activity_Activity {
 				 */
 				$sql['misc'] = apply_filters( 'bp_activity_comments_get_misc_sql', $sql['misc'] );
 
-				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
-				$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
+				$sql['limit'] = '';
+				if (
+					! bp_is_single_activity() ||
+					(
+						bb_is_rest() &&
+						! empty( (bool) $_GET['apply_limit'] )
+					)
+				) {
+					if (
+						! empty( $args['last_comment_id'] ) &&
+						! empty( $args['last_comment_timestamp'] ) &&
+						! empty( $args['comment_order_by'] )
+					) {
+						$comparison_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '<' : '>';
+
+						// Condition to handle other random order of ID if any.
+						$comparison_eq_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '>=' : '<=';
+
+						$sql['where'] .= $wpdb->prepare(
+							" AND (
+								a.id {$comparison_op} %d
+								OR (
+									a.id {$comparison_eq_op} %d
+									AND a.date_recorded {$comparison_op} '%s'
+								)
+							) ",
+							$args['last_comment_id'],
+							$args['last_comment_id'],
+							date_i18n( 'Y-m-d H:i:s', strtotime( $args['last_comment_timestamp'] ) )
+						);
+					}
+
+					if ( bb_is_rest() ) {
+						$limit = bb_get_activity_comment_loading();
+					} else {
+						$limit = ! empty( $args['limit'] ) ? $args['limit'] : bb_get_activity_comment_visibility();
+						$limit++;
+					}
+
+					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
+						$sql['limit'] = '';
+					} else {
+						$sql['limit'] = 'limit ' . $limit;
+					}
+
+					/**
+					 * Filters the MySQL From query for limit activity comment.
+					 *
+					 * @since BuddyBoss 2.5.80
+					 *
+					 * @param string $limit Activity Comment from query
+					 */
+					$sql['limit'] = apply_filters( 'bb_activity_comments_get_limit_conditions', $sql['limit'] );
+				}
+
+				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']} {$sql['limit']}";
 
 				$descendant_ids = $wpdb->get_col( $sql );
 				$descendants    = self::get_activity_data( $descendant_ids );
@@ -1709,7 +1881,6 @@ class BP_Activity_Activity {
 			}
 
 			$ref = array();
-
 			// Loop descendants and build an assoc array.
 			foreach ( (array) $descendants as $d ) {
 				$d->children = array();
@@ -1723,6 +1894,24 @@ class BP_Activity_Activity {
 				} else {
 					$comments[ $d->id ] = $d;
 					$ref[ $d->id ]      =& $comments[ $d->id ];
+				}
+
+				if (
+					true === $exclude_childrens ||
+					(
+						bb_is_rest() && ! isset( $_GET['apply_limit'] )
+					)
+				) {
+					$comments_count = self::bb_get_all_activity_comment_children_count(
+						array(
+							'spam'     => $spam,
+							'activity' => $d,
+						)
+					);
+					if ( ! empty( $comments_count ) ) {
+						$ref[ $d->id ]->all_child_count = $comments_count['all_child_count'];
+						$ref[ $d->id ]->top_level_count = $comments_count['top_level_count'];
+					}
 				}
 			}
 
@@ -1742,8 +1931,12 @@ class BP_Activity_Activity {
 							// If the direct parent is not an activity update, that means we've reached
 							// the parent activity item (eg. new_blog_post).
 							if ( 'activity_update' !== $direct_parent->type ) {
-								$parent_id = $r->item_id;
-
+								if ( 'activity_comment' === $direct_parent->type ) {
+									$parent_id = $direct_parent->secondary_item_id;
+								} else {
+									// the parent activity item (eg. new_blog_post).
+									$parent_id = $r->item_id;
+								}
 							} else {
 								$parent_id = $direct_parent->secondary_item_id;
 							}
@@ -1755,7 +1948,7 @@ class BP_Activity_Activity {
 						$parent_id = $ref[ $parent_id ]->secondary_item_id;
 					}
 				}
-				$r->depth = $depth;
+				$ref[ $r->id ]->depth = $depth;
 			}
 
 			// If we cache a value of false, it'll count as a cache
@@ -1768,7 +1961,16 @@ class BP_Activity_Activity {
 				$cache_value = $comments;
 			}
 
-			wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
+			if (
+				bp_is_single_activity() ||
+				(
+					bb_is_rest() &&
+					isset( $_GET['apply_limit'] ) &&
+					empty( (bool) $_GET['apply_limit'] )
+				)
+			) {
+				wp_cache_set( $activity_id, $cache_value, 'bp_activity_comments' );
+			}
 		}
 
 		return $comments;
@@ -2001,15 +2203,32 @@ class BP_Activity_Activity {
 			// Trick: parse to UNIX date then translate back.
 			$translated_date = date( 'Y-m-d H:i:s', strtotime( $filter_array['since'] ) );
 			if ( $translated_date === $filter_array['since'] ) {
-				$filter_sql[] = "a.date_recorded > '{$translated_date}'";
+				if ( ! empty( $filter_array['since_date_column'] ) && 'date_updated' === $filter_array['since_date_column'] ) {
+					$filter_sql[] = "a.date_updated > '{$translated_date}'";
+				} else {
+					$filter_sql[] = "a.date_recorded > '{$translated_date}'";
+				}
 			}
+		}
+
+		// Show unanswered activities only where clause.
+		if ( ! empty( $filter_array['unanswered_only'] ) && ! apply_filters( 'bb_activity_unanswered_only_remove_sql', false ) ) {
+			$filter_sql[] = "uac.item_id IS NULL";
 		}
 
 		if ( empty( $filter_sql ) ) {
 			return false;
 		}
 
-		return join( ' AND ', $filter_sql );
+		/**
+		 * Filter the activity get filter sql.
+		 *
+		 * @since BuddyBoss 2.8.80
+		 *
+		 * @param string $filter_sql   The filter sql.
+		 * @param array  $filter_array The filter array.
+		 */
+		return apply_filters( 'bb_activity_activity_get_filter_sql', join( ' AND ', $filter_sql ), $filter_array );
 	}
 
 	/**
@@ -2109,5 +2328,146 @@ class BP_Activity_Activity {
 		}
 
 		return $activity_comments;
+	}
+
+	/**
+	 * Get all activity children comments count and top level comment count based on id.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param array $args Array of arguments.
+	 *
+	 * @return array Array of child and top level comment count.
+	 */
+	public static function bb_get_all_activity_comment_children_count( $args = array() ) {
+		$all_child_count = 0;
+		$top_level_count = 0;
+
+		$activity = null;
+		if ( ! empty( $args['activity'] ) ) {
+			$activity = $args['activity'];
+		}
+
+		if (
+			empty( $activity ) &&
+			! $activity instanceof BP_Activity_Activity &&
+			empty( $activity->id )
+		) {
+			return array(
+				'all_child_count' => $all_child_count,
+				'top_level_count' => $top_level_count,
+			);
+		}
+
+		$comment_id = $activity->id;
+
+		global $wpdb, $bp;
+
+		if ( 'activity' === $activity->component && 0 === $activity->item_id && 0 === $activity->secondary_item_id ) {
+			// Condition for activity feed comments.
+			$all_child_count_condition = "a.item_id = $comment_id";
+		} elseif (
+			'activity' === $activity->component &&
+			'activity_update' === $activity->type &&
+			in_array( $activity->privacy, array( 'media', 'video', 'document' ), true ) &&
+			0 === $activity->item_id &&
+			0 !== $activity->secondary_item_id
+		) {
+			// Condition for individual media, video, document activity comments.
+			$all_child_count_condition = "a.item_id = $comment_id";
+		} elseif ( 'activity' !== $activity->component ) {
+			// Condition for blogs, groups, etc feed comments.
+			$all_child_count_condition = "a.item_id = $comment_id";
+		} elseif ( 'activity_comment' === $activity->type && 0 === $activity->mptt_left && 0 === $activity->mptt_right ) {
+			// The Condition for new added comment mptt_left and mptt_right will be 0 at that time.
+			$all_child_count_condition = "a.item_id = $comment_id";
+		} else {
+			// Condition for child of activity comments.
+			$all_child_count_condition = "a.item_id = $activity->item_id";
+		}
+
+		// Select conditions.
+		$select_sql = 'SELECT
+			COUNT(*) AS all_child_count,
+			SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
+
+		$from_sql = ' FROM ' . $bp->activity->table_name . ' a';
+
+		// Where conditions.
+		$where_conditions           = array();
+		$where_conditions[]         = $all_child_count_condition;
+		$where_conditions['a.type'] = "a.type = 'activity_comment'";
+
+		if ( ! empty( $args['spam'] ) ) {
+			if ( 'ham_only' == $args['spam'] ) {
+				$where_conditions['a.is_spam'] = 'a.is_spam = 0';
+			} elseif ( 'spam_only' == $args['spam'] ) {
+				$where_conditions['a.is_spam'] = 'a.is_spam = 1';
+			} else {
+				$where_conditions['a.is_spam'] = 'a.is_spam = ""';
+			}
+		}
+
+		if ( ! empty( $activity->mptt_left ) ) {
+			$where_conditions['a.mptt_left'] = "a.mptt_left > $activity->mptt_left";
+		}
+		if ( ! empty( $activity->mptt_right ) ) {
+			$where_conditions['a.mptt_right'] = "a.mptt_left < $activity->mptt_right";
+		}
+
+		$where_conditions = apply_filters( 'bb_activity_comments_count_get_where_conditions', $where_conditions, '' );
+		$where_sql        = 'WHERE ' . join( ' AND ', $where_conditions );
+
+		$join_sql = apply_filters( 'bb_activity_comments_count_get_join_sql', '', '' );
+
+		$total_comment_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
+
+		$cache_group = 'bp_activity_comment_count_' . $comment_id;
+		$cached      = wp_cache_get( $cache_group, 'bp_activity_comments' );
+		if ( false === $cached ) {
+			$counts          = $wpdb->get_row( $total_comment_sql, ARRAY_A );
+			$all_child_count = isset( $counts['all_child_count'] ) ? intval( $counts['all_child_count'] ) : 0;
+			$top_level_count = isset( $counts['top_level_count'] ) ? intval( $counts['top_level_count'] ) : 0;
+
+			wp_cache_set( $cache_group, $counts, 'bp_activity_comments' );
+		} else {
+			$all_child_count = isset( $cached['all_child_count'] ) ? intval( $cached['all_child_count'] ) : 0;
+			$top_level_count = isset( $cached['top_level_count'] ) ? intval( $cached['top_level_count'] ) : 0;
+		}
+
+		return array(
+			'all_child_count' => $all_child_count,
+			'top_level_count' => $top_level_count,
+		);
+	}
+
+	/**
+	 * Get activity status by id.
+	 *
+	 * @since BuddyBoss 2.6.10
+	 *
+	 * @param int $activity_id Activity Id.
+	 *
+	 * @return string Activity status.
+	 */
+	public static function bb_get_activity_status( $activity_id = 0 ) {
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		$bp        = buddypress();
+		$cache_key = 'bb_get_activity_status_' . $activity_id;
+		$status    = wp_cache_get( $cache_key, 'bp_activity' );
+
+		if ( false === $status ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$status = $wpdb->get_var( $wpdb->prepare( "SELECT `status` FROM {$bp->activity->table_name} WHERE id = %d", $activity_id ) );
+			wp_cache_set( $cache_key, $status, 'bp_activity' );
+		}
+
+		return $status;
 	}
 }

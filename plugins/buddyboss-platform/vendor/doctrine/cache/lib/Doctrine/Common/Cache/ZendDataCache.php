@@ -1,12 +1,11 @@
 <?php
 
-namespace Doctrine\Common\Cache;
+namespace BuddyBossPlatform\Doctrine\Common\Cache;
 
 use function zend_shm_cache_clear;
 use function zend_shm_cache_delete;
 use function zend_shm_cache_fetch;
 use function zend_shm_cache_store;
-
 /**
  * Zend Data Cache cache driver.
  *
@@ -23,15 +22,13 @@ class ZendDataCache extends CacheProvider
     {
         return zend_shm_cache_fetch($id);
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doContains($id)
     {
-        return zend_shm_cache_fetch($id) !== false;
+        return zend_shm_cache_fetch($id) !== \false;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -39,7 +36,6 @@ class ZendDataCache extends CacheProvider
     {
         return zend_shm_cache_store($id, $data, $lifeTime);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -47,7 +43,6 @@ class ZendDataCache extends CacheProvider
     {
         return zend_shm_cache_delete($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -57,10 +52,8 @@ class ZendDataCache extends CacheProvider
         if (empty($namespace)) {
             return zend_shm_cache_clear();
         }
-
         return zend_shm_cache_clear($namespace);
     }
-
     /**
      * {@inheritdoc}
      */

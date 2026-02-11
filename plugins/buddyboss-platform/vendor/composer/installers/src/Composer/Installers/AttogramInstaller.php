@@ -1,9 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class AttogramInstaller extends BaseInstaller
+class AttogramInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'module' => 'modules/{$name}/',
-    );
+    protected $locations = array('module' => 'modules/{$name}/');
 }

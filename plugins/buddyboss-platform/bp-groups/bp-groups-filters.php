@@ -103,6 +103,17 @@ add_filter( 'bp_groups_get_where_count_conditions', 'bb_groups_count_update_wher
 // Remove from group forums and topics.
 add_action( 'groups_leave_group', 'bb_groups_unsubscribe_group_forums_topic', 10, 2 );
 
+// The user suspends/unsuspends and only when a single group organizer then fire these hooks.
+add_action( 'bp_suspend_hide_user', 'bb_group_remove_suspended_user', 99, 1 );
+add_action( 'bp_suspend_unhide_user', 'bb_group_add_unsuspended_user', 9, 1 );
+
+add_action( 'bp_before_group_body', 'bb_before_group_body_callback' );
+add_action( 'bp_after_group_body', 'bb_after_group_body_callback' );
+add_action( 'bp_before_subgroups_loop', 'bb_before_group_body_callback' );
+add_action( 'bp_after_subgroups_loop', 'bb_after_group_body_callback' );
+
+add_filter( 'bb_readylaunch_left_sidebar_middle_content', 'bb_readylaunch_middle_content_my_groups', 10, 1 );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -192,7 +203,14 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 		return $send;
 	}
 
-	if ( 'groups' === $activity->component && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $activity->item_id ) ) ) {
+	if ( 'activity_update' === $activity->type ) {
+		$group_id = 'groups' === $activity->component ? $activity->item_id : 0;
+	} elseif ( 'activity_comment' === $activity->type ) {
+		$comment  = new BP_Activity_Activity( $activity->item_id );
+		$group_id = ! empty( $comment->component ) && 'groups' === $comment->component ? $comment->item_id : 0;
+	}
+
+	if ( $group_id && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
 		$send = false;
 	}
 
@@ -425,12 +443,13 @@ function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 		$group = groups_get_group( $activity->item_id );
 
 		// As per the new logic moderator can delete the activity of all the users. So removed the && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) condition.
-		if ( 
-			! empty( $group ) && 
+		if (
+			! empty( $group ) &&
 			(
 				groups_is_user_mod( get_current_user_id(), $activity->item_id ) ||
-				groups_is_user_admin( get_current_user_id(), $activity->item_id ) 
-			)
+				groups_is_user_admin( get_current_user_id(), $activity->item_id )
+			) &&
+			! groups_is_user_admin( bp_get_activity_user_id(), $activity->item_id )
 		) {
 			$can_delete = true;
 		}
@@ -608,13 +627,13 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 				'column'  => 'description',
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
-			)
+			),
 		);
 	}
 
 	$retval = array(
 		'relation' => 'OR',
-		$args
+		$args,
 	);
 
 	return $retval;
@@ -714,7 +733,7 @@ function bp_groups_filter_video_scope( $retval = array(), $filter = array() ) {
 				'column'  => 'description',
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
-			)
+			),
 		);
 	}
 
@@ -1086,6 +1105,9 @@ function bb_load_group_type_label_custom_css() {
 		}
 		wp_add_inline_style( 'bp-nouveau', $group_type_custom_css );
 	}
+
+	// load the group card template.
+	bb_group_card_template();
 }
 add_action( 'bp_enqueue_scripts', 'bb_load_group_type_label_custom_css', 12 );
 
@@ -1115,15 +1137,15 @@ function bb_subscription_send_subscribe_group_notifications( $content, $user_id,
 
 	$activity = new BP_Activity_Activity( $activity_id );
 
-	if ( empty( $activity ) || ( ! empty( $activity->item_id ) && $activity->item_id !== (int) $group_id ) ) {
+	if ( ( ! empty( $activity->item_id ) && $activity->item_id !== (int) $group_id ) ) {
 		return;
 	}
 
 	// Return if main activity post not found or activity is media/document/video.
 	if (
-		empty( $activity ) ||
 		'groups' !== $activity->component ||
-		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true )
+		in_array( $activity->privacy, array( 'document', 'media', 'video', 'onlyme' ), true ) ||
+		bb_get_activity_published_status() !== $activity->status
 	) {
 		return;
 	}
@@ -1473,4 +1495,301 @@ function bb_groups_unsubscribe_group_forums_topic( $group_id, $user_id ) {
 			bbp_remove_user_topic_subscription( $user_id, $topic_id );
 		}
 	}
+}
+
+/**
+ * Remove suspended user and assign site admin as group organizer only when a single group organizer.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @param int $user_id User id.
+ *
+ * @return void
+ */
+function bb_group_remove_suspended_user( $user_id ) {
+	global $wpdb, $bp;
+	if ( empty( $user_id ) ) {
+		return;
+	}
+	// Remove user when suspended.
+	if (
+		function_exists( 'bp_moderation_is_user_suspended' ) &&
+		bp_moderation_is_user_suspended( $user_id )
+	) {
+		$group_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = %d AND is_banned = %d AND is_admin = %d ORDER BY date_modified ASC",
+				$user_id,
+				1,
+				0,
+				1
+			)
+		);
+
+		if ( ! empty( $group_ids ) ) {
+			$admin = get_users(
+				array(
+					'blog_id' => bp_get_root_blog_id(),
+					'fields'  => 'id',
+					'number'  => 1,
+					'orderby' => 'ID',
+					'role'    => 'administrator',
+					'exclude' => array( $user_id ),
+				)
+			);
+			foreach ( $group_ids as $group_id ) {
+				if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
+
+					if ( ! empty( $admin ) ) {
+						if ( bp_is_active( 'messages' ) ) {
+							remove_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+						}
+						add_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+
+						groups_join_group( $group_id, $admin[0] );
+
+						remove_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+						if ( bp_is_active( 'messages' ) ) {
+							add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+						}
+						$member = new BP_Groups_Member( $admin[0], $group_id );
+						$member->promote( 'admin' );
+					}
+				}
+
+				BP_Groups_Member::delete( $user_id, $group_id );
+
+				// Update the group meta to store organiser when they suspended.
+				$suspended_users = groups_get_groupmeta( $group_id, 'bb_suspended_users' );
+				if ( ! empty( $suspended_users ) && ! empty( $suspended_users['admins'] ) ) {
+					$suspended_users['admin'][] = $user_id;
+				} else {
+					$suspended_users = array(
+						'admin' => array(
+							$user_id,
+						),
+					);
+				}
+
+				$suspended_users['admin'] = array_unique( $suspended_users['admin'] );
+				groups_update_groupmeta( $group_id, 'bb_suspended_users', $suspended_users );
+			}
+		}
+	}
+}
+
+/**
+ * Re-assign user when unsuspend to the group only when a single group organizer.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @param int $user_id User id.
+ *
+ * @return void
+ */
+function bb_group_add_unsuspended_user( $user_id ) {
+	global $wpdb, $bp;
+
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	// Remove user when un-suspended.
+	$group_metas = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT group_id, meta_value FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s AND meta_value LIKE %s ORDER BY id ASC",
+			'bb_suspended_users',
+			'%' . $wpdb->esc_like( $user_id ) . '%'
+		),
+		ARRAY_A
+	);
+
+	if ( ! empty( $group_metas ) ) {
+		foreach ( $group_metas as $group ) {
+			$group_meta = maybe_unserialize( $group['meta_value'] );
+
+			if ( ! empty( $group_meta ) && ! empty( $group_meta['admin'] ) ) {
+				// Search for the value in the array.
+				$result_index = array_search( $user_id, $group_meta['admin'] );
+
+				// Check if the value was found.
+				if ( false !== $result_index ) {
+
+					// Remove that user from meta.
+					unset( $group_meta['admin'][ $result_index ] );
+
+					if ( bp_is_active( 'messages' ) ) {
+						remove_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+					}
+					add_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+
+					// Join this user in the group.
+					groups_join_group( $group['group_id'], $user_id );
+
+					remove_filter( 'bb_group_join_groups_record_activity', 'bb_group_join_groups_record_activity_unsuspend_users' );
+					if ( bp_is_active( 'messages' ) ) {
+						add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+					}
+
+					// Promoted to admin.
+					$member = new BP_Groups_Member( $user_id, $group['group_id'] );
+					$member->promote( 'admin' );
+
+					// Update the group meta.
+					groups_update_groupmeta( $group['group_id'], 'bb_suspended_users', $group_meta );
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Function will not allow to record group activity when group organizer
+ * unsuspend where group have only one organizer.
+ *
+ * @since BuddyBoss 2.6.10
+ *
+ * @return bool Return false.
+ */
+function bb_group_join_groups_record_activity_unsuspend_users() {
+	return false;
+}
+
+/**
+ * Add subgroup args for single/home page to avoid looping for subgroups.
+ *
+ * @since BuddyBoss 2.6.40
+ */
+function bb_before_group_body_callback() {
+	add_filter( 'bp_after_groups_template_parse_args', 'bb_add_subgroups_args_single_home' );
+}
+
+/**
+ * Remove subgroup args for single/home page to avoid looping for subgroups.
+ *
+ * @since BuddyBoss 2.6.40
+ */
+function bb_after_group_body_callback() {
+	remove_filter( 'bp_after_groups_template_parse_args', 'bb_add_subgroups_args_single_home' );
+}
+
+/**
+ * Add subgroups args to fetch subgroups for the single/home page.
+ *
+ * @since BuddyBoss 2.6.40
+ *
+ * @param array $args Group args.
+ *
+ * @return array
+ */
+function bb_add_subgroups_args_single_home( $args ) {
+	if ( ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) || bp_is_group_subgroups() ) {
+		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
+		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
+		$args['include']     = $ids;
+		$args['slug']        = '';
+		$args['type']        = '';
+		$args['show_hidden'] = true;
+	}
+
+	/**
+	 * Filters the group args for single/home page to avoid looping for subgroups.
+	 *
+	 * @since BuddyBoss 2.6.40
+	 *
+	 * @param array $args Group args.
+	 */
+	return apply_filters( 'bb_add_subgroups_args_single_home', $args );
+}
+
+/**
+ * Add group hover card template.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_group_card_template() {
+	bp_get_template_part( 'groups/group-card' );
+}
+
+/**
+ * Delete group activity topic when delete the group.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param int $group_id ID of the group.
+ *
+ * @return bool|int True on success, false on failure.
+ */
+function bb_delete_group_activity_topic( $group_id ) {
+	global $wpdb;
+
+	$table_prefix = bp_core_get_table_prefix();
+	$deleted      = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$table_prefix . 'bb_topic_relationships',
+		array(
+			'item_id'   => $group_id,
+			'item_type' => 'groups',
+		),
+		array( '%d', '%s' )
+	);
+
+	if ( false === $deleted ) {
+		return false;
+	}
+
+	return true;
+}
+add_action( 'groups_delete_group', 'bb_delete_group_activity_topic' );
+
+/**
+ * Retrieves the groups the logged-in user is a member of and adds them to the provided arguments array.
+ *
+ * @since BuddyBoss 2.9.00
+ *
+ * @param array $args Arguments array to which the group data will be added.
+ *
+ * @return array Modified arguments array with the user's groups data.
+ */
+function bb_readylaunch_middle_content_my_groups( $args = array() ) {
+	$group_data = array(
+		'integration' => 'groups',
+	);
+
+	if ( $args['has_sidebar_data'] && $args['is_sidebar_enabled_for_groups'] ) {
+		$group_data['heading']    = __( 'My Groups', 'buddyboss' );
+		$group_data['error_text'] = __( 'There are no groups to display.', 'buddyboss' );
+
+		$user_id    = bp_loggedin_user_id();
+		$group_args = array(
+			'user_id'  => $user_id,
+			'per_page' => 6,
+		);
+		if ( ! empty( $user_id ) ) {
+			$count = groups_total_groups_for_user( $user_id );
+		} else {
+			$count = bp_get_total_group_count();
+		}
+
+		$groups = groups_get_groups( $group_args );
+		if ( ! empty( $groups['groups'] ) ) {
+			foreach ( $groups['groups'] as $group ) {
+				$group_id                         = $group->id;
+				$thumbnail_url                    = bp_get_group_avatar_url( $group );
+				$group_data['items'][ $group_id ] = array(
+					'title'     => $group->name,
+					'permalink' => bp_get_group_permalink( $group ),
+					'thumbnail' => '<img src="' . $thumbnail_url . '" alt="' . $group->name . '" class="avatar group--avatar avatar-200 photo" width="200" height="200"/>',
+				);
+			}
+
+			if ( $count > 6 ) {
+				$group_data['has_more_items'] = true;
+				$group_data['show_more_link'] = bp_get_groups_directory_permalink();
+			}
+		}
+	}
+
+	$args['groups'] = $group_data;
+
+	return $args;
 }

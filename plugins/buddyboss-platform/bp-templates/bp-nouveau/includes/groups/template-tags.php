@@ -552,7 +552,11 @@ function bb_nouveau_group_header_bubble_buttons( $args = array() ) {
 		$args = array( 'container_classes' => array( 'bb_more_options' ) );
 	}
 
-	$output = sprintf( '<a href="#" class="bb_more_options_action"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list">%s</div>', $output );
+	ob_start();
+	bp_get_template_part( 'common/more-options-view' );
+	$template_part_content = ob_get_clean();
+
+	$output = sprintf( '<a href="#" class="bb_more_options_action" aria-label="%1$s"><i class="bb-icon-f bb-icon-ellipsis-h"></i></a><div class="bb_more_options_list bb_more_dropdown"> %2$s %3$s</div><div class="bb_more_dropdown_overlay"></div>', esc_attr__( 'More Options', 'buddyboss' ), $template_part_content, $output );
 
 	bp_nouveau_wrapper( array_merge( $args, array( 'output' => $output ) ) );
 }
@@ -992,8 +996,9 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 
 		// Membership button on groups loop or single group's header.
 	} elseif ( 'subscription' === $type ) {
-
-		if ( bb_is_enabled_subscription( 'group' ) ) {
+		if (
+			bb_is_enabled_subscription( 'group' )
+		) {
 			$buttons['group_subscription'] = bb_get_group_subscription_button(
 				array(
 					'id'                => 'group_subscription',
@@ -1001,7 +1006,7 @@ function bp_nouveau_get_groups_buttons( $args = array() ) {
 					'component'         => 'groups',
 					'parent_element'    => $parent_element,
 					'parent_attr'       => array(
-						'id'    => ! empty( $button_args['wrapper_id'] ) ? $button_args['wrapper_id'] : '',
+						'id'    => '',
 						'class' => $parent_class,
 					),
 					'must_be_logged_in' => true,

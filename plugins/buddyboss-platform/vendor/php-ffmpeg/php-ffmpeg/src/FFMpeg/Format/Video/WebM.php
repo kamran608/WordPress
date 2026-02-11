@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Format\Video;
+namespace BuddyBossPlatform\FFMpeg\Format\Video;
 
 /**
  * The WebM video format
@@ -18,19 +17,15 @@ class WebM extends DefaultVideo
 {
     public function __construct($audioCodec = 'libvorbis', $videoCodec = 'libvpx')
     {
-        $this
-            ->setAudioCodec($audioCodec)
-            ->setVideoCodec($videoCodec);
+        $this->setAudioCodec($audioCodec)->setVideoCodec($videoCodec);
     }
-
     /**
      * {@inheritDoc}
      */
     public function supportBFrames()
     {
-        return true;
+        return \true;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -38,7 +33,6 @@ class WebM extends DefaultVideo
     {
         return array('-f', 'webm');
     }
-
     /**
      * {@inheritDoc}
      */
@@ -46,7 +40,6 @@ class WebM extends DefaultVideo
     {
         return array('copy', 'libvorbis');
     }
-
     /**
      * {@inheritDoc}
      */

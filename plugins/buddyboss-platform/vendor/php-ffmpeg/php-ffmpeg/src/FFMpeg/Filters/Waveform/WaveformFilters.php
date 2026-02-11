@@ -8,20 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Waveform;
 
-namespace FFMpeg\Filters\Waveform;
-
-use FFMpeg\Media\Waveform;
-
+use BuddyBossPlatform\FFMpeg\Media\Waveform;
 class WaveformFilters
 {
     private $waveform;
-
     public function __construct(Waveform $waveform)
     {
         $this->waveform = $waveform;
     }
-
     /**
      * Sets the downmix of the output waveform.
      *
@@ -32,7 +28,6 @@ class WaveformFilters
     public function setDownmix()
     {
         $this->waveform->addFilter(new WaveformDownmixFilter());
-
         return $this;
     }
 }

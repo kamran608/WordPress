@@ -8,22 +8,18 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Audio;
 
-namespace FFMpeg\Filters\Audio;
-
-use FFMpeg\Filters\Audio\AddMetadataFilter;
-use FFMpeg\Media\Audio;
-use FFMpeg\Coordinate\TimeCode;
-
+use BuddyBossPlatform\FFMpeg\Filters\Audio\AddMetadataFilter;
+use BuddyBossPlatform\FFMpeg\Media\Audio;
+use BuddyBossPlatform\FFMpeg\Coordinate\TimeCode;
 class AudioFilters
 {
     protected $media;
-
     public function __construct(Audio $media)
     {
         $this->media = $media;
     }
-
     /**
      * Resamples the audio file.
      *
@@ -34,10 +30,8 @@ class AudioFilters
     public function resample($rate)
     {
         $this->media->addFilter(new AudioResamplableFilter($rate));
-
         return $this;
     }
-
     /**
      * Add metadata to an audio file. If no arguments are given then filter
      * will remove all metadata from the audio file
@@ -55,10 +49,8 @@ class AudioFilters
     public function addMetadata($data = null)
     {
         $this->media->addFilter(new AddMetadataFilter($data));
-
         return $this;
     }
-
     /**
      * Cuts the audio at `$start`, optionally define the end
      *
@@ -66,12 +58,11 @@ class AudioFilters
      * @param   TimeCode    $duration   How long the clipped audio should be
      * @return AudioFilters
      */
-    public function clip($start, $duration = null) {
+    public function clip($start, $duration = null)
+    {
         $this->media->addFilter(new AudioClipFilter($start, $duration));
-
         return $this;
     }
-
     /**
      * Applies a custom filter
      *
@@ -82,7 +73,6 @@ class AudioFilters
     public function custom($parameters)
     {
         $this->media->addFilter(new CustomFilter($parameters));
-
         return $this;
     }
 }

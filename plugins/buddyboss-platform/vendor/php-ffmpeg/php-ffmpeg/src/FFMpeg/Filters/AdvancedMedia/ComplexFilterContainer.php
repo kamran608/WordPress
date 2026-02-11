@@ -1,9 +1,8 @@
 <?php
 
-namespace FFMpeg\Filters\AdvancedMedia;
+namespace BuddyBossPlatform\FFMpeg\Filters\AdvancedMedia;
 
-use FFMpeg\Media\AdvancedMedia;
-
+use BuddyBossPlatform\FFMpeg\Media\AdvancedMedia;
 /**
  * Container for the complex compatible filter.
  */
@@ -13,22 +12,18 @@ class ComplexFilterContainer implements ComplexFilterInterface
      * @var int
      */
     private $priority;
-
     /**
      * @var ComplexCompatibleFilter
      */
     private $baseFilter;
-
     /**
      * @var string
      */
     private $inLabels;
-
     /**
      * @var string
      */
     private $outLabels;
-
     /**
      * ComplexFilter constructor.
      *
@@ -43,7 +38,6 @@ class ComplexFilterContainer implements ComplexFilterInterface
         $this->baseFilter = $baseFilter;
         $this->outLabels = $outLabels;
     }
-
     /**
      * Returns the priority of the filter.
      *
@@ -53,7 +47,6 @@ class ComplexFilterContainer implements ComplexFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * @return string
      */
@@ -61,7 +54,6 @@ class ComplexFilterContainer implements ComplexFilterInterface
     {
         return $this->inLabels;
     }
-
     /**
      * @return string
      */
@@ -69,7 +61,6 @@ class ComplexFilterContainer implements ComplexFilterInterface
     {
         return $this->outLabels;
     }
-
     /**
      * Get name of the filter.
      *
@@ -79,7 +70,6 @@ class ComplexFilterContainer implements ComplexFilterInterface
     {
         return $this->baseFilter->getName();
     }
-
     /**
      * Get minimal version of ffmpeg starting with which this filter is supported.
      *
@@ -89,7 +79,6 @@ class ComplexFilterContainer implements ComplexFilterInterface
     {
         return $this->baseFilter->getMinimalFFMpegVersion();
     }
-
     /**
      * {@inheritdoc}
      */

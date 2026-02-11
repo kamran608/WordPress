@@ -60,7 +60,7 @@ class BP_Video_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'video',
-			__( 'Videos', 'buddyboss' ),
+			'Videos',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
@@ -150,6 +150,9 @@ class BP_Video_Component extends BP_Component {
 
 		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
 
+		$this->published_status = 'published';
+		$this->scheduled_status = 'scheduled';
+
 		// Global tables for video component.
 		$global_tables = array(
 			'table_name'        => $bp->table_prefix . 'bp_media',
@@ -216,20 +219,7 @@ class BP_Video_Component extends BP_Component {
 
 			$slug       = bp_get_video_slug();
 			$video_link = trailingslashit( $user_domain . $slug );
-
-			// Only grab count if we're on a user page and current user has access.
-			if ( bp_is_user() ) {
-				$count     = bp_video_get_total_video_count( bp_displayed_user_id() );
-				$class     = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name  = __( 'Videos', 'buddyboss' );
-				$nav_name .= sprintf(
-					' <span class="%s">%s</span>',
-					esc_attr( $class ),
-					$count
-				);
-			} else {
-				$nav_name = __( 'Videos', 'buddyboss' );
-			}
+			$nav_name   = __( 'Videos', 'buddyboss' );
 
 			// Add 'Videos' to the main navigation.
 			$main_nav = array(

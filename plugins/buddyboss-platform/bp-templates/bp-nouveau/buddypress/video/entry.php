@@ -52,10 +52,11 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 			$report_btn = bp_video_get_report_link( array( 'id' => $video_id ) );
 			if ( $can_edit || $can_move || $can_delete || $report_btn ) {
 				?>
-				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
+				<a href="#" class="video-action_more item-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-rl bb-icon-ellipsis-v"></i>
 				</a>
-				<div class="video-action_list item-action_list">
+				<div class="video-action_list item-action_list bb_more_dropdown">
+					<?php bp_get_template_part( 'common/more-options-view' ); ?>
 					<ul>
 						<?php
 						if ( $can_edit && ( bb_user_can_create_video() || $group_id > 0 ) ) {
@@ -125,6 +126,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 						?>
 					</ul>
 				</div>
+				<div class="bb_more_dropdown_overlay"></div>
 			<?php } ?>
 		</div>
 
@@ -142,6 +144,7 @@ if ( false !== strpos( $attachment_full, 'video-placeholder.jpg' ) || false !== 
 			data-album-id="<?php bp_video_album_id(); ?>"
 			data-group-id="<?php bp_video_group_id(); ?>"
 			data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
+			aria-label="<?php esc_attr_e( 'Open video in media theatre', 'buddyboss' ); ?>"
 			href="#">
 				<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/video-placeholder.jpg" data-src="<?php echo esc_url( $poster_full ); ?>" alt="<?php bp_video_title(); ?>" class="lazy"/>
 		</a>

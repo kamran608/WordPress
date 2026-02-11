@@ -8,19 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Media;
 
-namespace FFMpeg\Media;
-
-use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
-use FFMpeg\Filters\Audio\AudioFilters;
-use FFMpeg\Format\FormatInterface;
-use FFMpeg\Filters\Audio\SimpleFilter;
-use FFMpeg\Exception\RuntimeException;
-use FFMpeg\Exception\InvalidArgumentException;
-use FFMpeg\Filters\Audio\AudioFilterInterface;
-use FFMpeg\Filters\FilterInterface;
-use FFMpeg\Format\ProgressableInterface;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\ExecutionFailureException;
+use BuddyBossPlatform\FFMpeg\Filters\Audio\AudioFilters;
+use BuddyBossPlatform\FFMpeg\Format\FormatInterface;
+use BuddyBossPlatform\FFMpeg\Filters\Audio\SimpleFilter;
+use BuddyBossPlatform\FFMpeg\Exception\RuntimeException;
+use BuddyBossPlatform\FFMpeg\Exception\InvalidArgumentException;
+use BuddyBossPlatform\FFMpeg\Filters\Audio\AudioFilterInterface;
+use BuddyBossPlatform\FFMpeg\Filters\FilterInterface;
+use BuddyBossPlatform\FFMpeg\Format\ProgressableInterface;
 class Audio extends AbstractStreamableMedia
 {
     /**
@@ -32,7 +30,6 @@ class Audio extends AbstractStreamableMedia
     {
         return new AudioFilters($this);
     }
-
     /**
      * {@inheritdoc}
      *
@@ -43,12 +40,9 @@ class Audio extends AbstractStreamableMedia
         if (!$filter instanceof AudioFilterInterface) {
             throw new InvalidArgumentException('Audio only accepts AudioFilterInterface filters');
         }
-
         $this->filters->add($filter);
-
         return $this;
     }
-
     /**
      * Exports the audio in the desired format, applies registered filters.
      *
@@ -60,23 +54,18 @@ class Audio extends AbstractStreamableMedia
     public function save(FormatInterface $format, $outputPathfile)
     {
         $listeners = null;
-
         if ($format instanceof ProgressableInterface) {
             $listeners = $format->createProgressListener($this, $this->ffprobe, 1, 1, 0);
         }
-
         $commands = $this->buildCommand($format, $outputPathfile);
-
         try {
-            $this->driver->command($commands, false, $listeners);
+            $this->driver->command($commands, \false, $listeners);
         } catch (ExecutionFailureException $e) {
             $this->cleanupTemporaryFile($outputPathfile);
             throw new RuntimeException('Encoding failed', $e->getCode(), $e);
         }
-
         return $this;
     }
-
     /**
      * Returns the final command as a string, useful for debugging purposes.
      *
@@ -85,10 +74,10 @@ class Audio extends AbstractStreamableMedia
      * @return string
      * @since 0.11.0
      */
-    public function getFinalCommand(FormatInterface $format, $outputPathfile) {
-        return implode(' ', $this->buildCommand($format, $outputPathfile));
+    public function getFinalCommand(FormatInterface $format, $outputPathfile)
+    {
+        return \implode(' ', $this->buildCommand($format, $outputPathfile));
     }
-
     /**
      * Builds the command which will be executed with the provided format
      *
@@ -97,23 +86,20 @@ class Audio extends AbstractStreamableMedia
      * @return string[] An array which are the components of the command
      * @since 0.11.0
      */
-    protected function buildCommand(FormatInterface $format, $outputPathfile) {
+    protected function buildCommand(FormatInterface $format, $outputPathfile)
+    {
         $commands = array('-y', '-i', $this->pathfile);
-
         $filters = clone $this->filters;
         $filters->add(new SimpleFilter($format->getExtraParams(), 10));
-
         if ($this->driver->getConfiguration()->has('ffmpeg.threads')) {
             $filters->add(new SimpleFilter(array('-threads', $this->driver->getConfiguration()->get('ffmpeg.threads'))));
         }
         if (null !== $format->getAudioCodec()) {
             $filters->add(new SimpleFilter(array('-acodec', $format->getAudioCodec())));
         }
-
         foreach ($filters as $filter) {
-            $commands = array_merge($commands, $filter->apply($this, $format));
+            $commands = \array_merge($commands, $filter->apply($this, $format));
         }
-
         if (null !== $format->getAudioKiloBitrate()) {
             $commands[] = '-b:a';
             $commands[] = $format->getAudioKiloBitrate() . 'k';
@@ -123,10 +109,8 @@ class Audio extends AbstractStreamableMedia
             $commands[] = $format->getAudioChannels();
         }
         $commands[] = $outputPathfile;
-
         return $commands;
     }
-
     /**
      * Gets the waveform of the video.
      *
@@ -139,7 +123,6 @@ class Audio extends AbstractStreamableMedia
     {
         return new Waveform($this, $this->driver, $this->ffprobe, $width, $height, $colors);
     }
-
     /**
      * Concatenates a list of audio files into one unique audio file.
      *

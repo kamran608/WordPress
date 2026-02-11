@@ -1,9 +1,8 @@
 <?php
 
-namespace Doctrine\Common\Cache;
+namespace BuddyBossPlatform\Doctrine\Common\Cache;
 
 use BadMethodCallException;
-
 use function ini_get;
 use function serialize;
 use function unserialize;
@@ -13,9 +12,7 @@ use function xcache_info;
 use function xcache_isset;
 use function xcache_set;
 use function xcache_unset;
-
-use const XC_TYPE_VAR;
-
+use const BuddyBossPlatform\XC_TYPE_VAR;
 /**
  * Xcache cache driver.
  *
@@ -30,9 +27,8 @@ class XcacheCache extends CacheProvider
      */
     protected function doFetch($id)
     {
-        return $this->doContains($id) ? unserialize(xcache_get($id)) : false;
+        return $this->doContains($id) ? unserialize(xcache_get($id)) : \false;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -40,7 +36,6 @@ class XcacheCache extends CacheProvider
     {
         return xcache_isset($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -48,7 +43,6 @@ class XcacheCache extends CacheProvider
     {
         return xcache_set($id, serialize($data), (int) $lifeTime);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -56,19 +50,15 @@ class XcacheCache extends CacheProvider
     {
         return xcache_unset($id);
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doFlush()
     {
         $this->checkAuthorization();
-
         xcache_clear_cache(XC_TYPE_VAR);
-
-        return true;
+        return \true;
     }
-
     /**
      * Checks that xcache.admin.enable_auth is Off.
      *
@@ -79,28 +69,16 @@ class XcacheCache extends CacheProvider
     protected function checkAuthorization()
     {
         if (ini_get('xcache.admin.enable_auth')) {
-            throw new BadMethodCallException(
-                'To use all features of \Doctrine\Common\Cache\XcacheCache, '
-                . 'you must set "xcache.admin.enable_auth" to "Off" in your php.ini.'
-            );
+            throw new BadMethodCallException('To use all features of \\Doctrine\\Common\\Cache\\XcacheCache, ' . 'you must set "xcache.admin.enable_auth" to "Off" in your php.ini.');
         }
     }
-
     /**
      * {@inheritdoc}
      */
     protected function doGetStats()
     {
         $this->checkAuthorization();
-
         $info = xcache_info(XC_TYPE_VAR, 0);
-
-        return [
-            Cache::STATS_HITS   => $info['hits'],
-            Cache::STATS_MISSES => $info['misses'],
-            Cache::STATS_UPTIME => null,
-            Cache::STATS_MEMORY_USAGE      => $info['size'],
-            Cache::STATS_MEMORY_AVAILABLE  => $info['avail'],
-        ];
+        return [Cache::STATS_HITS => $info['hits'], Cache::STATS_MISSES => $info['misses'], Cache::STATS_UPTIME => null, Cache::STATS_MEMORY_USAGE => $info['size'], Cache::STATS_MEMORY_AVAILABLE => $info['avail']];
     }
 }

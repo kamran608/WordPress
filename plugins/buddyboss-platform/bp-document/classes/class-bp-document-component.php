@@ -67,7 +67,7 @@ class BP_Document_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'document',
-			__( 'Documents', 'buddyboss' ),
+			'Documents',
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
@@ -166,6 +166,9 @@ class BP_Document_Component extends BP_Component {
 		}
 
 		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+
+		$this->published_status = 'published';
+		$this->scheduled_status = 'scheduled';
 
 		// Global tables for document component.
 		$global_tables = array(
@@ -389,5 +392,16 @@ class BP_Document_Component extends BP_Component {
 			'BP_REST_Document_Folder_Endpoint',
 			'BP_REST_Document_Details_Endpoint',
 		) );
+	}
+
+	/**
+	 * Register the Documents Blocks.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 *
+	 * @param array $blocks Optional. See BP_Component::blocks_init() for description.
+	 */
+	public function blocks_init( $blocks = array() ) {
+		parent::blocks_init( array() );
 	}
 }

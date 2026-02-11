@@ -278,28 +278,6 @@ function bp_moderation_block_member() {
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['moderation'] = $moderation;
 
-			$friend_status = function_exists( 'bp_is_friend' ) && bp_is_active( 'friends' ) ? bp_is_friend( $item_id ) : array();
-			if ( ! empty( $friend_status ) && in_array( $friend_status, array( 'is_friend', 'pending', 'awaiting_response' ), true ) ) {
-				friends_remove_friend( bp_loggedin_user_id(), $item_id );
-			}
-
-			if (
-				function_exists( 'bp_is_following' ) &&
-				bp_is_following(
-					array(
-						'leader_id'   => $item_id,
-						'follower_id' => bp_loggedin_user_id(),
-					)
-				)
-			) {
-				bp_stop_following(
-					array(
-						'leader_id'   => $item_id,
-						'follower_id' => bp_loggedin_user_id(),
-					)
-				);
-			}
-
 			$response['button'] = bp_moderation_get_report_button(
 				array(
 					'button_attr' => array(
@@ -1051,7 +1029,7 @@ function bb_moderation_async_request_batch_process( $batch ) {
 			(int) $current_args['action_suspend'] === (int) $next_args['action_suspend']
 		) {
 			$batch->data = array();
-			error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+			bb_error_log( sprintf( 'Skip suspend process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
 
 			// Used for hide_parent argument check.
 		} elseif (
@@ -1060,7 +1038,7 @@ function bb_moderation_async_request_batch_process( $batch ) {
 			(int) $current_args['hide_parent'] !== (int) $next_args['hide_parent']
 		) {
 			$batch->data = array();
-			error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+			bb_error_log( sprintf( 'Skip parent process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
 			// Used for hide_sitewide argument check.
 		} elseif (
 			! empty( $next_data ) &&
@@ -1070,9 +1048,72 @@ function bb_moderation_async_request_batch_process( $batch ) {
 			(int) $next_data[1] !== (int) $current_data[1]
 		) {
 			$batch->data = array();
-			error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
+			bb_error_log( sprintf( 'Skip sitewide process: `%s` next found: `%s`', $batch->key, $next_batch->id ) );
 		}
 	}
 }
 add_action( 'bb_async_request_batch_process', 'bb_moderation_async_request_batch_process', 10, 1 );
 
+/**
+ * Function to exclude suspended users from the friendship query.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param array $where Array of where conditions.
+ *
+ * @return array Modified where conditions.
+ */
+function bb_moderation_get_friendship_ids_for_user_where_sql( $where ) {
+	global $bp;
+
+	$suspend_table_name    = esc_sql( $bp->moderation->table_name );
+	$moderation_table_name = esc_sql( $bp->moderation->table_name_reports );
+	$item_type             = esc_sql( BP_Suspend_Member::$type );
+
+	// Add a single NOT EXISTS condition to exclude suspended users.
+	$where[] = "NOT EXISTS (
+        SELECT 1
+        FROM {$suspend_table_name} s3
+        LEFT JOIN {$moderation_table_name} m ON m.moderation_id = s3.id
+        WHERE s3.item_type = '{$item_type}'
+        AND m.user_id IN (f.initiator_user_id, f.friend_user_id)
+        AND s3.item_id IN (f.initiator_user_id, f.friend_user_id)
+        AND s3.reported != 0 AND m.user_report != 1
+    )";
+
+	// Combine conditions to exclude suspended users.
+	$where[] = "(
+        (s1.user_suspended = 0 OR s1.user_suspended IS NULL)
+        AND (s1.hide_parent = 0 OR s1.hide_parent IS NULL)
+        AND (s1.hide_sitewide = 0 OR s1.hide_sitewide IS NULL)
+        AND (s2.user_suspended = 0 OR s2.user_suspended IS NULL)
+        AND (s2.hide_parent = 0 OR s2.hide_parent IS NULL)
+        AND (s2.hide_sitewide = 0 OR s2.hide_sitewide IS NULL)
+    )";
+
+	return $where;
+}
+
+add_filter( 'bb_get_friendship_ids_for_user_where_sql', 'bb_moderation_get_friendship_ids_for_user_where_sql', 10, 1 );
+
+/**
+ * Function to modify JOIN clauses to filter friendships based on suspension and moderation criteria.
+ *
+ * @since BuddyBoss 2.8.20
+ *
+ * @param string $join    The JOIN SQL part of the query.
+ * @param int    $user_id The ID of the user for whom friendships are being queried.
+ *
+ * @return string Updated JOIN SQL part with suspension and moderation checks.
+ */
+function bb_moderation_get_friendship_ids_for_user_join_sql( $join, $user_id ) {
+	global $bp;
+
+	// Join with the wp_bp_suspend table to filter out suspended users.
+	$join .= " LEFT JOIN {$bp->moderation->table_name} s1 ON f.friend_user_id = s1.item_id AND s1.item_type = 'user'";
+	$join .= " LEFT JOIN {$bp->moderation->table_name} s2 ON f.initiator_user_id = s2.item_id AND s2.item_type = 'user'";
+
+	return $join;
+}
+
+add_filter( 'bb_get_friendship_ids_for_user_join_sql', 'bb_moderation_get_friendship_ids_for_user_join_sql', 10, 2 );

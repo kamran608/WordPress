@@ -143,7 +143,7 @@ function bbp_get_topics_pagination_base( $forum_id = 0 ) {
 					}
 				} elseif ( bbp_is_topic_archive() ) {
 					$base = bbp_get_topics_url();
-                    
+
 					// Page or single post.
 				} else {
 					$base = get_permalink();
@@ -310,13 +310,6 @@ function bbp_has_topics( $args = '' ) {
 	// Limited the number of pages shown.
 	if ( ! empty( $r['max_num_pages'] ) ) {
 		$bbp->topic_query->max_num_pages = $r['max_num_pages'];
-	}
-
-	/** Stickies */
-
-	// Put sticky posts at the top of the posts array.
-	if ( ! empty( $r['show_stickies'] ) && $r['paged'] <= 1 ) {
-		bbp_add_sticky_topics( $bbp->topic_query, $r );
 	}
 
 	// If no limit to posts per page, set it to the current post_count.
@@ -719,7 +712,7 @@ function bbp_topic_title( $topic_id = 0 ) {
  */
 function bbp_get_topic_title( $topic_id = 0 ) {
 	$topic_id = bbp_get_topic_id( $topic_id );
-	$title    = ( ! empty( $topic_id ) ) ? get_the_title( $topic_id ) : '';
+	$title    = ( ! empty( $topic_id ) ) ? esc_html( get_the_title( $topic_id ) ) : '';
 
 	return apply_filters( 'bbp_get_topic_title', $title, $topic_id );
 }
@@ -1705,7 +1698,7 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Only wrap in link if profile exists
 		if ( empty( $anonymous ) && bbp_user_has_profile( bbp_get_topic_author_id( $topic_id ) ) ) {
-			$author_link = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link );
+			$author_link = sprintf( '<a href="%1$s"%2$s%3$s%5$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link, ' data-bb-hp-profile="' . bbp_get_topic_author_id( $topic_id ) . '"' );
 		}
 
 		// Role is not linked
@@ -2922,8 +2915,22 @@ function bbp_get_topic_trash_link( $args = '' ) {
 	$actions = array();
 	$topic   = bbp_get_topic( bbp_get_topic_id( (int) $r['id'] ) );
 
-	if ( empty( $topic ) || ! current_user_can( 'delete_topic', $topic->ID ) ) {
+	if ( empty( $topic ) ) {
 		return;
+	} elseif ( ! current_user_can( 'delete_topic', $topic->ID ) ) {
+
+		// Is groups component active.
+		if ( bp_is_active( 'groups' ) ) {
+			$author_id    = bbp_get_topic_author_id( $topic->ID );
+			$forum_id     = bbp_get_topic_forum_id( $topic->ID );
+			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$allow_delete = bb_moderator_can_delete_topic_reply( $topic, $args );
+			if ( ! $allow_delete ) {
+				return;
+			}
+		} else {
+			return;
+		}
 	}
 
 	if ( bbp_is_topic_trash( $topic->ID ) ) {
@@ -4129,7 +4136,7 @@ function bbp_get_form_topic_title() {
 
 	// Get _POST data.
 	if ( bbp_is_post_request() && isset( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = wp_unslash( $_POST['bbp_topic_title'] );
+		$topic_title = sanitize_text_field( wp_unslash( $_POST['bbp_topic_title'] ) );
 		// Get edit data.
 	} elseif ( bbp_is_topic_edit() ) {
 		$topic_title = bbp_get_global_post_field( 'post_title', 'raw' );
@@ -4138,7 +4145,7 @@ function bbp_get_form_topic_title() {
 		$topic_title = '';
 	}
 
-	return apply_filters( 'bbp_get_form_topic_title', esc_attr( $topic_title ) );
+	return apply_filters( 'bbp_get_form_topic_title', esc_html( $topic_title ) );
 }
 
 /**

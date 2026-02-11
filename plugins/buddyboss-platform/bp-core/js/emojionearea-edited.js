@@ -232,6 +232,8 @@ document = window.document || {};
 			emojiPlaceholder  : "",
 			searchPlaceholder : bp_emojionearea.searchPlaceholder,
 			container         : null,
+			detachPicker      : false,
+			containerPicker   : null,
 			hideSource        : true,
 			shortnames        : true,
 			sprite            : true,
@@ -1036,6 +1038,10 @@ document = window.document || {};
 					.addClass( selector( 'search-position-' + options.searchPosition, true ) )
 					.addClass( 'hidden' )
 			);
+
+		if (options.detachPicker && options.containerPicker) {
+			$( options.containerPicker ).append(picker);
+		}
 
 		if (options.search) {
 			searchPanel.addClass( selector( 'with-search', true ) );
@@ -1895,6 +1901,38 @@ document = window.document || {};
 
 	EmojioneArea.prototype.showPicker = function () {
 		var self = this;
+
+		var scrollTop    = $( window ).scrollTop();
+		var offset       = self.button.offset();
+		var pickerWidth  = self.picker.width();
+		var pickerHeight = self.picker.height();
+		var topPosition  = Math.round( offset.top );
+		var leftPosition = Math.round( offset.left ) + 42
+
+		if ( $( window ).width() < 1000 ) {
+			leftPosition = Math.round( offset.left ) + pickerWidth - 95;
+			var commentLevel = $( this.button ).parents( "li" ).length;
+			var emojiOrder = $( this.button ).closest( ".post-elements-buttons-item" ).index();
+
+			if ( commentLevel > 2 ) {
+				self.picker.addClass( "level-2" );
+			}
+
+			if( emojiOrder > 2 ) {
+				leftPosition = Math.round( offset.left ) + pickerWidth - 130;
+			}
+		}
+
+		if (
+			self.options.containerPicker &&
+			! isNaN( topPosition ) &&
+			! isNaN( leftPosition ) &&
+			! isNaN( pickerWidth ) &&
+			! isNaN( pickerHeight )
+		) {
+			var transformValue = 'translate(' + ( leftPosition ) + 'px, ' + ( topPosition - scrollTop - 10 ) + 'px) translate(-100%, -100%)';
+		}
+
 		if (self._sh_timer) {
 			window.clearTimeout( self._sh_timer );
 		}
@@ -1902,6 +1940,9 @@ document = window.document || {};
 		self._sh_timer = window.setTimeout(
 			function() {
 				self.button.addClass( "active" );
+				if (self.options.detachPicker && transformValue) {
+					self.picker.css('transform', transformValue);
+				}
 			},
 			50
 		);
@@ -1921,6 +1962,7 @@ document = window.document || {};
 			},
 			500
 		);
+		self.picker.removeClass( "level-2" );
 		trigger( self, "picker.hide", [self.picker] );
 		return self;
 	}

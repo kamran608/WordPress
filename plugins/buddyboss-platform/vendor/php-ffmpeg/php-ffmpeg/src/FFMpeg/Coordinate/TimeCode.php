@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Coordinate;
 
-namespace FFMpeg\Coordinate;
-
-use FFMpeg\Exception\InvalidArgumentException;
-
+use BuddyBossPlatform\FFMpeg\Exception\InvalidArgumentException;
 class TimeCode
 {
     //see http://www.dropframetimecode.org/
@@ -20,7 +18,6 @@ class TimeCode
     private $minutes;
     private $seconds;
     private $frames;
-
     public function __construct($hours, $minutes, $seconds, $frames)
     {
         $this->hours = $hours;
@@ -28,12 +25,10 @@ class TimeCode
         $this->seconds = $seconds;
         $this->frames = $frames;
     }
-
     public function __toString()
     {
-        return sprintf('%02d:%02d:%02d.%02d', $this->hours, $this->minutes, $this->seconds, $this->frames);
+        return \sprintf('%02d:%02d:%02d.%02d', $this->hours, $this->minutes, $this->seconds, $this->frames);
     }
-
     /**
      * Creates timecode from string.
      *
@@ -46,24 +41,20 @@ class TimeCode
     public static function fromString($timecode)
     {
         $days = 0;
-
-        if (preg_match('/^[0-9]+:[0-9]+:[0-9]+:[0-9]+\.[0-9]+$/', $timecode)) {
-            list($days, $hours, $minutes, $seconds, $frames) = sscanf($timecode, '%d:%d:%d:%d.%d');
-        } elseif (preg_match('/^[0-9]+:[0-9]+:[0-9]+:[0-9]+:[0-9]+$/', $timecode)) {
-            list($days, $hours, $minutes, $seconds, $frames) = sscanf($timecode, '%d:%d:%d:%d:%d');
-        } elseif (preg_match('/^[0-9]+:[0-9]+:[0-9]+\.[0-9]+$/', $timecode)) {
-            list($hours, $minutes, $seconds, $frames) = sscanf($timecode, '%d:%d:%d.%s');
-        } elseif (preg_match('/^[0-9]+:[0-9]+:[0-9]+:[0-9]+$/', $timecode)) {
-            list($hours, $minutes, $seconds, $frames) = sscanf($timecode, '%d:%d:%d:%s');
+        if (\preg_match('/^[0-9]+:[0-9]+:[0-9]+:[0-9]+\\.[0-9]+$/', $timecode)) {
+            list($days, $hours, $minutes, $seconds, $frames) = \sscanf($timecode, '%d:%d:%d:%d.%d');
+        } elseif (\preg_match('/^[0-9]+:[0-9]+:[0-9]+:[0-9]+:[0-9]+$/', $timecode)) {
+            list($days, $hours, $minutes, $seconds, $frames) = \sscanf($timecode, '%d:%d:%d:%d:%d');
+        } elseif (\preg_match('/^[0-9]+:[0-9]+:[0-9]+\\.[0-9]+$/', $timecode)) {
+            list($hours, $minutes, $seconds, $frames) = \sscanf($timecode, '%d:%d:%d.%s');
+        } elseif (\preg_match('/^[0-9]+:[0-9]+:[0-9]+:[0-9]+$/', $timecode)) {
+            list($hours, $minutes, $seconds, $frames) = \sscanf($timecode, '%d:%d:%d:%s');
         } else {
-            throw new InvalidArgumentException(sprintf('Unable to parse timecode %s', $timecode));
+            throw new InvalidArgumentException(\sprintf('Unable to parse timecode %s', $timecode));
         }
-
         $hours += $days * 24;
-
         return new static($hours, $minutes, $seconds, $frames);
     }
-
     /**
      * Creates timecode from number of seconds.
      *
@@ -74,47 +65,40 @@ class TimeCode
     public static function fromSeconds($quantity)
     {
         $minutes = $hours = $frames = 0;
-
-        $frames = round(100 * ($quantity - floor($quantity)));
-        $seconds = floor($quantity);
-
+        $frames = \round(100 * ($quantity - \floor($quantity)));
+        $seconds = \floor($quantity);
         if ($seconds > 59) {
-            $minutes = floor($seconds / 60);
+            $minutes = \floor($seconds / 60);
             $seconds = $seconds % 60;
         }
         if ($minutes > 59) {
-            $hours = floor($minutes / 60);
+            $hours = \floor($minutes / 60);
             $minutes = $minutes % 60;
         }
-
         return new static($hours, $minutes, $seconds, $frames);
     }
-
     /**
      * Returns this timecode in seconds
      * @return int
      */
-    public function toSeconds() {
+    public function toSeconds()
+    {
         $seconds = 0;
-
         $seconds += $this->hours * 60 * 60;
         $seconds += $this->minutes * 60;
         $seconds += $this->seconds;
-
         // TODO: Handle frames?
-
         return (int) $seconds;
     }
-
     /**
      * Helper function wether `$timecode` is after this one
      *
      * @param   TimeCode    $timecode   The Timecode to compare
      * @return bool
      */
-    public function isAfter(TimeCode $timecode) {
+    public function isAfter(TimeCode $timecode)
+    {
         // convert everything to seconds and compare
-        return ($this->toSeconds() > $timecode->toSeconds());
+        return $this->toSeconds() > $timecode->toSeconds();
     }
-
 }

@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.5.7
@@ -40,7 +47,8 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'get_items' ),
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 	}
@@ -129,6 +137,8 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 			? bb_user_has_access_upload_video( 0, $user_id, 0, 0, 'message' )
 			: bp_is_active( 'video' ) && bp_is_messages_video_support_enabled() && ( ! function_exists( 'bb_user_can_create_video' ) || bb_user_can_create_video() )
 		);
+
+		$data['can_create_poll'] = bp_current_user_can( 'administrator' );
 
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$response = rest_ensure_response( $data );
@@ -259,6 +269,12 @@ class BP_REST_Members_Permissions_Endpoint extends WP_REST_Controller {
 				'can_create_message_video'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether the user can create the video into messages or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
+				'can_create_poll'             => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether the user can create the poll into activity or not.', 'buddyboss' ),
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),

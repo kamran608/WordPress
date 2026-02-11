@@ -8,6 +8,34 @@
  * @version 1.7.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+$bp_current_action    = bp_current_action();
+if ( bp_is_user() && bb_enable_content_counts() && 'my-video' === $bp_current_action ) {
+	?>
+	<div class="bb-item-count">
+		<?php
+		if ( ! $is_send_ajax_request ) {
+			$count = bp_video_get_total_video_count();
+			printf(
+				wp_kses(
+					/* translators: %d is the video count */
+					_n(
+						'<span class="bb-count">%d</span> Video',
+						'<span class="bb-count">%d</span> Videos',
+						$count,
+						'buddyboss'
+					),
+					array( 'span' => array( 'class' => true ) )
+				),
+				(int) $count
+			);
+
+			unset( $count );
+		}
+		?>
+	</div>
+	<?php
+}
 ?>
 <div class="bb-video-container bb-media-container member-video">
 	<?php
@@ -16,7 +44,7 @@
 	bp_get_template_part( 'media/theatre' );
 	bp_get_template_part( 'document/theatre' );
 
-	switch ( bp_current_action() ) :
+	switch ( $bp_current_action ) :
 
 		// Home/Video.
 		case 'my-video':
@@ -24,8 +52,16 @@
 			bp_nouveau_member_hook( 'before', 'video_content' );
 			bp_get_template_part( 'video/actions' );
 			?>
-			<div id="video-stream" class="video" data-bp-list="video">
-				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-video-loading' ); ?></div>
+			<div id="video-stream" class="video" data-bp-list="video" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+				<?php
+				if ( $is_send_ajax_request ) {
+					echo '<div id="bp-ajax-loader">';
+					bp_nouveau_user_feedback( 'member-video-loading' );
+					echo '</div>';
+				} else {
+					bp_get_template_part( 'video/video-loop' );
+				}
+				?>
 			</div><!-- .video -->
 			<?php
 			bp_nouveau_member_hook( 'after', 'video_content' );

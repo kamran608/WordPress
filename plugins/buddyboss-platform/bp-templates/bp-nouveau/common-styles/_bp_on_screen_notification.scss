@@ -29,6 +29,13 @@
 		width: 100%;
 		z-index: 1099;
 
+		.activity-modal-open &,
+		.acomments-modal-open &,
+		.media-modal-open &,
+		.document-modal-open & {
+			z-index: 999999;
+		}
+
 		.notification-list {
 			margin: 0;
 			padding: 0;

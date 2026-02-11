@@ -114,9 +114,12 @@ class BB_Members extends Integration_Abstract {
 
 		if ( $cache_bb_members ) {
 
+			// Check if the cache_expiry static method exists and call it, or get the value from an instance.
+			$cache_expiry_time = method_exists('BuddyBoss\Performance\Cache', 'cache_expiry') ? Cache::cache_expiry() : Cache::instance()->month_in_seconds;
+
 			$this->cache_endpoint(
 				'buddyboss/v1/members',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(
 					'unique_id'         => 'id',
 					'purge_deep_events' => array_keys( $purge_single_events ),
@@ -126,7 +129,7 @@ class BB_Members extends Integration_Abstract {
 
 			$this->cache_endpoint(
 				'buddyboss/v1/members/<id>',
-				Cache::instance()->month_in_seconds * 60,
+				$cache_expiry_time,
 				array(),
 				false
 			);
@@ -221,6 +224,8 @@ class BB_Members extends Integration_Abstract {
 	 * @param BP_Activity_Follow $follow Object of Follow.
 	 */
 	public function event_bp_start_following( $follow ) {
+		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bbapp-deeplinking' );
 		$this->purge_item_cache_by_item_id( $follow->leader_id );
 	}
 
@@ -230,6 +235,8 @@ class BB_Members extends Integration_Abstract {
 	 * @param BP_Activity_Follow $follow Object of Follow.
 	 */
 	public function event_bp_follow_start_following( $follow ) {
+		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bbapp-deeplinking' );
 		$this->purge_item_cache_by_item_id( $follow->leader_id );
 	}
 
@@ -239,6 +246,8 @@ class BB_Members extends Integration_Abstract {
 	 * @param BP_Activity_Follow $follow Object of Follow.
 	 */
 	public function event_bp_stop_following( $follow ) {
+		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bbapp-deeplinking' );
 		$this->purge_item_cache_by_item_id( $follow->leader_id );
 	}
 
@@ -248,6 +257,8 @@ class BB_Members extends Integration_Abstract {
 	 * @param BP_Activity_Follow $follow Object of Follow.
 	 */
 	public function event_bp_follow_stop_following( $follow ) {
+		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $follow->follower_id, 'bbapp-deeplinking' );
 		$this->purge_item_cache_by_item_id( $follow->leader_id );
 	}
 
@@ -261,6 +272,10 @@ class BB_Members extends Integration_Abstract {
 	public function event_friends_friendship_requested( $friendship_id, $initiator_user_id, $friend_user_id ) {
 		$this->purge_item_cache_by_item_id( $initiator_user_id );
 		$this->purge_item_cache_by_item_id( $friend_user_id );
+		Cache::instance()->purge_by_user_id( $initiator_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $friend_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $initiator_user_id, 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_user_id( $friend_user_id, 'bbapp-deeplinking' );
 	}
 
 	/**
@@ -273,6 +288,10 @@ class BB_Members extends Integration_Abstract {
 	public function event_friends_friendship_accepted( $friendship_id, $initiator_user_id, $friend_user_id ) {
 		$this->purge_item_cache_by_item_id( $initiator_user_id );
 		$this->purge_item_cache_by_item_id( $friend_user_id );
+		Cache::instance()->purge_by_user_id( $initiator_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $friend_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $initiator_user_id, 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_user_id( $friend_user_id, 'bbapp-deeplinking' );
 	}
 
 	/**
@@ -285,6 +304,10 @@ class BB_Members extends Integration_Abstract {
 	public function event_friends_friendship_deleted( $friendship_id, $initiator_user_id, $friend_user_id ) {
 		$this->purge_item_cache_by_item_id( $initiator_user_id );
 		$this->purge_item_cache_by_item_id( $friend_user_id );
+		Cache::instance()->purge_by_user_id( $initiator_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $friend_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $initiator_user_id, 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_user_id( $friend_user_id, 'bbapp-deeplinking' );
 	}
 
 	/**
@@ -296,6 +319,10 @@ class BB_Members extends Integration_Abstract {
 	public function event_friends_friendship_rejected( $friendship_id, $friendship ) {
 		$this->purge_item_cache_by_item_id( $friendship->initiator_user_id );
 		$this->purge_item_cache_by_item_id( $friendship->friend_user_id );
+		Cache::instance()->purge_by_user_id( $friendship->initiator_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $friendship->friend_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $friendship->initiator_user_id, 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_user_id( $friendship->friend_user_id, 'bbapp-deeplinking' );
 	}
 
 	/**
@@ -307,6 +334,10 @@ class BB_Members extends Integration_Abstract {
 	public function event_friends_friendship_post_delete( $initiator_userid, $friend_userid ) {
 		$this->purge_item_cache_by_item_id( $initiator_userid );
 		$this->purge_item_cache_by_item_id( $friend_userid );
+		Cache::instance()->purge_by_user_id( $initiator_userid, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $friend_userid, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $initiator_userid, 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_user_id( $friend_userid, 'bbapp-deeplinking' );
 	}
 
 	/**
@@ -318,6 +349,10 @@ class BB_Members extends Integration_Abstract {
 	public function event_friends_friendship_withdrawn( $friendship_id, $friendship ) {
 		$this->purge_item_cache_by_item_id( $friendship->initiator_user_id );
 		$this->purge_item_cache_by_item_id( $friendship->friend_user_id );
+		Cache::instance()->purge_by_user_id( $friendship->initiator_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $friendship->friend_user_id, 'bp-activity' );
+		Cache::instance()->purge_by_user_id( $friendship->initiator_user_id, 'bbapp-deeplinking' );
+		Cache::instance()->purge_by_user_id( $friendship->friend_user_id, 'bbapp-deeplinking' );
 	}
 
 	/**
@@ -356,7 +391,9 @@ class BB_Members extends Integration_Abstract {
 	 */
 	public function event_bp_core_delete_existing_avatar( $args ) {
 		$user_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
-		$this->purge_item_cache_by_item_id( $user_id );
+		if ( ! empty( $user_id ) && isset( $args['object'] ) && 'user' === $args['object'] ) {
+			$this->purge_item_cache_by_item_id( $user_id );
+		}
 	}
 
 	/**
@@ -605,6 +642,11 @@ class BB_Members extends Integration_Abstract {
 	 * @param int $user_id User ID.
 	 */
 	private function purge_subscription_cache_by_user_id( $user_id ) {
+
+		if ( empty( $user_id ) ) {
+			return;
+		}
+
 		$args = array(
 			'user_id' => $user_id,
 			'fields'  => 'id',

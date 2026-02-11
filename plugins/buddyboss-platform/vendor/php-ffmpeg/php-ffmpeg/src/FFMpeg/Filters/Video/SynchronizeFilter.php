@@ -8,24 +8,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Video;
 
-namespace FFMpeg\Filters\Video;
-
-use FFMpeg\Format\VideoInterface;
-use FFMpeg\Media\Video;
-
+use BuddyBossPlatform\FFMpeg\Format\VideoInterface;
+use BuddyBossPlatform\FFMpeg\Media\Video;
 /**
  * Synchronizes audio and video in case of desynchronized movies.
  */
 class SynchronizeFilter implements VideoFilterInterface
 {
     private $priority;
-
     public function __construct($priority = 12)
     {
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -33,7 +29,6 @@ class SynchronizeFilter implements VideoFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * {@inheritdoc}
      */

@@ -1,12 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class EliasisInstaller extends BaseInstaller
+class EliasisInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'component' => 'components/{$name}/',
-        'module'    => 'modules/{$name}/',
-        'plugin'    => 'plugins/{$name}/',
-        'template'  => 'templates/{$name}/',
-    );
+    protected $locations = array('component' => 'components/{$name}/', 'module' => 'modules/{$name}/', 'plugin' => 'plugins/{$name}/', 'template' => 'templates/{$name}/');
 }

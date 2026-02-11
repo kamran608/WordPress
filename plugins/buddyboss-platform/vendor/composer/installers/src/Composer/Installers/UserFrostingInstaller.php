@@ -1,9 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class UserFrostingInstaller extends BaseInstaller
+class UserFrostingInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'sprinkle' => 'app/sprinkles/{$name}/',
-    );
+    protected $locations = array('sprinkle' => 'app/sprinkles/{$name}/');
 }

@@ -233,12 +233,30 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
  * Notify a member one of their activity received a reply.
  *
  * @since BuddyPress 2.6.0
+ * @since BuddyBoss 2.8.50 Added the `$params` parameter.
  *
  * @param BP_Activity_Activity $activity     The original activity.
  * @param int                  $comment_id   ID for the newly received comment.
  * @param int                  $commenter_id ID of the user who made the comment.
+ * @param array                $params       Arguments used with the original activity comment.
  */
-function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id ) {
+function bp_activity_update_reply_add_notification( $activity, $comment_id, $commenter_id, $params ) {
+	// Stop sending notification to user who has muted notifications.
+	if ( $activity->user_id !== $commenter_id ) {
+		if ( bb_user_has_mute_notification( $activity->id, $activity->user_id ) ) {
+			return;
+		}
+	}
+
+	// Try to find mentions.
+	$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
+
+	// Bail out the replied notification because he will recieve a "mentioned you" notification.
+	if ( ! empty( $usernames ) && array_key_exists( $activity->user_id, $usernames ) ) {
+		if ( true === bb_is_notification_enabled( $activity->user_id, 'bb_new_mention' ) ) {
+			return;
+		}
+	}
 
 	if (
 		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
@@ -278,20 +296,39 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 
 }
-add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 3 );
+add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 4 );
 
 /**
  * Notify a member one of their activity comment received a reply.
  *
  * @since BuddyPress 2.6.0
+ * @since BuddyBoss 2.8.50 Added the `$params` parameter.
  *
  * @param BP_Activity_Activity $activity_comment The parent activity.
  * @param int                  $comment_id       ID for the newly received comment.
  * @param int                  $commenter_id     ID of the user who made the comment.
+ * @param array                $params           Arguments used with the original activity comment.
  */
-function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id ) {
-
+function bp_activity_comment_reply_add_notification( $activity_comment, $comment_id, $commenter_id, $params ) {
 	$original_activity = new BP_Activity_Activity( $activity_comment->item_id );
+
+	// Stop sending notification to user who has muted notifications.
+	if ( $activity_comment->user_id !== $commenter_id ) {
+		if ( bb_user_has_mute_notification( $original_activity->id, $activity_comment->user_id ) ) {
+			return;
+		}
+	}
+
+	// Try to find mentions.
+	$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $params['content'] ) : array();
+
+	// Bail out the replied notification because he will recieve a "mentioned you" notification.
+	if ( ! empty( $usernames ) && array_key_exists( $activity_comment->user_id, $usernames ) ) {
+		if ( true === bb_is_notification_enabled( $activity_comment->user_id, 'bb_new_mention' ) ) {
+			return;
+		}
+	}
+
 	if (
 		function_exists( 'bb_moderation_allowed_specific_notification' ) &&
 		bb_moderation_allowed_specific_notification(
@@ -329,7 +366,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
 }
-add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );
+add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 4 );
 
 /**
  * Mark at-mention notifications as read when users visit their Mentions page.
@@ -468,6 +505,11 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 		// @todo Should we remove this restriction?
 		if ( ! empty( $post_type_comment->user_id ) ) {
 			if ( true === (bool) apply_filters( 'bb_is_recipient_moderated', false, $post_type_comment->post->post_author, $post_type_comment->user_id ) ) {
+				return;
+			}
+
+			// Stop sending notification to user who has muted notifications.
+			if ( bb_user_has_mute_notification( $activity_args['activity_id'], $post_type_comment->post->post_author ) ) {
 				return;
 			}
 

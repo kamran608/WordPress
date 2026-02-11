@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Format\ProgressListener;
+namespace BuddyBossPlatform\FFMpeg\Format\ProgressListener;
 
 /**
  * Parses ffmpeg stderr progress information for video files. An example:

@@ -1,9 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class LaravelInstaller extends BaseInstaller
+class LaravelInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'library' => 'libraries/{$name}/',
-    );
+    protected $locations = array('library' => 'libraries/{$name}/');
 }

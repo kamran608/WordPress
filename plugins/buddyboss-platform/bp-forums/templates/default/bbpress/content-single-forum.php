@@ -20,12 +20,14 @@
 
 	<?php if ( bbp_get_forum_report_link( array( 'id' => bbp_get_forum_id() ) ) ) { ?>
 		<div class="bb_more_options action">
-			<a href="#" class="bb_more_options_action">
+			<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 				<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 			</a>
-			<div class="bb_more_options_list">
+			<div class="bb_more_options_list bb_more_dropdown">
+				<?php bp_get_template_part( 'common/more-options-view' ); ?>
 				<?php bbp_forum_report_link( array( 'id' => bbp_get_forum_id() ) ); ?>
 			</div>
+			<div class="bb_more_dropdown_overlay"></div>
 		</div><!-- .bb_more_options -->
 	<?php } ?>
 

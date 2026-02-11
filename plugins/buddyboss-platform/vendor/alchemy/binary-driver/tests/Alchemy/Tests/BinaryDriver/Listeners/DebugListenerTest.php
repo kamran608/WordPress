@@ -1,33 +1,23 @@
 <?php
 
-namespace Alchemy\Tests\BinaryDriver\Listeners;
+namespace BuddyBossPlatform\Alchemy\Tests\BinaryDriver\Listeners;
 
-use Alchemy\BinaryDriver\Listeners\DebugListener;
-use Symfony\Component\Process\Process;
-
-class DebugListenerTest extends \PHPUnit_Framework_TestCase
+use BuddyBossPlatform\Alchemy\BinaryDriver\Listeners\DebugListener;
+use BuddyBossPlatform\Symfony\Component\Process\Process;
+class DebugListenerTest extends \BuddyBossPlatform\PHPUnit_Framework_TestCase
 {
     public function testHandle()
     {
         $listener = new DebugListener();
-
         $lines = array();
-        $listener->on('debug', function ($line) use (&$lines) {
+        $listener->on('debug', function ($line) use(&$lines) {
             $lines[] = $line;
         });
         $listener->handle(Process::ERR, "first line\nsecond line");
         $listener->handle(Process::OUT, "cool output");
         $listener->handle('unknown', "lalala");
         $listener->handle(Process::OUT, "another output\n");
-
-        $expected = array(
-            '[ERROR] first line',
-            '[ERROR] second line',
-            '[OUT] cool output',
-            '[OUT] another output',
-            '[OUT] ',
-        );
-
+        $expected = array('[ERROR] first line', '[ERROR] second line', '[OUT] cool output', '[OUT] another output', '[OUT] ');
         $this->assertEquals($expected, $lines);
     }
 }

@@ -1,11 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class ChefInstaller extends BaseInstaller
+class ChefInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'cookbook'  => 'Chef/{$vendor}/{$name}/',
-        'role'      => 'Chef/roles/{$name}/',
-    );
+    protected $locations = array('cookbook' => 'Chef/{$vendor}/{$name}/', 'role' => 'Chef/roles/{$name}/');
 }
-

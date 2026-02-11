@@ -8,16 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Format\Video;
 
-namespace FFMpeg\Format\Video;
-
-use FFMpeg\FFProbe;
-use FFMpeg\Exception\InvalidArgumentException;
-use FFMpeg\Format\Audio\DefaultAudio;
-use FFMpeg\Format\VideoInterface;
-use FFMpeg\Media\MediaTypeInterface;
-use FFMpeg\Format\ProgressListener\VideoProgressListener;
-
+use BuddyBossPlatform\FFMpeg\FFProbe;
+use BuddyBossPlatform\FFMpeg\Exception\InvalidArgumentException;
+use BuddyBossPlatform\FFMpeg\Format\Audio\DefaultAudio;
+use BuddyBossPlatform\FFMpeg\Format\VideoInterface;
+use BuddyBossPlatform\FFMpeg\Media\MediaTypeInterface;
+use BuddyBossPlatform\FFMpeg\Format\ProgressListener\VideoProgressListener;
 /**
  * The abstract default Video format
  */
@@ -25,19 +23,14 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
 {
     /** @var string */
     protected $videoCodec;
-
     /** @var Integer */
     protected $kiloBitrate = 1000;
-
     /** @var Integer */
     protected $modulus = 16;
-
     /** @var Array */
     protected $additionalParamaters;
-
     /** @var Array */
     protected $initialParamaters;
-
     /**
      * {@inheritdoc}
      */
@@ -45,7 +38,6 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
     {
         return $this->kiloBitrate;
     }
-
     /**
      * Sets the kiloBitrate value.
      *
@@ -57,12 +49,9 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
         if ($kiloBitrate < 1) {
             throw new InvalidArgumentException('Wrong kiloBitrate value');
         }
-
         $this->kiloBitrate = (int) $kiloBitrate;
-
         return $this;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -70,7 +59,6 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
     {
         return $this->videoCodec;
     }
-
     /**
      * Sets the video codec, Should be in the available ones, otherwise an
      * exception is thrown.
@@ -80,18 +68,12 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
      */
     public function setVideoCodec($videoCodec)
     {
-        if ( ! in_array($videoCodec, $this->getAvailableVideoCodecs())) {
-            throw new InvalidArgumentException(sprintf(
-                    'Wrong videocodec value for %s, available formats are %s'
-                    , $videoCodec, implode(', ', $this->getAvailableVideoCodecs())
-            ));
+        if (!\in_array($videoCodec, $this->getAvailableVideoCodecs())) {
+            throw new InvalidArgumentException(\sprintf('Wrong videocodec value for %s, available formats are %s', $videoCodec, \implode(', ', $this->getAvailableVideoCodecs())));
         }
-
         $this->videoCodec = $videoCodec;
-
         return $this;
     }
-
     /**
      * @return integer
      */
@@ -99,7 +81,6 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
     {
         return $this->modulus;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -107,7 +88,6 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
     {
         return $this->additionalParamaters;
     }
-
     /**
      * Sets additional parameters.
      *
@@ -116,15 +96,12 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
      */
     public function setAdditionalParameters($additionalParamaters)
     {
-        if (!is_array($additionalParamaters)) {
+        if (!\is_array($additionalParamaters)) {
             throw new InvalidArgumentException('Wrong additionalParamaters value');
         }
-
         $this->additionalParamaters = $additionalParamaters;
-
         return $this;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -132,7 +109,6 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
     {
         return $this->initialParamaters;
     }
-
     /**
      * Sets initial parameters.
      *
@@ -141,15 +117,12 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
      */
     public function setInitialParameters($initialParamaters)
     {
-        if (!is_array($initialParamaters)) {
+        if (!\is_array($initialParamaters)) {
             throw new InvalidArgumentException('Wrong initialParamaters value');
         }
-
         $this->initialParamaters = $initialParamaters;
-
         return $this;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -157,13 +130,11 @@ abstract class DefaultVideo extends DefaultAudio implements VideoInterface
     {
         $format = $this;
         $listeners = array(new VideoProgressListener($ffprobe, $media->getPathfile(), $pass, $total, $duration));
-
         foreach ($listeners as $listener) {
-            $listener->on('progress', function () use ($format, $media) {
-               $format->emit('progress', array_merge(array($media, $format), func_get_args()));
+            $listener->on('progress', function () use($format, $media) {
+                $format->emit('progress', \array_merge(array($media, $format), \func_get_args()));
             });
         }
-
         return $listeners;
     }
 }

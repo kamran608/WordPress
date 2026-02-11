@@ -8,28 +8,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Video;
 
-namespace FFMpeg\Filters\Video;
-
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Filters\AdvancedMedia\ComplexCompatibleFilter;
-use FFMpeg\Format\VideoInterface;
-use FFMpeg\Media\AdvancedMedia;
-use FFMpeg\Media\Video;
-
+use BuddyBossPlatform\FFMpeg\Coordinate\Dimension;
+use BuddyBossPlatform\FFMpeg\Filters\AdvancedMedia\ComplexCompatibleFilter;
+use BuddyBossPlatform\FFMpeg\Format\VideoInterface;
+use BuddyBossPlatform\FFMpeg\Media\AdvancedMedia;
+use BuddyBossPlatform\FFMpeg\Media\Video;
 class PadFilter implements VideoFilterInterface, ComplexCompatibleFilter
 {
     /** @var Dimension */
     private $dimension;
     /** @var integer */
     private $priority;
-
     public function __construct(Dimension $dimension, $priority = 0)
     {
         $this->dimension = $dimension;
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +33,6 @@ class PadFilter implements VideoFilterInterface, ComplexCompatibleFilter
     {
         return $this->priority;
     }
-
     /**
      * @return Dimension
      */
@@ -45,7 +40,6 @@ class PadFilter implements VideoFilterInterface, ComplexCompatibleFilter
     {
         return $this->dimension;
     }
-
     /**
      * Get name of the filter.
      *
@@ -55,7 +49,6 @@ class PadFilter implements VideoFilterInterface, ComplexCompatibleFilter
     {
         return 'pad';
     }
-
     /**
      * Get minimal version of ffmpeg starting with which this filter is supported.
      *
@@ -65,7 +58,6 @@ class PadFilter implements VideoFilterInterface, ComplexCompatibleFilter
     {
         return '0.4.9';
     }
-
     /**
      * {@inheritdoc}
      */
@@ -73,7 +65,6 @@ class PadFilter implements VideoFilterInterface, ComplexCompatibleFilter
     {
         return $this->getCommands();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -81,20 +72,14 @@ class PadFilter implements VideoFilterInterface, ComplexCompatibleFilter
     {
         return $this->getCommands();
     }
-
     /**
      * @return array
      */
     protected function getCommands()
     {
         $commands = array();
-
         $commands[] = '-vf';
-        $commands[] = 'scale=iw*min(' . $this->dimension->getWidth() . '/iw\,' . $this->dimension->getHeight()
-            . '/ih):ih*min(' . $this->dimension->getWidth() . '/iw\,' . $this->dimension->getHeight() . '/ih),pad='
-            . $this->dimension->getWidth() . ':' . $this->dimension->getHeight() . ':(' . $this->dimension->getWidth()
-            . '-iw)/2:(' . $this->dimension->getHeight() . '-ih)/2';
-
+        $commands[] = 'scale=iw*min(' . $this->dimension->getWidth() . '/iw\\,' . $this->dimension->getHeight() . '/ih):ih*min(' . $this->dimension->getWidth() . '/iw\\,' . $this->dimension->getHeight() . '/ih),pad=' . $this->dimension->getWidth() . ':' . $this->dimension->getHeight() . ':(' . $this->dimension->getWidth() . '-iw)/2:(' . $this->dimension->getHeight() . '-ih)/2';
         return $commands;
     }
 }

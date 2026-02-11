@@ -1,10 +1,9 @@
 <?php
 
-namespace Neutron\TemporaryFilesystem\Tests;
+namespace BuddyBossPlatform\Neutron\TemporaryFilesystem\Tests;
 
-use Neutron\TemporaryFilesystem\Manager;
-use PHPUnit\Framework\TestCase;
-
+use BuddyBossPlatform\Neutron\TemporaryFilesystem\Manager;
+use BuddyBossPlatform\PHPUnit\Framework\TestCase;
 class ManagerTest extends TestCase
 {
     public function testCreateEmptyFileAndCleanScope()
@@ -14,23 +13,14 @@ class ManagerTest extends TestCase
         $suffix = 'suffix';
         $extension = 'extension';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->once())
-            ->method('remove')
-            ->with(array('/path/to/empty/file'));
-
+        $fs->expects($this->once())->method('remove')->with(array('/path/to/empty/file'));
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createEmptyFile')
-            ->with($basePath, $prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue('/path/to/empty/file'));
-
+        $tmpFs->expects($this->once())->method('createEmptyFile')->with($basePath, $prefix, $suffix, $extension, $maxTry)->will($this->returnValue('/path/to/empty/file'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/empty/file', $manager->createEmptyFile($basePath, $prefix, $suffix, $extension, $maxTry));
         $manager->clean($prefix);
     }
-
     public function testCreateEmptyFileAndCleanOtherScope()
     {
         $basePath = 'basePath';
@@ -38,22 +28,14 @@ class ManagerTest extends TestCase
         $suffix = 'suffix';
         $extension = 'extension';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->never())
-            ->method('remove');
-
+        $fs->expects($this->never())->method('remove');
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createEmptyFile')
-            ->with($basePath, $prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue('/path/to/empty/file'));
-
+        $tmpFs->expects($this->once())->method('createEmptyFile')->with($basePath, $prefix, $suffix, $extension, $maxTry)->will($this->returnValue('/path/to/empty/file'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/empty/file', $manager->createEmptyFile($basePath, $prefix, $suffix, $extension, $maxTry));
         $manager->clean('other prefix');
     }
-
     public function testCreateEmptyFileAndCleanScopes()
     {
         $basePath = 'basePath';
@@ -61,156 +43,95 @@ class ManagerTest extends TestCase
         $suffix = 'suffix';
         $extension = 'extension';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->once())
-            ->method('remove')
-            ->with(array('/path/to/empty/file'));
-
+        $fs->expects($this->once())->method('remove')->with(array('/path/to/empty/file'));
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createEmptyFile')
-            ->with($basePath, $prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue('/path/to/empty/file'));
-
+        $tmpFs->expects($this->once())->method('createEmptyFile')->with($basePath, $prefix, $suffix, $extension, $maxTry)->will($this->returnValue('/path/to/empty/file'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/empty/file', $manager->createEmptyFile($basePath, $prefix, $suffix, $extension, $maxTry));
         $manager->clean();
     }
-
     public function testCreateTemporaryDirectoryAndCleanScope()
     {
         $mode = 'mode';
         $prefix = 'prefix';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->once())
-            ->method('remove')
-            ->with(array('/path/to/dir'));
-
+        $fs->expects($this->once())->method('remove')->with(array('/path/to/dir'));
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryDirectory')
-            ->with($mode, $maxTry, $prefix)
-            ->will($this->returnValue('/path/to/dir'));
-
+        $tmpFs->expects($this->once())->method('createTemporaryDirectory')->with($mode, $maxTry, $prefix)->will($this->returnValue('/path/to/dir'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/dir', $manager->createTemporaryDirectory($mode, $maxTry, $prefix));
         $manager->clean($prefix);
     }
-
     public function testCreateTemporaryDirectoryAndCleanOtherScope()
     {
         $mode = 'mode';
         $prefix = 'prefix';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->never())
-            ->method('remove');
-
+        $fs->expects($this->never())->method('remove');
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryDirectory')
-            ->with($mode, $maxTry, $prefix)
-            ->will($this->returnValue('/path/to/dir'));
-
+        $tmpFs->expects($this->once())->method('createTemporaryDirectory')->with($mode, $maxTry, $prefix)->will($this->returnValue('/path/to/dir'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/dir', $manager->createTemporaryDirectory($mode, $maxTry, $prefix));
         $manager->clean('other prefix');
     }
-
     public function testCreateTemporaryDirectoryAndCleanScopes()
     {
         $mode = 'mode';
         $prefix = 'prefix';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->once())
-            ->method('remove')
-            ->with(array('/path/to/dir'));
-
+        $fs->expects($this->once())->method('remove')->with(array('/path/to/dir'));
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryDirectory')
-            ->with($mode, $maxTry, $prefix)
-            ->will($this->returnValue('/path/to/dir'));
-
+        $tmpFs->expects($this->once())->method('createTemporaryDirectory')->with($mode, $maxTry, $prefix)->will($this->returnValue('/path/to/dir'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/dir', $manager->createTemporaryDirectory($mode, $maxTry, $prefix));
         $manager->clean();
     }
-
     public function testCreateTemporaryFileAndCleanScope()
     {
         $prefix = 'prefix';
         $suffix = 'suffix';
         $extension = 'extension';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->once())
-            ->method('remove')
-            ->with(array('/path/to/file'));
-
+        $fs->expects($this->once())->method('remove')->with(array('/path/to/file'));
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryFile')
-            ->with($prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue('/path/to/file'));
-
+        $tmpFs->expects($this->once())->method('createTemporaryFile')->with($prefix, $suffix, $extension, $maxTry)->will($this->returnValue('/path/to/file'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/file', $manager->createTemporaryFile($prefix, $suffix, $extension, $maxTry));
         $manager->clean($prefix);
     }
-
     public function testCreateTemporaryFileAndCleanOtherScope()
     {
         $prefix = 'prefix';
         $suffix = 'suffix';
         $extension = 'extension';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->never())
-            ->method('remove');
-
+        $fs->expects($this->never())->method('remove');
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryFile')
-            ->with($prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue('/path/to/file'));
-
+        $tmpFs->expects($this->once())->method('createTemporaryFile')->with($prefix, $suffix, $extension, $maxTry)->will($this->returnValue('/path/to/file'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/file', $manager->createTemporaryFile($prefix, $suffix, $extension, $maxTry));
         $manager->clean('other prefix');
     }
-
     public function testCreateTemporaryFileAndCleanScopes()
     {
         $prefix = 'prefix';
         $suffix = 'suffix';
         $extension = 'extension';
         $maxTry = 'maxtry';
-
         $fs = $this->createFsMock();
-        $fs->expects($this->once())
-            ->method('remove')
-            ->with(array('/path/to/file'));
-
+        $fs->expects($this->once())->method('remove')->with(array('/path/to/file'));
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryFile')
-            ->with($prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue('/path/to/file'));
-
+        $tmpFs->expects($this->once())->method('createTemporaryFile')->with($prefix, $suffix, $extension, $maxTry)->will($this->returnValue('/path/to/file'));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals('/path/to/file', $manager->createTemporaryFile($prefix, $suffix, $extension, $maxTry));
         $manager->clean();
     }
-
     public function testCreateTemporaryFilesAndCleanScope()
     {
         $prefix = 'prefix';
@@ -218,23 +139,14 @@ class ManagerTest extends TestCase
         $extension = 'extension';
         $maxTry = 'maxtry';
         $quantity = 123;
-
         $fs = $this->createFsMock();
-        $fs->expects($this->once())
-            ->method('remove')
-            ->with(array('/path/to/file'));
-
+        $fs->expects($this->once())->method('remove')->with(array('/path/to/file'));
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryFiles')
-            ->with($quantity, $prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue(array('/path/to/file')));
-
+        $tmpFs->expects($this->once())->method('createTemporaryFiles')->with($quantity, $prefix, $suffix, $extension, $maxTry)->will($this->returnValue(array('/path/to/file')));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals(array('/path/to/file'), $manager->createTemporaryFiles($quantity, $prefix, $suffix, $extension, $maxTry));
         $manager->clean($prefix);
     }
-
     public function testCreateTemporaryFilesAndCleanOtherScope()
     {
         $prefix = 'prefix';
@@ -242,22 +154,14 @@ class ManagerTest extends TestCase
         $extension = 'extension';
         $maxTry = 'maxtry';
         $quantity = 123;
-
         $fs = $this->createFsMock();
-        $fs->expects($this->never())
-            ->method('remove');
-
+        $fs->expects($this->never())->method('remove');
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryFiles')
-            ->with($quantity, $prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue(array('/path/to/file')));
-
+        $tmpFs->expects($this->once())->method('createTemporaryFiles')->with($quantity, $prefix, $suffix, $extension, $maxTry)->will($this->returnValue(array('/path/to/file')));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals(array('/path/to/file'), $manager->createTemporaryFiles($quantity, $prefix, $suffix, $extension, $maxTry));
         $manager->clean('other prefix');
     }
-
     public function testCreateTemporaryFilesAndCleanScopes()
     {
         $prefix = 'prefix';
@@ -265,38 +169,24 @@ class ManagerTest extends TestCase
         $extension = 'extension';
         $maxTry = 'maxtry';
         $quantity = 123;
-
         $fs = $this->createFsMock();
-        $fs->expects($this->once())
-            ->method('remove')
-            ->with(array('/path/to/file'));
-
+        $fs->expects($this->once())->method('remove')->with(array('/path/to/file'));
         $tmpFs = $this->createTmpFsMock();
-        $tmpFs->expects($this->once())
-            ->method('createTemporaryFiles')
-            ->with($quantity, $prefix, $suffix, $extension, $maxTry)
-            ->will($this->returnValue(array('/path/to/file')));
-
+        $tmpFs->expects($this->once())->method('createTemporaryFiles')->with($quantity, $prefix, $suffix, $extension, $maxTry)->will($this->returnValue(array('/path/to/file')));
         $manager = new Manager($tmpFs, $fs);
         $this->assertEquals(array('/path/to/file'), $manager->createTemporaryFiles($quantity, $prefix, $suffix, $extension, $maxTry));
         $manager->clean();
     }
-
     public function testCreate()
     {
-        $this->assertInstanceOf('Neutron\TemporaryFilesystem\Manager', Manager::create());
+        $this->assertInstanceOf('BuddyBossPlatform\\Neutron\\TemporaryFilesystem\\Manager', Manager::create());
     }
-
     private function createTmpFsMock()
     {
-        return $this->getMockBuilder('Neutron\TemporaryFilesystem\TemporaryFilesystemInterface')->getMock();
+        return $this->getMockBuilder('BuddyBossPlatform\\Neutron\\TemporaryFilesystem\\TemporaryFilesystemInterface')->getMock();
     }
-
     private function createFsMock()
     {
-        return $this
-            ->getMockBuilder('Symfony\Component\Filesystem\Filesystem')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->getMockBuilder('BuddyBossPlatform\\Symfony\\Component\\Filesystem\\Filesystem')->disableOriginalConstructor()->getMock();
     }
 }

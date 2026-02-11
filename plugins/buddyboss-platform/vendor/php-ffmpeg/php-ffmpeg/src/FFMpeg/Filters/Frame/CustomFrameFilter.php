@@ -8,19 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Frame;
 
-namespace FFMpeg\Filters\Frame;
-
-use FFMpeg\Exception\RuntimeException;
-use FFMpeg\Media\Frame;
-
+use BuddyBossPlatform\FFMpeg\Exception\RuntimeException;
+use BuddyBossPlatform\FFMpeg\Media\Frame;
 class CustomFrameFilter implements FrameFilterInterface
 {
     /** @var string */
     private $filter;
     /** @var integer */
     private $priority;
-
     /**
      * A custom filter, useful if you want to build complex filters
      *
@@ -32,7 +29,6 @@ class CustomFrameFilter implements FrameFilterInterface
         $this->filter = $filter;
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -40,15 +36,12 @@ class CustomFrameFilter implements FrameFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * {@inheritdoc}
      */
     public function apply(Frame $frame)
     {
         $commands = array('-vf', $this->filter);
-
         return $commands;
     }
 }
-

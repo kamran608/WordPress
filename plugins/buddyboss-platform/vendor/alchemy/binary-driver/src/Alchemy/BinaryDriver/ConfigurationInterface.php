@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Alchemy\BinaryDriver;
+namespace BuddyBossPlatform\Alchemy\BinaryDriver;
 
 interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
 {
@@ -22,7 +21,6 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      * @return mixed
      */
     public function get($key, $default = null);
-
     /**
      * Set a value to configuration
      *
@@ -30,7 +28,6 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      * @param mixed  $value The value corresponding to the key
      */
     public function set($key, $value);
-
     /**
      * Tells if Configuration contains `$key`
      *
@@ -39,7 +36,6 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      * @return Boolean
      */
     public function has($key);
-
     /**
      * Removes a value given a key
      *
@@ -48,7 +44,6 @@ interface ConfigurationInterface extends \ArrayAccess, \IteratorAggregate
      * @return mixed The previous value
      */
     public function remove($key);
-
     /**
      * Returns all values set in the configuration
      *

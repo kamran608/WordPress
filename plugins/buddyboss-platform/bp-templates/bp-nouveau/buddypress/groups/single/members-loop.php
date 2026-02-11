@@ -151,20 +151,23 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 								</div>
 								<?php
 							}
+
+							if ( ! empty( $profile_actions['primary'] ) ) {
 							?>
 							<div class="flex only-grid-view align-items-center primary-action justify-center">
 								<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 							</div>
+							<?php } ?>
 						</div><!-- // .item -->
 
 						<div class="member-buttons-wrap">
-							<?php if ( $profile_actions['secondary'] ) { ?>
+							<?php if ( ! empty( $profile_actions['secondary'] ) ) { ?>
 								<div class="flex only-grid-view button-wrap member-button-wrap footer-button-wrap">
 									<?php echo wp_kses_post( $profile_actions['secondary'] ); ?>
 								</div>
 							<?php } ?>
 
-							<?php if ( $profile_actions['primary'] ) { ?>
+							<?php if ( ! empty( $profile_actions['primary'] ) ) { ?>
 								<div class="flex only-list-view align-items-center primary-action justify-center">
 									<?php echo wp_kses_post( $profile_actions['primary'] ); ?>
 								</div>
@@ -175,7 +178,7 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 
 					<div class="bp-members-list-hook">
 						<?php if ( $member_loop_has_content ) { ?>
-							<a class="more-action-button" href="#"><i class="bb-icon-menu-dots-h"></i></a>
+							<a class="more-action-button" href="#" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>"><i class="bb-icon-menu-dots-h"></i></a>
 						<?php } ?>
 						<div class="bp-members-list-hook-inner">
 							<?php bp_nouveau_member_hook( '', 'members_list_item' ); ?>
@@ -184,12 +187,15 @@ if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&type=group
 
 					<?php if ( ! empty( $member_switch_button ) ) { ?>
 						<div class="bb_more_options member-dropdown">
-							<a href="#" class="bb_more_options_action">
+							<a href="#" class="bb_more_options_action" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 								<i class="bb-icon-menu-dots-h"></i>
+								<span class="bp-screen-reader-text"><?php esc_html_e( 'More options', 'buddyboss' ); ?></span>
 							</a>
-							<div class="bb_more_options_list">
+							<div class="bb_more_options_list bb_more_dropdown">
+								<?php bp_get_template_part( 'common/more-options-view' ); ?>
 								<?php echo wp_kses_post( bp_get_add_switch_button( $member_user_id ) ); ?>
 							</div>
+							<div class="bb_more_dropdown_overlay"></div>
 						</div><!-- .bb_more_options -->
 					<?php } ?>
 				</div>

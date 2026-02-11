@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Neutron\TemporaryFilesystem;
+namespace BuddyBossPlatform\Neutron\TemporaryFilesystem;
 
 interface TemporaryFilesystemInterface
 {
@@ -25,7 +24,6 @@ interface TemporaryFilesystemInterface
      * @throws IOException In case the directory could not be created
      */
     public function createTemporaryDirectory($mode = 0777, $maxTry = 65536, $prefix = null);
-
     /**
      * Creates an array of temporary files.
      *
@@ -44,7 +42,6 @@ interface TemporaryFilesystemInterface
      * @throws IOException               In case of failure
      */
     public function createTemporaryFiles($quantity = 1, $prefix = null, $suffix = null, $extension = null, $maxTry = 65536);
-
     /**
      * Creates a temporary file.
      *
@@ -62,7 +59,6 @@ interface TemporaryFilesystemInterface
      * @throws IOException               In case of failure
      */
     public function createTemporaryFile($prefix = null, $suffix = null, $extension = null, $maxTry = 65536);
-
     /**
      * Create an empty file in the specified directory.
      *

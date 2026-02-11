@@ -8,18 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace FFMpeg\Filters\Video;
+namespace BuddyBossPlatform\FFMpeg\Filters\Video;
 
-use FFMpeg\Format\VideoInterface;
-use FFMpeg\Media\Video;
-
+use BuddyBossPlatform\FFMpeg\Format\VideoInterface;
+use BuddyBossPlatform\FFMpeg\Media\Video;
 class CustomFilter implements VideoFilterInterface
 {
     /** @var string */
     private $filter;
     /** @var integer */
     private $priority;
-
     /**
      * A custom filter, useful if you want to build complex filters
      *
@@ -31,7 +29,6 @@ class CustomFilter implements VideoFilterInterface
         $this->filter = $filter;
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -39,14 +36,12 @@ class CustomFilter implements VideoFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * {@inheritdoc}
      */
     public function apply(Video $video, VideoInterface $format)
     {
         $commands = array('-vf', $this->filter);
-
         return $commands;
     }
 }

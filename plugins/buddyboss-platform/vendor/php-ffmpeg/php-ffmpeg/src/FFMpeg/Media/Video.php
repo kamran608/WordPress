@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of PHP-FFmpeg.
  *
@@ -7,14 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace FFMpeg\Media;
+namespace BuddyBossPlatform\FFMpeg\Media;
 
-use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\Coordinate\Dimension;
-
+use BuddyBossPlatform\FFMpeg\Coordinate\TimeCode;
+use BuddyBossPlatform\FFMpeg\Coordinate\Dimension;
 class Video extends AbstractVideo
 {
-
     /**
      * Gets the frame at timecode.
      *
@@ -25,7 +24,6 @@ class Video extends AbstractVideo
     {
         return new Frame($this, $this->driver, $this->ffprobe, $at);
     }
-
     /**
      * Extracts a gif from a sequence of the video.
      *
@@ -38,7 +36,6 @@ class Video extends AbstractVideo
     {
         return new Gif($this, $this->driver, $this->ffprobe, $at, $dimension, $duration);
     }
-
     /**
      * Concatenates a list of videos into one unique video.
      *
@@ -49,7 +46,6 @@ class Video extends AbstractVideo
     {
         return new Concat($sources, $this->driver, $this->ffprobe);
     }
-
     /**
      * Clips the video at the given time(s).
      *

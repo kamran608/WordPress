@@ -1,13 +1,10 @@
 <?php
+
 namespace Composer\Installers;
 
-class GravInstaller extends BaseInstaller
+class GravInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'plugin' => 'user/plugins/{$name}/',
-        'theme'  => 'user/themes/{$name}/',
-    );
-
+    protected $locations = array('plugin' => 'user/plugins/{$name}/', 'theme' => 'user/themes/{$name}/');
     /**
      * Format package name
      *
@@ -17,14 +14,9 @@ class GravInstaller extends BaseInstaller
      */
     public function inflectPackageVars($vars)
     {
-        $restrictedWords = implode('|', array_keys($this->locations));
-
-        $vars['name'] = strtolower($vars['name']);
-        $vars['name'] = preg_replace('/^(?:grav-)?(?:(?:'.$restrictedWords.')-)?(.*?)(?:-(?:'.$restrictedWords.'))?$/ui',
-            '$1',
-            $vars['name']
-        );
-
+        $restrictedWords = \implode('|', \array_keys($this->locations));
+        $vars['name'] = \strtolower($vars['name']);
+        $vars['name'] = \preg_replace('/^(?:grav-)?(?:(?:' . $restrictedWords . ')-)?(.*?)(?:-(?:' . $restrictedWords . '))?$/ui', '$1', $vars['name']);
         return $vars;
     }
 }

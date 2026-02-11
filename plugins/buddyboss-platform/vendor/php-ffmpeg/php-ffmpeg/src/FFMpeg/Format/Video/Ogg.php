@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Format\Video;
+namespace BuddyBossPlatform\FFMpeg\Format\Video;
 
 /**
  * The Ogg video format
@@ -18,19 +17,15 @@ class Ogg extends DefaultVideo
 {
     public function __construct($audioCodec = 'libvorbis', $videoCodec = 'libtheora')
     {
-        $this
-            ->setAudioCodec($audioCodec)
-            ->setVideoCodec($videoCodec);
+        $this->setAudioCodec($audioCodec)->setVideoCodec($videoCodec);
     }
-
     /**
      * {@inheritDoc}
      */
     public function supportBFrames()
     {
-        return true;
+        return \true;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -38,7 +33,6 @@ class Ogg extends DefaultVideo
     {
         return array('libvorbis');
     }
-
     /**
      * {@inheritDoc}
      */

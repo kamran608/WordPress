@@ -1,5 +1,5 @@
 {
-    "name": "neutron/temporary-filesystem",
+    "name": "neutron\/temporary-filesystem",
     "description": "Symfony filesystem extension to handle temporary files",
     "license": "MIT",
     "authors": [
@@ -10,14 +10,14 @@
     ],
     "require": {
         "php": "^5.6 || ^7.0",
-        "symfony/filesystem": "^2.3 || ^3.0 || ^4.0 || ^5.0"
+        "symfony\/filesystem": "^2.3 || ^3.0 || ^4.0 || ^5.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.0.4"
+        "symfony\/phpunit-bridge": "^5.0.4"
     },
     "autoload": {
-        "psr-0": {
-            "Neutron": "src"
+        "psr-4": {
+            "BuddyBossPlatform\\Neutron\\": "src\/Neutron\/"
         }
     }
 }

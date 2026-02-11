@@ -132,10 +132,18 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 			remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
 		}
 
+		if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+			remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
+		}
+
 		$bp_allowed_cpt = bb_feed_post_types();
 
 		if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
 			add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+		}
+
+		if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+			add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
 		}
 
 		$comment_post_types       = apply_filters( 'bp_blogs_record_comment_post_types', $bp_allowed_cpt );
@@ -1470,8 +1478,13 @@ function bp_blogs_activity_comment_permalink( $retval = '' ) {
 	if ( ( false !== $item_id ) && isset( buddypress()->blogs->allow_comments[ $item_id ] ) ) {
 		$retval = $activities_template->activity->current_comment->primary_link;
 		if ( empty( $retval ) ) {
-			$comment_id = bp_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_post_comment_id' );
-			$retval     = get_comment_link( $comment_id );
+			$post_type = str_replace( 'new_blog_', '', $activities_template->activity->type );
+			if ( empty( $post_type ) ) {
+				$comment_post_type = $activities_template->activity->secondary_item_id;
+				$post_type         = get_post_type( $comment_post_type );
+			}
+			$comment_id = bp_activity_get_meta( $activities_template->activity->current_comment->id, 'bp_blogs_' . $post_type . '_comment_id' );
+			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
 		}
 	}
 
@@ -1504,8 +1517,13 @@ function bp_blogs_activity_comment_single_permalink( $retval, $activity ) {
 	if ( isset( $parent_activity->type ) && bp_activity_post_type_get_tracking_arg( $parent_activity->type, 'post_type' ) ) {
 		$retval = $activity->primary_link;
 		if ( empty( $retval ) ) {
-			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_post_comment_id' );
-			$retval     = get_comment_link( $comment_id );
+			$post_type = str_replace( 'new_blog_', '', $parent_activity->type );
+			if ( empty( $post_type ) ) {
+				$comment_post_type = $parent_activity->secondary_item_id;
+				$post_type         = get_post_type( $comment_post_type );
+			}
+			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $post_type . '_comment_id' );
+			$retval     = ! empty( $comment_id ) ? get_comment_link( $comment_id ) : $retval;
 		}
 	}
 
@@ -1677,8 +1695,12 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 		$cu_post_types = get_post_types( $args, $output );
 
-		foreach ( $cu_post_types as $cu ) {
-			$singular_label_name = strtolower( $cu->labels->singular_name );
+		if ( ! empty( $cu_post_types ) ) {
+			foreach ( $cu_post_types as $cu ) {
+				$singular_label_name = strtolower( $cu->labels->singular_name );
+			}
+		} else {
+			$singular_label_name = 'post';
 		}
 
 		// Build the complete activity action string.
@@ -1716,4 +1738,39 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 	 * @param object $activity Activity data object.
 	 */
 	return apply_filters( 'bp_blogs_format_activity_action_new_custom_post_type_feed', $action, $activity );
+}
+
+/**
+ * Filter the activity get filter sql.
+ *
+ * @since BuddyBoss 2.8.80
+ *
+ * @param string $filter_sql   The filter sql.
+ * @param array  $filter_array The filter array.
+ *
+ * @return string The filter sql.
+ */
+function bb_filter_activity_get_filter_sql( $filter_sql, $filter_array ) {
+	global $wpdb, $bp;
+
+	// Handle the blog activity comment compatibility.
+	if ( ! empty( $filter_array['action'] ) ) {
+		$action_array = explode( ',', $filter_array['action'] );
+		if (
+			in_array( 'new_blog_comment', $action_array, true ) &&
+			! bp_disable_blogforum_comments() &&
+			count( $action_array ) > 1 &&
+			! empty( $bp->activity->table_name_meta )
+		) {
+
+			// Get the associated post type.
+			$post_type = bp_activity_post_type_get_tracking_arg( 'new_blog_comment', 'post_type' );
+			if ( ! empty( $post_type ) && ! bp_activity_post_type_get_tracking_arg( 'new_blog_comment', 'comment_action_id' ) ) {
+				$filter_blog_comment = 'a.id IN (SELECT activity_id FROM ' . $bp->activity->table_name_meta . ' WHERE meta_key = "bp_blogs_' . $post_type . '_comment_id")';
+				return '( ' . $filter_blog_comment . ' OR ' . $filter_sql . ' )';
+			}
+		}
+	}
+
+	return $filter_sql;
 }

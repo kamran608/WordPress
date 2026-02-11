@@ -1,10 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class SMFInstaller extends BaseInstaller
+class SMFInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'module' => 'Sources/{$name}/',
-        'theme' => 'Themes/{$name}/',
-    );
+    protected $locations = array('module' => 'Sources/{$name}/', 'theme' => 'Themes/{$name}/');
 }

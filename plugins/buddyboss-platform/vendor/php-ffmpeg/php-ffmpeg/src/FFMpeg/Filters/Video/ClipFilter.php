@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Video;
 
-namespace FFMpeg\Filters\Video;
-
-use FFMpeg\Format\VideoInterface;
-use FFMpeg\Media\Video;
-use FFMpeg\Coordinate\TimeCode;
-
+use BuddyBossPlatform\FFMpeg\Format\VideoInterface;
+use BuddyBossPlatform\FFMpeg\Media\Video;
+use BuddyBossPlatform\FFMpeg\Coordinate\TimeCode;
 class ClipFilter implements VideoFilterInterface
 {
     /** @var TimeCode */
@@ -23,14 +21,12 @@ class ClipFilter implements VideoFilterInterface
     private $duration;
     /** @var integer */
     private $priority;
-
     public function __construct(TimeCode $start, TimeCode $duration = null, $priority = 0)
     {
         $this->start = $start;
         $this->duration = $duration;
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -38,7 +34,6 @@ class ClipFilter implements VideoFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * @return TimeCode
      */
@@ -46,7 +41,6 @@ class ClipFilter implements VideoFilterInterface
     {
         return $this->start;
     }
-
     /**
      * @return TimeCode
      */
@@ -54,19 +48,16 @@ class ClipFilter implements VideoFilterInterface
     {
         return $this->duration;
     }
-
     /**
      * {@inheritdoc}
      */
     public function apply(Video $video, VideoInterface $format)
     {
         $commands = array('-ss', (string) $this->start);
-
         if ($this->duration !== null) {
-          $commands[] = '-t';
-          $commands[] = (string) $this->duration;
+            $commands[] = '-t';
+            $commands[] = (string) $this->duration;
         }
-
         return $commands;
     }
 }

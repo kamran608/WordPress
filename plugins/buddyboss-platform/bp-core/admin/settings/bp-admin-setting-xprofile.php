@@ -332,14 +332,25 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$profile_actions          = function_exists( 'bb_get_member_directory_profile_actions' ) ? bb_get_member_directory_profile_actions() : array();
 		$selected_profile_actions = function_exists( 'bb_get_enabled_member_directory_profile_actions' ) ? bb_get_enabled_member_directory_profile_actions() : array();
 
+		$has_visible_actions = false;
+
+		// Filter elements with "bp-hide" class.
+		$hidden_actions = array_filter( $profile_actions, function ( $element ) {
+			return isset( $element['element_class'] ) && strpos( $element['element_class'], 'bp-hide' ) !== false;
+		} );
+
+		if ( count( $profile_actions ) > count( $hidden_actions ) ) {
+			$has_visible_actions = true;
+		}
+
 		if ( ! empty( $profile_actions ) ) {
 			$args             = array();
-			$args['class']    = 'member-directory-profile-actions ' . esc_attr( $pro_class );
+			$args['class']    = 'member-directory-profile-actions ' . esc_attr( $pro_class ) . ( $has_visible_actions ? '' : ' bp-hide' );
 			$args['elements'] = $profile_actions;
 			$this->add_field( 'bb-member-profile-actions', esc_html__( 'Profile Actions', 'buddyboss' ) . bb_get_pro_label_notice(), 'bb_admin_setting_member_profile_actions', 'string', $args );
 
 			$profile_primary_action_class = '';
-			if ( empty( $selected_profile_actions ) ) {
+			if ( empty( $selected_profile_actions ) || ! $has_visible_actions ) {
 				$profile_primary_action_class = ' bp-hide';
 			}
 
@@ -581,7 +592,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
@@ -637,7 +648,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
@@ -719,7 +730,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="
+			<a class="button" target="_blank" href="
 			<?php
 			echo bp_get_admin_url(
 				add_query_arg(
@@ -821,6 +832,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			esc_html__( 'Select the format of your member’s profile links (i.e. /members/username). Both formats will open the member’s profile, so you can safely change without breaking previously shared links.', 'buddyboss' )
 		);
 	}
+
 }
 
 return new BP_Admin_Setting_Xprofile();

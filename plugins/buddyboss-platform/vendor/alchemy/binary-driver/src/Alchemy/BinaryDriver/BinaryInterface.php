@@ -8,15 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\Alchemy\BinaryDriver;
 
-namespace Alchemy\BinaryDriver;
-
-use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
-use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
-use Alchemy\BinaryDriver\Listeners\ListenerInterface;
-use Psr\Log\LoggerInterface;
-use Evenement\EventEmitterInterface;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\ExecutableNotFoundException;
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\ExecutionFailureException;
+use BuddyBossPlatform\Alchemy\BinaryDriver\Listeners\ListenerInterface;
+use BuddyBossPlatform\Psr\Log\LoggerInterface;
+use BuddyBossPlatform\Evenement\EventEmitterInterface;
 interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFactoryAwareInterface, ProcessRunnerAwareInterface, EventEmitterInterface
 {
     /**
@@ -27,7 +25,6 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      * @return BinaryInterface
      */
     public function listen(ListenerInterface $listener);
-
     /**
      * Removes a listener from the binary driver
      *
@@ -36,7 +33,6 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      * @return BinaryInterface
      */
     public function unlisten(ListenerInterface $listener);
-
     /**
      * Runs a command against the driver.
      *
@@ -50,8 +46,7 @@ interface BinaryInterface extends ConfigurationAwareInterface, ProcessBuilderFac
      *
      * @throws ExecutionFailureException in case of process failure.
      */
-    public function command($command, $bypassErrors = false, $listeners = null);
-
+    public function command($command, $bypassErrors = \false, $listeners = null);
     /**
      * Loads a binary
      *

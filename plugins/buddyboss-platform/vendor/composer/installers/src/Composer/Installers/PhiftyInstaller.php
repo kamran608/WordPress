@@ -1,11 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class PhiftyInstaller extends BaseInstaller
+class PhiftyInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'bundle' => 'bundles/{$name}/',
-        'library' => 'libraries/{$name}/',
-        'framework' => 'frameworks/{$name}/',
-    );
+    protected $locations = array('bundle' => 'bundles/{$name}/', 'library' => 'libraries/{$name}/', 'framework' => 'frameworks/{$name}/');
 }

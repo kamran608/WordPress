@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Format\Audio;
+namespace BuddyBossPlatform\FFMpeg\Format\Audio;
 
 /**
  * The AAC audio format
@@ -20,7 +19,6 @@ class Aac extends DefaultAudio
     {
         $this->audioCodec = 'libfdk_aac';
     }
-
     /**
      * {@inheritDoc}
      */

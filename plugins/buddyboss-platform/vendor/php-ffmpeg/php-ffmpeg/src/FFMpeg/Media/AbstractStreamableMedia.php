@@ -8,16 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Media;
 
-namespace FFMpeg\Media;
-
-use FFMpeg\FFProbe\DataMapping\Format;
-use FFMpeg\FFProbe\DataMapping\StreamCollection;
-
+use BuddyBossPlatform\FFMpeg\FFProbe\DataMapping\Format;
+use BuddyBossPlatform\FFMpeg\FFProbe\DataMapping\StreamCollection;
 abstract class AbstractStreamableMedia extends AbstractMediaType
 {
     private $streams;
-
     /**
      * @return StreamCollection
      */
@@ -26,10 +23,8 @@ abstract class AbstractStreamableMedia extends AbstractMediaType
         if (null === $this->streams) {
             $this->streams = $this->ffprobe->streams($this->pathfile);
         }
-
         return $this->streams;
     }
-
     /**
      * @return Format
      */

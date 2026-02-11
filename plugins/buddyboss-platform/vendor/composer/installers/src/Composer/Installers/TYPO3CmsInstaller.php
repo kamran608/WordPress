@@ -1,4 +1,5 @@
 <?php
+
 namespace Composer\Installers;
 
 /**
@@ -8,9 +9,7 @@ namespace Composer\Installers;
  *
  * @author Sascha Egerer <sascha.egerer@dkd.de>
  */
-class TYPO3CmsInstaller extends BaseInstaller
+class TYPO3CmsInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'extension'   => 'typo3conf/ext/{$name}/',
-    );
+    protected $locations = array('extension' => 'typo3conf/ext/{$name}/');
 }

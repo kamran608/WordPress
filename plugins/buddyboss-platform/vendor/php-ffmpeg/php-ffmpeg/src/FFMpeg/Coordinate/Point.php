@@ -8,25 +8,22 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Coordinate;
+namespace BuddyBossPlatform\FFMpeg\Coordinate;
 
 class Point
 {
     private $x;
     private $y;
-
-    public function __construct($x, $y, $dynamic = false)
+    public function __construct($x, $y, $dynamic = \false)
     {
         if ($dynamic) {
             $this->x = $x;
             $this->y = $y;
         } else {
-            $this->x = (int)$x;
-            $this->y = (int)$y;
+            $this->x = (int) $x;
+            $this->y = (int) $y;
         }
     }
-
     /**
      * @return integer
      */
@@ -34,7 +31,6 @@ class Point
     {
         return $this->x;
     }
-
     /**
      * @return integer
      */

@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Format;
 
-namespace FFMpeg\Format;
-
-use Evenement\EventEmitterInterface;
-use FFMpeg\FFProbe;
-use FFMpeg\Media\MediaTypeInterface;
-
+use BuddyBossPlatform\Evenement\EventEmitterInterface;
+use BuddyBossPlatform\FFMpeg\FFProbe;
+use BuddyBossPlatform\FFMpeg\Media\MediaTypeInterface;
 interface ProgressableInterface extends EventEmitterInterface
 {
     /**

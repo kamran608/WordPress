@@ -8,15 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Gif;
 
-namespace FFMpeg\Filters\Gif;
-
-use FFMpeg\Media\Gif;
-
+use BuddyBossPlatform\FFMpeg\Media\Gif;
 class GifFilters
 {
     private $gif;
-
     public function __construct(Gif $gif)
     {
         $this->gif = $gif;

@@ -8,16 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Driver;
 
-namespace FFMpeg\Driver;
-
-use Alchemy\BinaryDriver\AbstractBinary;
-use Alchemy\BinaryDriver\Configuration;
-use Alchemy\BinaryDriver\ConfigurationInterface;
-use Alchemy\BinaryDriver\Exception\ExecutableNotFoundException as BinaryDriverExecutableNotFound;
-use FFMpeg\Exception\ExecutableNotFoundException;
-use Psr\Log\LoggerInterface;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\AbstractBinary;
+use BuddyBossPlatform\Alchemy\BinaryDriver\Configuration;
+use BuddyBossPlatform\Alchemy\BinaryDriver\ConfigurationInterface;
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\ExecutableNotFoundException as BinaryDriverExecutableNotFound;
+use BuddyBossPlatform\FFMpeg\Exception\ExecutableNotFoundException;
+use BuddyBossPlatform\Psr\Log\LoggerInterface;
 class FFProbeDriver extends AbstractBinary
 {
     /**
@@ -27,7 +25,6 @@ class FFProbeDriver extends AbstractBinary
     {
         return 'ffprobe';
     }
-
     /**
      * Creates an FFProbeDriver.
      *
@@ -41,9 +38,7 @@ class FFProbeDriver extends AbstractBinary
         if (!$configuration instanceof ConfigurationInterface) {
             $configuration = new Configuration($configuration);
         }
-
         $binaries = $configuration->get('ffprobe.binaries', array('avprobe', 'ffprobe'));
-
         try {
             return static::load($binaries, $logger, $configuration);
         } catch (BinaryDriverExecutableNotFound $e) {

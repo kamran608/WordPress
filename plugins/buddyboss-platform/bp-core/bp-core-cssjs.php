@@ -54,7 +54,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'jquery-atwho'        => array(
-			'file'         => "{$url}vendor/jquery.atwho{$min}.js",
+			'file'         => "{$url}jquery.atwho{$min}.js",
 			'dependencies' => array( 'jquery', 'jquery-caret' ),
 			'footer'       => true,
 		),
@@ -90,12 +90,6 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 
-		// Version 3.1.1
-		'bp-jquery-validate'  => array(
-			'file'         => "{$url}vendor/jquery.validate{$min}.js",
-			'dependencies' => array( 'jquery' ),
-			'footer'       => true,
-		),
 		'jquery-mask'         => array(
 			'file'         => "{$url}vendor/jquery.mask{$min}.js",
 			'dependencies' => array( 'jquery' ),
@@ -108,7 +102,7 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 		'emojione'                      => array(
-			'file'         => "{$url}emojione-edited.js",
+			'file'         => "{$url}emojione-edited{$min}.js",
 			'dependencies' => array(),
 			'footer'       => true,
 		),
@@ -255,7 +249,7 @@ function bp_core_register_common_scripts() {
 			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss' ),
 			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
 			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
-			'dictFileTooBig'               => __( "File size is too big ({{filesize}} MB). Max file size: {{maxFilesize}} MB.", 'buddyboss' ),
+			'dictFileTooBig'               => __( "Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.", 'buddyboss' ),
 			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss' ),
 			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
 			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss' ),
@@ -804,7 +798,7 @@ function bp_core_enqueue_livestamp() {
 				1,
 			),
 			'unknown_text'      => apply_filters( 'bp_core_time_since_unknown_text', esc_html__( 'sometime', 'buddyboss' ) ),
-			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'a second', 'buddyboss' ) ),
+			'right_now_text'    => apply_filters( 'bp_core_time_since_right_now_text', esc_html__( 'Just now', 'buddyboss' ) ),
 			'ago_text'          => apply_filters( 'bp_core_time_since_ago_text', esc_html__( '%s ago', 'buddyboss' ) ),
 			'second_text'       => __( 'a second', 'buddyboss' ),
 			'seconds_text'      => __( 'seconds', 'buddyboss' ),
@@ -824,40 +818,6 @@ function bp_core_enqueue_livestamp() {
 	);
 
 	wp_enqueue_script( 'bp-livestamp' );
-}
-
-/**
- * Enqueues the jQuery validate js.
- *
- * @since BuddyPress 3.1.1
- */
-function bp_core_jquery_validate_scripts() {
-
-	// wp_enqueue_script( 'bp-jquery-validate' );
-	// add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
-}
-add_action( 'bp_enqueue_scripts', 'bp_core_jquery_validate_scripts' );
-
-
-/**
- * Output the inline JS needed for the jQuery validate
- *
- * @since BuddyPress 3.1.1
- */
-function bp_core_add_jquery_validate_inline_js() {
-	?>
-
-	<script>
-		jQuery(document).ready(function(){
-			jQuery('#buddypress #signup-form').validate({
-				submitHandler: function(form) {
-				  jQuery(form).submit();
-				}
-			});
-		});
-	</script>
-
-	<?php
 }
 
 /**

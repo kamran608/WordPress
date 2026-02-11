@@ -63,6 +63,7 @@ function xprofile_screen_edit_profile() {
 		$is_required              = array();
 		$validations              = array();
 		$is_required_fields_error = array();
+		$social_fields_validation = array();
 
 		// Loop through the posted fields formatting any datebox values then validate the field.
 		foreach ( (array) $posted_field_ids as $field_id ) {
@@ -70,14 +71,21 @@ function xprofile_screen_edit_profile() {
 
 			$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id );
 			if ( $is_required[ $field_id ] && empty( $_POST[ 'field_' . $field_id ] ) ) {
-				$errors                     = true;
-				$field                      = new BP_XProfile_Field( $field_id );
-				$field_name                 = $field->name;
-				$is_required_fields_error[] = $field_name;
+				$errors                                = true;
+				$field                                 = new BP_XProfile_Field( $field_id );
+				$is_required_fields_error[]            = $field->name;
+				$social_fields_validation[ $field_id ] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field->name );
 			}
 
 			$field = new BP_XProfile_Field( $field_id );
 			if ( 'membertypes' === $field->type ) {
+
+				$enabled = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_enable_profile_field', true );
+				if ( '' === $enabled || '0' === $enabled ) {
+					$errors        = true;
+					$validations[] = __( 'Invalid option selected. Please try again', 'buddyboss' );
+					continue;
+				}
 
 				$member_type_name = bp_get_member_type_key( $_POST[ 'field_' . $field_id ] );
 
@@ -90,7 +98,6 @@ function xprofile_screen_edit_profile() {
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 
 						// If selected profile type is empty then bypass required field error for admin.
-						$errors                   = false;
 						$is_required[ $field_id ] = false;
 					} elseif (
 						(
@@ -109,7 +116,6 @@ function xprofile_screen_edit_profile() {
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 
 						// If selected profile type is empty then bypass required field error for editor.
-						$errors                   = false;
 						$is_required[ $field_id ] = false;
 					} elseif (
 						(
@@ -140,9 +146,17 @@ function xprofile_screen_edit_profile() {
 				}
 			}
 
-			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
-				$errors        = true;
-				$validations[] = $message;
+			if ( empty( $social_fields_validation[ $field_id ] ) && isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
+				$errors = true;
+
+				// Add social networks validation messages to validations array.
+				if ( is_array( $message ) ) {
+					$validations = array_merge( $validations, array_values( $message ) );
+				} else {
+					$validations[] = $message;
+				}
+
+				$social_fields_validation[ $field_id ] = $message;
 			}
 		}
 
@@ -179,85 +193,50 @@ function xprofile_screen_edit_profile() {
 			do_action( 'bb_xprofile_error_on_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
 		}
 
-		// There are validation errors.
-		if ( ! empty( $errors ) && $validations ) {
-			foreach ( $validations as $validation ) {
-				bp_core_add_message( $validation, 'error' );
-			}
-
-			// There are errors.
-		} elseif ( ! empty( $errors ) ) {
-			if ( count( $is_required_fields_error ) > 1 ) {
-				bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ), 'error' );
-			} else {
-				$message_error = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
-				bp_core_add_message( $message_error, 'error' );
-			}
-
-			// No errors.
-		} else {
-
-			// Reset the errors var.
-			$errors = false;
-
-			// Now we've checked for required fields, lets save the values.
-			$old_values = $new_values = array();
-			foreach ( (array) $posted_field_ids as $field_id ) {
-
-				// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.
-				$value = isset( $_POST[ 'field_' . $field_id ] ) ? $_POST[ 'field_' . $field_id ] : '';
-
-				$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? $_POST[ 'field_' . $field_id . '_visibility' ] : 'public';
-
-				// Save the old and new values. They will be
-				// passed to the filter and used to determine
-				// whether an activity item should be posted.
-				$old_values[ $field_id ] = array(
-					'value'      => xprofile_get_field_data( $field_id, bp_displayed_user_id() ),
-					'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
-				);
-
-				// Update the field data and visibility level.
-				xprofile_set_field_visibility_level( $field_id, bp_displayed_user_id(), $visibility_level );
-				$field_updated = xprofile_set_field_data( $field_id, bp_displayed_user_id(), $value, $is_required[ $field_id ] );
-
-				// We need to pass post value here.
-				// If we get value from xprofile_get_field_data function then date format change and it will not validate as per Y-m-d 00:00:00 format.
-				$new_values[ $field_id ] = array(
-					'value'      => $value,
-					'visibility' => xprofile_get_field_visibility_level( $field_id, bp_displayed_user_id() ),
-				);
-
-				$value = xprofile_get_field_data( $field_id, bp_displayed_user_id() );
-
-				if ( ! $field_updated ) {
-					$errors = true;
-				} else {
-
-					/**
-					 * Fires on each iteration of an XProfile field being saved with no error.
-					 *
-					 * @since BuddyPress 1.1.0
-					 *
-					 * @param int    $field_id ID of the field that was saved.
-					 * @param string $value    Value that was saved to the field.
-					 */
-					do_action( 'xprofile_profile_field_data_updated', $field_id, $value );
+		// Check the social field error and remove it to save.
+		if ( ! empty( $errors ) && ! empty( $social_fields_validation ) ) {
+			$social_posted_id = 0;
+			foreach ( $social_fields_validation as $field_id => $message ) {
+				$field = new BP_XProfile_Field( $field_id );
+				if ( 'socialnetworks' === $field->type && ! empty( $_POST[ 'field_' . $field_id ] ) ) {
+					$providers = array_keys( $message );
+					if ( ! empty( $providers ) ) {
+						foreach ( $providers as $provider ) {
+							// If any provider has error then remove it from post request.
+							if ( isset( $_POST[ 'field_' . $field_id ][ $provider ] ) ) {
+								unset( $_POST[ 'field_' . $field_id ][ $provider ] );
+							}
+						}
+					}
+					$social_posted_id = $field_id;
+					break;
 				}
 			}
 
-			/**
-			 * Fires after all XProfile fields have been saved for the current profile.
-			 *
-			 * @since BuddyPress 1.0.0
-			 *
-			 * @param int   $value            Displayed user ID.
-			 * @param array $posted_field_ids Array of field IDs that were edited.
-			 * @param bool  $errors           Whether or not any errors occurred.
-			 * @param array $old_values       Array of original values before updated.
-			 * @param array $new_values       Array of newly saved values after update.
-			 */
-			do_action( 'xprofile_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
+			// Save other social fields.
+			if ( ! empty( $social_posted_id ) && isset( $_POST[ 'field_' . $social_posted_id ] ) && count( $social_fields_validation ) <= 1 ) {
+				bb_xprofile_save_fields( $posted_field_ids, $is_required );
+			}
+		}
+
+		// Required fields error.
+		if ( ! empty( $errors ) && ! empty( $is_required_fields_error ) ) {
+			if ( count( $is_required_fields_error ) > 1 ) {
+				$validations[] = __( 'Please fill in all required fields, and save your changes again.', 'buddyboss' );
+			} else {
+				$validations[] = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
+			}
+		}
+
+		// There are validation errors.
+		if ( ! empty( $errors ) && $validations ) {
+
+			// Add validation messages all together.
+			bp_core_add_message( implode( "\n", $validations ), 'error' );
+		} else {
+
+			// Reset the errors var.
+			$errors = bb_xprofile_save_fields( $posted_field_ids, $is_required );
 
 			// Set the feedback messages.
 			if ( ! empty( $errors ) ) {
@@ -265,10 +244,10 @@ function xprofile_screen_edit_profile() {
 			} else {
 				bp_core_add_message( __( 'Changes saved.', 'buddyboss' ) );
 			}
-
-			// Redirect back to the edit screen to display the updates and message.
-			bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );
 		}
+
+		// Redirect back to the edit screen to display the updates and message.
+		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );
 	}
 
 	/**

@@ -8,14 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Video;
 
-namespace FFMpeg\Filters\Video;
-
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Exception\RuntimeException;
-use FFMpeg\Media\Video;
-use FFMpeg\Format\VideoInterface;
-
+use BuddyBossPlatform\FFMpeg\Coordinate\Dimension;
+use BuddyBossPlatform\FFMpeg\Exception\RuntimeException;
+use BuddyBossPlatform\FFMpeg\Media\Video;
+use BuddyBossPlatform\FFMpeg\Format\VideoInterface;
 class ResizeFilter implements VideoFilterInterface
 {
     /** fits to the dimensions, might introduce anamorphosis */
@@ -26,7 +24,6 @@ class ResizeFilter implements VideoFilterInterface
     const RESIZEMODE_SCALE_WIDTH = 'width';
     /** resizes the video to fit the dimension height, no anamorphosis */
     const RESIZEMODE_SCALE_HEIGHT = 'height';
-
     /** @var Dimension */
     private $dimension;
     /** @var string */
@@ -35,15 +32,13 @@ class ResizeFilter implements VideoFilterInterface
     private $forceStandards;
     /** @var integer */
     private $priority;
-
-    public function __construct(Dimension $dimension, $mode = self::RESIZEMODE_FIT, $forceStandards = true, $priority = 0)
+    public function __construct(Dimension $dimension, $mode = self::RESIZEMODE_FIT, $forceStandards = \true, $priority = 0)
     {
         $this->dimension = $dimension;
         $this->mode = $mode;
         $this->forceStandards = $forceStandards;
         $this->priority = $priority;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -51,7 +46,6 @@ class ResizeFilter implements VideoFilterInterface
     {
         return $this->priority;
     }
-
     /**
      * @return Dimension
      */
@@ -59,7 +53,6 @@ class ResizeFilter implements VideoFilterInterface
     {
         return $this->dimension;
     }
-
     /**
      * @return string
      */
@@ -67,7 +60,6 @@ class ResizeFilter implements VideoFilterInterface
     {
         return $this->mode;
     }
-
     /**
      * @return Boolean
      */
@@ -75,7 +67,6 @@ class ResizeFilter implements VideoFilterInterface
     {
         return $this->forceStandards;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -83,34 +74,26 @@ class ResizeFilter implements VideoFilterInterface
     {
         $dimensions = null;
         $commands = array();
-
         foreach ($video->getStreams() as $stream) {
             if ($stream->isVideo()) {
                 try {
                     $dimensions = $stream->getDimensions();
                     break;
                 } catch (RuntimeException $e) {
-
                 }
             }
         }
-
         if (null !== $dimensions) {
             $dimensions = $this->getComputedDimensions($dimensions, $format->getModulus());
-
             // Using Filter to have ordering
             $commands[] = '-vf';
             $commands[] = '[in]scale=' . $dimensions->getWidth() . ':' . $dimensions->getHeight() . ' [out]';
-            
         }
-
         return $commands;
     }
-
     private function getComputedDimensions(Dimension $dimension, $modulus)
     {
         $originalRatio = $dimension->getRatio($this->forceStandards);
-
         switch ($this->mode) {
             case self::RESIZEMODE_SCALE_WIDTH:
                 $height = $this->dimension->getHeight();
@@ -122,7 +105,6 @@ class ResizeFilter implements VideoFilterInterface
                 break;
             case self::RESIZEMODE_INSET:
                 $targetRatio = $this->dimension->getRatio($this->forceStandards);
-
                 if ($targetRatio->getValue() > $originalRatio->getValue()) {
                     $height = $this->dimension->getHeight();
                     $width = $originalRatio->calculateWidth($height, $modulus);
@@ -137,7 +119,6 @@ class ResizeFilter implements VideoFilterInterface
                 $height = $this->dimension->getHeight();
                 break;
         }
-
         return new Dimension($width, $height);
     }
 }

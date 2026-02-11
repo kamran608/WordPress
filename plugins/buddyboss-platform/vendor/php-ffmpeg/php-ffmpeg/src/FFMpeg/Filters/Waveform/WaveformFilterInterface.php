@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Waveform;
 
-namespace FFMpeg\Filters\Waveform;
-
-use FFMpeg\Filters\FilterInterface;
-use FFMpeg\Media\Waveform;
-
+use BuddyBossPlatform\FFMpeg\Filters\FilterInterface;
+use BuddyBossPlatform\FFMpeg\Media\Waveform;
 interface WaveformFilterInterface extends FilterInterface
 {
     public function apply(Waveform $waveform);

@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace FFMpeg\Format\Video;
+namespace BuddyBossPlatform\FFMpeg\Format\Video;
 
 /**
  * The X264 video format
@@ -17,18 +16,13 @@ namespace FFMpeg\Format\Video;
 class X264 extends DefaultVideo
 {
     /** @var boolean */
-    private $bframesSupport = true;
-
+    private $bframesSupport = \true;
     /** @var integer */
     private $passes = 2;
-
     public function __construct($audioCodec = 'libfaac', $videoCodec = 'libx264')
     {
-        $this
-            ->setAudioCodec($audioCodec)
-            ->setVideoCodec($videoCodec);
+        $this->setAudioCodec($audioCodec)->setVideoCodec($videoCodec);
     }
-
     /**
      * {@inheritDoc}
      */
@@ -36,7 +30,6 @@ class X264 extends DefaultVideo
     {
         return $this->bframesSupport;
     }
-
     /**
      * @param $support
      *
@@ -45,10 +38,8 @@ class X264 extends DefaultVideo
     public function setBFramesSupport($support)
     {
         $this->bframesSupport = $support;
-
         return $this;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -56,7 +47,6 @@ class X264 extends DefaultVideo
     {
         return array('copy', 'aac', 'libvo_aacenc', 'libfaac', 'libmp3lame', 'libfdk_aac');
     }
-
     /**
      * {@inheritDoc}
      */
@@ -64,7 +54,6 @@ class X264 extends DefaultVideo
     {
         return array('libx264');
     }
-
     /**
      * @param $passes
      *
@@ -75,7 +64,6 @@ class X264 extends DefaultVideo
         $this->passes = $passes;
         return $this;
     }
-
     /**
      * {@inheritDoc}
      */
@@ -83,7 +71,6 @@ class X264 extends DefaultVideo
     {
         return $this->passes;
     }
-
     /**
      * @return int
      */

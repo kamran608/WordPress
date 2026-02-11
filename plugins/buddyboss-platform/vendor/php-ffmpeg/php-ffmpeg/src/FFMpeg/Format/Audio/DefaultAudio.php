@@ -8,28 +8,23 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Format\Audio;
 
-namespace FFMpeg\Format\Audio;
-
-use Evenement\EventEmitter;
-use FFMpeg\Exception\InvalidArgumentException;
-use FFMpeg\Format\AudioInterface;
-use FFMpeg\Media\MediaTypeInterface;
-use FFMpeg\Format\ProgressableInterface;
-use FFMpeg\Format\ProgressListener\AudioProgressListener;
-use FFMpeg\FFProbe;
-
+use BuddyBossPlatform\Evenement\EventEmitter;
+use BuddyBossPlatform\FFMpeg\Exception\InvalidArgumentException;
+use BuddyBossPlatform\FFMpeg\Format\AudioInterface;
+use BuddyBossPlatform\FFMpeg\Media\MediaTypeInterface;
+use BuddyBossPlatform\FFMpeg\Format\ProgressableInterface;
+use BuddyBossPlatform\FFMpeg\Format\ProgressListener\AudioProgressListener;
+use BuddyBossPlatform\FFMpeg\FFProbe;
 abstract class DefaultAudio extends EventEmitter implements AudioInterface, ProgressableInterface
 {
     /** @var string */
     protected $audioCodec;
-
     /** @var integer */
     protected $audioKiloBitrate = 128;
-
     /** @var integer */
     protected $audioChannels = null;
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +32,6 @@ abstract class DefaultAudio extends EventEmitter implements AudioInterface, Prog
     {
         return array();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -45,7 +39,6 @@ abstract class DefaultAudio extends EventEmitter implements AudioInterface, Prog
     {
         return $this->audioCodec;
     }
-
     /**
      * Sets the audio codec, Should be in the available ones, otherwise an
      * exception is thrown.
@@ -56,18 +49,12 @@ abstract class DefaultAudio extends EventEmitter implements AudioInterface, Prog
      */
     public function setAudioCodec($audioCodec)
     {
-        if ( ! in_array($audioCodec, $this->getAvailableAudioCodecs())) {
-            throw new InvalidArgumentException(sprintf(
-                    'Wrong audiocodec value for %s, available formats are %s'
-                    , $audioCodec, implode(', ', $this->getAvailableAudioCodecs())
-            ));
+        if (!\in_array($audioCodec, $this->getAvailableAudioCodecs())) {
+            throw new InvalidArgumentException(\sprintf('Wrong audiocodec value for %s, available formats are %s', $audioCodec, \implode(', ', $this->getAvailableAudioCodecs())));
         }
-
         $this->audioCodec = $audioCodec;
-
         return $this;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -75,7 +62,6 @@ abstract class DefaultAudio extends EventEmitter implements AudioInterface, Prog
     {
         return $this->audioKiloBitrate;
     }
-
     /**
      * Sets the kiloBitrate value.
      *
@@ -87,20 +73,16 @@ abstract class DefaultAudio extends EventEmitter implements AudioInterface, Prog
         if ($kiloBitrate < 1) {
             throw new InvalidArgumentException('Wrong kiloBitrate value');
         }
-
         $this->audioKiloBitrate = (int) $kiloBitrate;
-
         return $this;
     }
-
     /**
-	 * {@inheritdoc}
-	 */
+     * {@inheritdoc}
+     */
     public function getAudioChannels()
     {
         return $this->audioChannels;
     }
-
     /**
      * Sets the channels value.
      *
@@ -112,12 +94,9 @@ abstract class DefaultAudio extends EventEmitter implements AudioInterface, Prog
         if ($channels < 1) {
             throw new InvalidArgumentException('Wrong channels value');
         }
-
         $this->audioChannels = (int) $channels;
-
         return $this;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -125,13 +104,11 @@ abstract class DefaultAudio extends EventEmitter implements AudioInterface, Prog
     {
         $format = $this;
         $listener = new AudioProgressListener($ffprobe, $media->getPathfile(), $pass, $total, $duration);
-        $listener->on('progress', function () use ($media, $format) {
-           $format->emit('progress', array_merge(array($media, $format), func_get_args()));
+        $listener->on('progress', function () use($media, $format) {
+            $format->emit('progress', \array_merge(array($media, $format), \func_get_args()));
         });
-
         return array($listener);
     }
-
     /**
      * {@inheritDoc}
      */

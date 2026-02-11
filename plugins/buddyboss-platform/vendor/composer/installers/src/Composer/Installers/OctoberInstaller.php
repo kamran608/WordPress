@@ -1,14 +1,10 @@
 <?php
+
 namespace Composer\Installers;
 
-class OctoberInstaller extends BaseInstaller
+class OctoberInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'module'    => 'modules/{$name}/',
-        'plugin'    => 'plugins/{$vendor}/{$name}/',
-        'theme'     => 'themes/{$vendor}-{$name}/'
-    );
-
+    protected $locations = array('module' => 'modules/{$name}/', 'plugin' => 'plugins/{$vendor}/{$name}/', 'theme' => 'themes/{$vendor}-{$name}/');
     /**
      * Format package name.
      *
@@ -22,27 +18,21 @@ class OctoberInstaller extends BaseInstaller
         if ($vars['type'] === 'october-plugin') {
             return $this->inflectPluginVars($vars);
         }
-
         if ($vars['type'] === 'october-theme') {
             return $this->inflectThemeVars($vars);
         }
-
         return $vars;
     }
-
     protected function inflectPluginVars($vars)
     {
-        $vars['name'] = preg_replace('/^oc-|-plugin$/', '', $vars['name']);
-        $vars['vendor'] = preg_replace('/[^a-z0-9_]/i', '', $vars['vendor']);
-
+        $vars['name'] = \preg_replace('/^oc-|-plugin$/', '', $vars['name']);
+        $vars['vendor'] = \preg_replace('/[^a-z0-9_]/i', '', $vars['vendor']);
         return $vars;
     }
-
     protected function inflectThemeVars($vars)
     {
-        $vars['name'] = preg_replace('/^oc-|-theme$/', '', $vars['name']);
-        $vars['vendor'] = preg_replace('/[^a-z0-9_]/i', '', $vars['vendor']);
-
+        $vars['name'] = \preg_replace('/^oc-|-theme$/', '', $vars['name']);
+        $vars['vendor'] = \preg_replace('/[^a-z0-9_]/i', '', $vars['vendor']);
         return $vars;
     }
 }

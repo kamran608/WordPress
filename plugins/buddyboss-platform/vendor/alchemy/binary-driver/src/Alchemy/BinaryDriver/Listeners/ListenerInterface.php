@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\Alchemy\BinaryDriver\Listeners;
 
-namespace Alchemy\BinaryDriver\Listeners;
-
-use Evenement\EventEmitterInterface;
-
+use BuddyBossPlatform\Evenement\EventEmitterInterface;
 interface ListenerInterface extends EventEmitterInterface
 {
     /**
@@ -22,7 +20,6 @@ interface ListenerInterface extends EventEmitterInterface
      * @param string $data The output
      */
     public function handle($type, $data);
-
     /**
      * An array of events that should be forwarded to BinaryInterface
      *

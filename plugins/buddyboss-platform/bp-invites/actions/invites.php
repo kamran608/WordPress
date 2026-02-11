@@ -60,6 +60,7 @@ function bp_member_invite_submit() {
 	$invite_wrong_array      = array();
 	$invite_exists_array     = array();
 	$invite_restricted_array = array();
+	$invite_duplicate_array  = array();
 	$duplicate_email_inputs  = array();
 
 	foreach ( $_POST['email'] as $key => $value ) {
@@ -71,21 +72,23 @@ function bp_member_invite_submit() {
 		$duplicate_email_inputs[] = strtolower( trim( $_POST['email'][ $key ][0] ) );
 
 		if ( '' !== $_POST['invitee'][ $key ][0] && '' !== $_POST['email'][ $key ][0] && is_email( $_POST['email'][ $key ][0] ) ) {
-			if ( email_exists( (string) $_POST['email'][ $key ][0] ) ) {
-				$invite_exists_array[] = $_POST['email'][ $key ][0];
-			} elseif ( bb_is_allowed_register_email_address( $_POST['email'][ $key ][0] ) ) {
+			if ( email_exists( (string) sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ) ) ) {
+				$invite_exists_array[] = sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) );
+			} elseif ( bb_is_email_address_already_invited( sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ), bp_loggedin_user_id() ) ) {
+				$invite_duplicate_array[] = sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) );
+			} elseif ( bb_is_allowed_register_email_address( sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ) ) ) {
 				$invite_correct_array[] = array(
-					'name'        => $_POST['invitee'][ $key ][0],
-					'email'       => $_POST['email'][ $key ][0],
+					'name'        => sanitize_text_field( wp_unslash( $_POST['invitee'][ $key ][0] ) ),
+					'email'       => sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ),
 					'member_type' => ( isset( $_POST['member-type'][ $key ][0] ) && ! empty( $_POST['member-type'][ $key ][0] ) ) ? $_POST['member-type'][ $key ][0] : '',
 				);
 			} else {
-				$invite_restricted_array[] = $_POST['email'][ $key ][0];
+				$invite_restricted_array[] = sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) );
 			}
 		} else {
 			$invite_wrong_array[] = array(
-				'name'        => $_POST['invitee'][ $key ][0],
-				'email'       => $_POST['email'][ $key ][0],
+				'name'        => sanitize_text_field( wp_unslash( $_POST['invitee'][ $key ][0] ) ),
+				'email'       => sanitize_email( wp_unslash( $_POST['email'][ $key ][0] ) ),
 				'member_type' => ( isset( $_POST['member-type'][ $key ][0] ) && ! empty( $_POST['member-type'][ $key ][0] ) ) ? $_POST['member-type'][ $key ][0] : '',
 			);
 		}
@@ -98,7 +101,7 @@ function bp_member_invite_submit() {
 	foreach ( $invite_correct_array as $key => $value ) {
 
 		if ( true === bp_disable_invite_member_email_subject() ) {
-			$subject = stripslashes( strip_tags( $_POST['bp_member_invites_custom_subject'] ) );
+			$subject = sanitize_textarea_field( wp_unslash( $_POST['bp_member_invites_custom_subject'] ) );
 		} else {
 			$subject = stripslashes( strip_tags( bp_get_member_invitation_subject() ) );
 		}
@@ -109,8 +112,8 @@ function bp_member_invite_submit() {
 			$message = stripslashes( strip_tags( bp_get_member_invitation_message() ) );
 		}
 
-		$email          = $value['email'];
-		$name           = $value['name'];
+		$email          = sanitize_email( wp_unslash( $value['email'] ) );
+		$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 		$member_type    = $value['member_type'];
 		$query_string[] = $email;
 		$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
@@ -198,7 +201,7 @@ function bp_member_invite_submit() {
 	}
 
 	$failed_invite = wp_list_pluck( array_filter( $invite_wrong_array ), 'email' );
-	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email=' . urlencode( implode( ', ', $query_string ) ) . '&exists=' . urlencode( implode( ', ', $invite_exists_array ) ) . '&restricted=' . urlencode( implode( ', ', $invite_restricted_array ) ) . '&failed=' . urlencode( implode( ',', array_filter( $failed_invite ) ) ) );
+	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email=' . urlencode( implode( ', ', $query_string ) ) . '&exists=' . urlencode( implode( ', ', $invite_exists_array ) ) . '&restricted=' . urlencode( implode( ', ', $invite_restricted_array ) ) . '&failed=' . urlencode( implode( ',', array_filter( $failed_invite ) ) ) . '&duplicates=' . urlencode( implode( ', ', $invite_duplicate_array ) ) );
 
 }
 add_action( 'bp_actions', 'bp_member_invite_submit' );

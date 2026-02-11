@@ -109,6 +109,13 @@ class Cache {
 		$this->week_in_seconds   = WEEK_IN_SECONDS;
 		$this->month_in_seconds  = MONTH_IN_SECONDS;
 		$this->year_in_seconds   = YEAR_IN_SECONDS;
+
+		$this->bb_performance_purge_schedule_cron();
+
+		add_action( 'bb_performance_purge_expired_cache_hook', array( $this, 'purge_expired_cache' ) );
+
+		// Re-schedule when update the timezone.
+		add_action( 'updated_option', array( $this, 'bb_performance_purge_reschedule_cron' ), 10, 3 );
 	}
 
 	/**
@@ -123,13 +130,11 @@ class Cache {
 	 * @return bool
 	 */
 	public function set( $cache_name, $cache_value, $cache_expire, $cache_group = 'buddyboss-api', $user_id  = 0  ) {
-
 		// If the memcache based are available.
 		// Currently we bypass this condition as we not support purge with memcache.
 		if ( wp_using_ext_object_cache() && false ) {
 			$value = wp_cache_set( $cache_name, $cache_value, $cache_group, $cache_expire );
 		} else {
-
 			global $wpdb;
 
 			$cache_expire = gmdate( 'Y-m-d H:i:s', time() + $cache_expire );
@@ -169,7 +174,6 @@ class Cache {
 		}
 
 		return $value;
-
 	}
 
 	/**
@@ -183,7 +187,6 @@ class Cache {
 	 * @return bool|mixed
 	 */
 	public function get( $cache_name, $user_id, $blog_id, $cache_group = 'buddyboss-api', $current_endpoint = '' ) {
-
 		$value = false;
 
 		// If the memcache based are available.
@@ -191,7 +194,6 @@ class Cache {
 		if ( wp_using_ext_object_cache() && false ) {
 			$value = wp_cache_get( $cache_name, $cache_group );
 		} else {
-
 			global $wpdb;
 
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -205,6 +207,7 @@ class Cache {
 						'id' => $get->id,
 					)
 				);
+
 				$value = false;
 			} elseif ( ! empty( $get ) ) {
 				if ( ! is_serialized( $get->cache_value ) ) { // check if the data is compressed.
@@ -241,6 +244,7 @@ class Cache {
 		static $bp_purge_by_group_cache = array();
 
 		$cache_key = 'purge_by_group_' . sanitize_title( $group_name );
+
 		if ( ! isset( $bp_purge_by_group_cache[ $cache_key ] ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$caches                                = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->cache_table} where cache_group=%s", $group_name ) );
@@ -261,8 +265,6 @@ class Cache {
 	 * Purge cache by groups
 	 *
 	 * @param array|string $group_names Cache group names.
-	 *
-	 * @since BuddyBoss 2.5.50
 	 */
 	public function purge_by_groups( $group_names ) {
 		global $wpdb;
@@ -275,8 +277,6 @@ class Cache {
 		 * Filter the cache purge limit.
 		 *
 		 * @param int $limit Cache purge limit.
-		 *
-		 * @since BuddyBoss 2.5.50
 		 */
 		$limit = apply_filters( 'bb_cache_purge_limit', 1000 );
 
@@ -312,8 +312,6 @@ class Cache {
 		 * Filter the cache purge limit.
 		 *
 		 * @param int $limit Cache purge limit.
-		 *
-		 * @since BuddyBoss 2.5.50
 		 */
 		$limit = apply_filters( 'bb_cache_purge_limit', 1000 );
 
@@ -344,13 +342,36 @@ class Cache {
 		if ( ! empty( $group_name ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE  user_id=%s AND cache_group  LIKE %s", $user_id, '%' . $group_name . '%' ) );
-
 		} else {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->cache_table} WHERE  user_id=%s", $user_id ) );
 		}
 	}
 
+	/**
+	 * Purge cache by user ids
+	 *
+	 * @param array $user_ids Cache user ids.
+	 * @param array $group_names Cache group names.
+	 */
+	public function purge_by_user_ids( $user_ids, $group_names = array() ) {
+		global $wpdb;
+
+		if ( empty( $user_ids ) ) {
+			return;
+		}
+
+		$uid_in = implode( ',', $user_ids );
+
+		if ( ! empty( $group_names ) ) {
+			$gname_in = "'" . implode( "', '", $group_names ) . "'";
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE  user_id IN ({$uid_in}) AND cache_group IN ({$gname_in})" );
+		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( "DELETE FROM {$this->cache_table} WHERE  user_id IN ({$uid_in})" );
+		}
+	}
 
 	/**
 	 * Purge cache by endpoint
@@ -358,7 +379,6 @@ class Cache {
 	 * @param string $cache_name Cache name.
 	 */
 	public function purge_by_endpoint( $cache_name ) {
-
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -391,7 +411,6 @@ class Cache {
 	 * Purge all
 	 */
 	public function purge_all() {
-
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -411,8 +430,6 @@ class Cache {
 	 * @param array $group_names       Array of group names.
 	 * @param array $deeplink_callback Callable function to prepare the deeplink group name.
 	 *
-	 * @since BuddyBoss 2.5.50
-	 *
 	 * @return void
 	 */
 	public function purge_by_group_names( $ids, $group_names, $deeplink_callback = '' ) {
@@ -427,8 +444,6 @@ class Cache {
 		 * Limit the number of ids to purge at once.
 		 *
 		 * @param int $limit Cache purge limit.
-		 *
-		 * @since BuddyBoss 2.5.50
 		 */
 		$limit = apply_filters( 'bb_cache_purge_groups_limit', 1000 );
 
@@ -469,8 +484,6 @@ class Cache {
 	 * @param int   $user_id     User ID.
 	 * @param array $group_names Array of group names.
 	 *
-	 * @since BuddyBoss 2.5.50
-	 *
 	 * @return void
 	 */
 	public function purge_user_groups( $user_id, $group_names ) {
@@ -484,8 +497,6 @@ class Cache {
 		 * Limit the number of ids to purge at once.
 		 *
 		 * @param int $limit Cache purge limit.
-		 *
-		 * @since BuddyBoss 2.5.50
 		 */
 		$limit = apply_filters( 'bb_cache_purge_groups_limit', 1000 );
 
@@ -497,6 +508,90 @@ class Cache {
 			}
 		} else {
 			$this->purge_groups_by_user_id( $user_id, $group_names );
+		}
+	}
+
+	/**
+	 * Returns the cache expiry time.
+	 *
+	 * @return int Cache expiry in seconds.
+	 */
+	public static function cache_expiry() {
+		$cache_expiry = self::instance()->month_in_seconds;
+
+		/**
+		 * Filters the cache expiry time.
+		 *
+		 * @param int $cache_expiry Expiry time for cache.
+		 */
+		return apply_filters( 'bb_performance_cache_expiry_time', $cache_expiry );
+	}
+
+	/**
+	 * Purges expired cache via background job.
+	 *
+	 * @return void
+	 */
+	public function purge_expired_cache() {
+		global $wpdb;
+
+		// Current GMT time in Y-m-d H:i:s format.
+		$current_gmt_time = current_time( 'mysql', true );
+
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM $this->cache_table WHERE cache_expire < %s",
+				$current_gmt_time
+			)
+		);
+	}
+
+	/**
+	 * Schedule performance cache purge cron event.
+	 *
+	 * @return void
+	 */
+	public function bb_performance_purge_schedule_cron() {
+		// Check if the cron job is not already scheduled.
+		$is_scheduled = wp_next_scheduled( 'bb_performance_purge_expired_cache_hook' );
+
+		// WP datetime.
+		$final_date         = date_i18n( 'Y-m-d H:i:s', strtotime( 'today 23:30' ) );
+		$local_datetime     = date_create( $final_date, wp_timezone() );
+		$schedule_timestamp = $local_datetime->getTimestamp();
+
+		if ( ! $is_scheduled ) {
+			wp_schedule_event( $schedule_timestamp, 'daily', 'bb_performance_purge_expired_cache_hook' );
+		}
+	}
+
+	/**
+	 * Re-Schedule event to clear the cron for cache.
+	 *
+	 * @param string $option    Name of the option to update.
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $new_value The new option value.
+	 *
+	 * @return void
+	 */
+	public function bb_performance_purge_reschedule_cron( $option, $old_value = '', $new_value = '' ) {
+		// Avoid clearing multiple time.
+		static $is_reschedule = false;
+
+		// Check if the updated option is 'timezone_string'.
+		if (
+			(
+				'timezone_string' === $option ||
+				'gmt_offset' === $option
+			) &&
+			$old_value !== $new_value &&
+			! $is_reschedule
+		) {
+			if ( wp_next_scheduled( 'bb_performance_purge_expired_cache_hook' ) ) {
+				wp_clear_scheduled_hook( 'bb_performance_purge_expired_cache_hook' );
+			}
+			$this->bb_performance_purge_schedule_cron();
+			$is_reschedule = true;
 		}
 	}
 }

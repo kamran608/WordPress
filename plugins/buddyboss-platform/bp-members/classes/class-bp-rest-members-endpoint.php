@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -47,7 +54,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_public_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -55,7 +63,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'Unique identifier for the user.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -68,6 +76,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'args'                => array(
 						'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 					),
+					'allow_batch'         => $this->allow_batch,
 				),
 				array(
 					'methods'             => WP_REST_Server::EDITABLE,
@@ -87,7 +96,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 						),
 					),
 				),
-				'schema' => array( $this, 'get_public_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -241,7 +251,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				$users           = apply_filters( 'bp_ps_search_results', $users );
 				$args['include'] = implode( ',', $users );
 			}
-		} else if ( ! empty( $args['include'] ) ) {
+		} else if ( ! empty( $request['include'] ) ) {
 			$args['type'] = 'in';
 		}
 
@@ -250,7 +260,6 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				empty( $request['scope'] )
 				|| ( isset( $request['scope'] ) && 'all' === $request['scope'] )
 			)
-			&& empty( $request['bp_ps_search'] )
 			&& function_exists( 'bp_get_users_of_removed_member_types' )
 			&& ! empty( bp_get_users_of_removed_member_types() )
 		) {
@@ -701,12 +710,22 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		$user_data = get_userdata( $user->ID );
 		$followers = $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) );
 		$following = $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) );
+
+		$member_types = array();
+		if (
+			function_exists( 'bp_get_xprofile_member_type_field_id' ) &&
+			function_exists( 'bp_xprofile_get_hidden_fields_for_user' ) &&
+			! in_array( bp_get_xprofile_member_type_field_id(), bp_xprofile_get_hidden_fields_for_user( $user->ID ), true )
+		) {
+			$member_types = bp_get_member_type( $user->ID, false );
+		}
+
 		$data      = array(
 			'id'                 => $user->ID,
 			'name'               => $user->display_name,
 			'user_login'         => $user->user_login,
 			'link'               => bp_core_get_user_domain( $user->ID, $user->user_nicename, $user->user_login ),
-			'member_types'       => bp_get_member_type( $user->ID, false ),
+			'member_types'       => $member_types,
 			'roles'              => array(),
 			'capabilities'       => array(),
 			'extra_capabilities' => array(),
@@ -1509,11 +1528,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 *
 	 * @return mixed      Comma-seperated string of user IDs on success. Integer zero on failure.
 	 */
-	private function rest_bp_get_following_ids( $args ) {
+	public function rest_bp_get_following_ids( $args ) {
 		if ( bp_is_active( 'follow' ) ) {
 			return bp_get_following_ids( $args );
 		} else {
-			return ( function_exists( 'bp_get_following' ) ? bp_get_following( $args ) : '' );
+			return ( function_exists( 'bp_get_following' ) && bp_is_activity_follow_active() ? bp_get_following( $args ) : '' );
 		}
 	}
 
@@ -1524,11 +1543,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 *
 	 * @return mixed      Comma-seperated string of user IDs on success. Integer zero on failure.
 	 */
-	private function rest_bp_get_follower_ids( $args ) {
+	public function rest_bp_get_follower_ids( $args ) {
 		if ( bp_is_active( 'follow' ) ) {
 			return bp_get_follower_ids( $args );
 		} else {
-			return ( function_exists( 'bp_get_followers' ) ? bp_get_followers( $args ) : '' );
+			return ( function_exists( 'bp_get_followers' ) && bp_is_activity_follow_active() ? bp_get_followers( $args ) : '' );
 		}
 	}
 

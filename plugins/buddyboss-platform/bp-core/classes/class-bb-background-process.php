@@ -152,6 +152,8 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * @return void
 		 */
 		public static function create_table() {
+			static $checked_tables = [];
+
 			$sql             = array();
 			$wpdb            = $GLOBALS['wpdb'];
 			$charset_collate = $wpdb->get_charset_collate();
@@ -164,6 +166,10 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			// Ensure that dbDelta() is defined.
 			if ( ! function_exists( 'dbDelta' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			}
+
+			if ( isset( $checked_tables[ $table_name ] ) ) {
+				return;
 			}
 
 			// Table already exists, so maybe upgrade instead?
@@ -191,6 +197,8 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 
 				dbDelta( $sql );
 			}
+
+			$checked_tables[ $table_name ] = true;
 		}
 
 		/**
@@ -432,6 +440,15 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			do {
 				$batch = $this->get_batch();
 
+				/**
+				 * Filter to use before start process.
+				 *
+				 * @since BuddyBoss 2.5.60
+				 *
+				 * @param object $batch Batch object.
+				 */
+				$log_batch = apply_filters( 'bb_bg_process_start', $batch );
+
 				do_action( $this->identifier . '_batch_process', $batch );
 
 				$key_id = $batch->key;
@@ -453,6 +470,16 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 				if ( empty( $batch->data ) ) {
 					$this->delete( $key_id );
 				}
+
+				/**
+				 * Action to use after end the process.
+				 *
+				 * @since BuddyBoss 2.5.60
+				 *
+				 * @param object $batch Batch object.
+				 */
+				do_action( 'bb_bg_process_end', $log_batch );
+
 			} while ( ! $this->time_exceeded() && ! $this->memory_exceeded() && ! $this->is_queue_empty() && ! $this->is_paused() && ! $this->is_cancelled() );
 
 			$this->unlock_process();
@@ -905,7 +932,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 */
 		protected function completed() {
 			// phpcs:ignore
-			error_log( 'Data update completed' );
+			bb_error_log( 'Data update completed' );
 			do_action( $this->identifier . '_completed' );
 		}
 

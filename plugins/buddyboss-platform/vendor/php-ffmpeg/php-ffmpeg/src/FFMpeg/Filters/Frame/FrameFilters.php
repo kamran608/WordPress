@@ -8,20 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Filters\Frame;
 
-namespace FFMpeg\Filters\Frame;
-
-use FFMpeg\Media\Frame;
-
+use BuddyBossPlatform\FFMpeg\Media\Frame;
 class FrameFilters
 {
     private $frame;
-
     public function __construct(Frame $frame)
     {
         $this->frame = $frame;
     }
-
     /**
      * Fixes the display ratio of the output frame.
      *
@@ -33,10 +29,8 @@ class FrameFilters
     public function fixDisplayRatio()
     {
         $this->frame->addFilter(new DisplayRatioFixerFilter());
-
         return $this;
     }
-
     /**
      * Applies a custom filter: -vf foo bar
      *
@@ -47,7 +41,6 @@ class FrameFilters
     public function custom($parameters)
     {
         $this->frame->addFilter(new CustomFrameFilter($parameters));
-
         return $this;
     }
 }

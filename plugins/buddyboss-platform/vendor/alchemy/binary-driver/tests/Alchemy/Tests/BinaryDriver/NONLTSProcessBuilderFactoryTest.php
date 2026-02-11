@@ -1,15 +1,13 @@
 <?php
 
-namespace Alchemy\Tests\BinaryDriver;
+namespace BuddyBossPlatform\Alchemy\Tests\BinaryDriver;
 
-use Alchemy\BinaryDriver\ProcessBuilderFactory;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\ProcessBuilderFactory;
 class NONLTSProcessBuilderFactoryTest extends AbstractProcessBuilderFactoryTest
 {
     protected function getProcessBuilderFactory($binary)
     {
-        ProcessBuilderFactory::$emulateSfLTS = true;
-
+        ProcessBuilderFactory::$emulateSfLTS = \true;
         return new ProcessBuilderFactory($binary);
     }
 }

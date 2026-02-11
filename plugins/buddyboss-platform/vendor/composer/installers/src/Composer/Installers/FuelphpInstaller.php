@@ -1,9 +1,8 @@
 <?php
+
 namespace Composer\Installers;
 
-class FuelphpInstaller extends BaseInstaller
+class FuelphpInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'component'  => 'components/{$name}/',
-    );
+    protected $locations = array('component' => 'components/{$name}/');
 }

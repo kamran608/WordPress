@@ -9,6 +9,8 @@
  * @version 1.4.0
  */
 
+$is_send_ajax_request = bb_is_send_ajax_request();
+
 global $document_folder_template;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$folder_id = (int) bp_action_variable( 1 );
@@ -84,10 +86,11 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 									?>
 									<div class="media-folder_items">
 										<div class="media-folder_actions">
-											<a href="#" class="media-folder_action__anchor">
+											<a href="#" class="media-folder_action__anchor" aria-label="<?php esc_attr_e( 'More options', 'buddyboss' ); ?>">
 												<i class="bb-icon-f bb-icon-ellipsis-v"></i>
 											</a>
-											<div class="media-folder_action__list">
+											<div class="media-folder_action__list bb_more_dropdown">
+												<?php bp_get_template_part( 'common/more-options-view' ); ?>
 												<ul>
 													<?php
 													if ( $can_edit_btn ) {
@@ -111,6 +114,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 													?>
 												</ul>
 											</div>
+											<div class="bb_more_dropdown_overlay"></div>
 										</div>
 									</div> <!-- .media-folder_items -->
 									<?php
@@ -128,8 +132,16 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 					}
 					?>
 				</div> <!-- .bp-media-header-wrap -->
-				<div id="media-stream" class="media" data-bp-list="document">
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-document-loading' ); ?></div>
+				<div id="media-stream" class="media" data-bp-list="document" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
+					<?php
+					if ( $is_send_ajax_request ) {
+						echo '<div id="bp-ajax-loader">';
+						bp_nouveau_user_feedback( 'member-document-loading' );
+						echo '</div>';
+					} else {
+						bp_get_template_part( 'document/document-loop' );
+					}
+					?>
 				</div>
 			</div>
 		</div>

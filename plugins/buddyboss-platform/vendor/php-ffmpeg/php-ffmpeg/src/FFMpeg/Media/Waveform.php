@@ -8,41 +8,34 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Media;
 
-namespace FFMpeg\Media;
-
-use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
-use FFMpeg\Exception\InvalidArgumentException;
-use FFMpeg\Filters\Waveform\WaveformFilterInterface;
-use FFMpeg\Filters\Waveform\WaveformFilters;
-use FFMpeg\Driver\FFMpegDriver;
-use FFMpeg\FFProbe;
-use FFMpeg\Exception\RuntimeException;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\ExecutionFailureException;
+use BuddyBossPlatform\FFMpeg\Exception\InvalidArgumentException;
+use BuddyBossPlatform\FFMpeg\Filters\Waveform\WaveformFilterInterface;
+use BuddyBossPlatform\FFMpeg\Filters\Waveform\WaveformFilters;
+use BuddyBossPlatform\FFMpeg\Driver\FFMpegDriver;
+use BuddyBossPlatform\FFMpeg\FFProbe;
+use BuddyBossPlatform\FFMpeg\Exception\RuntimeException;
 class Waveform extends AbstractMediaType
 {
     const DEFAULT_COLOR = '#000000';
-
     /** @var Video */
     protected $audio;
     protected $width;
     protected $height;
-
     /**
      * @var array
      */
     protected $colors;
-
     public function __construct(Audio $audio, FFMpegDriver $driver, FFProbe $ffprobe, $width, $height, $colors = array(self::DEFAULT_COLOR))
     {
         parent::__construct($audio->getPathfile(), $driver, $ffprobe);
         $this->audio = $audio;
         $this->width = $width;
         $this->height = $height;
-
         $this->setColors($colors);
     }
-
     /**
      * Returns the audio related to the waveform.
      *
@@ -52,7 +45,6 @@ class Waveform extends AbstractMediaType
     {
         return $this->audio;
     }
-
     /**
      * {@inheritdoc}
      *
@@ -62,7 +54,6 @@ class Waveform extends AbstractMediaType
     {
         return new WaveformFilters($this);
     }
-
     /**
      * {@inheritdoc}
      *
@@ -71,10 +62,8 @@ class Waveform extends AbstractMediaType
     public function addFilter(WaveformFilterInterface $filter)
     {
         $this->filters->add($filter);
-
         return $this;
     }
-
     /**
      * Parameter should be an array containing at least one valid color represented as a HTML color string. For
      * example #FFFFFF or #000000. By default the color is set to black. Keep in mind that if you save the waveform
@@ -85,23 +74,17 @@ class Waveform extends AbstractMediaType
      */
     public function setColors(array $colors)
     {
-        foreach ($colors as $row => $value)
-        {
-            if (!preg_match('/^#(?:[0-9a-fA-F]{6})$/', $value))
-            {
+        foreach ($colors as $row => $value) {
+            if (!\preg_match('/^#(?:[0-9a-fA-F]{6})$/', $value)) {
                 //invalid color
                 //unset($colors[$row]);
-
-                throw new InvalidArgumentException("The provided color '$value' is invalid");
+                throw new InvalidArgumentException("The provided color '{$value}' is invalid");
             }
         }
-
-        if (count($colors))
-        {
+        if (\count($colors)) {
             $this->colors = $colors;
         }
     }
-
     /**
      * Returns an array of colors that will be passed to ffmpeg to use for waveform generation. Colors are applied ONLY
      * to the waveform. Background cannot be controlled that easily and it is probably easier to save the waveform
@@ -113,7 +96,6 @@ class Waveform extends AbstractMediaType
     {
         return $this->colors;
     }
-
     /**
      * Compiles the selected colors into a string, using a pipe separator.
      *
@@ -121,9 +103,8 @@ class Waveform extends AbstractMediaType
      */
     protected function compileColors()
     {
-        return implode('|', $this->colors);
+        return \implode('|', $this->colors);
     }
-
     /**
      * Saves the waveform in the given filename.
      *
@@ -139,25 +120,17 @@ class Waveform extends AbstractMediaType
          * might be optimized with http://ffmpeg.org/trac/ffmpeg/wiki/Seeking%20with%20FFmpeg
          * @see http://ffmpeg.org/ffmpeg.html#Main-options
          */
-        $commands = array(
-            '-y', '-i', $this->pathfile, '-filter_complex',
-            'showwavespic=colors='.$this->compileColors().':s='.$this->width.'x'.$this->height,
-            '-frames:v', '1'
-        );
-
+        $commands = array('-y', '-i', $this->pathfile, '-filter_complex', 'showwavespic=colors=' . $this->compileColors() . ':s=' . $this->width . 'x' . $this->height, '-frames:v', '1');
         foreach ($this->filters as $filter) {
-            $commands = array_merge($commands, $filter->apply($this));
+            $commands = \array_merge($commands, $filter->apply($this));
         }
-
-        $commands = array_merge($commands, array($pathfile));
-
+        $commands = \array_merge($commands, array($pathfile));
         try {
             $this->driver->command($commands);
         } catch (ExecutionFailureException $e) {
             $this->cleanupTemporaryFile($pathfile);
             throw new RuntimeException('Unable to save waveform', $e->getCode(), $e);
         }
-
         return $this;
     }
 }

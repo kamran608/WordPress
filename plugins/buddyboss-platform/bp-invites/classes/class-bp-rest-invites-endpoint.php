@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
 class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 	/**
+	 * Allow batch.
+	 *
+	 * @var true[] $allow_batch
+	 */
+	protected $allow_batch = array( 'v1' => true );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -47,7 +54,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -55,7 +63,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
-				'args'   => array(
+				'args'        => array(
 					'id' => array(
 						'description' => __( 'A unique numeric ID for the member invitation.', 'buddyboss' ),
 						'type'        => 'integer',
@@ -67,7 +75,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_item_schema' ),
+				'allow_batch' => $this->allow_batch,
+				'schema'      => array( $this, 'get_item_schema' ),
 			)
 		);
 
@@ -222,6 +231,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		$invite_exists_array     = array();
 		$failed_invite           = array();
 		$invite_restricted_array = array();
+		$invite_duplicate_array  = array();
 		$duplicate_email_inputs  = array();
 
 		$bp = buddypress();
@@ -242,12 +252,14 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					}
 					$duplicate_email_inputs[] = strtolower( trim( $field['email_id'] ) );
 
-					if ( email_exists( (string) $field['email_id'] ) ) {
-						$invite_exists_array[] = $field['email_id'];
+					if ( email_exists( (string) sanitize_email( wp_unslash( $field['email_id'] ) ) ) ) {
+						$invite_exists_array[] = sanitize_email( wp_unslash( $field['email_id'] ) );
+					} elseif ( function_exists( 'bb_is_email_address_already_invited' ) && bb_is_email_address_already_invited( sanitize_email( wp_unslash( $field['email_id'] ) ), bp_loggedin_user_id() ) ) {
+						$invite_duplicate_array[] = sanitize_email( wp_unslash( $field['email_id'] ) );
 					} elseif ( ! function_exists( 'bb_is_allowed_register_email_address' ) ) {
 						$invite_correct_array[] = array(
-							'name'        => $field['name'],
-							'email'       => $field['email_id'],
+							'name'        => sanitize_text_field( wp_unslash( $field['name'] ) ),
+							'email'       => sanitize_email( wp_unslash( $field['email_id'] ) ),
 							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
 						);
 					} elseif (
@@ -255,8 +267,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 						bb_is_allowed_register_email_address( $field['email_id'] )
 					) {
 						$invite_correct_array[] = array(
-							'name'        => $field['name'],
-							'email'       => $field['email_id'],
+							'name'        => sanitize_text_field( wp_unslash( $field['name'] ) ),
+							'email'       => sanitize_email( wp_unslash( $field['email_id'] ) ),
 							'member_type' => ( isset( $field['profile_type'] ) && ! empty( $field['profile_type'] ) ) ? $field['profile_type'] : '',
 						);
 					} else {
@@ -264,8 +276,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					}
 				} else {
 					$invite_wrong_array[] = array(
-						'name'        => ( isset( $field['name'] ) ? $field['name'] : '' ),
-						'email'       => ( isset( $field['email_id'] ) ? $field['email_id'] : '' ),
+						'name'        => ( isset( $field['name'] ) ? sanitize_text_field( wp_unslash( $field['name'] ) ) : '' ),
+						'email'       => ( isset( $field['email_id'] ) ? sanitize_email( wp_unslash( $field['email_id'] ) ) : '' ),
 						'member_type' => ( isset( $field['profile_type'] ) ? $field['profile_type'] : '' ),
 					);
 				}
@@ -288,8 +300,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 				$_POST = array();
 
-				$email          = $value['email'];
-				$name           = $value['name'];
+				$email          = sanitize_email( wp_unslash( $value['email'] ) );
+				$name           = sanitize_text_field( wp_unslash( $value['name'] ) );
 				$member_type    = $value['member_type'];
 				$query_string[] = $email;
 				$inviter_name   = bp_core_get_user_displayname( bp_loggedin_user_id() );
@@ -299,6 +311,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 					if ( empty( $subject ) ) {
 						$subject = stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) );
 					} else {
+						$subject = sanitize_textarea_field( wp_unslash( $subject ) );
+						
 						$_POST['bp_member_invites_custom_subject'] = $subject;
 					}
 				} else {
@@ -399,8 +413,21 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			'failed' => '',
 		);
 
+		if ( ! empty( $invite_wrong_array ) ) {
+			$failed_invite = wp_list_pluck( array_filter( $invite_wrong_array ), 'email' );
+		}
+
 		if ( ! empty( $invite_exists_array ) ) {
 			$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' ) . ' ' . implode( ', ', $invite_exists_array ) );
+		}
+
+		if ( ! empty( $invite_duplicate_array ) ) {
+			if ( ! empty( $invite_exists_array ) ) {
+				$merged_emails    = array_unique( array_merge( $invite_exists_array, $invite_duplicate_array ) );
+				$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already invited or already members:', 'buddyboss' ) . ' ' . implode( ', ', $merged_emails ) );
+			} else {
+				$retval['exists'] = trim( __( 'Invitations did not send to the following email addresses, because they are already invited:', 'buddyboss' ) . ' ' . implode( ', ', $invite_duplicate_array ) );
+			}
 		}
 
 		if ( ! empty( $failed_invite ) ) {
@@ -408,7 +435,12 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $invite_restricted_array ) ) {
-			$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $invite_restricted_array ) );
+			if ( ! empty( $failed_invite ) ) {
+				$merged_emails    = array_unique( array_merge( $failed_invite, $invite_restricted_array ) );
+				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because they are invalid email addresses or the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $merged_emails ) );
+			} else {
+				$retval['failed'] = trim( __( 'Invitations did not send to the following email addresses, because the address or domain has been blacklisted:', 'buddyboss' ) . ' ' . implode( ', ', $invite_restricted_array ) );
+			}
 		}
 
 		if ( ! empty( $invitations_ids ) ) {

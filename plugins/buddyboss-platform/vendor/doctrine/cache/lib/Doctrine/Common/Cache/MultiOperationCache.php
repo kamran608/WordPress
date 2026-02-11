@@ -1,6 +1,6 @@
 <?php
 
-namespace Doctrine\Common\Cache;
+namespace BuddyBossPlatform\Doctrine\Common\Cache;
 
 /**
  * Interface for cache drivers that supports multiple items manipulation.

@@ -74,7 +74,7 @@ function bp_admin_setting_callback_admin_admin_bar() {
 function bp_admin_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -139,7 +139,7 @@ function bp_admin_setting_callback_private_network_public_content() {
 function bp_privacy_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -196,7 +196,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 function bp_posts_in_activity_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -242,20 +242,6 @@ function bp_admin_setting_callback_heartbeat() {
 }
 
 /**
- * Automatically load more activity posts when scrolling to the bottom of the page.
- *
- * @since BuddyPress 2.0.0
- */
-function bp_admin_setting_callback_enable_activity_autoload() {
-	?>
-
-	<input id="_bp_enable_activity_autoload" name="_bp_enable_activity_autoload" type="checkbox" value="1" <?php checked( bp_is_activity_autoload_active( false ) ); ?> />
-	<label for="_bp_enable_activity_autoload"><?php esc_html_e( 'Automatically load more activity posts when scrolling to the bottom of the page ', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
-/**
  * Enable activity edit
  *
  * @since BuddyBoss 1.5.0
@@ -295,21 +281,6 @@ function bp_admin_setting_callback_enable_relevant_feed() {
 	<?php
 }
 
-
-/**
- * Enable activity scopes like groups, friends, mentions, following etc.
- *
- * @since BuddyBoss 1.1.6
- */
-function bp_admin_setting_callback_enable_activity_tabs() {
-	?>
-
-	<input id="_bp_enable_activity_tabs" name="_bp_enable_activity_tabs" type="checkbox" value="1" <?php checked( bp_is_activity_tabs_active( false ) ); ?> />
-	<label for="_bp_enable_activity_tabs"><?php esc_html_e( 'Display activity in separate tabs based on activity type', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
 /**
  * Allow following activity stream.
  *
@@ -346,7 +317,7 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 function bp_activity_settings_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -419,7 +390,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 	?>
 	<div class="avatar-custom-input">
 		<select name="bp-profile-avatar-type" id="bp-profile-avatar-type">
-			<option value="BuddyBoss" <?php selected( bb_get_profile_avatar_type(), 'BuddyBoss' ); ?>><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></option>
+			<option value="BuddyBoss" <?php selected( bb_get_profile_avatar_type(), 'BuddyBoss' ); ?>>BuddyBoss</option>
 			<option value="WordPress" <?php selected( bb_get_profile_avatar_type(), 'WordPress' ); ?>><?php esc_html_e( 'WordPress', 'buddyboss' ); ?></option>
 		</select>
 	</div>
@@ -463,7 +434,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 			<div class="img-block">
 				<img class="buddyboss-profile-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-profile-avatar-buddyboss.jpg' ); ?>" />
 			</div>
-			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+			<span>BuddyBoss</span>
 		</label>
 	</div>
 
@@ -592,7 +563,7 @@ function bp_admin_setting_callback_default_profile_cover_type() {
 			<div class="img-block">
 				<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg' ); ?>" />
 			</div>
-			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+			<span>BuddyBoss</span>
 		</label>
 	</div>
 
@@ -800,7 +771,7 @@ function bb_admin_setting_callback_default_profile_cover_size() {
 function bp_profile_photos_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -829,7 +800,7 @@ function bp_profile_photos_tutorial() {
 function bb_group_headers_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -858,7 +829,7 @@ function bb_group_headers_tutorial() {
 function bp_group_avatar_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -890,7 +861,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 			<div class="img-block">
 				<img class="buddyboss-group-avatar" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-group-avatar-buddyboss.jpg' ); ?>" />
 			</div>
-			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+			<span>BuddyBoss</span>
 		</label>
 	</div>
 
@@ -1001,7 +972,7 @@ function bp_admin_setting_callback_default_group_cover_type() {
 			<div class="img-block">
 				<img class="buddyboss-group-cover" src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/bb-cover-buddyboss.jpg' ); ?>" />
 			</div>
-			<span><?php esc_html_e( 'BuddyBoss', 'buddyboss' ); ?></span>
+			<span>BuddyBoss</span>
 		</label>
 	</div>
 
@@ -1101,13 +1072,6 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 
 		<div class="preview-switcher-main">
 
-			<div class="button-group preview-switcher">
-				<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
-					<a href="#web-preview" class="button button-large button-primary"><?php esc_html_e( 'Browser', 'buddyboss' ); ?></a>
-					<a href="#app-preview" class="button button-large"><?php esc_html_e( 'App', 'buddyboss' ); ?></a>
-				<?php endif; ?>
-			</div>
-
 			<div class="web-preview-wrap preview-block active" id="web-preview">
 				<div class="preview-item-cover <?php echo esc_attr( bb_get_profile_cover_image_height() . '-image' ); ?>" style="background-color: <?php echo esc_attr( $live_preview_settings['web_background_color'] ); ?>">
 					<img src="<?php echo esc_url( $web_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
@@ -1116,17 +1080,6 @@ function bp_admin_setting_callback_preview_group_avatar_cover() {
 					<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
 				</div>
 			</div>
-
-			<?php if ( $live_preview_settings['is_buddyboss_app_plugin_active'] ) : ?>
-				<div class="app-preview-wrap preview-block" id="app-preview">
-					<div class="preview-item-cover" style="background-color: <?php echo esc_attr( $live_preview_settings['app_background_color'] ); ?>">
-						<img src="<?php echo esc_url( $app_cover_preview ); ?>" alt="" data-buddyboss-cover="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/cover-image.png' ); ?>">
-					</div>
-					<div class="preview-item-avatar">
-						<img src="<?php echo esc_url( $avatar ); ?>" alt="" class="group-custom-avatar" data-blank-avatar="<?php echo esc_url( bb_get_blank_profile_avatar() ); ?>">
-					</div>
-				</div>
-			<?php endif; ?>
 
 		</div>
 
@@ -1191,7 +1144,7 @@ function bb_admin_setting_callback_default_group_cover_size() {
 function bb_profile_headers_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 			<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1259,7 +1212,7 @@ function bb_admin_setting_profile_header_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-profile-header-element bb-profile-header-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1296,7 +1249,7 @@ function bb_admin_setting_member_directory_elements( $args ) {
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $element ) {
 				?>
-				<div class="bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
+				<div class="<?php echo ! empty( $element['element_class'] ) ? esc_attr( $element['element_class'] ) : ''; ?> bb-member-directory-element bb-member-directory-element-<?php echo esc_attr( $element['element_name'] ); ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1332,8 +1285,11 @@ function bb_admin_setting_member_profile_actions( $args ) {
 		<?php
 		if ( isset( $args['elements'] ) && ! empty( $args['elements'] ) ) {
 			foreach ( $args['elements'] as $profile_action ) {
+				if ( false !== strpos( $profile_action['element_class'], 'bp-hide' ) ) {
+					continue;
+				}
 				?>
-				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?>">
+				<div class="bb-member-directory-profile-action bb-member-directory-profile-action-<?php echo esc_attr( $profile_action['element_name'] ); ?> <?php echo ! empty( $profile_action['element_class'] ) ? esc_attr( $profile_action['element_class'] ) : ''; ?>">
 					<?php
 					new BB_Admin_Setting_Fields(
 						array(
@@ -1372,6 +1328,10 @@ function bb_admin_setting_member_profile_primary_action( $args ) {
 
 			if ( isset( $args['elements'], $args['selected_elements'] ) && ! empty( $args['elements'] ) && ! empty( $args['selected_elements'] ) ) {
 				foreach ( $args['elements'] as $profile_primary_action ) {
+					if ( false !== strpos( $profile_primary_action['element_class'], 'bp-hide' ) ) {
+						continue;
+					}
+
 					if ( in_array( $profile_primary_action['element_name'], $args['selected_elements'], true ) ) {
 						$options[ $profile_primary_action['element_name'] ] = $profile_primary_action['element_label'];
 					}
@@ -1445,7 +1405,7 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 function bp_group_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1536,7 +1496,7 @@ function bp_admin_setting_callback_group_auto_join() {
 function bp_group_types_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1602,7 +1562,7 @@ function bp_admin_setting_callback_group_restrict_invites() {
 function bp_group_hierarchies_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -1986,7 +1946,7 @@ function bp_admin_setting_callback_enable_profile_gravatar() {
 function bp_email_invites_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2106,7 +2066,7 @@ function bp_admin_setting_callback_nickname_hide_last_name() {
 function bp_profile_names_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2301,7 +2261,7 @@ function bb_admin_setting_group_header_style() {
 		);
 		?>
 	</div>
-	<p class="description"><?php echo esc_html__( 'Select the style of your group headers. Group avatars and cover images will only be displayed if they are enabled.', 'buddyboss' ); ?></p>
+	<p class="description"><?php echo esc_html__( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ); ?></p>
 	<?php
 }
 
@@ -2423,7 +2383,7 @@ function bb_admin_setting_group_elements( $args ) {
 function bp_group_directories_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2501,7 +2461,7 @@ function bp_admin_setting_callback_register_page_url() {
 function bp_admin_registration_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2540,7 +2500,7 @@ function bp_admin_setting_callback_group_messages() {
 function bp_admin_moderation_block_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2567,7 +2527,7 @@ function bp_admin_moderation_block_setting_tutorial() {
 function bp_admin_moderation_report_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2707,7 +2667,7 @@ function bb_admin_setting_callback_on_screen_notifications_visibility() {
 function bp_admin_on_screen_notification_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 			echo esc_url(
 				bp_get_admin_url(
@@ -2804,7 +2764,7 @@ function bb_admin_setting_callback_private_rest_apis() {
 	<?php
 	if ( function_exists( 'bbapp_is_private_app_enabled' ) && false === bbapp_is_private_app_enabled() ) {
 		?>
-		<div class="bp-feedback info">
+		<div class="bp-feedback info bp-feedback--clean bp-feedback--vmiddle">
 			<span class="bp-icon" aria-hidden="true"></span>
 			<p>
 				<?php
@@ -3025,7 +2985,7 @@ function bb_admin_setting_callback_group_subscriptions() {
 function bb_profile_slug_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3052,7 +3012,7 @@ function bb_profile_slug_tutorial() {
 function bb_registration_restrictions_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3379,7 +3339,7 @@ function bb_admin_setting_callback_enable_activity_pinned_posts() {
 function bb_admin_redirection_setting_tutorial() {
 	?>
 	<p>
-		<a class="button" href="
+		<a class="button" target="_blank" href="
 		<?php
 		echo esc_url(
 			bp_get_admin_url(
@@ -3671,5 +3631,363 @@ function bb_reactions_settings_callback_reactions_button() {
 			<?php esc_html_e( 'Change the icon and text used within the Reactions button. When using “Emotions”, clicking on the button will react with the first emotion from the list of options.', 'buddyboss' ); ?>
 		</p>
 	</label>
+	<?php
+}
+
+/**
+ * Link to General Performance tutorial.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_general_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" target="_blank" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127427,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Link to Activity Performance tutorial.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_activity_setting_tutorial() {
+	?>
+	<p>
+		<a class="button" target="_blank" href="
+		<?php
+		echo esc_url(
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 127427,
+					),
+					'admin.php'
+				)
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a general section of the performance tab.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_setting_general_callback() {
+	$bb_ajax_request_page_load = bb_get_ajax_request_page_load();
+	?>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_ajax_request_page_load" id="bb_ajax_request_page_load">
+		<option value="1" <?php selected( $bb_ajax_request_page_load, 1 ); ?>>1</option>
+		<option value="2" <?php selected( $bb_ajax_request_page_load, 2 ); ?>>2</option>
+	</select>
+	<label for="bb_ajax_request_page_load"><?php esc_html_e( 'page requests on page load', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Function to render the fields in a activity section of the performance tab.
+ *
+ * @since BuddyBoss 2.5.80
+ */
+function bb_admin_performance_setting_activity_callback() {
+	$bb_load_activity_per_request = bb_get_load_activity_per_request();
+	$bb_activity_load_type        = bp_get_option( 'bb_activity_load_type', 'infinite' );
+
+	$activity_per_page = apply_filters( 'bb_performance_activity_per_page', array() );
+	$activity_per_page = bp_parse_args(
+		$activity_per_page,
+		array( 5, 10, 15, 20 )
+	);
+	asort( $activity_per_page );
+
+	$activity_autoload_options = apply_filters( 'bb_performance_activity_autoload', array() );
+	$activity_autoload_options        = bp_parse_args(
+		$activity_autoload_options,
+		array(
+			'infinite'  => __( 'Infinite scrolling', 'buddyboss' ),
+			'load_more' => __( 'Load more', 'buddyboss' ),
+		)
+	);
+	?>
+
+	<label for="bb_load_activity_per_request"><?php esc_html_e( 'Load', 'buddyboss' ); ?></label>
+	<select name="bb_load_activity_per_request" id="bb_load_activity_per_request">
+		<?php
+		foreach ( $activity_per_page as $load_val ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_load_activity_per_request, $load_val, false ) . '>' . esc_html( $load_val ) . '</option>';
+		}
+		?>
+	</select>
+	<label for="bb_activity_load_type"><?php esc_html_e( 'activity posts at a time using', 'buddyboss' ); ?></label>
+	<select name="bb_activity_load_type" id="bb_activity_load_type">
+		<?php
+		foreach ( $activity_autoload_options as $load_val => $load_label ) {
+			echo '<option value="' . esc_attr( $load_val ) . '" ' . selected( $bb_activity_load_type, $load_val, false ) . '>' . esc_html( $load_label ) . '</option>';
+		}
+		?>
+	</select>
+	<p class="description"><?php esc_html_e( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Setting for enable content count.
+ *
+ * @since BuddyBoss 2.8.10
+ */
+function bb_admin_setting_callback_content_counts() {
+	?>
+
+	<input id="bb-enable-content-counts" name="bb-enable-content-counts" type="checkbox" value="1" <?php checked( bb_enable_content_counts() ); ?> />
+	<label for="bb-enable-content-counts"><?php esc_html_e( 'Enable content counts across your site', 'buddyboss' ); ?></label>
+	<p class="description">
+		<?php
+		esc_html_e(
+			'Disabling content counts will remove the counts on pages such as Members Directory, Groups Directory, Media pages such as Photos & Videos. This will also remove the counts under the profile tabs and can improve page load performance.',
+			'buddyboss'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Enable activity filters with scopes like groups, friends, mentions, following etc.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_admin_setting_callback_activity_filters() {
+	?>
+	<label><?php esc_html_e( 'Allow members to filter activity posts by:', 'buddyboss' ); ?></label>
+	<br /><br />
+	<div class="bb_activity_filter_options_container bb-activity-sorting-list">
+		<?php
+		$filter_labels = bb_get_activity_filter_options_labels();
+
+		// Retrieve the saved options.
+		$activity_filters = bb_get_enabled_activity_filter_options();
+		if ( ! empty( $activity_filters ) ) {
+
+			// Sort filter labels based on the order of $activity_filters.
+			$sorted_filter_labels = array();
+			foreach ( $activity_filters as $key => $value ) {
+				if ( isset( $filter_labels[ $key ] ) ) {
+					$sorted_filter_labels[ $key ] = $filter_labels[ $key ];
+				}
+			}
+
+			// Add the remaining labels that were not part of $activity_filters.
+			if ( count( $filter_labels ) > count( $sorted_filter_labels ) ) {
+				foreach ( $filter_labels as $key => $label ) {
+					if ( ! isset( $sorted_filter_labels[ $key ] ) ) {
+						$sorted_filter_labels[ $key ] = $label;
+					}
+				}
+			}
+		} else {
+			$sorted_filter_labels = $filter_labels;
+		}
+
+		foreach ( $sorted_filter_labels as $key => $label ) :
+			$readonly = '';
+			if ( 'all' === $key ) {
+				$readonly = 'disabled';
+			}
+			?>
+			<div class="bb-activity-sorting-item">
+				<input
+					type="hidden"
+					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]"
+					value="<?php echo ( 'all' === $key ) ? 1 : 0; ?>"
+					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) && 'all' !== $key ? 'disabled' : ''; ?>
+				/>
+				<input
+					<?php echo esc_attr( $readonly ); ?>
+					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>"
+					name="bb_activity_filter_options[<?php echo esc_attr( $key ); ?>]"
+					type="checkbox"
+					value="1"
+					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
+				/>
+				<label for="bb_activity_filter_<?php echo esc_attr( $key ); ?>">
+					<?php echo esc_html( $label ); ?>
+				</label>
+			</div>
+			<?php
+		endforeach;
+		?>
+	</div>
+	<?php
+}
+
+/**
+ * Enable profile timeline filters with scopes like groups, friends, mentions, following etc.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_admin_setting_callback_activity_timeline_filters() {
+	?>
+	<label><?php esc_html_e( 'Allow members to filter activity posts by:', 'buddyboss' ); ?></label>
+	<br /><br />
+	<div class="bb_activity_filter_options_container bb-activity-sorting-list">
+		<?php
+		$filter_labels = bb_get_activity_timeline_filter_options_labels();
+
+		// Retrieve the saved options.
+		$activity_filters = bb_get_enabled_activity_timeline_filter_options();
+		if ( ! empty( $activity_filters ) ) {
+
+			// Sort filter labels based on the order of $activity_filters.
+			$sorted_filter_labels = array();
+			foreach ( $activity_filters as $key => $value ) {
+				if ( isset( $filter_labels[ $key ] ) ) {
+					$sorted_filter_labels[ $key ] = $filter_labels[ $key ];
+				}
+			}
+
+			// Add the remaining labels that were not part of $activity_filters.
+			if ( count( $filter_labels ) > count( $sorted_filter_labels ) ) {
+				foreach ( $filter_labels as $key => $label ) {
+					if ( ! isset( $sorted_filter_labels[ $key ] ) ) {
+						$sorted_filter_labels[ $key ] = $label;
+					}
+				}
+			}
+		} else {
+			$sorted_filter_labels = $filter_labels;
+		}
+
+		foreach ( $sorted_filter_labels as $key => $label ) :
+			$readonly = '';
+			if ( 'just-me' === $key ) {
+				$readonly = 'disabled';
+			}
+			?>
+			<div class="bb-activity-sorting-item">
+				<input
+					type="hidden"
+					name="bb_activity_timeline_filter_options[<?php echo esc_attr( $key ); ?>]"
+					value="<?php echo ( 'just-me' === $key ) ? 1 : 0; ?>"
+					<?php echo isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) && 'just-me' !== $key ? 'disabled' : ''; ?>
+				/>
+				<input
+					<?php echo esc_attr( $readonly ); ?>
+					id="bb_activity_filter_<?php echo esc_attr( $key ); ?>"
+					name="bb_activity_timeline_filter_options[<?php echo esc_attr( $key ); ?>]"
+					type="checkbox"
+					value="1"
+					<?php checked( isset( $activity_filters[ $key ] ) && ! empty( (bool) $activity_filters[ $key ] ) ); ?>
+				/>
+				<label for="bb_activity_timeline_filter_<?php echo esc_attr( $key ); ?>">
+				<?php echo esc_html( $label ); ?>
+				</label>
+			</div>
+			<?php
+		endforeach;
+		?>
+	</div>
+	<?php
+}
+
+/**
+ * Enable activity sorting options.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_admin_setting_callback_activity_sorting() {
+	?>
+	<label><?php esc_html_e( 'Allow members to sort activity posts by:', 'buddyboss' ); ?></label>
+	<br /><br />
+	<div class="bb-activity-sorting-list">
+		<?php
+
+		$sorting_options_labels = bb_get_activity_sorting_options_labels();
+
+		// Retrieve the saved options.
+		$sorting_options = bb_get_enabled_activity_sorting_options();
+		if ( ! empty( $sorting_options ) ) {
+			// Sort filter labels based on the order of $sorting_options.
+			$sorted_labels = array();
+			foreach ( $sorting_options as $key => $value ) {
+				if ( isset( $sorting_options_labels[ $key ] ) ) {
+					$sorted_labels[ $key ] = $sorting_options_labels[ $key ];
+				}
+			}
+
+			// Add the remaining labels that were not part of $sorting_options.
+			if ( count( $sorting_options_labels ) > count( $sorted_labels ) ) {
+				foreach ( $sorting_options_labels as $key => $label ) {
+					if ( ! isset( $sorted_labels[ $key ] ) ) {
+						$sorted_labels[ $key ] = $label;
+					}
+				}
+			}
+		} else {
+			$sorted_labels = $sorting_options_labels;
+		}
+
+		foreach ( $sorted_labels as $key => $label ) :
+			$readonly = '';
+			if ( 'date_recorded' === $key ) {
+				$readonly = 'disabled';
+			}
+			?>
+			<div class="bb-activity-sorting-item">
+				<input
+					type="hidden"
+					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]"
+					value="<?php echo ( 'date_recorded' === $key ) ? 1 : 0; ?>"
+					<?php echo isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) && 'date_recorded' !== $key ? 'disabled' : ''; ?>
+				/>
+				<input
+					<?php echo esc_attr( $readonly ); ?>
+					id="<?php echo esc_attr( $key ); ?>"
+					name="bb_activity_sorting_options[<?php echo esc_attr( $key ); ?>]"
+					type="checkbox"
+					value="1"
+					<?php checked( isset( $sorting_options[ $key ] ) && ! empty( (bool) $sorting_options[ $key ] ) ); ?>
+				/>
+				<label for="<?php echo esc_attr( $key ); ?>">
+					<?php echo esc_html( $label ); ?>
+				</label>
+			</div>
+			<?php
+		endforeach;
+		?>
+	</div>
+	<?php
+}
+
+/**
+ * Enable activity search.
+ *
+ * @since BuddyBoss 2.8.20
+ */
+function bb_admin_setting_callback_enable_activity_search() {
+	?>
+	<input id="bb_enable_activity_search" name="bb_enable_activity_search" type="checkbox" value="1" <?php checked( bb_is_activity_search_enabled( true ) ); ?> />
+	<label for="bb_enable_activity_search"><?php esc_html_e( 'Allow members to search activity posts', 'buddyboss' ); ?></label>
 	<?php
 }

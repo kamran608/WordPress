@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\FFMpeg\Media;
 
-namespace FFMpeg\Media;
-
-use FFMpeg\Driver\FFMpegDriver;
-use FFMpeg\FFProbe;
-use FFMpeg\Filters\FiltersCollection;
-
+use BuddyBossPlatform\FFMpeg\Driver\FFMpegDriver;
+use BuddyBossPlatform\FFMpeg\FFProbe;
+use BuddyBossPlatform\FFMpeg\Filters\FiltersCollection;
 abstract class AbstractMediaType implements MediaTypeInterface
 {
     /** @var string */
@@ -25,7 +23,6 @@ abstract class AbstractMediaType implements MediaTypeInterface
     protected $ffprobe;
     /** @var FiltersCollection */
     protected $filters;
-
     public function __construct($pathfile, FFMpegDriver $driver, FFProbe $ffprobe)
     {
         $this->pathfile = $pathfile;
@@ -33,7 +30,6 @@ abstract class AbstractMediaType implements MediaTypeInterface
         $this->ffprobe = $ffprobe;
         $this->filters = new FiltersCollection();
     }
-
     /**
      * @return FFMpegDriver
      */
@@ -41,7 +37,6 @@ abstract class AbstractMediaType implements MediaTypeInterface
     {
         return $this->driver;
     }
-
     /**
      * @param FFMpegDriver $driver
      *
@@ -50,10 +45,8 @@ abstract class AbstractMediaType implements MediaTypeInterface
     public function setFFMpegDriver(FFMpegDriver $driver)
     {
         $this->driver = $driver;
-
         return $this;
     }
-
     /**
      * @return FFProbe
      */
@@ -61,7 +54,6 @@ abstract class AbstractMediaType implements MediaTypeInterface
     {
         return $this->ffprobe;
     }
-
     /**
      * @param FFProbe $ffprobe
      *
@@ -70,10 +62,8 @@ abstract class AbstractMediaType implements MediaTypeInterface
     public function setFFProbe(FFProbe $ffprobe)
     {
         $this->ffprobe = $ffprobe;
-
         return $this;
     }
-
     /**
      * @return string
      */
@@ -81,7 +71,6 @@ abstract class AbstractMediaType implements MediaTypeInterface
     {
         return $this->pathfile;
     }
-
     /**
      * @param FiltersCollection $filters
      *
@@ -90,10 +79,8 @@ abstract class AbstractMediaType implements MediaTypeInterface
     public function setFiltersCollection(FiltersCollection $filters)
     {
         $this->filters = $filters;
-
         return $this;
     }
-
     /**
      * @return MediaTypeInterface
      */
@@ -101,13 +88,11 @@ abstract class AbstractMediaType implements MediaTypeInterface
     {
         return $this->filters;
     }
-
     protected function cleanupTemporaryFile($filename)
     {
-        if (file_exists($filename) && is_writable($filename)) {
-            unlink($filename);
+        if (\file_exists($filename) && \is_writable($filename)) {
+            \unlink($filename);
         }
-
         return $this;
     }
 }

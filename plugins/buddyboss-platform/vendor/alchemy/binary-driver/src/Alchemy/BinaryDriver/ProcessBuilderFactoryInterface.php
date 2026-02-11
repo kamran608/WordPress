@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace BuddyBossPlatform\Alchemy\BinaryDriver;
 
-namespace Alchemy\BinaryDriver;
-
-use Alchemy\BinaryDriver\Exception\InvalidArgumentException;
-use Symfony\Component\Process\Process;
-
+use BuddyBossPlatform\Alchemy\BinaryDriver\Exception\InvalidArgumentException;
+use BuddyBossPlatform\Symfony\Component\Process\Process;
 interface ProcessBuilderFactoryInterface
 {
     /**
@@ -26,14 +24,12 @@ interface ProcessBuilderFactoryInterface
      * @throws InvalidArgumentException
      */
     public function create($arguments = array());
-
     /**
      * Returns the path to the binary that is used
      *
      * @return String
      */
     public function getBinary();
-
     /**
      * Sets the path to the binary
      *
@@ -44,7 +40,6 @@ interface ProcessBuilderFactoryInterface
      * @throws InvalidArgumentException In case binary is not executable
      */
     public function useBinary($binary);
-
     /**
      * Set the default timeout to apply on created processes.
      *
@@ -55,7 +50,6 @@ interface ProcessBuilderFactoryInterface
      * @throws InvalidArgumentException In case the timeout is not valid
      */
     public function setTimeout($timeout);
-
     /**
      * Returns the current timeout applied to the created processes.
      *

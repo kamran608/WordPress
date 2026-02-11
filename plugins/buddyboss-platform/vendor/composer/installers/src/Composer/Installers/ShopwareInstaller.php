@@ -1,21 +1,14 @@
 <?php
+
 namespace Composer\Installers;
 
 /**
  * Plugin/theme installer for shopware
  * @author Benjamin Boit
  */
-class ShopwareInstaller extends BaseInstaller
+class ShopwareInstaller extends \Composer\Installers\BaseInstaller
 {
-    protected $locations = array(
-        'backend-plugin'    => 'engine/Shopware/Plugins/Local/Backend/{$name}/',
-        'core-plugin'       => 'engine/Shopware/Plugins/Local/Core/{$name}/',
-        'frontend-plugin'   => 'engine/Shopware/Plugins/Local/Frontend/{$name}/',
-        'theme'             => 'templates/{$name}/',
-        'plugin'            => 'custom/plugins/{$name}/',
-        'frontend-theme'    => 'themes/Frontend/{$name}/',
-    );
-
+    protected $locations = array('backend-plugin' => 'engine/Shopware/Plugins/Local/Backend/{$name}/', 'core-plugin' => 'engine/Shopware/Plugins/Local/Core/{$name}/', 'frontend-plugin' => 'engine/Shopware/Plugins/Local/Frontend/{$name}/', 'theme' => 'templates/{$name}/', 'plugin' => 'custom/plugins/{$name}/', 'frontend-theme' => 'themes/Frontend/{$name}/');
     /**
      * Transforms the names
      * @param  array $vars
@@ -26,10 +19,8 @@ class ShopwareInstaller extends BaseInstaller
         if ($vars['type'] === 'shopware-theme') {
             return $this->correctThemeName($vars);
         }
-
-        return $this->correctPluginName($vars);        
+        return $this->correctPluginName($vars);
     }
-
     /**
      * Changes the name to a camelcased combination of vendor and name
      * @param  array $vars
@@ -37,15 +28,12 @@ class ShopwareInstaller extends BaseInstaller
      */
     private function correctPluginName($vars)
     {
-        $camelCasedName = preg_replace_callback('/(-[a-z])/', function ($matches) {
-            return strtoupper($matches[0][1]);
+        $camelCasedName = \preg_replace_callback('/(-[a-z])/', function ($matches) {
+            return \strtoupper($matches[0][1]);
         }, $vars['name']);
-
-        $vars['name'] = ucfirst($vars['vendor']) . ucfirst($camelCasedName);
-
+        $vars['name'] = \ucfirst($vars['vendor']) . \ucfirst($camelCasedName);
         return $vars;
     }
-
     /**
      * Changes the name to a underscore separated name
      * @param  array $vars
@@ -53,8 +41,7 @@ class ShopwareInstaller extends BaseInstaller
      */
     private function correctThemeName($vars)
     {
-        $vars['name'] = str_replace('-', '_', $vars['name']);
-
+        $vars['name'] = \str_replace('-', '_', $vars['name']);
         return $vars;
     }
 }
