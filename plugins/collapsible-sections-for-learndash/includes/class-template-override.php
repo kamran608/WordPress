@@ -38,41 +38,62 @@ class CSLD_Template_Override {
      * @return string 'classic' or 'modern'
      */
     private function get_active_ui_variation() {
-        // Method 1: Check if Modern UI is enabled via registration appearance setting
-        if (class_exists('LearnDash_Settings_Section_General_Appearance')) {
-            if (LearnDash_Settings_Section_General_Appearance::get_setting('registration_enabled') === 'yes') {
+        // Method 1: Check LearnDash settings for Modern UI indicators
+        $learndash_settings = get_option('learndash_settings_courses_themes', array());
+        
+        // Check if there's a specific theme variation setting
+        if (isset($learndash_settings['active_theme']) && $learndash_settings['active_theme'] === 'ld30') {
+            // Check for Modern UI specific settings
+            if (isset($learndash_settings['theme_variation']) && $learndash_settings['theme_variation'] === 'modern') {
                 return 'modern';
             }
         }
         
-        // Method 2: Check theme variation settings
-        if (class_exists('LearnDash_Theme_Register_LD30')) {
-            $theme_instance = LearnDash_Theme_Register_LD30::get_instance();
-            if ($theme_instance && method_exists($theme_instance, 'get_current_variation')) {
-                $variation = $theme_instance->get_current_variation();
-                if (in_array($variation, array('classic', 'modern'), true)) {
-                    return $variation;
+        // Method 2: Check for Modern UI template files existence
+        if (defined('LEARNDASH_LMS_PLUGIN_DIR')) {
+            $modern_template_path = LEARNDASH_LMS_PLUGIN_DIR . 'themes/ld30/templates/modern/course/accordion/section.php';
+            if (file_exists($modern_template_path)) {
+                // Modern templates exist, check if Modern UI is likely active
+                
+                // Check general appearance settings for Modern UI indicators
+                $general_settings = get_option('learndash_settings_general_appearance', array());
+                if (!empty($general_settings) && isset($general_settings['registration_enabled']) && $general_settings['registration_enabled'] === 'yes') {
+                    return 'modern';
+                }
+                
+                // Check if any Modern UI specific options are set
+                if (isset($learndash_settings['modern_ui_enabled']) && $learndash_settings['modern_ui_enabled'] === 'yes') {
+                    return 'modern';
                 }
             }
         }
         
-        // Method 3: Check settings option directly
-        $themes = get_option('learndash_settings_courses_themes', array());
-        if (isset($themes['theme_variation']) && in_array($themes['theme_variation'], array('classic', 'modern'), true)) {
-            return $themes['theme_variation'];
-        }
-        
-        // Method 4: Check for Modern UI template existence as fallback
-        $modern_template_path = LEARNDASH_LMS_PLUGIN_DIR . 'themes/ld30/templates/modern/course/accordion/section.php';
-        if (file_exists($modern_template_path)) {
-            // If Modern templates exist but no explicit setting found, check for Modern UI indicators
-            if (class_exists('LearnDash_Settings_Section_General_Appearance')) {
-                // Modern UI is likely active if the class exists and no explicit Classic setting
-                return 'modern';
+        // Method 3: Check for LearnDash version and Modern UI availability
+        if (defined('LEARNDASH_VERSION')) {
+            $version = LEARNDASH_VERSION;
+            // Modern UI was introduced in 4.16.0
+            if (version_compare($version, '4.16.0', '>=')) {
+                // For newer versions, check if Modern UI is explicitly disabled
+                $appearance_settings = get_option('learndash_settings_general_appearance', array());
+                if (isset($appearance_settings['modern_ui_disabled']) && $appearance_settings['modern_ui_disabled'] === 'yes') {
+                    return 'classic';
+                }
+                
+                // In 4.25.2+, Modern UI is default unless explicitly disabled
+                if (version_compare($version, '4.25.0', '>=')) {
+                    // Check if Classic UI is explicitly enabled
+                    if (isset($learndash_settings['force_classic_ui']) && $learndash_settings['force_classic_ui'] === 'yes') {
+                        return 'classic';
+                    }
+                    // Default to Modern for 4.25.0+
+                    return 'modern';
+                }
             }
         }
         
-        // Default fallback to Classic
+        // Method 4: Template name detection fallback
+        // This will be used during template override to detect based on template name
+        // For now, default to Classic for safety
         return 'classic';
     }
     
@@ -86,8 +107,13 @@ class CSLD_Template_Override {
             return $filepath; // Return original template if plugin is disabled
         }
         
-        // Detect active UI variation
-        $active_variation = $this->get_active_ui_variation();
+        // First, try to detect UI variation from template name (most reliable)
+        $active_variation = $this->detect_ui_from_template_name($name);
+        
+        // If we can't detect from template name, use general detection
+        if ($active_variation === 'unknown') {
+            $active_variation = $this->get_active_ui_variation();
+        }
         
         // Handle Classic UI templates
         if ($active_variation === 'classic') {
@@ -130,6 +156,29 @@ class CSLD_Template_Override {
         }
         
         return $filepath;
+    }
+    
+    /**
+     * Detect UI variation from template name (most reliable method)
+     * 
+     * @param string $template_name Template name being requested
+     * @return string 'classic', 'modern', or 'unknown'
+     */
+    private function detect_ui_from_template_name($template_name) {
+        // Modern UI templates always start with 'modern/'
+        if (strpos($template_name, 'modern/') === 0) {
+            return 'modern';
+        }
+        
+        // Classic UI templates use traditional paths
+        if ($template_name === 'lesson/partials/section.php' || 
+            $template_name === 'course/listing.php' ||
+            strpos($template_name, 'lesson/') === 0 ||
+            strpos($template_name, 'course/') === 0) {
+            return 'classic';
+        }
+        
+        return 'unknown';
     }
     
     /**
