@@ -36,6 +36,9 @@ class Astra_BSF_Analytics {
 
 		add_action( 'init', array( $this, 'init_bsf_analytics' ), 5 );
 		add_filter( 'bsf_core_stats', array( $this, 'add_astra_analytics_data' ) );
+
+		// Track Astra customizer publish events for kpi tracking.
+		add_action( 'astra_customizer_save', array( $this, 'maybe_save_customizer_published_timestamp' ) );
 	}
 
 	/**
@@ -164,10 +167,17 @@ class Astra_BSF_Analytics {
 			'using_old_header_footer'      => $is_hf_builder_active ? 'no' : 'yes',
 			'loading_google_fonts_locally' => isset( $admin_dashboard_settings['self_hosted_gfonts'] ) && $admin_dashboard_settings['self_hosted_gfonts'] ? 'yes' : 'no',
 			'preloading_local_fonts'       => isset( $admin_dashboard_settings['preload_local_fonts'] ) && $admin_dashboard_settings['preload_local_fonts'] ? 'yes' : 'no',
+			'hosting_provider'             => self::get_hosting_provider(),
 		);
 
 		// Add onboarding analytics data.
 		self::add_astra_onboarding_analytics_data( $astra_stats );
+
+		// Add learn progress analytics data.
+		self::add_learn_progress_analytics_data( $astra_stats );
+
+		// Add KPI tracking data.
+		self::add_kpi_tracking_data( $astra_stats );
 
 		$stats_data['plugin_data']['astra'] = array_merge_recursive( $stats_data['plugin_data']['astra'], $astra_stats );
 
@@ -246,6 +256,272 @@ class Astra_BSF_Analytics {
 		// Onboarding Exit Status.
 		if ( isset( $onboarding_data['exited_early'] ) ) {
 			$astra_stats['boolean_values']['onboarding_exited_early'] = (bool) $onboarding_data['exited_early'];
+		}
+	}
+
+	/**
+	 * Add Astra learn progress analytics data.
+	 *
+	 * This function retrieves the astra_learn_progress user meta from ALL users
+	 * and returns an array of chapter IDs that have been completed by at least one user.
+	 * A chapter is considered complete only when ALL its steps are marked as true in the database.
+	 *
+	 * @param array $astra_stats Reference to the astra stats data.
+	 *
+	 * @since 4.12.0
+	 * @return void
+	 */
+	public static function add_learn_progress_analytics_data( &$astra_stats ) {
+		global $wpdb;
+
+		// Get all users who have learn progress data.
+		/** @psalm-suppress UndefinedConstant */
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT user_id, meta_value FROM {$wpdb->usermeta} WHERE meta_key = %s",
+				'astra_learn_progress'
+			),
+			ARRAY_A
+		);
+
+		// Return if no data found.
+		if ( empty( $results ) ) {
+			return;
+		}
+
+		// Get the actual chapters structure to validate against.
+		$chapters = Astra_Learn::get_chapters_structure();
+
+		// Initialize array to store unique completed chapter IDs across all users.
+		$completed_chapters = array();
+
+		// Process each user's progress data.
+		foreach ( $results as $row ) {
+			$progress_data = maybe_unserialize( $row['meta_value'] );
+
+			// Skip if data is not an array.
+			if ( ! is_array( $progress_data ) ) {
+				continue;
+			}
+
+			// Check each chapter from the actual structure.
+			foreach ( $chapters as $chapter ) {
+				$chapter_id = $chapter['id'];
+
+				// Skip if already recorded as completed.
+				if ( in_array( $chapter_id, $completed_chapters, true ) ) {
+					continue;
+				}
+
+				// Skip if this chapter has no steps defined.
+				if ( ! isset( $chapter['steps'] ) || ! is_array( $chapter['steps'] ) || empty( $chapter['steps'] ) ) {
+					continue;
+				}
+
+				// Skip if this chapter doesn't exist in this user's progress data.
+				if ( ! isset( $progress_data[ $chapter_id ] ) || ! is_array( $progress_data[ $chapter_id ] ) ) {
+					continue;
+				}
+
+				// Check if ALL steps from the chapter definition are completed for this user.
+				$all_steps_completed = true;
+				foreach ( $chapter['steps'] as $step ) {
+					$step_id = $step['id'];
+
+					// If step is not in progress data or not completed, chapter is incomplete.
+					if ( ! isset( $progress_data[ $chapter_id ][ $step_id ] ) || ! $progress_data[ $chapter_id ][ $step_id ] ) {
+						$all_steps_completed = false;
+						break;
+					}
+				}
+
+				// If all steps are completed for this user, add chapter ID to the array.
+				if ( $all_steps_completed ) {
+					$completed_chapters[] = $chapter_id;
+				}
+			}
+		}
+
+		// Add to astra stats if we have completed chapters.
+		if ( ! empty( $completed_chapters ) ) {
+			$astra_stats['learn_chapters_completed'] = array_values( array_unique( $completed_chapters ) );
+		}
+	}
+
+	/**
+	 * Get the hosting provider (ASN Organization) for the current site.
+	 *
+	 * @param string      $ip    Optional. IP address to look up. Defaults to server IP.
+	 * @param string|null $token Optional. ipinfo.io API token for higher rate limits.
+	 *
+	 * @return string|null Hosting provider name (ASN org), or null if not detected.
+	 */
+	public static function get_hosting_provider( $ip = '', $token = null ) {
+		if ( 'local' === wp_get_environment_type() ) {
+			return null; // Skip on local environments.
+		}
+
+		$transient_key = 'ast' . md5( 'hosting_provider' );
+		// If no IP provided, try to get the current server IP.
+		$is_current_server = false;
+		if ( ! $ip ) {
+			// Fetch from transient only for current server IP.
+			$cached = get_transient( $transient_key );
+			if ( $cached ) {
+				return $cached;
+			}
+
+			$is_current_server = true;
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$ip = $_SERVER['SERVER_ADDR'] ?? null;
+		}
+
+		// Fallback: resolve server name.
+		if ( ! $ip || $ip === '127.0.0.1' || $ip === '::1' ) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$hostname = $_SERVER['SERVER_NAME'] ?? 'localhost';
+			$ip       = gethostbyname( $hostname );
+		}
+
+		// Optional: fallback to external service for public IP.
+		if ( ! $ip || $ip === '127.0.0.1' || $ip === '::1' ) {
+			$response = wp_remote_get( 'https://api.ipify.org' );
+			if ( ! is_wp_error( $response ) ) {
+				$ip = trim( wp_remote_retrieve_body( $response ) );
+			}
+		}
+
+		if ( ! $ip ) {
+			return null; // Could not detect IP.
+		}
+
+		// Query ipinfo.io.
+		$url      = "https://ipinfo.io/{$ip}/json" . ( $token ? "?token={$token}" : '' );
+		$response = wp_remote_get( $url, array( 'timeout' => 5 ) );
+		if ( is_wp_error( $response ) ) {
+			return null;
+		}
+
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( ! empty( $data['org'] ) ) {
+			// Example: "AS13335 Cloudflare, Inc."
+			$parts            = explode( ' ', $data['org'], 2 );
+			$hosting_provider = isset( $parts[1] ) ? $parts[1] : $data['org'];
+
+			// Cache the result for current server IP only.
+			if ( $is_current_server ) {
+				set_transient( $transient_key, $hosting_provider, defined( 'MONTH_IN_SECONDS' ) ? MONTH_IN_SECONDS : 30 * DAY_IN_SECONDS );
+			}
+			return $hosting_provider;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Maybe save customizer published timestamp.
+	 *
+	 * This function checks if Astra customizer settings were modified during the customizer save event.
+	 * If so, it records the current timestamp in the '_astra_customizer_published_timestamps' option for KPI tracking.
+	 *
+	 * @since 4.12.2
+	 * @return void
+	 */
+	public function maybe_save_customizer_published_timestamp() {
+		global $wp_customize;
+
+		// Bail if customizer manager not available or no Astra customizer settings modified.
+		if ( ! $wp_customize || ! self::has_astra_customizer_settings_modified( $wp_customize ) ) {
+			return;
+		}
+
+		$timestamps = get_option( '_astra_customizer_published_timestamps', array() );
+		if ( ! is_array( $timestamps ) ) {
+			$timestamps = array();
+		}
+
+		$timestamps[] = time();
+		update_option( '_astra_customizer_published_timestamps', $timestamps, false );
+	}
+
+	/**
+	 * Check if any Astra-specific settings were modified in the customizer.
+	 *
+	 * @param WP_Customize_Manager $wp_customize The customizer manager instance.
+	 *
+	 * @since 4.12.2
+	 * @return bool True if Astra customizer settings were modified, false otherwise.
+	 */
+	public static function has_astra_customizer_settings_modified( $wp_customize ) {
+		$posted_values = $wp_customize->unsanitized_post_values();
+
+		// Check if any setting key starts with 'astra-' to identify Astra customizer settings.
+		foreach ( $posted_values as $setting_id => $setting_value ) {
+			if ( strpos( $setting_id, 'astra-' ) === 0 ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Add KPI tracking data.
+	 *
+	 * @param array $astra_stats Reference to the astra stats data.
+	 * @since 4.12.2
+	 * @return void
+	 */
+	public static function add_kpi_tracking_data( &$astra_stats ) {
+		$timestamps = get_option( '_astra_customizer_published_timestamps', array() );
+		if ( empty( $timestamps ) || ! is_array( $timestamps ) ) {
+			return;
+		}
+
+		// Get today's date for comparison.
+		$today = gmdate( 'Y-m-d' );
+
+		// Group timestamps by date and count occurrences, excluding today's data.
+		$kpi_data              = array();
+		$timestamps_to_cleanup = array();
+
+		foreach ( $timestamps as $timestamp ) {
+			// Skip invalid timestamps.
+			if ( ! is_numeric( $timestamp ) ) {
+				continue;
+			}
+
+			$date = gmdate( 'Y-m-d', (int) $timestamp );
+
+			// Skip today's data as we may have incomplete data for the current day.
+			if ( $date === $today ) {
+				continue;
+			}
+
+			// Count occurrences by date.
+			if ( ! isset( $kpi_data[ $date ] ) ) {
+				$kpi_data[ $date ] = array(
+					'numeric_values' => array(
+						'customizer_published' => 0,
+					),
+				);
+			}
+			$kpi_data[ $date ]['numeric_values']['customizer_published']++;
+
+			// Mark this timestamp for cleanup (all timestamps except today's).
+			$timestamps_to_cleanup[] = $timestamp;
+		}
+
+		// Only add to stats if we have data to report.
+		if ( ! empty( $kpi_data ) ) {
+			$astra_stats['kpi_records'] = $kpi_data;
+		}
+
+		// Cleanup old timestamps that are being sent to analytics.
+		// Keep only today's timestamps in the option.
+		if ( ! empty( $timestamps_to_cleanup ) ) {
+			$remaining_timestamps = array_diff( $timestamps, $timestamps_to_cleanup );
+			update_option( '_astra_customizer_published_timestamps', array_values( $remaining_timestamps ), false );
 		}
 	}
 

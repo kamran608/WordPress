@@ -211,13 +211,32 @@ class Astra_Menu {
 					$capability,
 					'admin.php?page=' . self::$plugin_slug . '&path=woocommerce'
 				);
-			} elseif ( ASTRA_THEME_ORG_VERSION && ! $this->spectra_has_top_level_menu() ) {
+			}
+			// elseif ( ASTRA_THEME_ORG_VERSION && ! $this->spectra_has_top_level_menu() ) {
+			// add_submenu_page( // phpcs:ignore WPThemeReview.PluginTerritory.NoAddAdminPages.add_menu_pages_add_submenu_page -- Taken the menu on top level
+			// self::$plugin_slug,
+			// 'Spectra',
+			// 'Spectra',
+			// $capability,
+			// $this->get_spectra_page_admin_link()
+			// );
+			// }
+		}
+
+		if ( is_callable( 'Astra_Learn::get_incomplete_chapters_count' ) ) {
+			$incomplete_count = Astra_Learn::get_incomplete_chapters_count();
+			if ( $incomplete_count > 0 ) {
+				$learn_menu_title = __( 'Learn', 'astra' ) . sprintf(
+					' <span class="awaiting-mod count-%1$d"><span class="pending-count">%1$d</span></span>',
+					$incomplete_count
+				);
+
 				add_submenu_page( // phpcs:ignore WPThemeReview.PluginTerritory.NoAddAdminPages.add_menu_pages_add_submenu_page -- Taken the menu on top level
 					self::$plugin_slug,
-					'Spectra',
-					'Spectra',
+					__( 'Learn', 'astra' ),
+					$learn_menu_title,
 					$capability,
-					$this->get_spectra_page_admin_link()
+					'admin.php?page=' . self::$plugin_slug . '&path=learn'
 				);
 			}
 		}
@@ -351,7 +370,9 @@ class Astra_Menu {
 				'whatsNewFeedUrl'        => esc_url( ASTRA_WEBSITE_BASE_URL . '/whats-new/feed/' ),
 			),
 			/** @psalm-suppress TypeDoesNotContainType */ // phpcs:ignore Generic.Commenting.DocComment.MissingShort
-			'astra_cta_btn_url'       => ASTRA_THEME_ORG_VERSION ? astra_get_pro_url( '/pricing/', 'free-theme', 'dashboard', 'unlock-pro-features-CTA' ) : 'https://woocommerce.com/products/astra-pro/',
+			'astra_cta_btn_url'       => astra_get_pro_url( '/pricing/', 'free-theme', 'dashboard', 'unlock-pro-features-CTA' ),
+			/** @psalm-suppress TypeDoesNotContainType */ // phpcs:ignore Generic.Commenting.DocComment.MissingShort
+			'is_woo_market_zip'       => ! ASTRA_THEME_ORG_VERSION,
 			/** @psalm-suppress TypeDoesNotContainType */ // phpcs:ignore Generic.Commenting.DocComment.MissingShort
 			'plugin_configuring_text' => esc_html__( 'Configuring', 'astra' ),
 			'bsfUsageTrackingUrl'     => 'https://store.brainstormforce.com/usage-tracking/?utm_source=astra&utm_medium=dashboard&utm_campaign=usage_tracking',
@@ -848,34 +869,17 @@ class Astra_Menu {
 		$extensions[] = array(
 			'title'       => 'Modern Cart for WooCommerce',
 			'subtitle'    => $under_useful_plugins ? __( 'Modern Cart: A smarter way to sell', 'astra' ) : __( 'Say goodbye to slow checkouts – boost sales with a smooth, hassle-free experience.', 'astra' ),
-			'status'      => 'visit',
-			'slug'        => '',
-			'path'        => '',
-			'redirection' => esc_url( 'https://cartflows.com/modern-cart-for-woocommerce/?utm_source=cross_promotions&utm_medium=referral&utm_campaign=astra_dashboard' ),
+			'status'      => self::get_plugin_status( 'modern-cart/modern-cart.php' ),
+			'slug'        => 'modern-cart',
+			'path'        => 'modern-cart/modern-cart.php',
+			'redirection' => admin_url( 'admin.php?page=moderncart_settings' ),
 			'ratings'     => '(25+)',
-			'activations' => '100 +',
+			'activations' => '10,000 +',
 			'logoPath'    => array(
 				'internal_icon' => true,
 				'icon_path'     => 'moderncart',
 			),
 		);
-
-		if ( ! $under_useful_plugins ) {
-			$extensions[] = array(
-				'title'       => 'PayPal Payments For WooCommerce',
-				'subtitle'    => __( 'PayPal Payments For WooCommerce simplifies and secures PayPal transactions on your store.', 'astra' ),
-				'status'      => self::get_plugin_status( 'checkout-paypal-woo/checkout-paypal-woo.php' ),
-				'slug'        => 'checkout-paypal-woo',
-				'path'        => 'checkout-paypal-woo/checkout-paypal-woo.php',
-				'redirection' => admin_url( 'admin.php?page=wc-settings&tab=cppw_api_settings' ),
-				'ratings'     => '(2)',
-				'activations' => '6,000 +',
-				'logoPath'    => array(
-					'internal_icon' => false,
-					'icon_path'     => 'https://ps.w.org/checkout-paypal-woo/assets/icon-128x128.jpg',
-				),
-			);
-		}
 
 		$extensions[] = array(
 			'title'       => 'Cart Abandonment Recovery',

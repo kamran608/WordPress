@@ -467,7 +467,7 @@ class Astra_WP_Editor_CSS {
 			'.wp-block-post-content'           => array(
 				'color' => esc_attr( $text_color ),
 			),
-			'.has-text-color .block-editor-block-list__block:not(:is(.wp-block-heading, .wp-block-button))' => array(
+			'.has-text-color .block-editor-block-list__block:not(:is(.wp-block-heading, .wp-block-button, .wp-block-spectra-pro-form-link))' => array(
 				'color' => 'inherit',
 			),
 			'.wp-block-cover:not(.has-text-color.has-link-color) .wp-block-cover__inner-container .block-editor-rich-text__editable.wp-block-paragraph' => array(
@@ -623,7 +623,7 @@ class Astra_WP_Editor_CSS {
 		}
 
 		if ( Astra_Dynamic_CSS::astra_4_6_0_compatibility() && astra_get_option( 'single-content-images-shadow', false ) ) {
-			$desktop_css['.wp-block-image img'] = array(
+			$desktop_css[':where(.post-type-post) .wp-block-image img'] = array(
 				'box-shadow'         => '0 0 30px 0 rgba(0,0,0,.15)',
 				'-webkit-box-shadow' => '0 0 30px 0 rgba(0,0,0,.15)',
 				'-moz-box-shadow'    => '0 0 30px 0 rgba(0,0,0,.15)',

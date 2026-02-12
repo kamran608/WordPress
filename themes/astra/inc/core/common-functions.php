@@ -40,6 +40,7 @@ if ( ! function_exists( 'astra_get_foreground_color' ) ) {
 
 		if ( strpos( $hex, 'rgba' ) !== false ) {
 
+			// phpcs:ignore Generic.PHP.ForbiddenFunctions.FoundWithAlternative -- Safe usage: no /e modifier.
 			$rgba = preg_replace( '/[^0-9,]/', '', $hex );
 			$rgba = explode( ',', $rgba );
 
@@ -769,7 +770,14 @@ if ( ! function_exists( 'astra_get_post_id' ) ) {
 
 			if ( is_home() ) {
 				$post_id = get_option( 'page_for_posts' );
-			} elseif ( function_exists( 'is_shop' ) && is_shop() && function_exists( 'wc_get_page_id' ) ) {
+			} elseif (
+				function_exists( 'wc_get_page_id' ) &&
+				(
+					( function_exists( 'is_shop' ) && is_shop() ) ||
+					( function_exists( 'is_product_category' ) && is_product_category() ) ||
+					( function_exists( 'is_product_tag' ) && is_product_tag() )
+				)
+			) {
 				$post_id = wc_get_page_id( 'shop' );
 			} elseif ( is_archive() ) {
 				global $wp_query;
@@ -1356,6 +1364,11 @@ if ( ! function_exists( 'astra_get_pro_url' ) ) {
 	 * @return mixed
 	 */
 	function astra_get_pro_url( $path, $source = '', $medium = '', $campaign = '' ) {
+
+		if ( '/pricing/' === $path && ! ASTRA_THEME_ORG_VERSION ) {
+			return 'https://woocommerce.com/products/astra-pro/';
+		}
+
 		$url           = esc_url( ASTRA_WEBSITE_BASE_URL . $path );
 		$astra_pro_url = trailingslashit( $url );
 
@@ -1944,6 +1957,7 @@ function astra_get_filter_svg( $filter_id, $color ) {
 	$svg = ob_get_clean();
 
 	// Clean up the whitespace.
+	// phpcs:ignore Generic.PHP.ForbiddenFunctions.FoundWithAlternative -- Safe usage: no /e modifier, normalizes whitespace in SVG output
 	$svg = preg_replace( "/[\r\n\t ]+/", ' ', $svg );
 	$svg = str_replace( '> <', '><', $svg );
 	return trim( $svg );
