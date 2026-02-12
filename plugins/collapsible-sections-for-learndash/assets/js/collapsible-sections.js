@@ -14,11 +14,25 @@ jQuery(document).ready(function($) {
     initCustomSectionToggles();
     
     function initCustomSectionToggles() {
-        // Find all custom section toggle buttons (completely unique selectors)
-        $('.custom-section-toggle-btn').each(function() {
+        // Find all custom section toggle buttons for both Classic and Modern UI
+        var toggleSelectors = [
+            '.custom-section-toggle-btn',        // Classic UI
+            '.custom-modern-section-toggle-btn'  // Modern UI
+        ];
+        
+        $(toggleSelectors.join(', ')).each(function() {
             var $toggleBtn = $(this);
             var sectionId = $toggleBtn.data('custom-section-id');
-            var $sectionContent = $('#custom-section-content-' + sectionId);
+            var $sectionContent;
+            
+            // Determine content selector based on UI type
+            if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
+                // Modern UI - content selector
+                $sectionContent = $('#custom-modern-section-content-' + sectionId);
+            } else {
+                // Classic UI - content selector
+                $sectionContent = $('#custom-section-content-' + sectionId);
+            }
             
             // Ensure section content is hidden by default
             $sectionContent.hide();
