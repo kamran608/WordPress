@@ -26,8 +26,12 @@ class CSLD_Template_Override {
      * Initialize hooks
      */
     private function init_hooks() {
-        // Override LearnDash templates
+        // Hook into LearnDash template system (Legacy/Classic UI)
         add_filter('learndash_template', array($this, 'override_section_template'), 10, 5);
+        
+        // Hook into Modern UI template system (LearnDash 4.6.0+)
+        add_filter('learndash_template_filepath', array($this, 'override_modern_template_filepath'), 10, 5);
+        add_filter('learndash_template_filename', array($this, 'override_modern_template_filename'), 10, 6);
         
         // Template override functionality only
     }
@@ -239,6 +243,81 @@ class CSLD_Template_Override {
     public function is_override_working() {
         $custom_template = $this->get_custom_template_path('section.php');
         return file_exists($custom_template) && is_readable($custom_template);
+    }
+    
+    /**
+     * Override Modern UI template filepath (LearnDash 4.6.0+)
+     * 
+     * @param string $file_path Template file path
+     * @param string $template_filename Template filename
+     * @param string $template_name Template name
+     * @param array $args Template arguments
+     * @param object $instance Template instance
+     * @return string Modified file path
+     */
+    public function override_modern_template_filepath($file_path, $template_filename, $template_name, $args, $instance) {
+        // Debug logging
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("CSLD Modern UI filepath filter - Template: $template_name, Filename: $template_filename, Path: $file_path");
+        }
+        
+        // Override lessons template for Modern UI (this contains both sections and lessons)
+        if ($template_name === 'modern/course/accordion/lessons') {
+            $custom_template = $this->get_custom_template_path('modern/lessons-modern.php');
+            if (file_exists($custom_template)) {
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log("CSLD Modern UI: Overriding lessons template with: $custom_template");
+                }
+                return $custom_template;
+            }
+        }
+        
+        // Also override section templates for Modern UI (fallback)
+        if ($template_name === 'modern/course/accordion/section') {
+            $custom_template = $this->get_custom_template_path('modern/section-modern.php');
+            if (file_exists($custom_template)) {
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log("CSLD Modern UI: Overriding section template with: $custom_template");
+                }
+                return $custom_template;
+            }
+        }
+        
+        return $file_path;
+    }
+    
+    /**
+     * Override Modern UI template filename (LearnDash 4.6.0+)
+     * 
+     * @param string $template_filename Template filename
+     * @param string $template_name Template name
+     * @param array $args Template arguments
+     * @param bool $echo Whether to echo output
+     * @param bool $return_file_path Whether to return file path
+     * @param object $instance Template instance
+     * @return string Modified filename
+     */
+    public function override_modern_template_filename($template_filename, $template_name, $args, $echo, $return_file_path, $instance) {
+        // Debug logging
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("CSLD Modern UI filename filter - Template: $template_name, Filename: $template_filename");
+        }
+        
+        // For Modern UI lessons template, we want to use our custom template
+        if ($template_name === 'modern/course/accordion/lessons') {
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log("CSLD Modern UI: Intercepting lessons template filename");
+            }
+        }
+        
+        // For Modern UI section templates, we want to use our custom template
+        if ($template_name === 'modern/course/accordion/section') {
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log("CSLD Modern UI: Intercepting section template filename");
+            }
+        }
+        
+        return $template_filename;
     }
 }
 

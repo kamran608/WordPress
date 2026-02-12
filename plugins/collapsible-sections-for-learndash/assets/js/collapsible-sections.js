@@ -117,10 +117,19 @@ jQuery(document).ready(function($) {
             if (!isCurrentlyExpanded) {
                 
                 // ONLY expand sections, do NOT let LearnDash expand lessons
-                $('.custom-section-toggle-btn').each(function() {
+                // Support both Classic and Modern UI
+                $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                     var $sectionToggle = $(this);
                     var sectionId = $sectionToggle.data('custom-section-id');
-                    var $sectionContent = $('#custom-section-content-' + sectionId);
+                    var $sectionContent;
+                    
+                    // Determine content selector based on UI type
+                    if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
+                        $sectionContent = $('#custom-modern-section-content-' + sectionId);
+                    } else {
+                        $sectionContent = $('#custom-section-content-' + sectionId);
+                    }
+                    
                     var $icon = $sectionToggle.find('.custom-toggle-icon');
                     
                     if (!$sectionToggle.hasClass('expanded')) {
@@ -140,10 +149,19 @@ jQuery(document).ready(function($) {
             } else {
                 
                 // Collapse all sections
-                $('.custom-section-toggle-btn').each(function() {
+                // Support both Classic and Modern UI
+                $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                     var $sectionToggle = $(this);
                     var sectionId = $sectionToggle.data('custom-section-id');
-                    var $sectionContent = $('#custom-section-content-' + sectionId);
+                    var $sectionContent;
+                    
+                    // Determine content selector based on UI type
+                    if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
+                        $sectionContent = $('#custom-modern-section-content-' + sectionId);
+                    } else {
+                        $sectionContent = $('#custom-section-content-' + sectionId);
+                    }
+                    
                     var $icon = $sectionToggle.find('.custom-toggle-icon');
                     
                     if ($sectionToggle.hasClass('expanded')) {
@@ -183,10 +201,19 @@ jQuery(document).ready(function($) {
 
                 
                 // FIRST: Expand all sections immediately BEFORE LearnDash processes
-                $('.custom-section-toggle-btn').each(function() {
+                // Support both Classic and Modern UI
+                $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                     var $sectionToggle = $(this);
                     var sectionId = $sectionToggle.data('custom-section-id');
-                    var $sectionContent = $('#custom-section-content-' + sectionId);
+                    var $sectionContent;
+                    
+                    // Determine content selector based on UI type
+                    if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
+                        $sectionContent = $('#custom-modern-section-content-' + sectionId);
+                    } else {
+                        $sectionContent = $('#custom-section-content-' + sectionId);
+                    }
+                    
                     var $icon = $sectionToggle.find('.custom-toggle-icon');
                     
                     if (!$sectionToggle.hasClass('expanded')) {
@@ -217,10 +244,19 @@ jQuery(document).ready(function($) {
                         // Only handle collapse case here (expand is handled by click intercept)
                         if (!isExpanded) {
 
-                            $('.custom-section-toggle-btn').each(function() {
+                            // Support both Classic and Modern UI
+                            $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                                 var $sectionToggle = $(this);
                                 var sectionId = $sectionToggle.data('custom-section-id');
-                                var $sectionContent = $('#custom-section-content-' + sectionId);
+                                var $sectionContent;
+                                
+                                // Determine content selector based on UI type
+                                if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
+                                    $sectionContent = $('#custom-modern-section-content-' + sectionId);
+                                } else {
+                                    $sectionContent = $('#custom-section-content-' + sectionId);
+                                }
+                                
                                 var $icon = $sectionToggle.find('.custom-toggle-icon');
                                 
                                 if ($sectionToggle.hasClass('expanded')) {

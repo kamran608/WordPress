@@ -159,3 +159,134 @@ body:not(.single-sfwd-courses) .custom-toggle-icon {
     z-index: 9999 !important;
     position: absolute !important;
 }
+
+/* ========================================
+   MODERN UI STYLES (LearnDash 4.16.0+)
+   ======================================== */
+
+/* Modern UI Section Wrapper */
+.custom-modern-section-wrapper {
+    margin-bottom: 1rem;
+}
+
+/* Modern UI Section Toggle Button */
+.custom-modern-section-toggle-btn {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    user-select: none;
+    margin-bottom: 0.5rem;
+}
+
+.custom-modern-section-toggle-btn:hover {
+    background: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.custom-modern-section-toggle-btn:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+/* Modern UI Toggle Icon */
+.custom-modern-section-toggle-btn .custom-toggle-icon {
+    margin-right: 0.5rem;
+    font-size: 16px;
+    transition: transform 0.2s ease;
+    color: #6c757d;
+}
+
+.custom-modern-section-toggle-btn.expanded .custom-toggle-icon {
+    transform: rotate(90deg);
+}
+
+/* Modern UI Section Title */
+.custom-modern-section-toggle-btn .custom-modern-section-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #495057;
+    margin: 0;
+}
+
+/* Modern UI Section Content */
+.custom-modern-section-content {
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid #e9ecef;
+    display: none; /* Hidden by default */
+}
+
+.custom-modern-section-content.expanded {
+    display: block;
+}
+
+/* Modern UI Lesson Items within Sections */
+.custom-modern-section-content .ld-accordion__item {
+    margin-bottom: 0.5rem;
+}
+
+.custom-modern-section-content .ld-accordion__item:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive adjustments for Modern UI */
+@media (max-width: 768px) {
+    .custom-modern-section-toggle-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .custom-modern-section-content {
+        margin-left: 1rem;
+        padding-left: 0.75rem;
+    }
+    
+    .custom-modern-section-toggle-btn .custom-modern-section-title {
+        font-size: 1rem;
+    }
+}
+
+/* Integration with LearnDash Modern UI theme colors */
+.ld-accordion--course .custom-modern-section-toggle-btn {
+    background: var(--ld-color-background-secondary, #f8f9fa);
+    border-color: var(--ld-color-border, #e9ecef);
+}
+
+.ld-accordion--course .custom-modern-section-toggle-btn:hover {
+    background: var(--ld-color-background-tertiary, #e9ecef);
+}
+
+.ld-accordion--course .custom-modern-section-content {
+    border-left-color: var(--ld-color-border, #e9ecef);
+}
+
+/* Dark mode support for Modern UI */
+@media (prefers-color-scheme: dark) {
+    .custom-modern-section-toggle-btn {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .custom-modern-section-toggle-btn:hover {
+        background: #4a5568;
+        border-color: #718096;
+    }
+    
+    .custom-modern-section-toggle-btn .custom-modern-section-title {
+        color: #e2e8f0;
+    }
+    
+    .custom-modern-section-toggle-btn .custom-toggle-icon {
+        color: #a0aec0;
+    }
+    
+    .custom-modern-section-content {
+        border-left-color: #4a5568;
+    }
+}
