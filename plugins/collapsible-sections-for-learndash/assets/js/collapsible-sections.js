@@ -37,6 +37,16 @@ jQuery(document).ready(function($) {
             // Ensure section content is hidden by default
             $sectionContent.hide();
             
+            // Ensure toggle button starts in collapsed state
+            $toggleBtn.removeClass('expanded');
+            $toggleBtn.attr('aria-expanded', 'false');
+            
+            // Ensure icon shows arrow-right (collapsed state) for Modern UI
+            if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
+                var $icon = $toggleBtn.find('.custom-toggle-icon');
+                $icon.removeClass('dashicons-arrow-down').addClass('dashicons-arrow-right');
+            }
+            
             // Add click handler to toggle button
             $toggleBtn.on('click.customSectionToggle', function(e) {
                 e.preventDefault();
@@ -84,8 +94,13 @@ jQuery(document).ready(function($) {
     initExpandAllIntegration();
     
     function initExpandAllIntegration() {
-        // Find the main expand/collapse button
-        var $mainExpandButton = $('.ld-expand-button[data-ld-expands]').first();
+        // Find the main expand/collapse button - support both Classic and Modern UI
+        var $mainExpandButton = $('.ld-expand-button[data-ld-expands]').first(); // Classic UI
+        
+        // If Classic UI button not found, try Modern UI selector
+        if (!$mainExpandButton.length) {
+            $mainExpandButton = $('.ld-accordion__expand-button[data-ld-expand-button="true"]').first(); // Modern UI
+        }
         
         if ($mainExpandButton.length) {
             // Get the expand/collapse behavior setting
@@ -112,15 +127,25 @@ jQuery(document).ready(function($) {
             e.stopImmediatePropagation();
             
             var $button = $(this);
-            var isCurrentlyExpanded = $button.hasClass('ld-expanded');
+            // Check for both Classic UI (ld-expanded) and Modern UI (aria-expanded) states
+            var isCurrentlyExpanded = $button.hasClass('ld-expanded') || $button.attr('aria-expanded') === 'true';
             
             if (!isCurrentlyExpanded) {
                 
                 // ONLY expand sections, do NOT let LearnDash expand lessons
-                $('.custom-section-toggle-btn').each(function() {
+                // Support both Classic and Modern UI
+                $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                     var $sectionToggle = $(this);
                     var sectionId = $sectionToggle.data('custom-section-id');
-                    var $sectionContent = $('#custom-section-content-' + sectionId);
+                    var $sectionContent;
+                    
+                    // Determine content selector based on UI type
+                    if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
+                        $sectionContent = $('#custom-modern-section-content-' + sectionId);
+                    } else {
+                        $sectionContent = $('#custom-section-content-' + sectionId);
+                    }
+                    
                     var $icon = $sectionToggle.find('.custom-toggle-icon');
                     
                     if (!$sectionToggle.hasClass('expanded')) {
@@ -133,17 +158,30 @@ jQuery(document).ready(function($) {
                     }
                 });
                 
-                // Update button state to expanded
+                // Update button state to expanded - support both Classic and Modern UI
                 $button.addClass('ld-expanded');
-                $button.find('.ld-text').text($button.data('ld-collapse-text') || 'Collapse All');
+                $button.attr('aria-expanded', 'true');
+                
+                // Update button text - support both Classic and Modern UI
+                var $textElement = $button.find('.ld-text, .ld-accordion__expand-button-text');
+                $textElement.text($button.data('ld-collapse-text') || 'Collapse All');
                 
             } else {
                 
                 // Collapse all sections
-                $('.custom-section-toggle-btn').each(function() {
+                // Support both Classic and Modern UI
+                $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                     var $sectionToggle = $(this);
                     var sectionId = $sectionToggle.data('custom-section-id');
-                    var $sectionContent = $('#custom-section-content-' + sectionId);
+                    var $sectionContent;
+                    
+                    // Determine content selector based on UI type
+                    if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
+                        $sectionContent = $('#custom-modern-section-content-' + sectionId);
+                    } else {
+                        $sectionContent = $('#custom-section-content-' + sectionId);
+                    }
+                    
                     var $icon = $sectionToggle.find('.custom-toggle-icon');
                     
                     if ($sectionToggle.hasClass('expanded')) {
@@ -156,9 +194,13 @@ jQuery(document).ready(function($) {
                     }
                 });
                 
-                // Update button state to collapsed
+                // Update button state to collapsed - support both Classic and Modern UI
                 $button.removeClass('ld-expanded');
-                $button.find('.ld-text').text($button.data('ld-expand-text') || 'Expand All');
+                $button.attr('aria-expanded', 'false');
+                
+                // Update button text - support both Classic and Modern UI
+                var $textElement = $button.find('.ld-text, .ld-accordion__expand-button-text');
+                $textElement.text($button.data('ld-expand-text') || 'Expand All');
             }
             
             return false;
@@ -174,7 +216,8 @@ jQuery(document).ready(function($) {
             // Don't stop propagation - let LearnDash's handler run too
             
             var $button = $(this);
-            var isCurrentlyExpanded = $button.hasClass('ld-expanded');
+            // Check for both Classic UI (ld-expanded) and Modern UI (aria-expanded) states
+            var isCurrentlyExpanded = $button.hasClass('ld-expanded') || $button.attr('aria-expanded') === 'true';
             
 
             
@@ -183,10 +226,19 @@ jQuery(document).ready(function($) {
 
                 
                 // FIRST: Expand all sections immediately BEFORE LearnDash processes
-                $('.custom-section-toggle-btn').each(function() {
+                // Support both Classic and Modern UI
+                $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                     var $sectionToggle = $(this);
                     var sectionId = $sectionToggle.data('custom-section-id');
-                    var $sectionContent = $('#custom-section-content-' + sectionId);
+                    var $sectionContent;
+                    
+                    // Determine content selector based on UI type
+                    if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
+                        $sectionContent = $('#custom-modern-section-content-' + sectionId);
+                    } else {
+                        $sectionContent = $('#custom-section-content-' + sectionId);
+                    }
+                    
                     var $icon = $sectionToggle.find('.custom-toggle-icon');
                     
                     if (!$sectionToggle.hasClass('expanded')) {
@@ -208,19 +260,29 @@ jQuery(document).ready(function($) {
         // ALSO watch for state changes to sync collapse (using MutationObserver like PR #3)
         var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                if (mutation.type === 'attributes' && (mutation.attributeName === 'class' || mutation.attributeName === 'aria-expanded')) {
                     var $button = $(mutation.target);
                     
-                    if ($button.attr('data-ld-expands')) {
-                        var isExpanded = $button.hasClass('ld-expanded');
+                    // Check for both Classic UI and Modern UI expand buttons
+                    if ($button.attr('data-ld-expands') || $button.attr('data-ld-expand-button')) {
+                        var isExpanded = $button.hasClass('ld-expanded') || $button.attr('aria-expanded') === 'true';
                         
                         // Only handle collapse case here (expand is handled by click intercept)
                         if (!isExpanded) {
 
-                            $('.custom-section-toggle-btn').each(function() {
+                            // Support both Classic and Modern UI
+                            $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                                 var $sectionToggle = $(this);
                                 var sectionId = $sectionToggle.data('custom-section-id');
-                                var $sectionContent = $('#custom-section-content-' + sectionId);
+                                var $sectionContent;
+                                
+                                // Determine content selector based on UI type
+                                if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
+                                    $sectionContent = $('#custom-modern-section-content-' + sectionId);
+                                } else {
+                                    $sectionContent = $('#custom-section-content-' + sectionId);
+                                }
+                                
                                 var $icon = $sectionToggle.find('.custom-toggle-icon');
                                 
                                 if ($sectionToggle.hasClass('expanded')) {
@@ -240,7 +302,7 @@ jQuery(document).ready(function($) {
         
         observer.observe($mainExpandButton[0], {
             attributes: true,
-            attributeFilter: ['class']
+            attributeFilter: ['class', 'aria-expanded']
         });
     }
     
