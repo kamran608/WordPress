@@ -37,6 +37,16 @@ jQuery(document).ready(function($) {
             // Ensure section content is hidden by default
             $sectionContent.hide();
             
+            // Ensure toggle button starts in collapsed state
+            $toggleBtn.removeClass('expanded');
+            $toggleBtn.attr('aria-expanded', 'false');
+            
+            // Ensure icon shows arrow-right (collapsed state) for Modern UI
+            if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
+                var $icon = $toggleBtn.find('.custom-toggle-icon');
+                $icon.removeClass('dashicons-arrow-down').addClass('dashicons-arrow-right');
+            }
+            
             // Add click handler to toggle button
             $toggleBtn.on('click.customSectionToggle', function(e) {
                 e.preventDefault();
