@@ -201,6 +201,15 @@ body:not(.single-sfwd-courses) .custom-toggle-icon {
     color: #6c757d;
 }
 
+/* Ensure default state shows arrow-right (collapsed) */
+.custom-modern-section-toggle-btn:not(.expanded) .custom-toggle-icon {
+    /* Default state - should show arrow-right */
+}
+
+.custom-modern-section-toggle-btn.expanded .custom-toggle-icon {
+    /* Expanded state - should show arrow-down */
+}
+
 /* Modern UI Section Title */
 .custom-modern-section-toggle-btn .custom-modern-section-title {
     font-weight: 600;
