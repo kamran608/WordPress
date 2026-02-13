@@ -218,7 +218,7 @@ This plugin is licensed under GPL v2 or later. Professional support and updates 
 
 ## 📋 **Changelog**
 
-### Version 1.2.0 - February 13, 2026
+### Version 1.2 - February 13, 2026
 **🎯 Complete Modern UI Compatibility Update**
 
 #### ✅ **New Features**
@@ -256,7 +256,7 @@ This plugin is licensed under GPL v2 or later. Professional support and updates 
 - **WordPress**: Compatible with WordPress 5.0+
 - **PHP**: Supports PHP 7.4+
 
-### Version 1.1.0 - Previous Release
+### Version 1.1 - Previous Release
 - Initial release with Classic UI support
 - Basic collapsible sections functionality
 - Admin interface with color customization
