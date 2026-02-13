@@ -216,6 +216,54 @@ This plugin is licensed under GPL v2 or later. Professional support and updates 
 
 ---
 
+## 📋 **Changelog**
+
+### Version 1.2.0 - February 13, 2026
+**🎯 Complete Modern UI Compatibility Update**
+
+#### ✅ **New Features**
+- **Full Modern UI Support**: Complete compatibility with LearnDash Modern UI (4.16.0+)
+- **Dual UI Detection**: Automatic detection and support for both Classic and Modern UI
+- **Enhanced Template System**: Modern UI specific templates with collapsible section functionality
+- **Advanced JavaScript Integration**: Support for both Classic UI and Modern UI expand/collapse buttons
+
+#### 🔧 **Technical Improvements**
+- **Template Override System**: Hook into Modern UI specific filters (`learndash_template_filepath`, `learndash_template_filename`)
+- **Modern UI Templates**: Custom `section-modern.php` and `lessons-modern.php` templates
+- **JavaScript Enhancements**: 
+  - Support for Modern UI selectors (`.ld-accordion__expand-button`)
+  - ARIA attribute handling (`aria-expanded`)
+  - MutationObserver for both `class` and `aria-expanded` changes
+  - Dual text element support (`.ld-text` and `.ld-accordion__expand-button-text`)
+- **CSS Improvements**: Modern UI specific styling with responsive design and dark mode support
+- **Icon State Management**: Proper default state initialization for section toggle icons
+
+#### 🐛 **Bug Fixes**
+- **Fixed**: Section toggler icons now correctly show arrow-right by default in Modern UI
+- **Fixed**: Expand All/Collapse All functionality now works perfectly with Modern UI
+- **Fixed**: Template override issues with Modern UI template naming conventions
+- **Fixed**: JavaScript initialization ensuring proper collapsed state on page load
+
+#### 🎨 **UI/UX Enhancements**
+- **Modern UI Styling**: Comprehensive CSS for Modern UI components
+- **Responsive Design**: Optimized for all screen sizes in Modern UI
+- **Dark Mode Support**: Full dark mode compatibility for Modern UI
+- **Accessibility**: Enhanced ARIA support for Modern UI components
+
+#### 🔄 **Compatibility**
+- **LearnDash Classic UI**: Full backward compatibility maintained
+- **LearnDash Modern UI**: Complete support for 4.16.0+ versions
+- **WordPress**: Compatible with WordPress 5.0+
+- **PHP**: Supports PHP 7.4+
+
+### Version 1.1.0 - Previous Release
+- Initial release with Classic UI support
+- Basic collapsible sections functionality
+- Admin interface with color customization
+- Dual expand/collapse modes
+
+---
+
 ### 🚀 **[Get Collapsible Sections for LearnDash Now →](https://swrice.com/collapsible-sections-for-learndash/)**
 
 **Transform your courses today. Your students will thank you.**
