@@ -141,7 +141,6 @@ class CSLD_Template_Override {
         // Handle Modern UI templates
         elseif ($active_variation === 'modern') {
             // Override section template for Modern UI (accordion-based)
-            var_dump( $name );
             if ($name === 'modern/course/accordion/section' ) {
                 $custom_template = $this->get_custom_template_path('section-modern.php', 'modern');
                 if (file_exists($custom_template)) {

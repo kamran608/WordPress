@@ -201,10 +201,6 @@ body:not(.single-sfwd-courses) .custom-toggle-icon {
     color: #6c757d;
 }
 
-.custom-modern-section-toggle-btn.expanded .custom-toggle-icon {
-    transform: rotate(90deg);
-}
-
 /* Modern UI Section Title */
 .custom-modern-section-toggle-btn .custom-modern-section-title {
     font-weight: 600;
