@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Learndash Course Progress
+ * Plugin Name: SWR LearnDash Course Progress
  * Plugin URI: www.swrice.com
  * Description: Swrice LearnDash Course Progress Add-on is a powerful and easy-to-use plugin that allows you to display student progress for any LearnDash course using either a shortcode or a Gutenberg block.
  * Author: Swrice
@@ -14,7 +14,6 @@
 if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
-
 /**
  * Class Learndash_Course_Progress
  */
@@ -44,7 +43,6 @@ class Learndash_Course_Progress {
      * defining constants for plugin
      */
     public function setup_constants() {
-
         /**
          * Directory
          */
@@ -72,15 +70,12 @@ class Learndash_Course_Progress {
      * Plugin requiered files
      */
     public function includes() {
-
         if ( file_exists( LCP_INCLUDES_DIR . 'admin.php' ) ) {
             require LCP_INCLUDES_DIR . 'admin.php';
         }
-        
         if ( file_exists( LCP_INCLUDES_DIR . 'frontend.php' ) ) {
             require LCP_INCLUDES_DIR . 'frontend.php';
         }
-
         if ( file_exists( LCP_INCLUDES_DIR . 'progress-block.php' ) ) {
             require LCP_INCLUDES_DIR . 'progress-block.php';
         }
@@ -90,46 +85,45 @@ class Learndash_Course_Progress {
      * Load freemius
      */
     public function enable_freemius() {
-
-        if ( ! function_exists( 'lcp_fs' ) ) {
+        if ( !function_exists( 'lcp_fs' ) ) {
             // Create a helper function for easy SDK access.
             function lcp_fs() {
                 global $lcp_fs;
-        
-                if ( ! isset( $lcp_fs ) ) {
+                if ( !isset( $lcp_fs ) ) {
                     // Include Freemius SDK.
                     require_once dirname( __FILE__ ) . '/freemius/start.php';
                     $lcp_fs = fs_dynamic_init( array(
-                        'id'                  => '16283',
-                        'slug'                => 'learndash-course-progress',
-                        'type'                => 'plugin',
-                        'public_key'          => 'pk_f570659b025f9f10ec3bd7e1ffa1a',
-                        'is_premium'          => true,
-                        'is_premium_only'     => false,
-                        'has_addons'          => false,
-                        'has_paid_plans'      => true,
-                        'is_org_compliant'    => false,
-                        'menu'                => array(
-                            'slug'           => 'lcp-progress-settings',
-                            'first-path'     => 'admin.php?page=lcp-progress-settings',
-                            'contact'        => true,
-                            'support'        => false,
-                            'parent'         => array(
+                        'id'               => '16283',
+                        'slug'             => 'learndash-course-progress',
+                        'type'             => 'plugin',
+                        'public_key'       => 'pk_f570659b025f9f10ec3bd7e1ffa1a',
+                        'is_premium'       => true,
+                        'is_premium_only'  => false,
+                        'has_addons'       => false,
+                        'has_paid_plans'   => true,
+                        'is_org_compliant' => false,
+                        'menu'             => array(
+                            'slug'       => 'lcp-progress-settings',
+                            'first-path' => 'admin.php?page=lcp-progress-settings',
+                            'contact'    => true,
+                            'support'    => false,
+                            'parent'     => array(
                                 'slug' => 'learndash-lms',
                             ),
                         ),
+                        'is_live'          => true,
                     ) );
                 }
-        
                 return $lcp_fs;
             }
-        
+
             // Init Freemius.
             lcp_fs();
             // Signal that SDK was initiated.
             do_action( 'lcp_fs_loaded' );
         }
     }
+
 }
 
 /**
