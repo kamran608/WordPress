@@ -98,7 +98,7 @@ class Learndash_Course_Progress {
                         'type'             => 'plugin',
                         'public_key'       => 'pk_f570659b025f9f10ec3bd7e1ffa1a',
                         'is_premium'       => true,
-                        'is_premium_only'  => false,
+                        'is_premium_only'  => true,
                         'has_addons'       => false,
                         'has_paid_plans'   => true,
                         'is_org_compliant' => false,
