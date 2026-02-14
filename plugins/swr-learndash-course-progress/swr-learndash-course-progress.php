@@ -6,7 +6,7 @@
  * Description: Swrice LearnDash Course Progress Add-on is a powerful and easy-to-use plugin that allows you to display student progress for any LearnDash course using either a shortcode or a Gutenberg block.
  * Author: Swrice
  * Author URI: www.swrice.com
- * Version: 1.1
+ * Version: 1.2
  * Update URI: https://swrice.com/learndash-course-progress/
  * Plugin URL: https://swrice.com/learndash-course-progress/
  * Text Domain: learndash-course-progress
@@ -19,8 +19,7 @@ if ( !defined( 'ABSPATH' ) ) {
  * Class Learndash_Course_Progress
  */
 class Learndash_Course_Progress {
-
-    const VERSION = '1.1';
+    const VERSION = '1.2';
 
     /**
      * @var self
