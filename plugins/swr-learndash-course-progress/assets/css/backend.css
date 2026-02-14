@@ -1,14 +1,85 @@
+/* ---------- Wrapper ---------- */
+.lcp-setting-wrap {
+    max-width: 960px;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* ---------- Table ---------- */
+.lcp-setting-wrap .form-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 14px;
+}
+
+/* ---------- Labels ---------- */
 .lcp-setting-wrap .form-table th {
-    width: 200px;
+    width: 220px;
+    padding: 8px 10px 8px 0;
+    font-weight: 600;
+    color: #1f2937;
+    vertical-align: middle;
 }
 
-.lcp-setting-wrap pre {
-    background-color: #f4f4f4;
-    padding: 10px;
-    border: 1px solid #ddd;
+/* ---------- Fields ---------- */
+.lcp-setting-wrap .form-table td {
+    padding: 8px 0;
 }
 
-.lcp-setting-wrap .form-table input[type="text"], 
+/* Inputs & Selects */
+.lcp-setting-wrap .form-table input[type="text"],
 .lcp-setting-wrap .form-table select {
-    width: 300px;
+    width: 100%;
+    max-width: 420px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+/* Focus State */
+.lcp-setting-wrap .form-table input[type="text"]:focus,
+.lcp-setting-wrap .form-table select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    outline: none;
+}
+
+/* ---------- Description Text ---------- */
+.lcp-setting-wrap .description {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* ---------- Code / Pre ---------- */
+.lcp-setting-wrap pre {
+    background: #0f172a;
+    color: #e5e7eb;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-size: 13px;
+    overflow-x: auto;
+}
+
+/* ---------- Submit Button ---------- */
+.lcp-setting-wrap .button-primary {
+    margin-top: 20px;
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+/* ---------- Section Titles ---------- */
+.lcp-setting-wrap h2,
+.lcp-setting-wrap h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-weight: 600;
+    color: #111827;
 }

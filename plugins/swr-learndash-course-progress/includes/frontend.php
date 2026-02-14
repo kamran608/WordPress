@@ -134,7 +134,7 @@ class LCP_Frontend {
         $lcp_general_color = $this->lcp_general_color;
 
         ?>
-        <div class="course-card">
+        <div class="lcp-course-card">
             <div class="course-card-wrapper">
                 <div class="course-header">
                     <div class="course-icon">
@@ -155,27 +155,34 @@ class LCP_Frontend {
                     <div class="progress-fill" style="width: <?php echo $percentage; ?>%; background-color: <?php echo $lcp_general_color; ?>;"></div>
                 </div>
                 <div class="progress-info">
-                    <?php 
-                    if( !empty( $lesson_list ) ) {
-                        ?>
-                        <span><?php echo $completed_lessons; ?> / <?php echo $lesson_count; ?> <?php echo LearnDash_Custom_Label::get_label( 'lessons' ); ?></span>
-                        <?php
-                    }
+                    <div class="progress-stats">
+                        <?php if ( ! empty( $lesson_list ) ) : ?>
+                            <span class="progress-pill">
+                                <?php echo $completed_lessons; ?>/<?php echo $lesson_count; ?>
+                                <small><?php echo LearnDash_Custom_Label::get_label( 'lessons' ); ?></small>
+                            </span>
+                        <?php endif; ?>
 
-                    if( !empty( $topic_list ) ) {
-                        ?>
-                        <span><?php echo $completed_topics; ?> / <?php echo $topic_count; ?> <?php echo LearnDash_Custom_Label::get_label( 'Topics' ); ?></span>
-                        <?php
-                    }
+                        <?php if ( ! empty( $topic_list ) ) : ?>
+                            <span class="progress-pill">
+                                <?php echo $completed_topics; ?>/<?php echo $topic_count; ?>
+                                <small><?php echo LearnDash_Custom_Label::get_label( 'Topics' ); ?></small>
+                            </span>
+                        <?php endif; ?>
 
-                    if( !empty( $quiz_list ) ) {
-                        ?>
-                        <span><?php echo $completed_quizzes; ?> / <?php echo $quiz_count; ?> <?php echo LearnDash_Custom_Label::get_label( 'Quizzes' ); ?></span>
-                        <?php
-                    }
-                    ?>
-                    <span class="lcp-progress-percentage"><?php echo $percentage; ?>%</span>
+                        <?php if ( ! empty( $quiz_list ) ) : ?>
+                            <span class="progress-pill">
+                                <?php echo $completed_quizzes; ?>/<?php echo $quiz_count; ?>
+                                <small><?php echo LearnDash_Custom_Label::get_label( 'Quizzes' ); ?></small>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="progress-percentage" style="color: <?php echo $lcp_general_color; ?>">
+                        <?php echo $percentage; ?>%
+                    </div>
                 </div>
+
                 <ul class="lesson-list">
                     <?php 
                     if (!empty($lesson_list)) {
@@ -184,7 +191,7 @@ class LCP_Frontend {
                             $lesson_progress = learndash_lesson_progress($lesson_id, $course_id);
                             $lesson_percentage = isset($lesson_progress['percentage']) ? $lesson_progress['percentage'] : 0;
                             ?>
-                            <a href="<?php echo get_the_permalink($lesson_id); ?>">
+                            <a target="_blank" href="<?php echo get_the_permalink($lesson_id); ?>">
                                 <li>
                                     <span class="lcp-lesson-title"><?php echo get_the_title($lesson_id); ?></span>
                                     
@@ -196,7 +203,7 @@ class LCP_Frontend {
                                     ?>
 
                                     <!-- Progress bar container -->
-                                    <div class="progress-circle-container" style="display: inline-block; position: relative; width: 22px; height: 22px;">
+                                    <div class="progress-circle-container">
                                         <!-- Progress circle -->
                                         <svg 
                                             class="progress-circle" 
@@ -214,7 +221,7 @@ class LCP_Frontend {
                                                 a 15.9155 15.9155 0 0 1 0 -31.831"
                                                 fill="none"
                                                 stroke="#e6e6e6"
-                                                stroke-width="4"/>
+                                                stroke-width="3"/>
                                             <path class="circle"
                                                 stroke-dasharray="<?php echo $lesson_percentage; ?>, 100"
                                                 d="M18 2.0845
@@ -222,7 +229,7 @@ class LCP_Frontend {
                                                 a 15.9155 15.9155 0 0 1 0 -31.831"
                                                 fill="none"
                                                 stroke="<?php echo $stroke; ?>"
-                                                stroke-width="4"
+                                                stroke-width="3"
                                                 stroke-linecap="round"/>
                                         </svg>
                                         <!-- Checkmark if complete -->
