@@ -34,8 +34,8 @@ $expand_first_section = $plugin_instance->get_setting('expand_first_section', tr
 // Use a more unique global variable to track if we've already expanded the first section
 global $csld_first_section_expanded_flag;
 
-// Force initialize to false if not set or if it's somehow true
-if (!isset($csld_first_section_expanded_flag) || $csld_first_section_expanded_flag !== false) {
+// Only initialize to false if not set at all
+if (!isset($csld_first_section_expanded_flag)) {
 	$csld_first_section_expanded_flag = false;
 }
 
