@@ -175,9 +175,10 @@ Expert help when you need it most
 
 ---
 
-## 📈 **Version 2.0 - Enhanced Professional Edition**
+## 📈 **Version 1.3 - Enhanced User Experience Edition**
 
 ### ✨ **Latest Features**
+- **🚀 "Expand First Section by Default" Option**: Smart section expansion for immediate content access
 - **🎯 Dual Expand/Collapse Modes**: Choose "All Content" or "Sections Only" behavior
 - **🎯 Smart Mode Selection**: Perfect for any course structure or learning style
 - **Modern Admin Interface** with card-based design and gradient headers
@@ -217,6 +218,38 @@ This plugin is licensed under GPL v2 or later. Professional support and updates 
 ---
 
 ## 📋 **Changelog**
+
+### Version 1.3 - March 1, 2026
+**🎯 Enhanced User Experience with Smart Section Expansion**
+
+#### ✨ **New Features**
+- **🚀 "Expand First Section by Default" Option**: New admin setting that automatically expands the first section when students visit a course page
+- **🎛️ Admin Control**: Toggle switch in admin interface placed after "Expand/Collapse Behavior" setting
+- **✅ Smart Defaults**: Feature enabled by default to improve user experience for new installations
+- **🔄 Backward Compatibility**: Existing installations can enable/disable the feature as needed
+
+#### 🎯 **User Experience Improvements**
+- **Immediate Content Access**: Students see course content immediately without extra clicks
+- **Reduced Friction**: Eliminates the need for students to manually expand the first section
+- **Better Engagement**: Improved course navigation leads to higher completion rates
+- **Flexible Control**: Admins can choose between auto-expansion or traditional collapsed behavior
+
+#### 🔧 **Technical Enhancements**
+- **Settings Integration**: New `expand_first_section` setting with proper sanitization and defaults
+- **Frontend Logic**: Enhanced JavaScript initialization to handle first section expansion intelligently
+- **Dual UI Support**: Works seamlessly with both LearnDash Classic and Modern UI
+- **AJAX Handling**: Updated admin form processing to include the new setting
+- **Icon Management**: Proper arrow state management (right/down) for expanded/collapsed states
+
+#### 🐛 **Bug Fixes**
+- **Fixed**: Admin JavaScript now properly includes new setting in AJAX requests
+- **Fixed**: Checkbox persistence issue where checked state wasn't being saved correctly
+- **Fixed**: Form data serialization to ensure all settings are transmitted properly
+
+#### 🎨 **UI/UX Enhancements**
+- **Modern Toggle Switch**: Consistent styling with existing admin interface
+- **Descriptive Help Text**: Clear explanation of feature behavior for administrators
+- **Professional Integration**: Seamlessly integrated into existing settings panel
 
 ### Version 1.2 - February 13, 2026
 **🎯 Complete Modern UI Compatibility Update**
