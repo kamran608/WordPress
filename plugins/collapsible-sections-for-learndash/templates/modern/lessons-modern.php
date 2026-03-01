@@ -61,30 +61,21 @@ foreach ( $lessons as $lesson ) {
 				// Generate unique section ID
 				$section_id = 'section_' . md5( $section_title );
 				
-				// Check if this is the first section and if expand_first_section setting is enabled
-				// Use a global approach to ensure only the very first section across all templates is expanded
+				// Get plugin settings
 				$plugin_instance = CollapsibleSectionsLearnDash::get_instance();
 				$expand_first_section = $plugin_instance->get_setting('expand_first_section', true);
 				
-				// Use a very unique global variable to track if we've already expanded the first section
-				global $csld_plugin_first_section_processed_v2;
-				
-				// Force initialize to false - something else is setting our variable
-				if (!isset($csld_plugin_first_section_processed_v2) || $csld_plugin_first_section_processed_v2 !== false) {
-					$csld_plugin_first_section_processed_v2 = false;
-				}
+				// Use static variable to track first section within this template file only
+				static $section_counter = 0;
+				$section_counter++;
+				$is_first_section = ($section_counter === 1);
 				
 				// Determine if this section should be expanded by default
-				$should_expand = !$csld_plugin_first_section_processed_v2 && $expand_first_section;
+				$should_expand = $is_first_section && $expand_first_section;
 				$aria_expanded = $should_expand ? 'true' : 'false';
 				$expanded_class = $should_expand ? ' expanded' : '';
 				$content_expanded_class = $should_expand ? ' expanded' : '';
 				$icon_class = $should_expand ? 'dashicons-arrow-down' : 'dashicons-arrow-right';
-				
-				// Mark that we've processed the first section globally
-				if ($should_expand) {
-					$csld_plugin_first_section_processed_v2 = true;
-				}
 				?>
 				
 				<!-- Collapsible Section Header -->

@@ -75,17 +75,21 @@ jQuery(document).ready(function($) {
                 $sectionContent = $('#custom-section-content-' + sectionId);
             }
             
-            // Check if the section is already in expanded state (server-rendered)
+            // Read PHP-determined state from DOM data attributes
+            var isFirstSection = $toggleBtn.data('is-first-section') === true || $toggleBtn.data('is-first-section') === 'true';
+            var shouldExpand = $toggleBtn.data('should-expand') === true || $toggleBtn.data('should-expand') === 'true';
             var isAlreadyExpanded = $toggleBtn.hasClass('expanded') || $toggleBtn.attr('aria-expanded') === 'true';
             
             // Debug logging for each section
-            console.log('🔍 CSLD: Section ' + sectionId + ' - isAlreadyExpanded:', isAlreadyExpanded, 
-                       'hasExpandedClass:', $toggleBtn.hasClass('expanded'), 
-                       'ariaExpanded:', $toggleBtn.attr('aria-expanded'));
+            console.log('🔍 CSLD: Section ' + sectionId + ' - isFirstSection:', isFirstSection, 
+                       'shouldExpand:', shouldExpand, 'isAlreadyExpanded:', isAlreadyExpanded);
             
-            if (isAlreadyExpanded) {
-                // Section is already expanded by PHP, ensure content is visible
-                console.log('✅ CSLD: Section ' + sectionId + ' - Keeping expanded (PHP-rendered)');
+            if (shouldExpand) {
+                // PHP determined this section should be expanded - ensure it is
+                console.log('✅ CSLD: Section ' + sectionId + ' - Expanding (PHP-determined)');
+                $toggleBtn.addClass('expanded');
+                $toggleBtn.attr('aria-expanded', 'true');
+                
                 if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
                     // Modern UI uses CSS classes
                     $sectionContent.addClass('expanded');
@@ -94,8 +98,11 @@ jQuery(document).ready(function($) {
                     $sectionContent.show();
                 }
             } else {
-                // Section should be collapsed, ensure it's hidden
-                console.log('❌ CSLD: Section ' + sectionId + ' - Ensuring collapsed state');
+                // PHP determined this section should be collapsed - ensure it is
+                console.log('❌ CSLD: Section ' + sectionId + ' - Collapsing (PHP-determined)');
+                $toggleBtn.removeClass('expanded');
+                $toggleBtn.attr('aria-expanded', 'false');
+                
                 if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
                     // Modern UI uses CSS classes
                     $sectionContent.removeClass('expanded');
@@ -103,10 +110,6 @@ jQuery(document).ready(function($) {
                     // Classic UI uses jQuery show/hide
                     $sectionContent.hide();
                 }
-                
-                // Ensure toggle button is in collapsed state
-                $toggleBtn.removeClass('expanded');
-                $toggleBtn.attr('aria-expanded', 'false');
                 
                 // Ensure icon shows arrow-right (collapsed state)
                 var $icon = $toggleBtn.find('.custom-toggle-icon');
@@ -131,6 +134,61 @@ jQuery(document).ready(function($) {
                 }
             });
         });
+        
+        // Add state validation to ensure exactly one section is expanded
+        validateAccordionState();
+    }
+    
+    function validateAccordionState() {
+        var $allToggleBtns = $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn');
+        var expandedSections = $allToggleBtns.filter('.expanded');
+        
+        console.log('🔍 CSLD: State validation - found', expandedSections.length, 'expanded sections');
+        
+        if (expandedSections.length === 0) {
+            // No sections expanded - find the first section and expand it
+            var $firstSection = $allToggleBtns.filter('[data-is-first-section="true"]').first();
+            if ($firstSection.length === 0) {
+                // Fallback: expand the very first section found
+                $firstSection = $allToggleBtns.first();
+            }
+            
+            if ($firstSection.length > 0) {
+                console.log('⚠️ CSLD: No sections expanded - expanding first section');
+                $firstSection.addClass('expanded');
+                $firstSection.attr('aria-expanded', 'true');
+                
+                var sectionId = $firstSection.data('custom-section-id');
+                var $content = $firstSection.hasClass('custom-modern-section-toggle-btn') 
+                    ? $('#custom-modern-section-content-' + sectionId)
+                    : $('#custom-section-content-' + sectionId);
+                
+                if ($firstSection.hasClass('custom-modern-section-toggle-btn')) {
+                    $content.addClass('expanded');
+                } else {
+                    $content.show();
+                }
+            }
+        } else if (expandedSections.length > 1) {
+            // Multiple sections expanded - collapse all except the first one
+            console.log('⚠️ CSLD: Multiple sections expanded - keeping only the first');
+            expandedSections.slice(1).each(function() {
+                var $btn = $(this);
+                $btn.removeClass('expanded');
+                $btn.attr('aria-expanded', 'false');
+                
+                var sectionId = $btn.data('custom-section-id');
+                var $content = $btn.hasClass('custom-modern-section-toggle-btn') 
+                    ? $('#custom-modern-section-content-' + sectionId)
+                    : $('#custom-section-content-' + sectionId);
+                
+                if ($btn.hasClass('custom-modern-section-toggle-btn')) {
+                    $content.removeClass('expanded');
+                } else {
+                    $content.hide();
+                }
+            });
+        }
     }
     
     function toggleCustomSection($toggleBtn, $sectionContent) {

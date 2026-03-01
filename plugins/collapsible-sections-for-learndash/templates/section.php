@@ -40,40 +40,25 @@ do_action( 'learndash-before-section-heading', $section, $course_id, $user_id );
 	?>
 	
 	<?php
-	// Check if this is the first section and if expand_first_section setting is enabled
-	// Use a global approach to ensure only the very first section across all templates is expanded
+	// Get plugin settings
 	$plugin_instance = CollapsibleSectionsLearnDash::get_instance();
 	$expand_first_section = $plugin_instance->get_setting('expand_first_section', true);
 	
-	// Use a very unique global variable to track if we've already expanded the first section
-	global $csld_plugin_first_section_processed_v2;
-	
-	// Force initialize to false - something else is setting our variable
-	if (!isset($csld_plugin_first_section_processed_v2) || $csld_plugin_first_section_processed_v2 !== false) {
-		$csld_plugin_first_section_processed_v2 = false;
-	}
-	
-	// Debug: Log global variable state
-	echo '<script>console.log("🔧 CSLD PHP: section.php - global var before:", ' . ($csld_plugin_first_section_processed_v2 ? 'true' : 'false') . ', "expand_first_section:", ' . ($expand_first_section ? 'true' : 'false') . ');</script>';
+	// Use static variable to track first section within this template file only
+	static $section_counter = 0;
+	$section_counter++;
+	$is_first_section = ($section_counter === 1);
 	
 	// Determine if this section should be expanded by default
-	$should_expand = !$csld_plugin_first_section_processed_v2 && $expand_first_section;
+	$should_expand = $is_first_section && $expand_first_section;
 	$aria_expanded = $should_expand ? 'true' : 'false';
 	$expanded_class = $should_expand ? ' expanded' : '';
 	$icon_class = $should_expand ? 'dashicons-arrow-down' : 'dashicons-arrow-right';
-	
-	// Mark that we've processed the first section globally
-	if ($should_expand) {
-		$csld_plugin_first_section_processed_v2 = true;
-	}
-	
-	// Debug: Log to browser console via JavaScript
-	echo '<script>console.log("🔧 CSLD PHP: section.php loaded - should_expand:", ' . ($should_expand ? 'true' : 'false') . ', "section_id:", "' . esc_js($section->ID) . '");</script>';
 	?>
 	
 	<div class="custom-section-heading-wrapper">
 		<div class="custom-section-item">
-			<div class="custom-section-toggle-btn<?php echo esc_attr($expanded_class); ?>" data-custom-section-id="<?php echo esc_attr( $section->ID ); ?>" role="button" tabindex="0" aria-expanded="<?php echo esc_attr($aria_expanded); ?>" aria-controls="custom-section-content-<?php echo esc_attr( $section->ID ); ?>">
+			<div class="custom-section-toggle-btn<?php echo esc_attr($expanded_class); ?>" data-custom-section-id="<?php echo esc_attr( $section->ID ); ?>" data-is-first-section="<?php echo $is_first_section ? 'true' : 'false'; ?>" data-should-expand="<?php echo $should_expand ? 'true' : 'false'; ?>" role="button" tabindex="0" aria-expanded="<?php echo esc_attr($aria_expanded); ?>" aria-controls="custom-section-content-<?php echo esc_attr( $section->ID ); ?>">
 				<div class="custom-section-left">
 					<?php 
 					if ( function_exists('learndash_is_course_post') && learndash_is_course_post(get_the_ID()) ) {
