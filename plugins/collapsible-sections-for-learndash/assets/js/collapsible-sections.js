@@ -20,6 +20,13 @@ jQuery(document).ready(function($) {
             '.custom-modern-section-toggle-btn'  // Modern UI
         ];
         
+        // Check if first section should be expanded by default
+        var expandFirstSection = (typeof csld_settings !== 'undefined' && csld_settings.expand_first_section !== undefined) 
+            ? csld_settings.expand_first_section 
+            : true; // Default to true
+        
+        var isFirstSection = true;
+        
         $(toggleSelectors.join(', ')).each(function() {
             var $toggleBtn = $(this);
             var sectionId = $toggleBtn.data('custom-section-id');
@@ -34,17 +41,33 @@ jQuery(document).ready(function($) {
                 $sectionContent = $('#custom-section-content-' + sectionId);
             }
             
-            // Ensure section content is hidden by default
-            $sectionContent.hide();
-            
-            // Ensure toggle button starts in collapsed state
-            $toggleBtn.removeClass('expanded');
-            $toggleBtn.attr('aria-expanded', 'false');
-            
-            // Ensure icon shows arrow-right (collapsed state) for Modern UI
-            if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
+            // Handle first section expansion setting
+            if (isFirstSection && expandFirstSection) {
+                // Expand the first section by default
+                $sectionContent.show();
+                $toggleBtn.addClass('expanded');
+                $toggleBtn.attr('aria-expanded', 'true');
+                
+                // Set icon to arrow-down (expanded state)
+                var $icon = $toggleBtn.find('.custom-toggle-icon');
+                $icon.removeClass('dashicons-arrow-right').addClass('dashicons-arrow-down');
+                
+                isFirstSection = false; // Mark that we've processed the first section
+            } else {
+                // Ensure section content is hidden by default
+                $sectionContent.hide();
+                
+                // Ensure toggle button starts in collapsed state
+                $toggleBtn.removeClass('expanded');
+                $toggleBtn.attr('aria-expanded', 'false');
+                
+                // Ensure icon shows arrow-right (collapsed state)
                 var $icon = $toggleBtn.find('.custom-toggle-icon');
                 $icon.removeClass('dashicons-arrow-down').addClass('dashicons-arrow-right');
+                
+                if (isFirstSection) {
+                    isFirstSection = false; // Mark that we've processed the first section
+                }
             }
             
             // Add click handler to toggle button

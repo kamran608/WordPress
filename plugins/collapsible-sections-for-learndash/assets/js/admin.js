@@ -74,7 +74,8 @@ jQuery(document).ready(function($) {
             toggler_inner_color: $('#toggler_inner_color').val(),
             section_background_color: $('#section_background_color').val(),
             section_border_color: $('#section_border_color').val(),
-            expand_collapse_behavior: $('#expand_collapse_behavior').val()
+            expand_collapse_behavior: $('#expand_collapse_behavior').val(),
+            expand_first_section: $('#expand_first_section').is(':checked') ? '1' : '0'
         };
         
         // Send AJAX request
