@@ -97,6 +97,10 @@ jQuery(document).ready(function($) {
                     // Classic UI uses jQuery show/hide
                     $sectionContent.show();
                 }
+                
+                // Ensure icon shows arrow-down (expanded state)
+                var $icon = $toggleBtn.find('.custom-toggle-icon');
+                $icon.removeClass('dashicons-arrow-right').addClass('dashicons-arrow-down');
             } else {
                 // PHP determined this section should be collapsed - ensure it is
                 console.log('❌ CSLD: Section ' + sectionId + ' - Collapsing (PHP-determined)');
@@ -142,19 +146,16 @@ jQuery(document).ready(function($) {
     function validateAccordionState() {
         var $allToggleBtns = $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn');
         var expandedSections = $allToggleBtns.filter('.expanded');
+        var sectionsToExpand = $allToggleBtns.filter('[data-should-expand="true"]');
         
-        console.log('🔍 CSLD: State validation - found', expandedSections.length, 'expanded sections');
+        console.log('🔍 CSLD: State validation - found', expandedSections.length, 'expanded sections,', sectionsToExpand.length, 'should be expanded');
         
-        if (expandedSections.length === 0) {
-            // No sections expanded - find the first section and expand it
-            var $firstSection = $allToggleBtns.filter('[data-is-first-section="true"]').first();
-            if ($firstSection.length === 0) {
-                // Fallback: expand the very first section found
-                $firstSection = $allToggleBtns.first();
-            }
+        if (expandedSections.length === 0 && sectionsToExpand.length > 0) {
+            // No sections expanded but some should be - expand the first one that should be expanded
+            var $firstSection = sectionsToExpand.first();
             
             if ($firstSection.length > 0) {
-                console.log('⚠️ CSLD: No sections expanded - expanding first section');
+                console.log('⚠️ CSLD: No sections expanded but setting enabled - expanding first section');
                 $firstSection.addClass('expanded');
                 $firstSection.attr('aria-expanded', 'true');
                 
@@ -168,7 +169,14 @@ jQuery(document).ready(function($) {
                 } else {
                     $content.show();
                 }
+                
+                // Update icon
+                var $icon = $firstSection.find('.custom-toggle-icon');
+                $icon.removeClass('dashicons-arrow-right').addClass('dashicons-arrow-down');
             }
+        } else if (expandedSections.length === 0 && sectionsToExpand.length === 0) {
+            // No sections expanded and none should be expanded (setting disabled) - this is correct
+            console.log('✅ CSLD: Setting disabled - all sections correctly collapsed');
         } else if (expandedSections.length > 1) {
             // Multiple sections expanded - collapse all except the first one
             console.log('⚠️ CSLD: Multiple sections expanded - keeping only the first');
@@ -187,6 +195,10 @@ jQuery(document).ready(function($) {
                 } else {
                     $content.hide();
                 }
+                
+                // Update icon to collapsed state
+                var $icon = $btn.find('.custom-toggle-icon');
+                $icon.removeClass('dashicons-arrow-down').addClass('dashicons-arrow-right');
             });
         }
     }
