@@ -31,21 +31,23 @@ $user_id = isset( $user_id ) ? $user_id : get_current_user_id();
 $plugin_instance = CollapsibleSectionsLearnDash::get_instance();
 $expand_first_section = $plugin_instance->get_setting('expand_first_section', true);
 
-// Use a global variable to track if we've already expanded the first section
-global $csld_first_section_processed;
-if (!isset($csld_first_section_processed)) {
-	$csld_first_section_processed = false;
+// Use a more unique global variable to track if we've already expanded the first section
+global $csld_first_section_expanded_flag;
+
+// Force initialize to false if not set or if it's somehow true
+if (!isset($csld_first_section_expanded_flag) || $csld_first_section_expanded_flag !== false) {
+	$csld_first_section_expanded_flag = false;
 }
 
 // Determine if this section should be expanded by default
-$should_expand = !$csld_first_section_processed && $expand_first_section;
+$should_expand = !$csld_first_section_expanded_flag && $expand_first_section;
 $aria_expanded = $should_expand ? 'true' : 'false';
 $expanded_class = $should_expand ? ' expanded' : '';
 $icon_class = $should_expand ? 'dashicons-arrow-down' : 'dashicons-arrow-right';
 
 // Mark that we've processed the first section globally
 if ($should_expand) {
-	$csld_first_section_processed = true;
+	$csld_first_section_expanded_flag = true;
 }
 
 // Debug: Log to browser console via JavaScript
