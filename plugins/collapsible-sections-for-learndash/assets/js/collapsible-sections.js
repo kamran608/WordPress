@@ -10,8 +10,49 @@
 jQuery(document).ready(function($) {
     'use strict';
     
+    // Debug logging to track section expansion issues
+    console.log('🔍 CSLD: Document ready, initializing section toggles...');
+    
     // Initialize custom section toggles
     initCustomSectionToggles();
+    
+    // Add monitoring to detect unwanted section expansions
+    setTimeout(function() {
+        console.log('🕐 CSLD: Setting up post-load monitoring...');
+        monitorSectionChanges();
+    }, 2000); // Monitor after 2 seconds to catch delayed expansions
+    
+    function monitorSectionChanges() {
+        // Monitor all section toggle buttons for unexpected changes
+        $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
+            var $toggleBtn = $(this);
+            var sectionId = $toggleBtn.data('custom-section-id');
+            var initialState = $toggleBtn.hasClass('expanded');
+            
+            console.log('📊 CSLD: Monitoring section ' + sectionId + ' - initial state:', initialState);
+            
+            // Use MutationObserver to detect changes to this specific section
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && 
+                        (mutation.attributeName === 'class' || mutation.attributeName === 'aria-expanded')) {
+                        var currentState = $toggleBtn.hasClass('expanded');
+                        if (currentState !== initialState) {
+                            console.log('⚠️ CSLD: UNEXPECTED STATE CHANGE detected for section ' + sectionId + 
+                                       ' - was:', initialState, 'now:', currentState);
+                            console.trace('Stack trace for unexpected change:');
+                            initialState = currentState; // Update for next comparison
+                        }
+                    }
+                });
+            });
+            
+            observer.observe($toggleBtn[0], {
+                attributes: true,
+                attributeFilter: ['class', 'aria-expanded']
+            });
+        });
+    }
     
     function initCustomSectionToggles() {
         // Find all custom section toggle buttons for both Classic and Modern UI
@@ -37,8 +78,14 @@ jQuery(document).ready(function($) {
             // Check if the section is already in expanded state (server-rendered)
             var isAlreadyExpanded = $toggleBtn.hasClass('expanded') || $toggleBtn.attr('aria-expanded') === 'true';
             
+            // Debug logging for each section
+            console.log('🔍 CSLD: Section ' + sectionId + ' - isAlreadyExpanded:', isAlreadyExpanded, 
+                       'hasExpandedClass:', $toggleBtn.hasClass('expanded'), 
+                       'ariaExpanded:', $toggleBtn.attr('aria-expanded'));
+            
             if (isAlreadyExpanded) {
                 // Section is already expanded by PHP, ensure content is visible
+                console.log('✅ CSLD: Section ' + sectionId + ' - Keeping expanded (PHP-rendered)');
                 if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
                     // Modern UI uses CSS classes
                     $sectionContent.addClass('expanded');
@@ -48,6 +95,7 @@ jQuery(document).ready(function($) {
                 }
             } else {
                 // Section should be collapsed, ensure it's hidden
+                console.log('❌ CSLD: Section ' + sectionId + ' - Ensuring collapsed state');
                 if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
                     // Modern UI uses CSS classes
                     $sectionContent.removeClass('expanded');
@@ -136,6 +184,24 @@ jQuery(document).ready(function($) {
         }
         
         if ($mainExpandButton.length) {
+            console.log('🔍 CSLD: Found main expand button:', $mainExpandButton[0]);
+            
+            // Monitor the main expand button for any changes
+            var expandButtonObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes') {
+                        var isExpanded = $mainExpandButton.hasClass('ld-expanded') || 
+                                       $mainExpandButton.attr('aria-expanded') === 'true';
+                        console.log('🔄 CSLD: Main expand button state changed - expanded:', isExpanded, 
+                                   'attribute:', mutation.attributeName);
+                    }
+                });
+            });
+            
+            expandButtonObserver.observe($mainExpandButton[0], {
+                attributes: true,
+                attributeFilter: ['class', 'aria-expanded']
+            });
             // Get the expand/collapse behavior setting
             var expandBehavior = (typeof csld_settings !== 'undefined' && csld_settings.expand_collapse_behavior) 
                 ? csld_settings.expand_collapse_behavior 
@@ -263,16 +329,22 @@ jQuery(document).ready(function($) {
         $mainExpandButton.on('click.customSectionIntercept', function(e) {
             // Only respond to direct user clicks, not programmatic triggers
             if (!e.isTrusted) {
+                console.log('🚫 CSLD: Ignoring programmatic click on expand button');
                 return; // Ignore programmatic clicks
             }
+            
+            console.log('👆 CSLD: User clicked expand all button');
             
             var $button = $(this);
             // Check for both Classic UI (ld-expanded) and Modern UI (aria-expanded) states
             var isCurrentlyExpanded = $button.hasClass('ld-expanded') || $button.attr('aria-expanded') === 'true';
             
+            console.log('🔍 CSLD: Expand button state - isCurrentlyExpanded:', isCurrentlyExpanded);
+            
             // If user is clicking to expand all content
             if (!isCurrentlyExpanded) {
                 // Expand all sections when user explicitly clicks "Expand All"
+                console.log('🚀 CSLD: Expanding all sections (user requested)');
                 $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                     var $sectionToggle = $(this);
                     var sectionId = $sectionToggle.data('custom-section-id');
