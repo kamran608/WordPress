@@ -51,6 +51,9 @@ do_action( 'learndash-before-section-heading', $section, $course_id, $user_id );
 		$csld_first_section_processed = false;
 	}
 	
+	// Debug: Log global variable state
+	echo '<script>console.log("🔧 CSLD PHP: section.php - global var before:", ' . ($csld_first_section_processed ? 'true' : 'false') . ', "expand_first_section:", ' . ($expand_first_section ? 'true' : 'false') . ');</script>';
+	
 	// Determine if this section should be expanded by default
 	$should_expand = !$csld_first_section_processed && $expand_first_section;
 	$aria_expanded = $should_expand ? 'true' : 'false';
