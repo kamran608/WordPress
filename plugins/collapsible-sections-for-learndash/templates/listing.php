@@ -99,6 +99,18 @@ if ( ! empty( $lessons ) || ! empty( $quizzes ) ) :
 					
 					// Start new section
 					$current_section = $sections[ $lesson_id ];
+					
+					// Check if this is the first section and if expand_first_section setting is enabled
+					static $is_first_section_listing = true;
+					$plugin_instance = CollapsibleSectionsLearnDash::get_instance();
+					$expand_first_section = $plugin_instance->get_setting('expand_first_section', true);
+					
+					// Determine if this section content should be visible by default
+					$should_expand = $is_first_section_listing && $expand_first_section;
+					$display_style = $should_expand ? 'display: block;' : 'display: none;';
+					
+					// Mark that we've processed the first section
+					$is_first_section_listing = false;
 					?>
 					<div class="ld-section-wrapper" data-section-id="<?php echo esc_attr( $current_section->ID ); ?>">
 						<?php
@@ -113,7 +125,7 @@ if ( ! empty( $lessons ) || ! empty( $quizzes ) ) :
 							true
 						);
 						?>
-						<div class="custom-section-content" id="custom-section-content-<?php echo esc_attr( $current_section->ID ); ?>" data-custom-section-content="<?php echo esc_attr( $current_section->ID ); ?>" style="display: none;">
+						<div class="custom-section-content" id="custom-section-content-<?php echo esc_attr( $current_section->ID ); ?>" data-custom-section-content="<?php echo esc_attr( $current_section->ID ); ?>" style="<?php echo esc_attr($display_style); ?>">
 					<?php
 				}
 				
