@@ -391,7 +391,7 @@ class CollapsibleSectionsLearnDash {
             'section_background_color' => sanitize_hex_color($_POST['section_background_color']),
             'section_border_color' => sanitize_hex_color($_POST['section_border_color']),
             'expand_collapse_behavior' => isset($_POST['expand_collapse_behavior']) ? sanitize_text_field($_POST['expand_collapse_behavior']) : 'all_content',
-            'expand_first_section' => isset($_POST['expand_first_section']) ? (bool) $_POST['expand_first_section'] : false
+            'expand_first_section' => isset($_POST['expand_first_section']) && $_POST['expand_first_section'] === '1'
         );
         
         // Get current settings and merge with new ones to preserve other settings
