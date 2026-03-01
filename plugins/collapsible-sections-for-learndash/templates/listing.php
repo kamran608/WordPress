@@ -105,21 +105,21 @@ if ( ! empty( $lessons ) || ! empty( $quizzes ) ) :
 					$plugin_instance = CollapsibleSectionsLearnDash::get_instance();
 					$expand_first_section = $plugin_instance->get_setting('expand_first_section', true);
 					
-					// Use a more unique global variable to track if we've already expanded the first section
-					global $csld_first_section_expanded_flag;
+					// Use a very unique global variable to track if we've already expanded the first section
+					global $csld_plugin_first_section_processed_v2;
 					
-					// Only initialize to false if not set at all
-					if (!isset($csld_first_section_expanded_flag)) {
-						$csld_first_section_expanded_flag = false;
+					// Force initialize to false - something else is setting our variable
+					if (!isset($csld_plugin_first_section_processed_v2) || $csld_plugin_first_section_processed_v2 !== false) {
+						$csld_plugin_first_section_processed_v2 = false;
 					}
 					
 					// Determine if this section content should be visible by default
-					$should_expand = !$csld_first_section_expanded_flag && $expand_first_section;
+					$should_expand = !$csld_plugin_first_section_processed_v2 && $expand_first_section;
 					$display_style = $should_expand ? 'display: block;' : 'display: none;';
 					
 					// Mark that we've processed the first section globally
 					if ($should_expand) {
-						$csld_first_section_expanded_flag = true;
+						$csld_plugin_first_section_processed_v2 = true;
 					}
 					?>
 					<div class="ld-section-wrapper" data-section-id="<?php echo esc_attr( $current_section->ID ); ?>">

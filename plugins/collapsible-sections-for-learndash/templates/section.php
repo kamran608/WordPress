@@ -45,26 +45,26 @@ do_action( 'learndash-before-section-heading', $section, $course_id, $user_id );
 	$plugin_instance = CollapsibleSectionsLearnDash::get_instance();
 	$expand_first_section = $plugin_instance->get_setting('expand_first_section', true);
 	
-	// Use a more unique global variable to track if we've already expanded the first section
-	global $csld_first_section_expanded_flag;
+	// Use a very unique global variable to track if we've already expanded the first section
+	global $csld_plugin_first_section_processed_v2;
 	
-	// Only initialize to false if not set at all
-	if (!isset($csld_first_section_expanded_flag)) {
-		$csld_first_section_expanded_flag = false;
+	// Force initialize to false - something else is setting our variable
+	if (!isset($csld_plugin_first_section_processed_v2) || $csld_plugin_first_section_processed_v2 !== false) {
+		$csld_plugin_first_section_processed_v2 = false;
 	}
 	
 	// Debug: Log global variable state
-	echo '<script>console.log("🔧 CSLD PHP: section.php - global var before:", ' . ($csld_first_section_expanded_flag ? 'true' : 'false') . ', "expand_first_section:", ' . ($expand_first_section ? 'true' : 'false') . ');</script>';
+	echo '<script>console.log("🔧 CSLD PHP: section.php - global var before:", ' . ($csld_plugin_first_section_processed_v2 ? 'true' : 'false') . ', "expand_first_section:", ' . ($expand_first_section ? 'true' : 'false') . ');</script>';
 	
 	// Determine if this section should be expanded by default
-	$should_expand = !$csld_first_section_expanded_flag && $expand_first_section;
+	$should_expand = !$csld_plugin_first_section_processed_v2 && $expand_first_section;
 	$aria_expanded = $should_expand ? 'true' : 'false';
 	$expanded_class = $should_expand ? ' expanded' : '';
 	$icon_class = $should_expand ? 'dashicons-arrow-down' : 'dashicons-arrow-right';
 	
 	// Mark that we've processed the first section globally
 	if ($should_expand) {
-		$csld_first_section_expanded_flag = true;
+		$csld_plugin_first_section_processed_v2 = true;
 	}
 	
 	// Debug: Log to browser console via JavaScript
