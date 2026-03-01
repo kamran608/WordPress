@@ -61,6 +61,9 @@ do_action( 'learndash-before-section-heading', $section, $course_id, $user_id );
 	if ($should_expand) {
 		$csld_first_section_processed = true;
 	}
+	
+	// Debug: Log to browser console via JavaScript
+	echo '<script>console.log("🔧 CSLD PHP: section.php loaded - should_expand:", ' . ($should_expand ? 'true' : 'false') . ', "section_id:", "' . esc_js($section->ID) . '");</script>';
 	?>
 	
 	<div class="custom-section-heading-wrapper">

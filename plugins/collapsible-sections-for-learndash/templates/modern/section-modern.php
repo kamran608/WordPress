@@ -47,6 +47,9 @@ $icon_class = $should_expand ? 'dashicons-arrow-down' : 'dashicons-arrow-right';
 if ($should_expand) {
 	$csld_first_section_processed = true;
 }
+
+// Debug: Log to browser console via JavaScript
+echo '<script>console.log("🔧 CSLD PHP: section-modern.php loaded - should_expand:", ' . ($should_expand ? 'true' : 'false') . ', "section_id:", "' . esc_js($section_id) . '");</script>';
 ?>
 
 <div class="ld-accordion__subheading-wrapper custom-modern-section-wrapper">
