@@ -145,8 +145,9 @@ jQuery(document).ready(function($) {
                 // SECTIONS ONLY BEHAVIOR - Current working implementation
                 initSectionsOnlyBehavior($mainExpandButton);
             } else {
-                // ALL CONTENT BEHAVIOR - Default behavior (expand everything)
-                initAllContentBehavior($mainExpandButton);
+                // ALL CONTENT BEHAVIOR - But be conservative to prevent unwanted expansions
+                // Since PHP now handles first section expansion, we only need to handle user clicks
+                initConservativeAllContentBehavior($mainExpandButton);
             }
         }
     }
@@ -254,26 +255,24 @@ jQuery(document).ready(function($) {
         });
     }
     
-    function initAllContentBehavior($mainExpandButton) {
-        // ALL CONTENT BEHAVIOR - INTERCEPT BEFORE LearnDash processes (like PR #3)
-        // This is the key difference - we need to run BEFORE LearnDash, not after
+    function initConservativeAllContentBehavior($mainExpandButton) {
+        // CONSERVATIVE ALL CONTENT BEHAVIOR
+        // Since PHP now handles first section expansion, we only respond to explicit user clicks
+        // This prevents automatic expansions that were causing the second section to expand
         
         $mainExpandButton.on('click.customSectionIntercept', function(e) {
-            // Don't prevent default - let LearnDash handle its own content after we're done
-            // Don't stop propagation - let LearnDash's handler run too
+            // Only respond to direct user clicks, not programmatic triggers
+            if (!e.isTrusted) {
+                return; // Ignore programmatic clicks
+            }
             
             var $button = $(this);
             // Check for both Classic UI (ld-expanded) and Modern UI (aria-expanded) states
             var isCurrentlyExpanded = $button.hasClass('ld-expanded') || $button.attr('aria-expanded') === 'true';
             
-
-            
-            // If we're about to expand (button is currently collapsed)
+            // If user is clicking to expand all content
             if (!isCurrentlyExpanded) {
-
-                
-                // FIRST: Expand all sections immediately BEFORE LearnDash processes
-                // Support both Classic and Modern UI
+                // Expand all sections when user explicitly clicks "Expand All"
                 $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
                     var $sectionToggle = $(this);
                     var sectionId = $sectionToggle.data('custom-section-id');
@@ -304,67 +303,12 @@ jQuery(document).ready(function($) {
                         $icon.removeClass('dashicons-arrow-right').addClass('dashicons-arrow-down');
                     }
                 });
-                
-
-            } else {
-
             }
+            // Note: We don't handle collapse here - let LearnDash handle that naturally
         });
         
-        // ALSO watch for state changes to sync collapse (using MutationObserver like PR #3)
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'attributes' && (mutation.attributeName === 'class' || mutation.attributeName === 'aria-expanded')) {
-                    var $button = $(mutation.target);
-                    
-                    // Check for both Classic UI and Modern UI expand buttons
-                    if ($button.attr('data-ld-expands') || $button.attr('data-ld-expand-button')) {
-                        var isExpanded = $button.hasClass('ld-expanded') || $button.attr('aria-expanded') === 'true';
-                        
-                        // Only handle collapse case here (expand is handled by click intercept)
-                        if (!isExpanded) {
-
-                            // Support both Classic and Modern UI
-                            $('.custom-section-toggle-btn, .custom-modern-section-toggle-btn').each(function() {
-                                var $sectionToggle = $(this);
-                                var sectionId = $sectionToggle.data('custom-section-id');
-                                var $sectionContent;
-                                
-                                // Determine content selector based on UI type
-                                if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
-                                    $sectionContent = $('#custom-modern-section-content-' + sectionId);
-                                } else {
-                                    $sectionContent = $('#custom-section-content-' + sectionId);
-                                }
-                                
-                                var $icon = $sectionToggle.find('.custom-toggle-icon');
-                                
-                                if ($sectionToggle.hasClass('expanded')) {
-                                    $sectionToggle.removeClass('expanded');
-                                    $sectionToggle.attr('aria-expanded', 'false');
-                                    
-                                    if ($sectionToggle.hasClass('custom-modern-section-toggle-btn')) {
-                                        // Modern UI uses CSS classes
-                                        $sectionContent.removeClass('expanded');
-                                    } else {
-                                        // Classic UI uses jQuery show/hide
-                                        $sectionContent.hide();
-                                    }
-                                    
-                                    // Change icon from arrow-down to arrow-right
-                                    $icon.removeClass('dashicons-arrow-down').addClass('dashicons-arrow-right');
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-        });
-        
-        observer.observe($mainExpandButton[0], {
-            attributes: true,
-            attributeFilter: ['class', 'aria-expanded']
-        });
+        // Remove the MutationObserver entirely to prevent automatic responses
+        // This eliminates the source of unwanted section expansions
     }
     
     // Handle window resize to ensure proper layout
