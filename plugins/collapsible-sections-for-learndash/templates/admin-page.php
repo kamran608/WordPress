@@ -162,6 +162,29 @@ $settings = $this->get_settings();
                                 </p>
                             </td>
                         </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="expand_first_section">
+                                    <?php _e('Expand First Section by Default', 'collapsible-sections-learndash'); ?>
+                                </label>
+                            </th>
+                            <td>
+                                <label class="csld-toggle-switch">
+                                    <input 
+                                        type="checkbox" 
+                                        id="expand_first_section" 
+                                        name="expand_first_section" 
+                                        value="1"
+                                        <?php checked($settings['expand_first_section'], true); ?>
+                                    />
+                                    <span class="csld-toggle-slider"></span>
+                                </label>
+                                <p class="description">
+                                    <?php _e('When enabled, the first section will be expanded by default when students visit the course page. When disabled, all sections will be collapsed by default (current behavior).', 'collapsible-sections-learndash'); ?>
+                                </p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 

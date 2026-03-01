@@ -30,6 +30,7 @@ class CSLD_Settings {
         'section_background_color' => '#ffffff',
         'section_border_color' => '#e2e7ed',
         'expand_collapse_behavior' => 'all_content',
+        'expand_first_section' => true,
         'enable_animations' => true,
         'animation_speed' => 300
     );
@@ -115,6 +116,11 @@ class CSLD_Settings {
             $sanitized['expand_collapse_behavior'] = in_array($settings['expand_collapse_behavior'], $allowed_values) 
                 ? $settings['expand_collapse_behavior'] 
                 : 'all_content';
+        }
+        
+        // Sanitize expand first section
+        if (isset($settings['expand_first_section'])) {
+            $sanitized['expand_first_section'] = (bool) $settings['expand_first_section'];
         }
         
         // Sanitize enable animations
