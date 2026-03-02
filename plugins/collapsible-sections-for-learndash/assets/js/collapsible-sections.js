@@ -13,14 +13,25 @@ jQuery(document).ready(function($) {
     // Debug logging to track section expansion issues
     console.log('🔍 CSLD: Document ready, initializing section toggles...');
     
-    // Initialize custom section toggles
+    // Initialize custom section toggles immediately
     initCustomSectionToggles();
     
-    // Add monitoring to detect unwanted section expansions
+    // Add multiple initialization attempts to handle LearnDash Modern UI interference
     setTimeout(function() {
-        console.log('🕐 CSLD: Setting up post-load monitoring...');
+        console.log('🕐 CSLD: Re-initializing after 500ms (LearnDash Modern UI protection)...');
+        initCustomSectionToggles();
+    }, 500);
+    
+    setTimeout(function() {
+        console.log('🕐 CSLD: Re-initializing after 1000ms (LearnDash Modern UI protection)...');
+        initCustomSectionToggles();
+    }, 1000);
+    
+    setTimeout(function() {
+        console.log('🕐 CSLD: Final re-initialization after 2000ms...');
+        initCustomSectionToggles();
         monitorSectionChanges();
-    }, 2000); // Monitor after 2 seconds to catch delayed expansions
+    }, 2000);
     
     function monitorSectionChanges() {
         // Monitor all section toggle buttons for unexpected changes
@@ -31,18 +42,32 @@ jQuery(document).ready(function($) {
             
             console.log('📊 CSLD: Monitoring section ' + sectionId + ' - initial state:', initialState);
             
-            // Use MutationObserver to detect changes to this specific section
+            // Use MutationObserver to detect and fix interference
             var observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
                     if (mutation.type === 'attributes' && 
                         (mutation.attributeName === 'class' || mutation.attributeName === 'aria-expanded')) {
                         var currentState = $toggleBtn.hasClass('expanded');
-                        if (currentState !== initialState) {
-                            console.log('⚠️ CSLD: UNEXPECTED STATE CHANGE detected for section ' + sectionId + 
-                                       ' - was:', initialState, 'now:', currentState);
-                            console.trace('Stack trace for unexpected change:');
-                            initialState = currentState; // Update for next comparison
+                        var shouldExpand = $toggleBtn.data('should-expand') === true || $toggleBtn.data('should-expand') === 'true';
+                        
+                        // Check if the state was changed incorrectly
+                        if (shouldExpand && !currentState) {
+                            console.log('🚨 CSLD: INTERFERENCE DETECTED! Section ' + sectionId + ' should be expanded but was collapsed by external code - FIXING...');
+                            
+                            // Fix the state immediately
+                            setTimeout(function() {
+                                validateSingleSectionState($toggleBtn);
+                            }, 10); // Small delay to let the interfering code finish
+                        } else if (!shouldExpand && currentState) {
+                            console.log('🚨 CSLD: INTERFERENCE DETECTED! Section ' + sectionId + ' should be collapsed but was expanded by external code - FIXING...');
+                            
+                            // Fix the state immediately
+                            setTimeout(function() {
+                                validateSingleSectionState($toggleBtn);
+                            }, 10);
                         }
+                        
+                        initialState = currentState; // Update for next comparison
                     }
                 });
             });
@@ -65,6 +90,14 @@ jQuery(document).ready(function($) {
             var $toggleBtn = $(this);
             var sectionId = $toggleBtn.data('custom-section-id');
             var $sectionContent;
+            
+            // Skip if already initialized (prevent duplicate event handlers)
+            if ($toggleBtn.data('csld-initialized')) {
+                console.log('🔄 CSLD: Section ' + sectionId + ' already initialized, re-validating state...');
+                // Just re-validate the state without adding new event handlers
+                validateSingleSectionState($toggleBtn);
+                return;
+            }
             
             // Determine content selector based on UI type
             if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
@@ -137,10 +170,58 @@ jQuery(document).ready(function($) {
                     return false;
                 }
             });
+            
+            // Mark this section as initialized
+            $toggleBtn.data('csld-initialized', true);
         });
         
         // Add state validation to ensure exactly one section is expanded
         validateAccordionState();
+    }
+    
+    function validateSingleSectionState($toggleBtn) {
+        var sectionId = $toggleBtn.data('custom-section-id');
+        var shouldExpand = $toggleBtn.data('should-expand') === true || $toggleBtn.data('should-expand') === 'true';
+        var isCurrentlyExpanded = $toggleBtn.hasClass('expanded');
+        
+        console.log('🔍 CSLD: Re-validating section ' + sectionId + ' - shouldExpand:', shouldExpand, 'isCurrentlyExpanded:', isCurrentlyExpanded);
+        
+        // Get content element
+        var $sectionContent = $toggleBtn.hasClass('custom-modern-section-toggle-btn') 
+            ? $('#custom-modern-section-content-' + sectionId)
+            : $('#custom-section-content-' + sectionId);
+        
+        if (shouldExpand && !isCurrentlyExpanded) {
+            // Should be expanded but isn't - fix it
+            console.log('⚠️ CSLD: Section ' + sectionId + ' should be expanded but was collapsed - fixing...');
+            $toggleBtn.addClass('expanded');
+            $toggleBtn.attr('aria-expanded', 'true');
+            
+            if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
+                $sectionContent.addClass('expanded');
+            } else {
+                $sectionContent.show();
+            }
+            
+            // Update icon
+            var $icon = $toggleBtn.find('.custom-toggle-icon');
+            $icon.removeClass('dashicons-arrow-right').addClass('dashicons-arrow-down');
+        } else if (!shouldExpand && isCurrentlyExpanded) {
+            // Should be collapsed but isn't - fix it
+            console.log('⚠️ CSLD: Section ' + sectionId + ' should be collapsed but was expanded - fixing...');
+            $toggleBtn.removeClass('expanded');
+            $toggleBtn.attr('aria-expanded', 'false');
+            
+            if ($toggleBtn.hasClass('custom-modern-section-toggle-btn')) {
+                $sectionContent.removeClass('expanded');
+            } else {
+                $sectionContent.hide();
+            }
+            
+            // Update icon
+            var $icon = $toggleBtn.find('.custom-toggle-icon');
+            $icon.removeClass('dashicons-arrow-down').addClass('dashicons-arrow-right');
+        }
     }
     
     function validateAccordionState() {
