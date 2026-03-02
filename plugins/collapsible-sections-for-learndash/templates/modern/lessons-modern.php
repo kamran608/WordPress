@@ -60,18 +60,34 @@ foreach ( $lessons as $lesson ) {
 				<?php 
 				// Generate unique section ID
 				$section_id = 'section_' . md5( $section_title );
+				
+				// Simple first section detection for Modern UI content
+				static $modern_content_section_counter = 0;
+				$modern_content_section_counter++;
+				$is_first_section = ($modern_content_section_counter === 1);
+				
+				// Get plugin setting
+				$plugin_instance = CollapsibleSectionsLearnDash::get_instance();
+				$expand_first_section = $plugin_instance->get_setting('expand_first_section', true);
+				
+				// Determine initial state
+				$should_expand = $is_first_section && $expand_first_section;
+				$expanded_class = $should_expand ? ' expanded' : '';
+				$content_expanded_class = $should_expand ? ' expanded' : '';
+				$aria_expanded = $should_expand ? 'true' : 'false';
+				$icon_class = $should_expand ? 'dashicons-arrow-down' : 'dashicons-arrow-right';
 				?>
 				
 				<!-- Collapsible Section Header -->
 				<div class="custom-modern-section-wrapper">
-					<div class="custom-modern-section-toggle-btn" 
+					<div class="custom-modern-section-toggle-btn<?php echo esc_attr($expanded_class); ?>" 
 						 data-custom-section-id="<?php echo esc_attr( $section_id ); ?>" 
 						 role="button" 
 						 tabindex="0" 
-						 aria-expanded="true" 
+						 aria-expanded="<?php echo esc_attr($aria_expanded); ?>" 
 						 aria-controls="custom-modern-section-content-<?php echo esc_attr( $section_id ); ?>">
 						
-						<span class="custom-toggle-icon dashicons dashicons-arrow-down" aria-hidden="true"></span>
+						<span class="custom-toggle-icon dashicons <?php echo esc_attr($icon_class); ?>" aria-hidden="true"></span>
 						
 						<span
 							aria-level="3"
@@ -83,7 +99,7 @@ foreach ( $lessons as $lesson ) {
 					</div>
 					
 					<!-- Collapsible Section Content -->
-					<div class="custom-modern-section-content" 
+					<div class="custom-modern-section-content<?php echo esc_attr($content_expanded_class); ?>" 
 						 id="custom-modern-section-content-<?php echo esc_attr( $section_id ); ?>"
 						 aria-labelledby="custom-modern-section-toggle-<?php echo esc_attr( $section_id ); ?>">
 						
