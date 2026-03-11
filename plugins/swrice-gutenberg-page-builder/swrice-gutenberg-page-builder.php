@@ -103,7 +103,7 @@ class Swrice_Gutenberg_Page_Builder {
         wp_register_script(
             'swrice-plugin-page-builder-blocks',
             SGPB_PLUGIN_URL . 'assets/js/blocks.js',
-            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
+            array('wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n'),
             SGPB_VERSION,
             true
         );

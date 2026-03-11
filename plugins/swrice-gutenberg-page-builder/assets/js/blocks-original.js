@@ -14,7 +14,7 @@ const {
     MediaUpload,
     MediaUploadCheck
 } = wp.components;
-const { InspectorControls, RichText } = wp.blockEditor;
+const { InspectorControls } = wp.blockEditor;
 
 // Icon options for different sections
 const PROBLEM_ICON_OPTIONS = [
@@ -385,14 +385,9 @@ registerBlockType('swrice/hero-section', {
                                 createElement('h1', { className: 'sppm-hero-title' }, 
                                     getAttr('pluginName', 'My Awesome Plugin')
                                 ),
-                                createElement(RichText, { 
-                                    tagName: "p", 
-                                    className: "sppm-hero-subtitle", 
-                                    placeholder: "Enter hero subtitle with link support...", 
-                                    value: getAttr("heroSubtitle"), 
-                                    onChange: (val) => setAttributes({ heroSubtitle: val }), 
-                                    allowedFormats: ["core/bold", "core/italic", "core/link"] 
-                                }),
+                                createElement('p', { className: 'sppm-hero-subtitle' }, 
+                                    getAttr('heroSubtitle', 'Transform your WordPress experience with our powerful plugin solution')
+                                ),
                                 createElement('div', { className: 'sppm-hero-ctas' },
                                     getAttr('buyNowShortcode') ? 
                                         createElement('div', { 
@@ -580,13 +575,9 @@ registerBlockType('swrice/solution-section', {
                             )
                         ),
                         createElement('div', { className: 'sppm-solution-content' },
-                            createElement(RichText, { 
-                                tagName: "p", 
-                                placeholder: "Enter solution description with link support...", 
-                                value: getAttr("solutionDescription"), 
-                                onChange: (val) => setAttributes({ solutionDescription: val }), 
-                                allowedFormats: ["core/bold", "core/italic", "core/link"] 
-                            })
+                            createElement('p', null, 
+                                getAttr('solutionDescription', 'Our plugin solves all your problems with an elegant solution.')
+                            )
                         )
                     )
                 )
