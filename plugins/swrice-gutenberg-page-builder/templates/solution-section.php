@@ -21,6 +21,6 @@ if (empty($solution_heading) && empty($solution_description)) return;
     </div>
     
     <div class="sppm-solution-content">
-        <p><?php echo esc_html($solution_description); ?></p>
+        <p><?php echo wp_kses_post($solution_description); ?></p>
     </div>
 </section>

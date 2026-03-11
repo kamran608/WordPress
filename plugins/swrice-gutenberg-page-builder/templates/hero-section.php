@@ -38,7 +38,7 @@ $hero_image = isset($attributes['heroImageUrl']) ? $attributes['heroImageUrl'] :
         </div>
 
         <h1 class="sppm-hero-title"><?php echo esc_html($plugin_name); ?></h1>
-        <p class="sppm-hero-subtitle"><?php echo esc_html($hero_subtitle); ?></p>
+        <p class="sppm-hero-subtitle"><?php echo wp_kses_post($hero_subtitle); ?></p>
 
         <div class="sppm-hero-ctas">
             <?php if ($buy_now_shortcode): ?>
