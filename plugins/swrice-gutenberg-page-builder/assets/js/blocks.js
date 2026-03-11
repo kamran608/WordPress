@@ -271,14 +271,17 @@ registerBlockType('swrice/hero-section', {
                         value: getAttr('pluginName'),
                         onChange: (val) => setAttributes({ pluginName: val })
                     }),
-                    createElement(RichText, {
-                        tagName: "div",
-                        placeholder: "Enter hero subtitle with link support...",
-                        value: getAttr("heroSubtitle"),
-                        onChange: (val) => setAttributes({ heroSubtitle: val }),
-                        allowedFormats: ["core/bold", "core/italic", "core/link"],
-                        style: { border: "1px solid #ddd", padding: "8px", borderRadius: "4px", minHeight: "60px" }
-                    }),
+                    createElement("div", { style: { marginBottom: "16px" } },
+                        createElement("label", { style: { display: "block", marginBottom: "8px", fontWeight: "bold" } }, "Hero Subtitle"),
+                        createElement(RichText, {
+                            tagName: "div",
+                            placeholder: "Enter hero subtitle with link support...",
+                            value: getAttr("heroSubtitle"),
+                            onChange: (val) => setAttributes({ heroSubtitle: val }),
+                            allowedFormats: ["core/bold", "core/italic", "core/link"],
+                            style: { border: "1px solid #ddd", padding: "8px", borderRadius: "4px", minHeight: "60px" }
+                        })
+                    ),
                     createElement(TextControl, {
                         label: 'Plugin Price ($)',
                         value: getAttr('pluginPrice'),
@@ -558,13 +561,11 @@ registerBlockType('swrice/solution-section', {
                         onChange: (val) => setAttributes({ solutionIcon: val }),
                         help: 'Choose an icon for this section'
                     }),
-                    createElement(RichText, {
-                        tagName: "div",
-                        placeholder: "Enter solution description with link support...",
-                        value: getAttr("solutionDescription"),
+                    createElement(TextareaControl, {
+                        label: 'Solution Description',
+                        value: getAttr('solutionDescription'),
                         onChange: (val) => setAttributes({ solutionDescription: val }),
-                        allowedFormats: ["core/bold", "core/italic", "core/link"],
-                        style: { border: "1px solid #ddd", padding: "8px", borderRadius: "4px", minHeight: "80px" }
+                        rows: 4
                     })
                 )
             ),
@@ -581,10 +582,9 @@ registerBlockType('swrice/solution-section', {
                             )
                         ),
                         createElement('div', { className: 'sppm-solution-content' },
-                            createElement(RichText.Content, { 
-                                tagName: "p", 
-                                value: getAttr("solutionDescription", "Our plugin solves all your problems with an elegant solution.") 
-                            })
+                            createElement('p', null, 
+                                getAttr('solutionDescription', 'Our plugin solves all your problems with an elegant solution.')
+                            )
                         )
                     )
                 )
