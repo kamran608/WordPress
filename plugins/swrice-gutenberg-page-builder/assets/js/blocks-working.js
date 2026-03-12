@@ -208,30 +208,13 @@ const RepeaterField = ({ items, onChange, fields, addButtonText = 'Add Item' }) 
                 ),
                 ...fields.map(field => {
                     if (field.type === 'textarea') {
-                        return createElement('div', { key: field.key, style: { marginBottom: '15px' } },
-                            createElement('label', { 
-                                style: { 
-                                    display: 'block', 
-                                    marginBottom: '5px', 
-                                    fontWeight: 'bold',
-                                    fontSize: '13px'
-                                }
-                            }, field.label),
-                            createElement(RichText, {
-                                tagName: "div",
-                                placeholder: `Enter ${field.label.toLowerCase()} with link support...`,
-                                value: item[field.key] || '',
-                                onChange: (value) => updateItem(index, field.key, value),
-                                allowedFormats: ["core/bold", "core/italic", "core/link"],
-                                style: { 
-                                    border: "1px solid #ddd", 
-                                    padding: "8px", 
-                                    borderRadius: "4px", 
-                                    minHeight: "60px",
-                                    backgroundColor: "#fff"
-                                }
-                            })
-                        );
+                        return createElement(TextareaControl, {
+                            key: field.key,
+                            label: field.label,
+                            value: item[field.key] || '',
+                            onChange: (value) => updateItem(index, field.key, value),
+                            rows: 3
+                        });
                     } else if (field.type === 'select') {
                         return createElement(SelectControl, {
                             key: field.key,
@@ -525,7 +508,9 @@ registerBlockType('swrice/problem-section', {
                                         createElement('h3', { className: 'sppm-problem-title' }, 
                                             problem.title || 'Problem Title'
                                         ),
-                                        createElement(RichText.Content, { tagName: 'p', className: 'sppm-problem-desc', value: problem.description || 'Problem description' })
+                                        createElement('p', { className: 'sppm-problem-desc' }, 
+                                            problem.description || 'Problem description'
+                                        )
                                     )
                                 ) :
                                 createElement('div', { 
@@ -688,7 +673,9 @@ registerBlockType('swrice/features-section', {
                                             )
                                         ),
                                         createElement('div', { className: 'sppm-feature-card-body' },
-                                            createElement(RichText.Content, { tagName: 'p', className: 'sppm-feature-desc', value: feature.description || 'Feature description' })
+                                            createElement('p', { className: 'sppm-feature-desc' }, 
+                                                feature.description || 'Feature description'
+                                            )
                                         )
                                     )
                                 ) :
@@ -884,7 +871,9 @@ registerBlockType('swrice/how-it-works-section', {
                                         createElement('h3', { className: 'sppm-step-title' }, 
                                             step.title || 'Step Title'
                                         ),
-                                        createElement(RichText.Content, { tagName: 'p', className: 'sppm-step-desc', value: step.description || 'Step description' })
+                                        createElement('p', { className: 'sppm-step-desc' }, 
+                                            step.description || 'Step description'
+                                        )
                                     )
                                 ) :
                                 createElement('div', { 
@@ -1091,7 +1080,9 @@ registerBlockType('swrice/bonuses-section', {
                                             createElement('div', { className: 'sppm-bonus-value' }, 
                                                 'Value: ' + bonus.value
                                             ) : null,
-                                        createElement(RichText.Content, { tagName: 'p', className: 'sppm-bonus-desc', value: bonus.description || 'Bonus description' })
+                                        createElement('p', { className: 'sppm-bonus-desc' }, 
+                                            bonus.description || 'Bonus description'
+                                        )
                                     )
                                 ) :
                                 createElement('div', { 
@@ -1180,7 +1171,9 @@ registerBlockType('swrice/guarantee-section', {
                             )
                         ),
                         createElement('div', { className: 'sppm-guarantee-content' },
-                            createElement(RichText, { tagName: 'p', className: 'sppm-guarantee-text', placeholder: 'Enter guarantee text with link support...', value: getAttr('guaranteeText'), onChange: (val) => setAttributes({ guaranteeText: val }), allowedFormats: ['core/bold', 'core/italic', 'core/link'] }),
+                            createElement('p', { className: 'sppm-guarantee-text' }, 
+                                getAttr('guaranteeText', 'We guarantee your satisfaction with our product.')
+                            ),
                             getAttr('guaranteePoints', []).length > 0 ?
                                 createElement('div', { className: 'sppm-guarantee-points' },
                                     getAttr('guaranteePoints', []).map((point, index) =>
@@ -1285,7 +1278,9 @@ registerBlockType('swrice/why-choose-section', {
                                         createElement('h3', { className: 'sppm-benefit-title' }, 
                                             benefit.title || 'Benefit Title'
                                         ),
-                                        createElement(RichText.Content, { tagName: 'p', className: 'sppm-benefit-desc', value: benefit.description || 'Benefit description' })
+                                        createElement('p', { className: 'sppm-benefit-desc' }, 
+                                            benefit.description || 'Benefit description'
+                                        )
                                     )
                                 ) :
                                 createElement('div', { 
@@ -1357,7 +1352,9 @@ registerBlockType('swrice/about-section', {
                             )
                         ),
                         createElement('div', { className: 'sppm-about-content' },
-                            createElement(RichText, { tagName: 'p', placeholder: 'Enter about description with link support...', value: getAttr('aboutDescription'), onChange: (val) => setAttributes({ aboutDescription: val }), allowedFormats: ['core/bold', 'core/italic', 'core/link'] })
+                            createElement('p', null, 
+                                getAttr('aboutDescription', 'Learn more about our company and mission.')
+                            )
                         )
                     )
                 )
@@ -1445,7 +1442,9 @@ registerBlockType('swrice/final-cta-section', {
                                         getAttr('ctaTitle', 'Get Started Today')
                                     ) : null,
                                 getAttr('ctaSubtitle') ?
-                                    createElement(RichText, { tagName: 'p', className: 'sppm-cta-subtitle', placeholder: 'Enter CTA subtitle with link support...', value: getAttr('ctaSubtitle'), onChange: (val) => setAttributes({ ctaSubtitle: val }), allowedFormats: ['core/bold', 'core/italic', 'core/link'] }) : null
+                                    createElement('p', { className: 'sppm-cta-subtitle' },
+                                        getAttr('ctaSubtitle', 'Join thousands of satisfied customers')
+                                    ) : null
                             ),
                             createElement('div', { className: 'sppm-cta-buttons' },
                                 getAttr('buyNowShortcode') ? 
@@ -1712,7 +1711,9 @@ registerBlockType('swrice/screenshots-section', {
                                 getAttr('screenshotsHeading', 'Screenshots')
                             ) : null,
                         getAttr('screenshotsDescription') ?
-                            createElement(RichText, { tagName: 'p', className: 'sppm-section-description', placeholder: 'Enter screenshots description with link support...', value: getAttr('screenshotsDescription'), onChange: (val) => setAttributes({ screenshotsDescription: val }), allowedFormats: ['core/bold', 'core/italic', 'core/link'] }) : null,
+                            createElement('p', { className: 'sppm-section-description' },
+                                getAttr('screenshotsDescription')
+                            ) : null,
                         createElement('div', { className: 'sppm-screenshots-gallery' },
                             getAttr('screenshotItems', []).length > 0 ?
                                 getAttr('screenshotItems', []).map((item, index) =>
@@ -1849,7 +1850,9 @@ registerBlockType('swrice/video-tutorial-section', {
                                 getAttr('videoTutorialHeading', 'Video Tutorial')
                             ) : null,
                         getAttr('videoTutorialDescription') ?
-                            createElement(RichText, { tagName: 'p', className: 'sppm-section-description', placeholder: 'Enter video tutorial description with link support...', value: getAttr('videoTutorialDescription'), onChange: (val) => setAttributes({ videoTutorialDescription: val }), allowedFormats: ['core/bold', 'core/italic', 'core/link'] }) : null,
+                            createElement('p', { className: 'sppm-section-description' },
+                                getAttr('videoTutorialDescription')
+                            ) : null,
                         createElement('div', { className: 'sppm-video-container' },
                             getAttr('videoUrl') ?
                                 createElement('div', { 
@@ -1998,7 +2001,9 @@ registerBlockType('swrice/version-changelog-section', {
                                 getAttr('versionChangelogHeading', 'Version & Changelog')
                             ) : null,
                         getAttr('versionChangelogDescription') ?
-                            createElement(RichText, { tagName: 'p', className: 'sppm-section-description', placeholder: 'Enter version changelog description with link support...', value: getAttr('versionChangelogDescription'), onChange: (val) => setAttributes({ versionChangelogDescription: val }), allowedFormats: ['core/bold', 'core/italic', 'core/link'] }) : null,
+                            createElement('p', { className: 'sppm-section-description' },
+                                getAttr('versionChangelogDescription')
+                            ) : null,
                         
                         // Current Version Display
                         createElement('div', { className: 'sppm-current-version' },

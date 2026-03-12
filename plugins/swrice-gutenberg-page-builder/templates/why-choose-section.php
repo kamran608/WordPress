@@ -27,7 +27,7 @@ if (empty($why_choose_items) || !is_array($why_choose_items)) return;
             <div class="sppm-benefit-icon"><?php echo $benefit['icon']; ?></div>
             <?php endif; ?>
             <h3 class="sppm-benefit-title"><?php echo esc_html($benefit['title']); ?></h3>
-            <p class="sppm-benefit-desc"><?php echo esc_html($benefit['description']); ?></p>
+            <p class="sppm-benefit-desc"><?php echo wp_kses_post($benefit['description']); ?></p>
         </div>
         <?php endforeach; ?>
     </div>

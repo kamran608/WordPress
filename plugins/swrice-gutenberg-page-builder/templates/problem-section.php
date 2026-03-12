@@ -28,7 +28,7 @@ if (empty($problem_items) || !is_array($problem_items)) return;
                 <div class="sppm-problem-icon"><?php echo $problem['icon']; ?></div>
                 <?php endif; ?>
                 <h3 class="sppm-problem-title"><?php echo esc_html($problem['title']); ?></h3>
-                <p class="sppm-problem-desc"><?php echo esc_html($problem['description']); ?></p>
+                <p class="sppm-problem-desc"><?php echo wp_kses_post($problem['description']); ?></p>
             </div>
             <?php endforeach; ?>
         <?php endif; ?>

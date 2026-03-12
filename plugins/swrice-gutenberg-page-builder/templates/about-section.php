@@ -21,6 +21,6 @@ if (empty($about_description) && empty($about_heading)) return;
     </div>
     
     <div class="sppm-about-content">
-        <p><?php echo esc_html($about_description); ?></p>
+        <p><?php echo wp_kses_post($about_description); ?></p>
     </div>
 </section>

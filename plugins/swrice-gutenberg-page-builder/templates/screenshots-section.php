@@ -23,7 +23,7 @@ $total_slides = count($screenshot_items);
             <?php echo esc_html($screenshots_heading); ?>
         </h2>
         <?php if ($screenshots_description): ?>
-        <p class="sppm-section-description"><?php echo esc_html($screenshots_description); ?></p>
+        <p class="sppm-section-description"><?php echo wp_kses_post($screenshots_description); ?></p>
         <?php endif; ?>
     </div>
 

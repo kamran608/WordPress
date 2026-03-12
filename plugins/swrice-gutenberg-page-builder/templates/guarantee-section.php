@@ -22,7 +22,7 @@ if (empty($guarantee_text) && empty($guarantee_points)) return;
     </div>
     
     <div class="sppm-guarantee-content">
-        <p class="sppm-guarantee-text"><?php echo esc_html($guarantee_text); ?></p>
+        <p class="sppm-guarantee-text"><?php echo wp_kses_post($guarantee_text); ?></p>
         
         <?php if (is_array($guarantee_points) && !empty($guarantee_points)): ?>
         <div class="sppm-guarantee-points">

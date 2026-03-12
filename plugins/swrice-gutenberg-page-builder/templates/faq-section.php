@@ -27,7 +27,7 @@ if (empty($faq_items) || !is_array($faq_items)) return;
                 <?php echo esc_html($faq['question']); ?>
                 <span>+</span>
             </div>
-            <div class="sppm-faq-answer"><?php echo esc_html($faq['answer']); ?></div>
+            <div class="sppm-faq-answer"><?php echo wp_kses_post($faq['answer']); ?></div>
         </div>
         <?php endforeach; ?>
     </div>

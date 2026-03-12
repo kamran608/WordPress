@@ -42,7 +42,7 @@ $changelog_items = isset($attributes['changelogItems']) ? $attributes['changelog
                 <div class="sppm-notice-icon">⚠️</div>
                 <div class="sppm-notice-content">
                     <div class="sppm-notice-title">Important Notice</div>
-                    <div class="sppm-notice-text"><?php echo esc_html($upgrade_notice); ?></div>
+                    <div class="sppm-notice-text"><?php echo wp_kses_post($upgrade_notice); ?></div>
                 </div>
             </div>
             <?php endif; ?>

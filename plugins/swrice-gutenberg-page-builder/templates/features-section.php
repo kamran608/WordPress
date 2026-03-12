@@ -31,7 +31,7 @@ if (empty($feature_items) || !is_array($feature_items)) return;
                     <h3 class="sppm-feature-title"><?php echo esc_html($feature['title']); ?></h3>
                 </div>
                 <div class="sppm-feature-card-body">
-                    <p class="sppm-feature-desc"><?php echo esc_html($feature['description']); ?></p>
+                    <p class="sppm-feature-desc"><?php echo wp_kses_post($feature['description']); ?></p>
                 </div>
             </div>
             <?php endforeach; ?>

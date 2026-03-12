@@ -30,7 +30,7 @@ if (empty($bonus_items) || !is_array($bonus_items)) return;
             <?php if (!empty($bonus['value'])): ?>
             <div class="sppm-bonus-value">Value: <?php echo esc_html($bonus['value']); ?></div>
             <?php endif; ?>
-            <p class="sppm-bonus-desc"><?php echo esc_html($bonus['description']); ?></p>
+            <p class="sppm-bonus-desc"><?php echo wp_kses_post($bonus['description']); ?></p>
         </div>
         <?php endforeach; ?>
     </div>

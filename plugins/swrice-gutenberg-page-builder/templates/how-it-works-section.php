@@ -26,7 +26,7 @@ if (empty($steps_items) || !is_array($steps_items)) return;
             <div class="sppm-step-card">
                 <div class="sppm-step-number"><?php echo ($index + 1); ?></div>
                 <h3 class="sppm-step-title"><?php echo esc_html($step['title']); ?></h3>
-                <p class="sppm-step-desc"><?php echo esc_html($step['description']); ?></p>
+                <p class="sppm-step-desc"><?php echo wp_kses_post($step['description']); ?></p>
             </div>
             <?php endforeach; ?>
         <?php endif; ?>
