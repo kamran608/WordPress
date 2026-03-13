@@ -39,7 +39,7 @@ if (empty($testimonial_items) || !is_array($testimonial_items)) return;
             </div>
             <div class="sppm-testimonial-content">"<?php echo esc_html($testimonial['content']); ?>"</div>
             <div class="sppm-testimonial-author">
-                <strong><?php echo esc_html($testimonial['name']); ?></strong>
+                <strong><?php echo wp_kses_post($testimonial[\'name\']); ?></strong>
                 <span><?php echo esc_html($testimonial['title']); ?></span>
             </div>
         </div>

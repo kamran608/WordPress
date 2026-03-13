@@ -283,38 +283,17 @@ registerBlockType('swrice/hero-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Hero Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Plugin Name'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter plugin name with link support...",
-                            value: getAttr('pluginName'),
-                            onChange: (val) => setAttributes({ pluginName: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Hero Subtitle'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter hero subtitle with link support...",
-                            value: getAttr('heroSubtitle'),
-                            onChange: (val) => setAttributes({ heroSubtitle: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Plugin Name',
+                        value: getAttr('pluginName'),
+                        onChange: (val) => setAttributes({ pluginName: val })
+                    }),
+                    createElement(TextareaControl, {
+                        label: 'Hero Subtitle',
+                        value: getAttr('heroSubtitle'),
+                        onChange: (val) => setAttributes({ heroSubtitle: val }),
+                        rows: 3
+                    }),
                     createElement(TextControl, {
                         label: 'Plugin Price ($)',
                         value: getAttr('pluginPrice'),
@@ -327,22 +306,13 @@ registerBlockType('swrice/hero-section', {
                         onChange: (val) => setAttributes({ pluginOriginalPrice: val }),
                         type: 'number'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Buy Now Shortcode'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter buy now shortcode with link support...",
-                            value: getAttr('buyNowShortcode'),
-                            onChange: (val) => setAttributes({ buyNowShortcode: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextareaControl, {
+                        label: 'Buy Now Shortcode',
+                        value: getAttr('buyNowShortcode'),
+                        onChange: (val) => setAttributes({ buyNowShortcode: val }),
+                        help: 'Paste your payment processor shortcode here',
+                        rows: 3
+                    }),
                     createElement(TextControl, {
                         label: 'Demo Link',
                         value: getAttr('demoLink'),
@@ -507,22 +477,11 @@ registerBlockType('swrice/problem-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Problem Section Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('problemHeading'),
-                            onChange: (val) => setAttributes({ problemHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('problemHeading'),
+                        onChange: (val) => setAttributes({ problemHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('problemIcon'),
@@ -603,22 +562,11 @@ registerBlockType('swrice/solution-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Solution Section Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('solutionHeading'),
-                            onChange: (val) => setAttributes({ solutionHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('solutionHeading'),
+                        onChange: (val) => setAttributes({ solutionHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('solutionIcon'),
@@ -626,22 +574,12 @@ registerBlockType('swrice/solution-section', {
                         onChange: (val) => setAttributes({ solutionIcon: val }),
                         help: 'Choose an icon for this section'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Solution Description'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter solution description with link support...",
-                            value: getAttr('solutionDescription'),
-                            onChange: (val) => setAttributes({ solutionDescription: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    )
+                    createElement(TextareaControl, {
+                        label: 'Solution Description',
+                        value: getAttr('solutionDescription'),
+                        onChange: (val) => setAttributes({ solutionDescription: val }),
+                        rows: 4
+                    })
                 )
             ),
             
@@ -699,22 +637,11 @@ registerBlockType('swrice/features-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Features Section Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('featuresHeading'),
-                            onChange: (val) => setAttributes({ featuresHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('featuresHeading'),
+                        onChange: (val) => setAttributes({ featuresHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('featuresIcon'),
@@ -811,22 +738,11 @@ registerBlockType('swrice/faq-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'FAQ Section Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('faqHeading'),
-                            onChange: (val) => setAttributes({ faqHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('faqHeading'),
+                        onChange: (val) => setAttributes({ faqHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('faqIcon'),
@@ -920,22 +836,11 @@ registerBlockType('swrice/how-it-works-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'How It Works Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('howItWorksHeading'),
-                            onChange: (val) => setAttributes({ howItWorksHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('howItWorksHeading'),
+                        onChange: (val) => setAttributes({ howItWorksHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('howItWorksIcon'),
@@ -1028,22 +933,11 @@ registerBlockType('swrice/testimonials-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Testimonials Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('testimonialsHeading'),
-                            onChange: (val) => setAttributes({ testimonialsHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('testimonialsHeading'),
+                        onChange: (val) => setAttributes({ testimonialsHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('testimonialsIcon'),
@@ -1144,22 +1038,11 @@ registerBlockType('swrice/bonuses-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Bonuses Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('bonusesHeading'),
-                            onChange: (val) => setAttributes({ bonusesHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('bonusesHeading'),
+                        onChange: (val) => setAttributes({ bonusesHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('bonusesIcon'),
@@ -1256,22 +1139,11 @@ registerBlockType('swrice/guarantee-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Guarantee Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('guaranteeHeading'),
-                            onChange: (val) => setAttributes({ guaranteeHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('guaranteeHeading'),
+                        onChange: (val) => setAttributes({ guaranteeHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('guaranteeIcon'),
@@ -1279,22 +1151,12 @@ registerBlockType('swrice/guarantee-section', {
                         onChange: (val) => setAttributes({ guaranteeIcon: val }),
                         help: 'Choose an icon for this section'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Guarantee Text'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter guarantee text with link support...",
-                            value: getAttr('guaranteeText'),
-                            onChange: (val) => setAttributes({ guaranteeText: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextareaControl, {
+                        label: 'Guarantee Text',
+                        value: getAttr('guaranteeText'),
+                        onChange: (val) => setAttributes({ guaranteeText: val }),
+                        rows: 3
+                    }),
                     createElement(RepeaterField, {
                         items: getAttr('guaranteePoints', []),
                         onChange: (items) => setAttributes({ guaranteePoints: items }),
@@ -1375,22 +1237,11 @@ registerBlockType('swrice/why-choose-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Why Choose Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('whyChooseHeading'),
-                            onChange: (val) => setAttributes({ whyChooseHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('whyChooseHeading'),
+                        onChange: (val) => setAttributes({ whyChooseHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('whyChooseIcon'),
@@ -1473,22 +1324,11 @@ registerBlockType('swrice/about-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'About Section Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('aboutHeading'),
-                            onChange: (val) => setAttributes({ aboutHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('aboutHeading'),
+                        onChange: (val) => setAttributes({ aboutHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('aboutIcon'),
@@ -1496,22 +1336,12 @@ registerBlockType('swrice/about-section', {
                         onChange: (val) => setAttributes({ aboutIcon: val }),
                         help: 'Choose an icon for this section'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'About Description'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter about description with link support...",
-                            value: getAttr('aboutDescription'),
-                            onChange: (val) => setAttributes({ aboutDescription: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    )
+                    createElement(TextareaControl, {
+                        label: 'About Description',
+                        value: getAttr('aboutDescription'),
+                        onChange: (val) => setAttributes({ aboutDescription: val }),
+                        rows: 4
+                    })
                 )
             ),
             
@@ -1558,22 +1388,11 @@ registerBlockType('swrice/final-cta-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Final CTA Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('finalCtaHeading'),
-                            onChange: (val) => setAttributes({ finalCtaHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('finalCtaHeading'),
+                        onChange: (val) => setAttributes({ finalCtaHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('finalCtaIcon'),
@@ -1581,54 +1400,23 @@ registerBlockType('swrice/final-cta-section', {
                         onChange: (val) => setAttributes({ finalCtaIcon: val }),
                         help: 'Choose an icon for this section'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'CTA Title'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter CTA title with link support...",
-                            value: getAttr('ctaTitle'),
-                            onChange: (val) => setAttributes({ ctaTitle: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'CTA Subtitle'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter cta subtitle with link support...",
-                            value: getAttr('ctaSubtitle'),
-                            onChange: (val) => setAttributes({ ctaSubtitle: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Buy Now Shortcode'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter buy now shortcode with link support...",
-                            value: getAttr('buyNowShortcode'),
-                            onChange: (val) => setAttributes({ buyNowShortcode: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'CTA Title',
+                        value: getAttr('ctaTitle'),
+                        onChange: (val) => setAttributes({ ctaTitle: val })
+                    }),
+                    createElement(TextControl, {
+                        label: 'CTA Subtitle',
+                        value: getAttr('ctaSubtitle'),
+                        onChange: (val) => setAttributes({ ctaSubtitle: val })
+                    }),
+                    createElement(TextareaControl, {
+                        label: 'Buy Now Shortcode',
+                        value: getAttr('buyNowShortcode'),
+                        onChange: (val) => setAttributes({ buyNowShortcode: val }),
+                        help: 'Paste your payment processor shortcode here',
+                        rows: 3
+                    }),
                     createElement(TextControl, {
                         label: 'Demo Link URL',
                         value: getAttr('demoLink'),
@@ -1731,22 +1519,11 @@ registerBlockType('swrice/screenshots-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Screenshots Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('screenshotsHeading'),
-                            onChange: (val) => setAttributes({ screenshotsHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('screenshotsHeading'),
+                        onChange: (val) => setAttributes({ screenshotsHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('screenshotsIcon'),
@@ -1754,22 +1531,13 @@ registerBlockType('swrice/screenshots-section', {
                         onChange: (val) => setAttributes({ screenshotsIcon: val }),
                         help: 'Choose an icon for the section heading'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Description'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section description with link support...",
-                            value: getAttr('screenshotsDescription'),
-                            onChange: (val) => setAttributes({ screenshotsDescription: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    )
+                    createElement(TextareaControl, {
+                        label: 'Section Description',
+                        value: getAttr('screenshotsDescription'),
+                        onChange: (val) => setAttributes({ screenshotsDescription: val }),
+                        rows: 3,
+                        help: 'Brief description of the screenshots section'
+                    })
                 ),
                 createElement(PanelBody, { title: 'Screenshot Gallery', initialOpen: false },
                     // Custom Screenshots Repeater with Media Library Support
@@ -1806,48 +1574,29 @@ registerBlockType('swrice/screenshots-section', {
                                 ),
                                 
                                 // Screenshot Title
-                                // Screenshot Title
-                                createElement('div', { style: { marginBottom: '8px' } },
-                                    createElement('label', { style: { display: 'block', marginBottom: '4px', fontWeight: 'bold', fontSize: '12px' } }, 'Screenshot Title'),
-                                    createElement(RichText, {
-                                        tagName: "div",
-                                        placeholder: "Enter screenshot title with link support...",
-                                        value: item.title || '',
-                                        onChange: (value) => {
-                                            const newItems = [...getAttr('screenshotItems', [])];
-                                            newItems[index] = { ...newItems[index], title: value };
-                                            setAttributes({ screenshotItems: newItems });
-                                        },
-                                        allowedFormats: ["core/bold", "core/italic", "core/link"],
-                                        style: {
-                                            border: "1px solid #ddd",
-                                            padding: "8px",
-                                            minHeight: "40px",
-                                            borderRadius: "4px"
-                                        }
-                                    })
-                                ),
+                                createElement(TextControl, {
+                                    label: 'Screenshot Title',
+                                    value: item.title || '',
+                                    onChange: (value) => {
+                                        const newItems = [...getAttr('screenshotItems', [])];
+                                        newItems[index] = { ...newItems[index], title: value };
+                                        setAttributes({ screenshotItems: newItems });
+                                    },
+                                    placeholder: 'e.g., Dashboard Overview'
+                                }),
+                                
                                 // Screenshot Description
-                                createElement('div', { style: { marginBottom: '8px' } },
-                                    createElement('label', { style: { display: 'block', marginBottom: '4px', fontWeight: 'bold', fontSize: '12px' } }, 'Screenshot Description'),
-                                    createElement(RichText, {
-                                        tagName: "div",
-                                        placeholder: "Enter screenshot description with link support...",
-                                        value: item.description || '',
-                                        onChange: (value) => {
-                                            const newItems = [...getAttr('screenshotItems', [])];
-                                            newItems[index] = { ...newItems[index], description: value };
-                                            setAttributes({ screenshotItems: newItems });
-                                        },
-                                        allowedFormats: ["core/bold", "core/italic", "core/link"],
-                                        style: {
-                                            border: "1px solid #ddd",
-                                            padding: "12px",
-                                            minHeight: "80px",
-                                            borderRadius: "4px"
-                                        }
-                                    })
-                                ),
+                                createElement(TextareaControl, {
+                                    label: 'Screenshot Description',
+                                    value: item.description || '',
+                                    onChange: (value) => {
+                                        const newItems = [...getAttr('screenshotItems', [])];
+                                        newItems[index] = { ...newItems[index], description: value };
+                                        setAttributes({ screenshotItems: newItems });
+                                    },
+                                    rows: 3,
+                                    placeholder: 'Brief description of what this screenshot shows'
+                                }),
                                 
                                 // Image Selection - URL Input
                                 createElement(TextControl, {
@@ -2038,22 +1787,11 @@ registerBlockType('swrice/video-tutorial-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Video Tutorial Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('videoTutorialHeading'),
-                            onChange: (val) => setAttributes({ videoTutorialHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('videoTutorialHeading'),
+                        onChange: (val) => setAttributes({ videoTutorialHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('videoTutorialIcon'),
@@ -2061,22 +1799,13 @@ registerBlockType('swrice/video-tutorial-section', {
                         onChange: (val) => setAttributes({ videoTutorialIcon: val }),
                         help: 'Choose an icon for the section heading'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Description'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section description with link support...",
-                            value: getAttr('videoTutorialDescription'),
-                            onChange: (val) => setAttributes({ videoTutorialDescription: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    )
+                    createElement(TextareaControl, {
+                        label: 'Section Description',
+                        value: getAttr('videoTutorialDescription'),
+                        onChange: (val) => setAttributes({ videoTutorialDescription: val }),
+                        rows: 3,
+                        help: 'Brief description of the video tutorial'
+                    })
                 ),
                 createElement(PanelBody, { title: 'Video Settings', initialOpen: false },
                     createElement(TextControl, {
@@ -2086,22 +1815,12 @@ registerBlockType('swrice/video-tutorial-section', {
                         placeholder: 'https://www.youtube.com/watch?v=... or https://vimeo.com/...',
                         help: 'YouTube, Vimeo, or direct video URL'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Video Title'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter video title with link support...",
-                            value: getAttr('videoTitle'),
-                            onChange: (val) => setAttributes({ videoTitle: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Video Title',
+                        value: getAttr('videoTitle'),
+                        onChange: (val) => setAttributes({ videoTitle: val }),
+                        placeholder: 'e.g., Complete Plugin Setup Guide'
+                    }),
                     createElement(TextControl, {
                         label: 'Video Duration',
                         value: getAttr('videoDuration'),
@@ -2211,22 +1930,11 @@ registerBlockType('swrice/version-changelog-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Version & Changelog Settings', initialOpen: true },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Heading'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section heading with link support...",
-                            value: getAttr('versionChangelogHeading'),
-                            onChange: (val) => setAttributes({ versionChangelogHeading: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
+                    createElement(TextControl, {
+                        label: 'Section Heading',
+                        value: getAttr('versionChangelogHeading'),
+                        onChange: (val) => setAttributes({ versionChangelogHeading: val })
+                    }),
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('versionChangelogIcon'),
@@ -2234,56 +1942,30 @@ registerBlockType('swrice/version-changelog-section', {
                         onChange: (val) => setAttributes({ versionChangelogIcon: val }),
                         help: 'Choose an icon for the section heading'
                     }),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Section Description'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter section description with link support...",
-                            value: getAttr('versionChangelogDescription'),
-                            onChange: (val) => setAttributes({ versionChangelogDescription: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    )
+                    createElement(TextareaControl, {
+                        label: 'Section Description',
+                        value: getAttr('versionChangelogDescription'),
+                        onChange: (val) => setAttributes({ versionChangelogDescription: val }),
+                        rows: 3,
+                        help: 'Brief description of the version/changelog section'
+                    })
                 ),
                 createElement(PanelBody, { title: 'Current Version', initialOpen: false },
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Current Version'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter current version with link support...",
-                            value: getAttr('currentVersion'),
-                            onChange: (val) => setAttributes({ currentVersion: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "8px",
-                                minHeight: "40px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    ),
-                    createElement('div', { style: { marginBottom: '16px' } },
-                        createElement('label', { style: { display: 'block', marginBottom: '8px', fontWeight: 'bold' } }, 'Upgrade Notice'),
-                        createElement(RichText, {
-                            tagName: "div",
-                            placeholder: "Enter upgrade notice with link support...",
-                            value: getAttr('upgradeNotice'),
-                            onChange: (val) => setAttributes({ upgradeNotice: val }),
-                            allowedFormats: ["core/bold", "core/italic", "core/link"],
-                            style: {
-                                border: "1px solid #ddd",
-                                padding: "12px",
-                                minHeight: "80px",
-                                borderRadius: "4px"
-                            }
-                        })
-                    )
+                    createElement(TextControl, {
+                        label: 'Current Version',
+                        value: getAttr('currentVersion'),
+                        onChange: (val) => setAttributes({ currentVersion: val }),
+                        placeholder: 'e.g., 2.1.0',
+                        help: 'Current plugin version number'
+                    }),
+                    createElement(TextareaControl, {
+                        label: 'Upgrade Notice',
+                        value: getAttr('upgradeNotice'),
+                        onChange: (val) => setAttributes({ upgradeNotice: val }),
+                        rows: 3,
+                        placeholder: 'Important upgrade information or notices...',
+                        help: 'Optional: Important information about the current version'
+                    })
                 ),
                 createElement(PanelBody, { title: 'Changelog Entries', initialOpen: false },
                     createElement(RepeaterField, {
