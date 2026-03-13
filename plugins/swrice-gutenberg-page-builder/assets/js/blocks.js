@@ -14,7 +14,7 @@ const {
     MediaUpload,
     MediaUploadCheck
 } = wp.components;
-const { InspectorControls } = wp.blockEditor;
+const { InspectorControls, RichText } = wp.blockEditor;
 
 // Icon options for different sections
 const PROBLEM_ICON_OPTIONS = [
@@ -245,6 +245,7 @@ const RepeaterField = ({ items, onChange, fields, addButtonText = 'Add Item' }) 
 };
 
 // Hero Section Block
+// Hero Section Block - Option C: Full Inline Editing
 registerBlockType('swrice/hero-section', {
     title: 'Hero Section',
     icon: 'superhero',
@@ -266,17 +267,7 @@ registerBlockType('swrice/hero-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Hero Settings', initialOpen: true },
-                    createElement(TextControl, {
-                        label: 'Plugin Name',
-                        value: getAttr('pluginName'),
-                        onChange: (val) => setAttributes({ pluginName: val })
-                    }),
-                    createElement(TextareaControl, {
-                        label: 'Hero Subtitle',
-                        value: getAttr('heroSubtitle'),
-                        onChange: (val) => setAttributes({ heroSubtitle: val }),
-                        rows: 3
-                    }),
+                    // Keep only non-text fields in sidebar - prices, shortcodes, links
                     createElement(TextControl, {
                         label: 'Plugin Price ($)',
                         value: getAttr('pluginPrice'),
@@ -354,7 +345,7 @@ registerBlockType('swrice/hero-section', {
                 )
             ),
             
-            // Block Preview - Exact Frontend Match
+            // Block Preview - ALL TEXT FIELDS NOW HAVE INLINE EDITING
             createElement('div', { className: 'sgpb-plugin-page-editor' },
                 createElement('div', { className: 'sppm-plugin-page' },
                     createElement('div', { className: 'sppm-container' },
@@ -374,19 +365,62 @@ registerBlockType('swrice/hero-section', {
                                             createElement('rect', { x: '2', y: '18', width: '12', height: '4', rx: '2', fill: '#bcdff6' })
                                         )
                                     ),
+                                    // INLINE EDITING: Plugin Name in logo
                                     createElement('div', { className: 'sppm-logo-text' }, 
-                                        getAttr('pluginName', 'My Awesome Plugin')
+                                        createElement(RichText, {
+                                            tagName: "span",
+                                            placeholder: "Click to edit plugin name...",
+                                            value: getAttr('pluginName'),
+                                            onChange: (val) => setAttributes({ pluginName: val }),
+                                            allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                            style: { 
+                                                border: '1px dashed #007cba', 
+                                                padding: '2px 6px', 
+                                                minHeight: '20px',
+                                                borderRadius: '3px',
+                                                backgroundColor: 'rgba(0, 124, 186, 0.05)'
+                                            }
+                                        })
                                     )
                                 ),
                                 createElement('div', { className: 'sppm-rating' },
                                     createElement('div', { className: 'sppm-rating-stars' }, '★ ★ ★ ★ ★'),
                                     createElement('div', null, '5.0')
                                 ),
+                                // INLINE EDITING: Hero Title (same as plugin name for consistency)
                                 createElement('h1', { className: 'sppm-hero-title' }, 
-                                    getAttr('pluginName', 'My Awesome Plugin')
+                                    createElement(RichText, {
+                                        tagName: "span",
+                                        placeholder: "Click to edit hero title...",
+                                        value: getAttr('pluginName'),
+                                        onChange: (val) => setAttributes({ pluginName: val }),
+                                        allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                        style: { 
+                                            border: '1px dashed #007cba', 
+                                            padding: '4px 8px', 
+                                            minHeight: '30px',
+                                            borderRadius: '3px',
+                                            backgroundColor: 'rgba(0, 124, 186, 0.05)'
+                                        }
+                                    })
                                 ),
+                                // INLINE EDITING: Hero Subtitle - KEY FIELD FOR LINKS
                                 createElement('p', { className: 'sppm-hero-subtitle' }, 
-                                    getAttr('heroSubtitle', 'Transform your WordPress experience with our powerful plugin solution')
+                                    createElement(RichText, {
+                                        tagName: "span",
+                                        placeholder: "Click to edit subtitle - add links like LearnDash Course Progress...",
+                                        value: getAttr('heroSubtitle'),
+                                        onChange: (val) => setAttributes({ heroSubtitle: val }),
+                                        allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                        style: { 
+                                            border: '1px dashed #007cba', 
+                                            padding: '6px 10px', 
+                                            minHeight: '50px',
+                                            borderRadius: '3px',
+                                            backgroundColor: 'rgba(0, 124, 186, 0.05)',
+                                            display: 'block'
+                                        }
+                                    })
                                 ),
                                 createElement('div', { className: 'sppm-hero-ctas' },
                                     getAttr('buyNowShortcode') ? 
@@ -428,6 +462,7 @@ registerBlockType('swrice/hero-section', {
     },
     save: () => null // Server-side rendering
 });
+
 
 // Problem Section Block
 registerBlockType('swrice/problem-section', {
