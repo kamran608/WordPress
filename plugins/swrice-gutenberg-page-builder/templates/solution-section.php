@@ -16,11 +16,11 @@ if (empty($solution_heading) && empty($solution_description)) return;
     <div class="sppm-section-header">
         <h2 class="sppm-section-title">
             <?php if ($solution_icon): ?><span class="sppm-section-icon"><?php echo $solution_icon; ?></span><?php endif; ?>
-            <?php echo esc_html($solution_heading); ?>
+            <?php echo wp_kses_post($solution_heading); ?>
         </h2>
     </div>
     
     <div class="sppm-solution-content">
-        <p><?php echo esc_html($solution_description); ?></p>
+        <p><?php echo wp_kses_post($solution_description); ?></p>
     </div>
 </section>

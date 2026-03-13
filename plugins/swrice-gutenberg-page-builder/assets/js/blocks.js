@@ -490,11 +490,7 @@ registerBlockType('swrice/problem-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Problem Section Settings', initialOpen: true },
-                    createElement(TextControl, {
-                        label: 'Section Heading',
-                        value: getAttr('problemHeading'),
-                        onChange: (val) => setAttributes({ problemHeading: val })
-                    }),
+                    // Section heading moved to inline editing - removed from sidebar
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('problemIcon'),
@@ -523,7 +519,20 @@ registerBlockType('swrice/problem-section', {
                             createElement('h2', { className: 'sppm-section-title' },
                                 getAttr('problemIcon') ? 
                                     createElement('span', { className: 'sppm-section-icon' }, getAttr('problemIcon')) : null,
-                                getAttr('problemHeading', 'The Problem')
+                                createElement(RichText, {
+                                    tagName: "span",
+                                    placeholder: "Click to edit section heading...",
+                                    value: getAttr("problemHeading"),
+                                    onChange: (val) => setAttributes({ problemHeading: val }),
+                                    allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                    style: { 
+                                        border: "1px dashed #007cba", 
+                                        padding: "4px 8px", 
+                                        minHeight: "25px",
+                                        borderRadius: "3px",
+                                        backgroundColor: "rgba(0, 124, 186, 0.05)"
+                                    }
+                                })
                             )
                         ),
                         createElement('div', { className: 'sppm-problem-grid' },
@@ -535,11 +544,46 @@ registerBlockType('swrice/problem-section', {
                                     },
                                         problem.icon ? 
                                             createElement('div', { className: 'sppm-problem-icon' }, problem.icon) : null,
-                                        createElement('h3', { className: 'sppm-problem-title' }, 
-                                            problem.title || 'Problem Title'
+                                        createElement("h3", { className: "sppm-problem-title" }, 
+                                            createElement(RichText, {
+                                                tagName: "span",
+                                                placeholder: "Click to edit problem title...",
+                                                value: problem.title || "",
+                                                onChange: (val) => {
+                                                    const newItems = [...getAttr("problemItems", [])];
+                                                    newItems[index] = { ...newItems[index], title: val };
+                                                    setAttributes({ problemItems: newItems });
+                                                },
+                                                allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                                style: { 
+                                                    border: "1px dashed #007cba", 
+                                                    padding: "2px 6px", 
+                                                    minHeight: "20px",
+                                                    borderRadius: "3px",
+                                                    backgroundColor: "rgba(0, 124, 186, 0.05)"
+                                                }
+                                            })
                                         ),
-                                        createElement('p', { className: 'sppm-problem-desc' }, 
-                                            problem.description || 'Problem description'
+                                        createElement("p", { className: "sppm-problem-desc" }, 
+                                            createElement(RichText, {
+                                                tagName: "span",
+                                                placeholder: "Click to edit problem description...",
+                                                value: problem.description || "",
+                                                onChange: (val) => {
+                                                    const newItems = [...getAttr("problemItems", [])];
+                                                    newItems[index] = { ...newItems[index], description: val };
+                                                    setAttributes({ problemItems: newItems });
+                                                },
+                                                allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                                style: { 
+                                                    border: "1px dashed #007cba", 
+                                                    padding: "4px 8px", 
+                                                    minHeight: "30px",
+                                                    borderRadius: "3px",
+                                                    backgroundColor: "rgba(0, 124, 186, 0.05)",
+                                                    display: "block"
+                                                }
+                                            })
                                         )
                                     )
                                 ) :
@@ -577,11 +621,7 @@ registerBlockType('swrice/solution-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Solution Section Settings', initialOpen: true },
-                    createElement(TextControl, {
-                        label: 'Section Heading',
-                        value: getAttr('solutionHeading'),
-                        onChange: (val) => setAttributes({ solutionHeading: val })
-                    }),
+                    // Section heading moved to inline editing - removed from sidebar
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('solutionIcon'),
@@ -589,12 +629,7 @@ registerBlockType('swrice/solution-section', {
                         onChange: (val) => setAttributes({ solutionIcon: val }),
                         help: 'Choose an icon for this section'
                     }),
-                    createElement(TextareaControl, {
-                        label: 'Solution Description',
-                        value: getAttr('solutionDescription'),
-                        onChange: (val) => setAttributes({ solutionDescription: val }),
-                        rows: 4
-                    })
+                    // Solution description moved to inline editing - removed from sidebar
                 )
             ),
             
@@ -606,13 +641,38 @@ registerBlockType('swrice/solution-section', {
                             createElement('h2', { className: 'sppm-section-title' },
                                 getAttr('solutionIcon') ? 
                                     createElement('span', { className: 'sppm-section-icon' }, getAttr('solutionIcon')) : null,
-                                getAttr('solutionHeading', 'The Solution')
+                                createElement(RichText, {
+                                    tagName: "span",
+                                    placeholder: "Click to edit section heading...",
+                                    value: getAttr("solutionHeading"),
+                                    onChange: (val) => setAttributes({ solutionHeading: val }),
+                                    allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                    style: { 
+                                        border: "1px dashed #007cba", 
+                                        padding: "4px 8px", 
+                                        minHeight: "25px",
+                                        borderRadius: "3px",
+                                        backgroundColor: "rgba(0, 124, 186, 0.05)"
+                                    }
+                                })
                             )
                         ),
                         createElement('div', { className: 'sppm-solution-content' },
-                            createElement('p', null, 
-                                getAttr('solutionDescription', 'Our plugin solves all your problems with an elegant solution.')
-                            )
+                            createElement(RichText, {
+                                tagName: "p",
+                                placeholder: "Click to edit solution description...",
+                                value: getAttr("solutionDescription"),
+                                onChange: (val) => setAttributes({ solutionDescription: val }),
+                                allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                style: { 
+                                    border: "1px dashed #007cba", 
+                                    padding: "8px 12px", 
+                                    minHeight: "40px",
+                                    borderRadius: "3px",
+                                    backgroundColor: "rgba(0, 124, 186, 0.05)",
+                                    display: "block"
+                                }
+                            })
                         )
                     )
                 )
@@ -648,11 +708,7 @@ registerBlockType('swrice/features-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'Features Section Settings', initialOpen: true },
-                    createElement(TextControl, {
-                        label: 'Section Heading',
-                        value: getAttr('featuresHeading'),
-                        onChange: (val) => setAttributes({ featuresHeading: val })
-                    }),
+                    // Section heading moved to inline editing - removed from sidebar
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('featuresIcon'),
@@ -681,7 +737,20 @@ registerBlockType('swrice/features-section', {
                             createElement('h2', { className: 'sppm-section-title' },
                                 getAttr('featuresIcon') ? 
                                     createElement('span', { className: 'sppm-section-icon' }, getAttr('featuresIcon')) : null,
-                                getAttr('featuresHeading', 'Features')
+                                createElement(RichText, {
+                                    tagName: "span",
+                                    placeholder: "Click to edit section heading...",
+                                    value: getAttr("featuresHeading"),
+                                    onChange: (val) => setAttributes({ featuresHeading: val }),
+                                    allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                    style: { 
+                                        border: "1px dashed #007cba", 
+                                        padding: "4px 8px", 
+                                        minHeight: "25px",
+                                        borderRadius: "3px",
+                                        backgroundColor: "rgba(0, 124, 186, 0.05)"
+                                    }
+                                })
                             )
                         ),
                         createElement('div', { className: 'sppm-features-grid' },
@@ -694,14 +763,50 @@ registerBlockType('swrice/features-section', {
                                         createElement('div', { className: 'sppm-feature-card-header' },
                                             feature.icon ? 
                                                 createElement('div', { className: 'sppm-feature-icon' }, feature.icon) : null,
-                                            createElement('h3', { className: 'sppm-feature-title' }, 
-                                                feature.title || 'Feature Title'
+                                            createElement("h3", { className: "sppm-feature-title" }, 
+                                                createElement(RichText, {
+                                                    tagName: "span",
+                                                    placeholder: "Click to edit feature title...",
+                                                    value: feature.title || "",
+                                                    onChange: (val) => {
+                                                        const newItems = [...getAttr("featuresItems", [])];
+                                                        newItems[index] = { ...newItems[index], title: val };
+                                                        setAttributes({ featuresItems: newItems });
+                                                    },
+                                                    allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                                    style: { 
+                                                        border: "1px dashed #007cba", 
+                                                        padding: "2px 6px", 
+                                                        minHeight: "20px",
+                                                        borderRadius: "3px",
+                                                        backgroundColor: "rgba(0, 124, 186, 0.05)"
+                                                    }
+                                                })
                                             )
                                         ),
-                                        createElement('div', { className: 'sppm-feature-card-body' },
-                                            createElement('p', { className: 'sppm-feature-desc' }, 
-                                                feature.description || 'Feature description'
+                                        createElement("div", { className: "sppm-feature-card-body" },
+                                            createElement("p", { className: "sppm-feature-desc" }, 
+                                                createElement(RichText, {
+                                                    tagName: "span",
+                                                    placeholder: "Click to edit feature description...",
+                                                    value: feature.description || "",
+                                                    onChange: (val) => {
+                                                        const newItems = [...getAttr("featuresItems", [])];
+                                                        newItems[index] = { ...newItems[index], description: val };
+                                                        setAttributes({ featuresItems: newItems });
+                                                    },
+                                                    allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                                    style: { 
+                                                        border: "1px dashed #007cba", 
+                                                        padding: "4px 8px", 
+                                                        minHeight: "30px",
+                                                        borderRadius: "3px",
+                                                        backgroundColor: "rgba(0, 124, 186, 0.05)",
+                                                        display: "block"
+                                                    }
+                                                })
                                             )
+                                        )
                                         )
                                     )
                                 ) :
@@ -751,11 +856,7 @@ registerBlockType('swrice/faq-section', {
         return createElement(Fragment, null,
             createElement(InspectorControls, null,
                 createElement(PanelBody, { title: 'FAQ Section Settings', initialOpen: true },
-                    createElement(TextControl, {
-                        label: 'Section Heading',
-                        value: getAttr('faqHeading'),
-                        onChange: (val) => setAttributes({ faqHeading: val })
-                    }),
+                    // Section heading moved to inline editing - removed from sidebar
                     createElement(SelectControl, {
                         label: 'Section Icon',
                         value: getAttr('faqIcon'),
@@ -783,7 +884,20 @@ registerBlockType('swrice/faq-section', {
                             createElement('h2', { className: 'sppm-section-title' },
                                 getAttr('faqIcon') ? 
                                     createElement('span', { className: 'sppm-section-icon' }, getAttr('faqIcon')) : null,
-                                getAttr('faqHeading', 'FAQ')
+                                createElement(RichText, {
+                                    tagName: "span",
+                                    placeholder: "Click to edit section heading...",
+                                    value: getAttr("faqHeading"),
+                                    onChange: (val) => setAttributes({ faqHeading: val }),
+                                    allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                    style: { 
+                                        border: "1px dashed #007cba", 
+                                        padding: "4px 8px", 
+                                        minHeight: "25px",
+                                        borderRadius: "3px",
+                                        backgroundColor: "rgba(0, 124, 186, 0.05)"
+                                    }
+                                })
                             )
                         ),
                         createElement('div', { className: 'sppm-faq-list' },
@@ -794,12 +908,47 @@ registerBlockType('swrice/faq-section', {
                                         className: 'sppm-faq-item',
                                         'data-faq': index
                                     },
-                                        createElement('div', { className: 'sppm-faq-question' },
-                                            faq.question || 'FAQ Question',
-                                            createElement('span', null, '+')
+                                        createElement("div", { className: "sppm-faq-question" },
+                                            createElement(RichText, {
+                                                tagName: "span",
+                                                placeholder: "Click to edit FAQ question...",
+                                                value: faq.question || "",
+                                                onChange: (val) => {
+                                                    const newItems = [...getAttr("faqItems", [])];
+                                                    newItems[index] = { ...newItems[index], question: val };
+                                                    setAttributes({ faqItems: newItems });
+                                                },
+                                                allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                                style: { 
+                                                    border: "1px dashed #007cba", 
+                                                    padding: "2px 6px", 
+                                                    minHeight: "20px",
+                                                    borderRadius: "3px",
+                                                    backgroundColor: "rgba(0, 124, 186, 0.05)"
+                                                }
+                                            }),
+                                            createElement("span", null, "+")
                                         ),
-                                        createElement('div', { className: 'sppm-faq-answer' }, 
-                                            faq.answer || 'FAQ Answer'
+                                        createElement("div", { className: "sppm-faq-answer" }, 
+                                            createElement(RichText, {
+                                                tagName: "span",
+                                                placeholder: "Click to edit FAQ answer...",
+                                                value: faq.answer || "",
+                                                onChange: (val) => {
+                                                    const newItems = [...getAttr("faqItems", [])];
+                                                    newItems[index] = { ...newItems[index], answer: val };
+                                                    setAttributes({ faqItems: newItems });
+                                                },
+                                                allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                                style: { 
+                                                    border: "1px dashed #007cba", 
+                                                    padding: "4px 8px", 
+                                                    minHeight: "30px",
+                                                    borderRadius: "3px",
+                                                    backgroundColor: "rgba(0, 124, 186, 0.05)",
+                                                    display: "block"
+                                                }
+                                            })
                                         )
                                     )
                                 ) :

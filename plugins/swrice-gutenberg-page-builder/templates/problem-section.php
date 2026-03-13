@@ -16,7 +16,7 @@ if (empty($problem_items) || !is_array($problem_items)) return;
     <div class="sppm-section-header">
         <h2 class="sppm-section-title">
             <?php if ($problem_icon): ?><span class="sppm-section-icon"><?php echo $problem_icon; ?></span><?php endif; ?>
-            <?php echo esc_html($problem_heading); ?>
+            <?php echo wp_kses_post($problem_heading); ?>
         </h2>
     </div>
     
@@ -27,8 +27,8 @@ if (empty($problem_items) || !is_array($problem_items)) return;
                 <?php if (!empty($problem['icon'])): ?>
                 <div class="sppm-problem-icon"><?php echo $problem['icon']; ?></div>
                 <?php endif; ?>
-                <h3 class="sppm-problem-title"><?php echo esc_html($problem['title']); ?></h3>
-                <p class="sppm-problem-desc"><?php echo esc_html($problem['description']); ?></p>
+                <h3 class="sppm-problem-title"><?php echo wp_kses_post($problem['title']); ?></h3>
+                <p class="sppm-problem-desc"><?php echo wp_kses_post($problem['description']); ?></p>
             </div>
             <?php endforeach; ?>
         <?php endif; ?>
