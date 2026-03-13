@@ -26,7 +26,7 @@ if (empty($bonus_items) || !is_array($bonus_items)) return;
             <?php if (!empty($bonus['icon'])): ?>
             <div class="sppm-bonus-icon"><?php echo $bonus['icon']; ?></div>
             <?php endif; ?>
-            <h3 class="sppm-bonus-title"><?php echo wp_kses_post($bonus[\'title\']); ?></h3>
+            <h3 class="sppm-bonus-title"><?php echo wp_kses_post($bonus['title']); ?></h3>
             <?php if (!empty($bonus['value'])): ?>
             <div class="sppm-bonus-value">Value: <?php echo esc_html($bonus['value']); ?></div>
             <?php endif; ?>

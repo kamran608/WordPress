@@ -28,7 +28,7 @@ if (empty($feature_items) || !is_array($feature_items)) return;
                     <?php if (!empty($feature['icon'])): ?>
                     <div class="sppm-feature-icon"><?php echo $feature['icon']; ?></div>
                     <?php endif; ?>
-                    <h3 class="sppm-feature-title"><?php echo wp_kses_post($feature[\'title\']); ?></h3>
+                    <h3 class="sppm-feature-title"><?php echo wp_kses_post($feature['title']); ?></h3>
                 </div>
                 <div class="sppm-feature-card-body">
                     <p class="sppm-feature-desc"><?php echo wp_kses_post($feature['description']); ?></p>

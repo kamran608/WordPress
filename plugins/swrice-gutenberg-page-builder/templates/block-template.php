@@ -143,8 +143,8 @@ if (!function_exists('render_how_it_works_section')) {
                 <?php foreach ($steps_items as $index => $step): ?>
                 <div class="sppm-step-card">
                     <div class="sppm-step-number"><?php echo ($index + 1); ?></div>
-                    <h3 class="sppm-step-title"><?php echo wp_kses_post($step[\'title\']); ?></h3>
-                    <p class="sppm-step-desc"><?php echo wp_kses_post($step[\'description\']); ?></p>
+                    <h3 class="sppm-step-title"><?php echo wp_kses_post($step['title']); ?></h3>
+                    <p class="sppm-step-desc"><?php echo wp_kses_post($step['description']); ?></p>
                 </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -174,10 +174,10 @@ if (!function_exists('render_features_section')) {
                         <?php if (!empty($feature['icon'])): ?>
                         <div class="sppm-feature-icon"><?php echo $feature['icon']; ?></div>
                         <?php endif; ?>
-                        <h3 class="sppm-feature-title"><?php echo wp_kses_post($feature[\'title\']); ?></h3>
+                        <h3 class="sppm-feature-title"><?php echo wp_kses_post($feature['title']); ?></h3>
                     </div>
                     <div class="sppm-feature-card-body">
-                        <p class="sppm-feature-desc"><?php echo wp_kses_post($feature[\'description\']); ?></p>
+                        <p class="sppm-feature-desc"><?php echo wp_kses_post($feature['description']); ?></p>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -208,7 +208,7 @@ if (!function_exists('render_testimonials_section')) {
                 </div>
                 <div class="sppm-testimonial-content">"<?php echo esc_html($testimonial['content']); ?>"</div>
                 <div class="sppm-testimonial-author">
-                    <strong><?php echo wp_kses_post($testimonial[\'name\']); ?></strong>
+                    <strong><?php echo wp_kses_post($testimonial['name']); ?></strong>
                     <span><?php echo esc_html($testimonial['title']); ?></span>
                 </div>
             </div>
@@ -235,10 +235,10 @@ if (!function_exists('render_faq_section')) {
             <?php foreach ($faq_items as $index => $faq): ?>
             <div class="sppm-faq-item" data-faq="<?php echo $index; ?>">
                 <div class="sppm-faq-question">
-                    <?php echo wp_kses_post($faq[\'question\']); ?>
+                    <?php echo wp_kses_post($faq['question']); ?>
                     <span>+</span>
                 </div>
-                <div class="sppm-faq-answer"><?php echo wp_kses_post($faq[\'answer\']); ?></div>
+                <div class="sppm-faq-answer"><?php echo wp_kses_post($faq['answer']); ?></div>
             </div>
             <?php endforeach; ?>
         </div>
@@ -265,11 +265,11 @@ if (!function_exists('render_bonuses_section')) {
                 <?php if (!empty($bonus['icon'])): ?>
                 <div class="sppm-bonus-icon"><?php echo $bonus['icon']; ?></div>
                 <?php endif; ?>
-                <h3 class="sppm-bonus-title"><?php echo wp_kses_post($bonus[\'title\']); ?></h3>
+                <h3 class="sppm-bonus-title"><?php echo wp_kses_post($bonus['title']); ?></h3>
                 <?php if (!empty($bonus['value'])): ?>
                 <div class="sppm-bonus-value">Value: <?php echo esc_html($bonus['value']); ?></div>
                 <?php endif; ?>
-                <p class="sppm-bonus-desc"><?php echo wp_kses_post($bonus[\'description\']); ?></p>
+                <p class="sppm-bonus-desc"><?php echo wp_kses_post($bonus['description']); ?></p>
             </div>
             <?php endforeach; ?>
         </div>
@@ -327,8 +327,8 @@ if (!function_exists('render_why_choose_section')) {
                 <?php if (!empty($item['icon'])): ?>
                 <div class="sppm-why-choose-icon"><?php echo $item['icon']; ?></div>
                 <?php endif; ?>
-                <h3 class="sppm-why-choose-title"><?php echo wp_kses_post($item[\'title\']); ?></h3>
-                <p class="sppm-why-choose-desc"><?php echo wp_kses_post($item[\'description\']); ?></p>
+                <h3 class="sppm-why-choose-title"><?php echo wp_kses_post($item['title']); ?></h3>
+                <p class="sppm-why-choose-desc"><?php echo wp_kses_post($item['description']); ?></p>
             </div>
             <?php endforeach; ?>
         </div>

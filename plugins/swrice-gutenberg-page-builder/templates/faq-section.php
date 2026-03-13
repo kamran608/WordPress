@@ -24,7 +24,7 @@ if (empty($faq_items) || !is_array($faq_items)) return;
         <?php foreach ($faq_items as $index => $faq): ?>
         <div class="sppm-faq-item" data-faq="<?php echo $index; ?>">
             <div class="sppm-faq-question">
-                <?php echo wp_kses_post($faq[\'question\']); ?>
+                <?php echo wp_kses_post($faq['question']); ?>
                 <span>+</span>
             </div>
             <div class="sppm-faq-answer"><?php echo wp_kses_post($faq['answer']); ?></div>
