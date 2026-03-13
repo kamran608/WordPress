@@ -85,6 +85,15 @@ class Swrice_Gutenberg_Page_Builder {
             SGPB_VERSION . '-' . time() // Cache busting for development
         );
         
+        // Enqueue the main blocks script
+        wp_enqueue_script(
+            'swrice-plugin-page-builder-blocks',
+            SGPB_PLUGIN_URL . 'assets/js/blocks.js',
+            array('wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n'),
+            SGPB_VERSION . '-' . time(), // Cache busting for development
+            true
+        );
+        
         // Enqueue Yoast SEO integration script for editor
         wp_enqueue_script(
             'swrice-yoast-seo-integration-editor',
@@ -99,15 +108,6 @@ class Swrice_Gutenberg_Page_Builder {
      * Register all blocks
      */
     public function register_blocks() {
-        // Register the blocks script
-        wp_register_script(
-            'swrice-plugin-page-builder-blocks',
-            SGPB_PLUGIN_URL . 'assets/js/blocks.js',
-            array('wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n'),
-            SGPB_VERSION,
-            true
-        );
-        
         // Register individual section blocks
         $this->register_hero_block();
         $this->register_problem_block();
@@ -131,7 +131,6 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_hero_block() {
         register_block_type('swrice/hero-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
             'render_callback' => array($this, 'render_hero_section'),
             'attributes' => array(
                 'pluginName' => array('type' => 'string', 'default' => 'My Awesome Plugin'),
@@ -151,7 +150,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_problem_block() {
         register_block_type('swrice/problem-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_problem_section'),
             'attributes' => array(
                 'problemHeading' => array('type' => 'string', 'default' => 'The Problem'),
@@ -175,7 +174,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_solution_block() {
         register_block_type('swrice/solution-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_solution_section'),
             'attributes' => array(
                 'solutionHeading' => array('type' => 'string', 'default' => 'The Solution'),
@@ -190,7 +189,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_features_block() {
         register_block_type('swrice/features-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_features_section'),
             'attributes' => array(
                 'featuresHeading' => array('type' => 'string', 'default' => 'Features'),
@@ -214,7 +213,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_faq_block() {
         register_block_type('swrice/faq-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_faq_section'),
             'attributes' => array(
                 'faqHeading' => array('type' => 'string', 'default' => 'FAQ'),
@@ -237,7 +236,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_how_it_works_block() {
         register_block_type('swrice/how-it-works-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_how_it_works_section'),
             'attributes' => array(
                 'howItWorksHeading' => array('type' => 'string', 'default' => 'How It Works'),
@@ -260,7 +259,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_testimonials_block() {
         register_block_type('swrice/testimonials-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_testimonials_section'),
             'attributes' => array(
                 'testimonialsHeading' => array('type' => 'string', 'default' => 'Testimonials'),
@@ -285,7 +284,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_bonuses_block() {
         register_block_type('swrice/bonuses-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_bonuses_section'),
             'attributes' => array(
                 'bonusesHeading' => array('type' => 'string', 'default' => 'Bonuses'),
@@ -310,7 +309,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_guarantee_block() {
         register_block_type('swrice/guarantee-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_guarantee_section'),
             'attributes' => array(
                 'guaranteeHeading' => array('type' => 'string', 'default' => 'Guarantee'),
@@ -333,7 +332,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_why_choose_block() {
         register_block_type('swrice/why-choose-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_why_choose_section'),
             'attributes' => array(
                 'whyChooseHeading' => array('type' => 'string', 'default' => 'Why Choose Us'),
@@ -357,7 +356,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_about_block() {
         register_block_type('swrice/about-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_about_section'),
             'attributes' => array(
                 'aboutHeading' => array('type' => 'string', 'default' => 'About'),
@@ -372,7 +371,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_final_cta_block() {
         register_block_type('swrice/final-cta-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_final_cta_section'),
             'attributes' => array(
                 'finalCtaHeading' => array('type' => 'string', 'default' => 'Ready to Get Started?'),
@@ -579,7 +578,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_screenshots_block() {
         register_block_type('swrice/screenshots-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_screenshots_section'),
             'attributes' => array(
                 'screenshotsHeading' => array('type' => 'string', 'default' => 'Screenshots'),
@@ -595,7 +594,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_video_tutorial_block() {
         register_block_type('swrice/video-tutorial-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_video_tutorial_section'),
             'attributes' => array(
                 'videoTutorialHeading' => array('type' => 'string', 'default' => 'Video Tutorial'),
@@ -614,7 +613,7 @@ class Swrice_Gutenberg_Page_Builder {
      */
     public function register_version_changelog_block() {
         register_block_type('swrice/version-changelog-section', array(
-            'editor_script' => 'swrice-plugin-page-builder-blocks',
+            
             'render_callback' => array($this, 'render_version_changelog_section'),
             'attributes' => array(
                 'versionChangelogHeading' => array('type' => 'string', 'default' => 'Version & Changelog'),

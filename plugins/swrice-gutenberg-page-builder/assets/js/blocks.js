@@ -14,7 +14,7 @@ const {
     MediaUpload,
     MediaUploadCheck
 } = wp.components;
-const { InspectorControls, RichText } = wp.blockEditor;
+const { InspectorControls, RichText } = wp.blockEditor || wp.editor;
 
 // Icon options for different sections
 const PROBLEM_ICON_OPTIONS = [
