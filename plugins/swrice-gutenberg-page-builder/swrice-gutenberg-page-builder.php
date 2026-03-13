@@ -104,7 +104,7 @@ class Swrice_Gutenberg_Page_Builder {
             'swrice-plugin-page-builder-blocks',
             SGPB_PLUGIN_URL . 'assets/js/blocks.js',
             array('wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n'),
-            SGPB_VERSION,
+            SGPB_VERSION . '-' . time(), // Cache busting for development
             true
         );
         

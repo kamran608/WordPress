@@ -242,13 +242,30 @@ const RepeaterField = ({ items, onChange, fields, addButtonText = 'Add Item' }) 
                             help: field.help || ''
                         });
                     } else {
-                        return createElement(TextControl, {
-                            key: field.key,
-                            label: field.label,
-                            value: item[field.key] || '',
-                            onChange: (value) => updateItem(index, field.key, value),
-                            placeholder: field.placeholder || ''
-                        });
+                        return createElement('div', { key: field.key, style: { marginBottom: '15px' } },
+                            createElement('label', { 
+                                style: { 
+                                    display: 'block', 
+                                    marginBottom: '5px', 
+                                    fontWeight: 'bold',
+                                    fontSize: '13px'
+                                }
+                            }, field.label),
+                            createElement(RichText, {
+                                tagName: "div",
+                                placeholder: `Enter ${field.label.toLowerCase()} with link support...`,
+                                value: item[field.key] || '',
+                                onChange: (value) => updateItem(index, field.key, value),
+                                allowedFormats: ["core/bold", "core/italic", "core/link"],
+                                style: { 
+                                    border: "1px solid #ddd", 
+                                    padding: "8px", 
+                                    borderRadius: "4px", 
+                                    minHeight: "40px",
+                                    backgroundColor: "#fff"
+                                }
+                            })
+                        );
                     }
                 })
             )
