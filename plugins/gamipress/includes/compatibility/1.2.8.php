@@ -521,8 +521,6 @@ function gamipress_parse_log_pattern_old( $log_pattern = '',  $log_data = array(
     $gamipress_pattern_replacements['{user_id}'] = $post_author->ID;
     $gamipress_pattern_replacements['{user}'] = ( is_admin() ? $post_author->display_name . ' (' . $post_author->user_login . ')' : $post_author->display_name );
 
-    // TODO: Add more user tags
-
     foreach( $log_meta as $log_meta_key => $log_meta_value ) {
         if( in_array( $log_meta_key, array( 'pattern', 'type' ) ) ) {
             continue;

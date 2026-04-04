@@ -624,17 +624,17 @@
         },
         {
             "name": "inpsyde\/assets",
-            "version": "2.10.0",
-            "version_normalized": "2.10.0.0",
+            "version": "2.12.0",
+            "version_normalized": "2.12.0.0",
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/inpsyde\/assets.git",
-                "reference": "b328f2f357e147f662779d20d6642329b1db7307"
+                "reference": "9bf2a427270a3c803544f807f4b32fe10d8c834b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/inpsyde\/assets\/zipball\/b328f2f357e147f662779d20d6642329b1db7307",
-                "reference": "b328f2f357e147f662779d20d6642329b1db7307",
+                "url": "https:\/\/api.github.com\/repos\/inpsyde\/assets\/zipball\/9bf2a427270a3c803544f807f4b32fe10d8c834b",
+                "reference": "9bf2a427270a3c803544f807f4b32fe10d8c834b",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -663,7 +663,7 @@
                 "syde\/phpcs": "^1.0.0",
                 "szepeviktor\/phpstan-wordpress": "^2"
             },
-            "time": "2025-09-03T07:45:07+00:00",
+            "time": "2025-11-21T09:36:33+00:00",
             "type": "library",
             "extra": {
                 "wordpress-install-dir": "vendor\/wordpress\/wordpress"
@@ -699,7 +699,7 @@
             "description": "Package to manage assets in WordPress.",
             "support": {
                 "issues": "https:\/\/github.com\/inpsyde\/assets\/issues",
-                "source": "https:\/\/github.com\/inpsyde\/assets\/tree\/2.10.0"
+                "source": "https:\/\/github.com\/inpsyde\/assets\/tree\/2.12.0"
             },
             "install-path": "..\/inpsyde\/assets"
         },
@@ -987,8 +987,8 @@
         },
         {
             "name": "inpsyde\/payoneer-admin-banner",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/admin-banner",
@@ -1039,8 +1039,8 @@
         },
         {
             "name": "inpsyde\/payoneer-analytics",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/analytics",
@@ -1088,8 +1088,8 @@
         },
         {
             "name": "inpsyde\/payoneer-api",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/api",
@@ -1137,8 +1137,8 @@
         },
         {
             "name": "inpsyde\/payoneer-embedded-payment",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/embedded-payment",
@@ -1191,8 +1191,8 @@
         },
         {
             "name": "inpsyde\/payoneer-hosted-payment",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/hosted-payment",
@@ -1244,8 +1244,8 @@
         },
         {
             "name": "inpsyde\/payoneer-list-session",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/list-session",
@@ -1286,8 +1286,8 @@
         },
         {
             "name": "inpsyde\/payoneer-migrator",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/migration",
@@ -1334,8 +1334,8 @@
         },
         {
             "name": "inpsyde\/payoneer-page-detector",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/page-detector",
@@ -1382,8 +1382,8 @@
         },
         {
             "name": "inpsyde\/payoneer-payment-gateway-checkout",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/checkout",
@@ -1433,8 +1433,8 @@
         },
         {
             "name": "inpsyde\/payoneer-payment-methods",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/payment-methods",
@@ -1565,8 +1565,8 @@
         },
         {
             "name": "inpsyde\/payoneer-settings",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/settings",
@@ -1614,8 +1614,8 @@
         },
         {
             "name": "inpsyde\/payoneer-status-report",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/status-report",
@@ -1661,8 +1661,8 @@
         },
         {
             "name": "inpsyde\/payoneer-third-party-compat",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/third-party-compat",
@@ -1701,8 +1701,8 @@
         },
         {
             "name": "inpsyde\/payoneer-webhooks",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/webhooks",
@@ -1754,8 +1754,8 @@
         },
         {
             "name": "inpsyde\/payoneer-websdk",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/websdk",
@@ -1804,8 +1804,8 @@
         },
         {
             "name": "inpsyde\/payoneer-wp",
-            "version": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
-            "version_normalized": "dev-fix\/PN-2447-order-not-found-by-transaction-id",
+            "version": "dev-dev\/develop",
+            "version_normalized": "dev-dev\/develop",
             "dist": {
                 "type": "path",
                 "url": ".\/modules.local\/wp",
@@ -2615,17 +2615,17 @@
         },
         {
             "name": "sniccowp\/php-scoper-wordpress-excludes",
-            "version": "6.8.1",
-            "version_normalized": "6.8.1.0",
+            "version": "6.9.0",
+            "version_normalized": "6.9.0.0",
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/snicco\/php-scoper-wordpress-excludes.git",
-                "reference": "c2c18f89a9aa2d7ef1998d233b9ed00d0deff5dd"
+                "reference": "40ab73f3def963304e23e44596baf49441f00512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https:\/\/api.github.com\/repos\/snicco\/php-scoper-wordpress-excludes\/zipball\/c2c18f89a9aa2d7ef1998d233b9ed00d0deff5dd",
-                "reference": "c2c18f89a9aa2d7ef1998d233b9ed00d0deff5dd",
+                "url": "https:\/\/api.github.com\/repos\/snicco\/php-scoper-wordpress-excludes\/zipball\/40ab73f3def963304e23e44596baf49441f00512",
+                "reference": "40ab73f3def963304e23e44596baf49441f00512",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -2637,10 +2637,10 @@
             "require-dev": {
                 "php": "^7.4",
                 "php-stubs\/wordpress-globals": "0.2.0",
-                "php-stubs\/wordpress-stubs": "6.8.1",
+                "php-stubs\/wordpress-stubs": "6.9.0",
                 "sniccowp\/php-scoper-excludes": "dev-master"
             },
-            "time": "2025-05-03T00:01:53+00:00",
+            "time": "2025-12-08T11:39:50+00:00",
             "type": "library",
             "installation-source": "dist",
             "notification-url": "https:\/\/repo.packagist.com\/inpsyde\/downloads\/",
@@ -2665,7 +2665,7 @@
             ],
             "support": {
                 "issues": "https:\/\/github.com\/snicco\/php-scoper-wordpress-excludes\/issues",
-                "source": "https:\/\/github.com\/snicco\/php-scoper-wordpress-excludes\/tree\/6.8.1"
+                "source": "https:\/\/github.com\/snicco\/php-scoper-wordpress-excludes\/tree\/6.9.0"
             },
             "install-path": "..\/sniccowp\/php-scoper-wordpress-excludes"
         },

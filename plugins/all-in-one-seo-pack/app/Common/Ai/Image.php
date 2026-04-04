@@ -81,7 +81,7 @@ class Image {
 		$style       = trim( $metadata['style'] ?? '' );
 		$aspectRatio = trim( $metadata['aspectRatio'] ?? '' );
 
-		$filenameContext = substr( $prompt, 0, 25 ) . '-' . $quality . '-' . $style . '-' . $aspectRatio . '-' . date( 'Ymd-His' );
+		$filenameContext = substr( $prompt, 0, 25 ) . '-' . $quality . '-' . $style . '-' . $aspectRatio . '-' . date_i18n( 'Ymd-His' );
 		$filename        = 'aioseo-ai-' . aioseo()->helpers->toLowerCase( sanitize_file_name( $filenameContext ) ) . '.' . $format;
 
 		$upload = wp_upload_bits( $filename, null, $imageData );
@@ -200,10 +200,7 @@ class Image {
 	 */
 	public function deleteImages( $ids ) {
 		foreach ( $ids as $id ) {
-			$deleted = wp_delete_attachment( $id, true );
-			if ( ! $deleted ) {
-				continue;
-			}
+			wp_delete_attachment( $id, true );
 
 			// Update all images post meta that have the parent image id set to the deleted image id.
 			$attachmentIds = get_posts( [

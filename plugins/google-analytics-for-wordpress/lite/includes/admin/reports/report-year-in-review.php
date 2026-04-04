@@ -68,7 +68,7 @@ final class MonsterInsights_Lite_Report_YearInReview extends MonsterInsights_Rep
 	 * @return string
 	 */
 	public function default_start_date() {
-		return date( 'Y-m-d', strtotime( '01 January 2024' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We want this to depend on the runtime timezone.
+		return date( 'Y-m-d', strtotime( '01 January 2025' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We want this to depend on the runtime timezone.
 	}
 
 	/**
@@ -80,13 +80,13 @@ final class MonsterInsights_Lite_Report_YearInReview extends MonsterInsights_Rep
 	public function default_end_date() {
 		$current_year = date('Y'); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We want this to depend on the runtime timezone.
 
-		// If we are still in 2024 we should get data from yesterday
-		if ($current_year === '2024') {
+		// If we are still in 2025 we should get data from yesterday
+		if ($current_year === '2025') {
 			return date( 'Y-m-d', strtotime( '-1' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We want this to depend on the runtime timezone.
 		}
 
 		// otherwise let it be a thing of the past.
-		return date( 'Y-m-d', strtotime( '31 December 2024' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We want this to depend on the runtime timezone.
+		return date( 'Y-m-d', strtotime( '31 December 2025' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We want this to depend on the runtime timezone.
 	}
 
 }

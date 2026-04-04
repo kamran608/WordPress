@@ -52,7 +52,10 @@ trait Vue {
 		$this->setWritingAssistantData();
 		$this->setBreadcrumbsData();
 		$this->setSeoAnalyzerData();
+		$this->setAiAssistantData();
 		$this->setAiImageGeneratorData();
+		$this->setAiInsightsData();
+		$this->setGeneralSettingsData();
 
 		$this->cache[ $hash ] = $this->data;
 
@@ -83,7 +86,7 @@ trait Vue {
 			'options'            => aioseo()->options->all(),
 			'dynamicOptions'     => aioseo()->dynamicOptions->all(),
 			'deprecatedOptions'  => aioseo()->internalOptions->getAllDeprecatedOptions( true ),
-			'settings'           => aioseo()->settings->all(),
+			'settings'           => aioseo()->settings ? aioseo()->settings->all() : [],
 			'additional_scripts' => apply_filters( 'aioseo_vue_additional_scripts_enabled', true ),
 			'tags'               => aioseo()->tags->all( true ),
 			'nonce'              => wp_create_nonce( 'wp_rest' ),
@@ -118,6 +121,7 @@ trait Vue {
 				], defined( 'AIOSEO_CONNECT_URL' ) ? AIOSEO_CONNECT_URL : 'https://connect.aioseo.com' ),
 				'aio'               => [
 					'about'            => is_network_admin() ? network_admin_url( 'admin.php?page=aioseo-about' ) : admin_url( 'admin.php?page=aioseo-about' ),
+					'aiSuite'          => admin_url( 'admin.php?page=aioseo-ai-insights' ),
 					'dashboard'        => admin_url( 'admin.php?page=aioseo' ),
 					'featureManager'   => admin_url( 'admin.php?page=aioseo-feature-manager' ),
 					'linkAssistant'    => admin_url( 'admin.php?page=aioseo-link-assistant' ),
@@ -183,15 +187,6 @@ trait Vue {
 				],
 				'vueComponentsDefaults' => $this->getVueComponentsDefaults(),
 			],
-			'user'               => [
-				'canManage'      => aioseo()->access->canManage(),
-				'capabilities'   => aioseo()->access->getAllCapabilities(),
-				'customRoles'    => $this->getCustomRoles(),
-				'data'           => wp_get_current_user(),
-				'locale'         => function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale(),
-				'roles'          => $this->getUserRoles(),
-				'unfilteredHtml' => current_user_can( 'unfiltered_html' )
-			],
 			'plugins'            => $this->getPluginData(),
 			'postData'           => [
 				'postTypes'    => array_values( $this->getPublicPostTypes( false, false, true ) ),
@@ -215,6 +210,32 @@ trait Vue {
 			'theme'              => [
 				'features' => aioseo()->helpers->getThemeFeatures()
 			]
+		];
+
+		// In multisite, super admins may not have explicit roles on subsites.
+		// Ensure they have administrator role and capabilities for proper access.
+		$userData     = wp_get_current_user();
+		$roles        = $userData->roles;
+		$capabilities = $userData->allcaps;
+
+		// If the user is a network admin, and doesn't have a user on the subsite, give him admin role/caps.
+		if ( is_multisite() && is_super_admin() && empty( $roles ) ) {
+			$roles     = [ 'administrator' ];
+			$adminRole = get_role( 'administrator' );
+			if ( is_a( $adminRole, 'WP_Role' ) ) {
+				$capabilities = $adminRole->capabilities;
+			}
+		}
+
+		$this->data['user'] = [
+			'emailAddress'   => $userData->user_email,
+			'roles'          => $roles,
+			'capabilities'   => $capabilities,
+			'customRoles'    => $this->getCustomRoles(),
+			'userRoles'      => aioseo()->helpers->getUserRoles(),
+			'locale'         => function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale(),
+			'unfilteredHtml' => current_user_can( 'unfiltered_html' ),
+			'canManage'      => aioseo()->access->canManage()
 		];
 	}
 
@@ -362,6 +383,8 @@ trait Vue {
 		$this->data['setupWizard']['isCompleted'] = aioseo()->standalone->setupWizard->isCompleted();
 		$this->data['seoOverview']                = aioseo()->postSettings->getPostTypesOverview();
 		$this->data['importers']                  = aioseo()->importExport->plugins();
+
+		$this->setSeoChecklistData();
 	}
 
 	/**
@@ -433,6 +456,8 @@ trait Vue {
 			'staticHomePageTitle'       => $isStaticHomePage ? aioseo()->meta->title->getTitle( $staticHomePage ) : '',
 			'staticHomePageDescription' => $isStaticHomePage ? aioseo()->meta->description->getDescription( $staticHomePage ) : '',
 		];
+
+		$this->setSeoChecklistData();
 	}
 
 	/**
@@ -541,7 +566,7 @@ trait Vue {
 			is_network_admin()
 		) {
 			$this->data['data']['network'] = [
-				'sites'   => aioseo()->helpers->getSites( aioseo()->settings->tablePagination['networkDomains'] ),
+				'sites'   => aioseo()->helpers->getSites(),
 				'backups' => []
 			];
 		}
@@ -657,10 +682,12 @@ trait Vue {
 	 * @return void
 	 */
 	private function setBreadcrumbsData() {
-		$isPostOrTermPage              = aioseo()->helpers->isScreenBase( 'post' ) || aioseo()->helpers->isScreenBase( 'term' );
-		$isCurrentPageUsingPageBuilder = 'post' === $this->args['page'] && ! empty( $this->args['integration'] );
-		$isSettingsPage                = ! empty( $this->args['page'] ) && 'settings' === $this->args['page'];
-		if ( ! $isSettingsPage && ! $isCurrentPageUsingPageBuilder && ! $isPostOrTermPage ) {
+		if (
+			! empty( $this->args['page'] ) &&
+			'settings' !== $this->args['page'] &&
+			'post' !== $this->args['page'] &&
+			! aioseo()->helpers->isScreenBase( 'term' )
+		) {
 			return;
 		}
 
@@ -680,6 +707,19 @@ trait Vue {
 		}
 
 		$this->data['analyzer'] = aioseo()->seoAnalysis->getVueData();
+	}
+
+	/**
+	 * Set Vue AI Assistant data.
+	 *
+	 * @since 4.9.1
+	 *
+	 * @return void
+	 */
+	private function setAiAssistantData() {
+		if ( 'post' === $this->args['page'] ) {
+			$this->data['aiAssistant'] = aioseo()->ai->assistant->getVueDataEdit( $this->args['staticPostId'] ?? null );
+		}
 	}
 
 	/**
@@ -767,5 +807,51 @@ trait Vue {
 		];
 
 		return apply_filters( 'aioseo_vue_components_defaults', $defaults );
+	}
+
+	/**
+	 * Set Vue AI Insights data.
+	 *
+	 * @since 4.9.1
+	 *
+	 * @return void
+	 */
+	private function setAiInsightsData() {
+		if ( 'ai-insights' !== $this->args['page'] ) {
+			return;
+		}
+
+		$rateLimit = aioseo()->core->cache->get( 'ai_insights_rate_limit' );
+
+		$this->data['aiInsights'] = [
+			'rateLimit' => ! empty( $rateLimit ) ? $rateLimit : null
+		];
+	}
+
+	/**
+	 * Set Vue General Settings data.
+	 *
+	 * @since 4.9.4
+	 *
+	 * @return void
+	 */
+	protected function setGeneralSettingsData() {
+		if ( 'settings' !== $this->args['page'] ) {
+			return;
+		}
+
+		$this->setSeoChecklistData();
+	}
+
+
+	/**
+	 * Set Vue SEO Checklist data.
+	 *
+	 * @since 4.9.4
+	 *
+	 * @return void
+	 */
+	protected function setSeoChecklistData() {
+		$this->data['seoChecklist'] = aioseo()->seoChecklist->getChecks();
 	}
 }

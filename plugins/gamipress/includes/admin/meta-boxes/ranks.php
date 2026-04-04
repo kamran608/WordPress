@@ -35,22 +35,25 @@ function gamipress_ranks_meta_boxes( $post_type ) {
         $rank_types,
         array(
             $prefix . 'congratulations_text' => array(
-                'name' => __( 'Congratulations Text', 'gamipress' ),
-                'desc' => __( 'Displayed after rank is reached.', 'gamipress' ),
-                'type' => 'wysiwyg',
+                'name'      => __( 'Congratulations Text', 'gamipress' ),
+                'tooltip'   => __( 'Displayed after rank is reached.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'wysiwyg',
             ),
             $prefix . 'unlock_with_points' => array(
-                'name' => __( 'Allow reach with points', 'gamipress' ),
-                'desc' => __( 'Check this option to allow users to reach this rank by expend an amount of points.', 'gamipress' ),
-                'type' => 'checkbox',
-                'classes' => 'gamipress-switch'
+                'name'      => __( 'Unlock using points', 'gamipress' ),
+                'tooltip'   => __( 'Allow users to unlock this rank by expending an amount of points.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch'
             ),
             $prefix . 'points_to_unlock' => array(
-                'name' => __( 'Points to Unlock', 'gamipress' ),
-                'desc' => __( 'Amount of points needed to optionally reach this rank by expending them.', 'gamipress' ),
-                'type' => 'gamipress_points',
-                'points_type_key' => $prefix . 'points_type_to_unlock',
-                'default' => '0',
+                'name'              => __( 'Points to Unlock', 'gamipress' ),
+                'tooltip'           => __( 'Amount of points needed to optionally unlock this rank by expending them.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
+                'type'              => 'gamipress_points',
+                'points_type_key'   => $prefix . 'points_type_to_unlock',
+                'default'           => '0',
             ),
         ),
         array(
@@ -66,24 +69,27 @@ function gamipress_ranks_meta_boxes( $post_type ) {
         $rank_types,
         array(
             $prefix . 'show_earners' => array(
-                'name' => __( 'Show Earners', 'gamipress' ),
-                'desc' => __( 'Check this option to display a list of users who have reached this rank.', 'gamipress' ),
-                'type' => 'checkbox',
-                'classes' => 'gamipress-switch'
+                'name'      => __( 'Show Earners', 'gamipress' ),
+                'tooltip'   => __( 'Display a list of users who have reached this rank.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch'
             ),
             $prefix . 'maximum_earners' => array(
-                'name' => __( 'Maximum Earners', 'gamipress' ),
-                'desc' => __( 'Set the maximum number of earners to show (0 for no maximum).', 'gamipress' ),
+                'name'      => __( 'Maximum Earners', 'gamipress' ),
+                'tooltip'   => __( 'Set the maximum number of earners to show (0 for no maximum).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
                 'type' => 'text',
                 'attributes' => array(
-                    'type' => 'number',
-                    'step' => '1',
+                    'type'  => 'number',
+                    'step'  => '1',
                 ),
                 'default' => '0'
             ),
             $prefix . 'layout' => array(
                 'name'        => __( 'Layout', 'gamipress' ),
-                'description' => __( 'Layout to show the rank.', 'gamipress' ),
+                'tooltip'     => __( 'Layout to show the rank.', 'gamipress' ),
+                'label_cb'    => 'cmb_tooltip_label_cb',
                 'type' 		  => 'radio',
                 'options' 	  => gamipress_get_layout_options(),
                 'default' 	  => 'left',
@@ -92,7 +98,8 @@ function gamipress_ranks_meta_boxes( $post_type ) {
             ),
             $prefix . 'align' => array(
                 'name'        => __( 'Alignment', 'gamipress' ),
-                'description' => __( 'Alignment to show the rank.', 'gamipress' ),
+                'tooltip'     => __( 'Alignment to show the rank.', 'gamipress' ),
+                'label_cb'    => 'cmb_tooltip_label_cb',
                 'type' 		  => 'radio',
                 'options' 	  => gamipress_get_alignment_options(),
                 'default' 	  => 'none',
@@ -112,9 +119,10 @@ function gamipress_ranks_meta_boxes( $post_type ) {
         $rank_types,
         array(
             'menu_order' => array(
-                'name' 	=> __( 'Priority', 'gamipress' ),
-                'desc' 	=> __( 'The rank priority defines the order a user can achieve ranks. User will need to get lower priority ranks before get this one.', 'gamipress' ),
-                'type' 	=> 'text_medium',
+                'name' 	    => __( 'Priority', 'gamipress' ),
+                'tooltip'   => __( 'The rank priority defines the order a user can achieve ranks. User will need to get lower priority ranks before get this one.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'text_medium',
             ),
             $prefix . 'next_rank' => array(
                 'content_cb' 	=> 'gamipress_next_rank_content_cb',

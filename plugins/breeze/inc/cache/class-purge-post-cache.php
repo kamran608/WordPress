@@ -3,6 +3,9 @@
  * This class handles the functionality of clearing the cache for
  * individual posts or pages.
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 class Purge_Post_Cache {
 
 	/**
@@ -47,6 +50,10 @@ class Purge_Post_Cache {
 	 * @return array Modified actions array with the 'Clear Cache' option.
 	 */
 	public function clear_cache_option( $actions, $post ) {
+		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+			return $actions;
+		}
+
 		$url         = $this->clear_cache_action_url( $post );
 		$clear_cache = array( 'clear-cache' => "<a href='$url'>Clear Cache</a>" );
 
@@ -111,7 +118,7 @@ class Purge_Post_Cache {
 		// Clear the CF cache.
 		$post_related_urls = Breeze_PurgeCache::collect_urls_for_cache_purge( $post_id );
 		Breeze_CloudFlare_Helper::purge_cloudflare_cache_urls( $post_related_urls );
-		wp_redirect(
+		wp_safe_redirect(
 			add_query_arg(
 				array(
 					'breeze_post_cache' => 'cleared',

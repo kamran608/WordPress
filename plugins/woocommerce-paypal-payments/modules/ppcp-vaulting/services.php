@@ -9,16 +9,12 @@ declare (strict_types=1);
 namespace WooCommerce\PayPalCommerce\Vaulting;
 
 use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
-return array('vaulting.module-url' => static function (ContainerInterface $container): string {
-    return plugins_url('/modules/ppcp-vaulting/', $container->get('ppcp.path-to-plugin-main-file'));
-}, 'vaulting.repository.payment-token' => static function (ContainerInterface $container): \WooCommerce\PayPalCommerce\Vaulting\PaymentTokenRepository {
-    $factory = $container->get('api.factory.payment-token');
-    $endpoint = $container->get('api.endpoint.payment-token');
-    return new \WooCommerce\PayPalCommerce\Vaulting\PaymentTokenRepository($factory, $endpoint);
+return array('vaulting.repository.payment-token' => static function (ContainerInterface $container): \WooCommerce\PayPalCommerce\Vaulting\PaymentTokenRepository {
+    return new \WooCommerce\PayPalCommerce\Vaulting\PaymentTokenRepository($container->get('vault-v2.endpoint.payment-token'));
 }, 'vaulting.customer-approval-listener' => function (ContainerInterface $container): \WooCommerce\PayPalCommerce\Vaulting\CustomerApprovalListener {
-    return new \WooCommerce\PayPalCommerce\Vaulting\CustomerApprovalListener($container->get('api.endpoint.payment-token'), $container->get('woocommerce.logger.woocommerce'));
+    return new \WooCommerce\PayPalCommerce\Vaulting\CustomerApprovalListener($container->get('vault-v2.endpoint.payment-token'), $container->get('woocommerce.logger.woocommerce'));
 }, 'vaulting.credit-card-handler' => function (ContainerInterface $container): \WooCommerce\PayPalCommerce\Vaulting\VaultedCreditCardHandler {
-    return new \WooCommerce\PayPalCommerce\Vaulting\VaultedCreditCardHandler($container->get('wc-subscriptions.helper'), $container->get('vaulting.repository.payment-token'), $container->get('api.factory.purchase-unit'), $container->get('api.factory.payer'), $container->get('api.factory.shipping-preference'), $container->get('api.endpoint.order'), $container->get('settings.environment'), $container->get('wcgateway.processor.authorized-payments'), $container->get('wcgateway.settings'));
+    return new \WooCommerce\PayPalCommerce\Vaulting\VaultedCreditCardHandler($container->get('wc-subscriptions.helper'), $container->get('vaulting.repository.payment-token'), $container->get('api.factory.purchase-unit'), $container->get('api.factory.payer'), $container->get('api.factory.shipping-preference'), $container->get('api.endpoint.order'), $container->get('settings.environment'), $container->get('wcgateway.processor.authorized-payments'), $container->get('settings.settings-provider'));
 }, 'vaulting.payment-token-factory' => function (ContainerInterface $container): \WooCommerce\PayPalCommerce\Vaulting\PaymentTokenFactory {
     return new \WooCommerce\PayPalCommerce\Vaulting\PaymentTokenFactory();
 }, 'vaulting.payment-token-helper' => function (ContainerInterface $container): \WooCommerce\PayPalCommerce\Vaulting\PaymentTokenHelper {

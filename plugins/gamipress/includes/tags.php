@@ -58,15 +58,17 @@ function gamipress_get_achievement_earned_pattern_tags() {
     $pattern_tags[] = '<strong>' . __( 'Achievement Tags', 'gamipress' ) . '</strong>';
 
     return apply_filters( 'gamipress_achievement_earned_pattern_tags', array_merge( $pattern_tags, array(
-        '{achievement_id}'              =>  __(  'Achievement ID (useful for shortcodes that achievement ID can be passed as attribute).', 'gamipress' ),
-        '{achievement_title}'           =>  __(  'Achievement title.', 'gamipress' ),
-        '{achievement_url}'             =>  __(  'URL to the achievement.', 'gamipress' ),
-        '{achievement_link}'            =>  __(  'Link to the achievement with the achievement title as text.', 'gamipress' ),
-        '{achievement_excerpt}'         =>  __(  'Achievement excerpt.', 'gamipress' ),
-        '{achievement_image}'           =>  __(  'Achievement featured image.', 'gamipress' ),
-        '{achievement_steps}'           =>  __(  'Achievement steps.', 'gamipress' ),
-        '{achievement_congratulations}' =>  __(  'Achievement congratulations text.', 'gamipress' ),
-        '{achievement_type}'            =>  __(  'Type of the achievement.', 'gamipress' ),
+        '{achievement_id}'              =>  __( 'Achievement ID (useful for shortcodes that achievement ID can be passed as attribute).', 'gamipress' ),
+        '{achievement_title}'           =>  __( 'Achievement title.', 'gamipress' ),
+        '{achievement_url}'             =>  __( 'URL to the achievement.', 'gamipress' ),
+        '{achievement_link}'            =>  __( 'Link to the achievement with the achievement title as text.', 'gamipress' ),
+        '{achievement_excerpt}'         =>  __( 'Achievement excerpt.', 'gamipress' ),
+        '{achievement_image}'           =>  __( 'Achievement featured image.', 'gamipress' ),
+        '{achievement_steps}'           =>  __( 'Achievement steps.', 'gamipress' ),
+        '{achievement_congratulations}' =>  __( 'Achievement congratulations text.', 'gamipress' ),
+        '{achievement_type}'            =>  __( 'Type of the achievement.', 'gamipress' ),
+        '{achievement_points}'          =>  __( 'The amount of points earned.', 'gamipress' ),
+        '{achievement_points_type}'     =>  __( 'The points award points type. Singular or plural is based on the amount of points earned.', 'gamipress' ),
     ) ) );
 
 }
@@ -361,6 +363,24 @@ function gamipress_get_achievement_earned_tags_replacements( $achievement_id, $u
         $replacements['{achievement_type}'] = $achievement_type['singular_name'];
         $replacements['{achievement_congratulations}'] = gamipress_get_post_meta( $achievement->ID, '_gamipress_congratulations_text' );
 
+        // Get the points and points type in achievement
+        $points = absint( gamipress_get_post_meta( $achievement->ID, '_gamipress_points' ) );
+        $points_type_slug = gamipress_get_post_meta( $achievement->ID, '_gamipress_points_type' );
+
+        $replacements['{achievement_points}'] = '';
+        $replacements['{achievement_points_type}'] = '';
+
+        // Check if the point reward is set up in the achievement
+        if ( $points && $points_type_slug ) {
+
+            $points_type = gamipress_get_points_type( $points_type_slug );
+            $singular = $points_type['singular_name'];
+            $plural = $points_type['plural_name'];
+
+            $replacements['{achievement_points}'] = gamipress_format_amount( $points, $points_type['ID'] );
+            $replacements['{achievement_points_type}'] = _n( $singular, $plural, $points );
+        }
+        
     }
 
     return $replacements;

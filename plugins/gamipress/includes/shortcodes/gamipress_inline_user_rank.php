@@ -50,45 +50,51 @@ function gamipress_register_inline_user_rank_shortcode() {
         ),
         'fields'      => array_merge( array(
             'type' => array(
-                'name'        => __( 'Rank Type', 'gamipress' ),
-                'description' => __( 'Rank type to display.', 'gamipress' ),
-                'type'        => 'select',
+                'name'      => __( 'Rank Type', 'gamipress' ),
+                'tooltip'   => __( 'Rank type to display.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
                 'option_all'  => false,
                 'option_none' => true,
                 'options_cb'  => 'gamipress_options_cb_rank_types',
             ),
             'prev_rank' => array(
-                'name'        => __( 'Show Previous Rank', 'gamipress' ),
-                'description' => __( 'Show the previous user rank.', 'gamipress' ),
-                'type' 		  => 'checkbox',
-                'classes' 	  => 'gamipress-switch',
-                'default'     => 'yes'
+                'name'      => __( 'Show Previous Rank', 'gamipress' ),
+                'tooltip'   => __( 'Show the previous user rank.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'current_rank' => array(
-                'name'        => __( 'Show Current Rank', 'gamipress' ),
-                'description' => __( 'Show the current user rank.', 'gamipress' ),
-                'type' 		  => 'checkbox',
-                'classes' 	  => 'gamipress-switch',
-                'default'     => 'yes'
+                'name'      => __( 'Show Current Rank', 'gamipress' ),
+                'tooltip'   => __( 'Show the current user rank.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'next_rank' => array(
-                'name'        => __( 'Show Next Rank', 'gamipress' ),
-                'description' => __( 'Show the next user rank.', 'gamipress' ),
-                'type' 		  => 'checkbox',
-                'classes' 	  => 'gamipress-switch',
-                'default'     => 'yes'
+                'name'      => __( 'Show Next Rank', 'gamipress' ),
+                'tooltip'   => __( 'Show the next user rank.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'current_user' => array(
-                'name'        => __( 'Current User', 'gamipress' ),
-                'description' => __( 'Show the current logged in user ranks.', 'gamipress' ),
-                'type' 		  => 'checkbox',
-                'classes' 	  => 'gamipress-switch',
-                'default'     => 'yes'
+                'name'      => __( 'Current User', 'gamipress' ),
+                'tooltip'   => __( 'Show the current logged in user ranks.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'user_id' => array(
-                'name'        => __( 'User', 'gamipress' ),
-                'description' => __( 'Show a specific user ranks.', 'gamipress' ),
-                'type'        => 'select',
+                'name'      => __( 'User', 'gamipress' ),
+                'tooltip'   => __( 'Show a specific user ranks.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
                 'default'     => '',
                 'options_cb'  => 'gamipress_options_cb_users'
             ),

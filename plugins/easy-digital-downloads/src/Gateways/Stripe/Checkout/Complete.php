@@ -57,6 +57,9 @@ class Complete {
 
 			$intent = $this->get_intent();
 
+			Validation::intent_status( $intent );
+			Validation::intent_amount( $intent, $this->get_expected_price( $intent ) );
+
 			// Get the existing order if one was created.
 			if ( ! empty( $intent->metadata->edd_payment_id ) ) {
 				$order_id = $intent->metadata->edd_payment_id;
@@ -133,16 +136,19 @@ class Complete {
 			$order = edd_get_order( $order->id );
 
 			if ( 'setup_intent' !== $intent['object'] ) {
-				$charge_id = sanitize_text_field( current( $intent['charges']['data'] )['id'] );
+				// Use latest_charge instead of charges->data for API version compatibility.
+				$charge_id = ! empty( $intent['latest_charge'] ) ? sanitize_text_field( $intent['latest_charge'] ) : '';
 
-				edd_add_note(
-					array(
-						'object_id'   => $order->id,
-						'content'     => 'Stripe Charge ID: ' . $charge_id,
-						'user_id'     => is_admin() ? get_current_user_id() : 0,
-						'object_type' => 'order',
-					)
-				);
+				if ( ! empty( $charge_id ) ) {
+					edd_add_note(
+						array(
+							'object_id'   => $order->id,
+							'content'     => 'Stripe Charge ID: ' . $charge_id,
+							'user_id'     => is_admin() ? get_current_user_id() : 0,
+							'object_type' => 'order',
+						)
+					);
+				}
 
 				$order_transaction = edd_get_order_transaction_by( 'object_id', $order->id );
 				if ( ! empty( $order_transaction ) ) {
@@ -228,6 +234,33 @@ class Complete {
 		 * @param string            $intent_id Stripe Payment Intent ID.
 		 */
 		do_action( 'edds_order_complete', $order, $charge->payment_intent );
+	}
+
+	/**
+	 * Get the expected price for validation.
+	 *
+	 * If an order already exists (via intent metadata), returns the order total.
+	 * Otherwise returns the session purchase data price.
+	 *
+	 * @since 3.6.6
+	 *
+	 * @param \Stripe\PaymentIntent|\Stripe\SetupIntent $intent The Stripe Intent object.
+	 * @return float The expected price.
+	 */
+	private function get_expected_price( $intent ) {
+		if ( ! empty( $intent->metadata->edd_payment_id ) ) {
+			$order = edd_get_order( $intent->metadata->edd_payment_id );
+			if ( $order ) {
+				return $order->total;
+			}
+		}
+
+		$purchase_data = \EDD\Sessions\PurchaseData::get( false );
+		if ( ! empty( $purchase_data['price'] ) ) {
+			return $purchase_data['price'];
+		}
+
+		return 0;
 	}
 
 	/**

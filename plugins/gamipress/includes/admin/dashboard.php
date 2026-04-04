@@ -46,11 +46,50 @@ function gamipress_dashboard_widget() {
     ?>
 
     <h3>
-        <a href="<?php echo admin_url( 'edit.php?post_type=achievement-type' ); ?>" id="achievement-types">
-            <?php echo gamipress_dashicon( 'awards' ); ?>
-            <?php printf( _n( '%d Achievement Type', '%d Achievement Types', count( $achievement_types ) ), count( $achievement_types ) ); ?>
+        <a href="<?php echo admin_url( 'edit.php?post_type=points-type' ); ?>" id="points-types">
+            <?php echo gamipress_dashicon( 'star-filled' ); ?>
+            <?php ( count( $points_types ) === 0 ? esc_html_e( 'Points Types', 'gamipress' ) : printf( _n( '%d Points Type', '%d Points Types', count( $points_types ) ), count( $points_types ) ) ); ?>
         </a>
     </h3>
+
+    <?php if( count( $points_types ) === 0 ) : ?>
+
+        <p><?php esc_html_e( 'Points acts as a digital wallet for users. They can collect points while interacting with your site, then use them in different ways.', 'gamipress' ); ?></p>
+
+        <div class="center">
+            <a href="<?php echo admin_url( 'post-new.php?post_type=points-type' ); ?>" class="button button-primary"><?php esc_html_e( 'Create your first points type', 'gamipress' ); ?></a>
+        </div>
+
+    <?php endif; ?>
+
+    <div id="gamipress-registered-points" class="gamipress-registered-points">
+        <ul>
+            <?php foreach( $points_types as $points_type_slug => $points_type) : ?>
+                <li>
+                    <a href="<?php echo get_edit_post_link( $points_type['ID'] ); ?>">
+                        <?php echo esc_html( $points_type['plural_name'] ); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <h3>
+        <a href="<?php echo admin_url( 'edit.php?post_type=achievement-type' ); ?>" id="achievement-types">
+            <?php echo gamipress_dashicon( 'awards' ); ?>
+            <?php ( count( $achievement_types ) === 0 ? esc_html_e( 'Achievement Types', 'gamipress' ) :printf( _n( '%d Achievement Type', '%d Achievement Types', count( $achievement_types ) ), count( $achievement_types ) ) ); ?>
+        </a>
+    </h3>
+
+    <?php if( count( $achievement_types ) === 0 ) : ?>
+
+        <p><?php esc_html_e( 'Users can acquire achievements by completing the configured requirements. This reward often takes the form of "badges" or "stickers" that users can display on their profiles.', 'gamipress' ); ?></p>
+
+        <div class="center">
+            <a href="<?php echo admin_url( 'post-new.php?post_type=achievement-type' ); ?>" class="button button-primary"><?php esc_html_e( 'Create your first achievement type', 'gamipress' ); ?></a>
+        </div>
+
+    <?php endif; ?>
 
     <div id="gamipress-registered-achievements" class="gamipress-registered-achievements">
         <ul>
@@ -66,30 +105,21 @@ function gamipress_dashboard_widget() {
     </div>
 
     <h3>
-        <a href="<?php echo admin_url( 'edit.php?post_type=points-type' ); ?>" id="points-types">
-            <?php echo gamipress_dashicon( 'star-filled' ); ?>
-            <?php printf( _n( '%d Points Type', '%d Points Types', count( $points_types ) ), count( $points_types ) ); ?>
-        </a>
-    </h3>
-
-    <div id="gamipress-registered-points" class="gamipress-registered-points">
-        <ul>
-            <?php foreach( $points_types as $points_type_slug => $points_type) : ?>
-                <li>
-                    <a href="<?php echo get_edit_post_link( $points_type['ID'] ); ?>">
-                        <?php echo $points_type['plural_name']; ?>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-
-    <h3>
         <a href="<?php echo admin_url( 'edit.php?post_type=rank-type' ); ?>" id="achievement-types">
             <?php echo gamipress_dashicon( 'rank' ); ?>
-            <?php printf( _n( '%d Rank Type', '%d Rank Types', count( $rank_types ) ), count( $rank_types ) ); ?>
+            <?php ( count( $rank_types ) === 0 ? esc_html_e( 'Rank Types', 'gamipress' ) :printf( _n( '%d Rank Type', '%d Rank Types', count( $rank_types ) ), count( $rank_types ) ) ); ?>
         </a>
     </h3>
+
+    <?php if( count( $rank_types ) === 0 ) : ?>
+
+        <p><?php esc_html_e( 'Similar to achievements, ranks are awarded when users complete certain tasks. However, in this case, the criteria must be met in a specific order.', 'gamipress' ); ?></p>
+
+        <div class="center">
+            <a href="<?php echo admin_url( 'post-new.php?post_type=rank-type' ); ?>" class="button button-primary"><?php esc_html_e( 'Create your first rank type', 'gamipress' ); ?></a>
+        </div>
+
+    <?php endif; ?>
 
     <div id="gamipress-registered-ranks" class="gamipress-registered-ranks">
         <ul>
@@ -104,7 +134,10 @@ function gamipress_dashboard_widget() {
         </ul>
     </div>
 
-    <h3><?php _e( 'Latest Logs', 'gamipress' ); ?></h3>
+    <h3>
+        <?php echo gamipress_dashicon( 'flag' ); ?>
+        <?php _e( 'Latest User Earnings', 'gamipress' ); ?>
+    </h3>
 
     <?php
 
@@ -114,7 +147,7 @@ function gamipress_dashboard_widget() {
     }
 
     // Setup table
-    ct_setup_table( 'gamipress_logs' );
+    ct_setup_table( 'gamipress_user_earnings' );
 
     $query = new CT_Query( array(
         'orderby'        => 'date',
@@ -124,20 +157,20 @@ function gamipress_dashboard_widget() {
         'cache_results'  => false,
     ) );
 
-    $logs = $query->get_results();
+    $user_earnings = $query->get_results();
 
-    if ( count( $logs ) > 0 ) {
+    if ( count( $user_earnings ) > 0 ) {
 
-        echo '<div id="gamipress-latest-logs" class="gamipress-latest-logs">';
+        echo '<div id="gamipress-latest-earnings" class="gamipress-latest-earnings">';
 
         echo '<ul>';
 
         $today    = date( 'Y-m-d', current_time( 'timestamp' ) );
         $yesterday = date( 'Y-m-d', strtotime( '-1 day', current_time( 'timestamp' ) ) );
 
-        foreach ( $logs as $log ) {
+        foreach ( $user_earnings as $user_earning ) {
 
-            $time = strtotime( $log->date );
+            $time = strtotime( $user_earning->date );
 
             if ( date( 'Y-m-d', $time ) === $today ) {
                 $relative = __( 'Today', 'gamipress' );
@@ -151,17 +184,31 @@ function gamipress_dashboard_widget() {
                 $relative = date_i18n( __( 'M jS' ), $time );
             }
 
-            $edit_post_link = ct_get_edit_link( 'gamipress_logs', $log->log_id );
+            $user = get_userdata( $user_earning->user_id );
 
-            printf(
-                '<li><a href="%1$s">%2$s</a> <span>%3$s</span></li>',
-                $edit_post_link,
-                apply_filters( 'gamipress_render_log_title', $log->title, $log->log_id ),
-                sprintf( _x( '%1$s, %2$s', 'dashboard' ), $relative, mysql2date( get_option( 'time_format' ), $log->date ) )
+            $user_display_name = $user->display_name;
+
+            if( current_user_can( 'edit_users' ) ) {
+                $user_display_name = '<a href="' . get_edit_user_link( $user_earning->user_id ) . '">' . $user_display_name . '</a>';
+            }
+
+            $user_earning_title = '<strong>' . $user_earning->title . '</strong>';
+
+            $date = sprintf( _x( '%1$s, %2$s', 'dashboard' ), $relative, mysql2date( get_option( 'time_format' ), $user_earning->date ) );
+
+            // translators: %1$s: Username %2$s: Reward
+            $label = sprintf( __( '%1$s got %2$s', 'gamipress' ),
+                $user_display_name,
+                $user_earning_title
             );
+
+            echo '<li>' . $label . '<span>' . $date . '</span>' . '</li>';
         }
 
         echo '</ul>';
+
+        echo '<a href="' . ct_get_list_link( 'gamipress_user_earnings' ) . '" class="gamipress-latest-earnings-view-all">' . esc_html__( 'View all user earnings', 'gamipress' ) . '</a>';
+
         echo '</div>';
 
     } else {

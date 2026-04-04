@@ -141,7 +141,7 @@ class FlyoutMenu {
 		$support_url = ! edd_is_pro() || edd_is_inactive_pro()
 			? 'https://wordpress.org/support/plugin/easy-digital-downloads/'
 			: edd_link_helper(
-				'https://easydigitaldownloads.com/support/',
+				'https://easydigitaldownloads.com/your-account/support/',
 				array(
 					'utm_medium'  => $utm_medium,
 					'utm_content' => 'support',
@@ -181,7 +181,7 @@ class FlyoutMenu {
 	private static function enqueue() {
 		wp_enqueue_script(
 			'edd-flyout-menu',
-			EDD_PLUGIN_URL . 'assets/js/edd-admin-flyout.js',
+			edd_get_assets_url( 'js/admin' ) . 'flyout.js',
 			array( 'wp-dom-ready' ),
 			EDD_VERSION,
 			true

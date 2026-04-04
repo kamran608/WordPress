@@ -51,14 +51,16 @@ function gamipress_recount_activity_tool_meta_boxes( $meta_boxes ) {
             ),
             'activity_to_recount' => array(
                 'name' => __( 'Activity to recount', 'gamipress' ),
-                'desc' => __( 'Choose the activity to recount.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the activity to recount.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'advanced_select',
                 'options' => $recountable_activity_triggers,
             ),
             'entries_per_loop' => array(
                 'name' => __( 'Entries per loop', 'gamipress' ),
-                'desc' => __( 'To prevent block your site, this tool performs the recount in small groups of entries. Set the number of entries to recount in each loop (by default, 100).', 'gamipress' )
-                    . '<br>' . __( '<strong>Note:</strong> If the recount process fails, try to reduce this setting to a lower number to 50, 20 or 10 entries per loop.', 'gamipress' ),
+                'tooltip'   => __( 'To prevent block your site, this tool performs the recount in small groups of entries. Set the number of entries to recount in each loop (by default, 100).', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
+                'desc' => __( '<strong>Note:</strong> If the recount process fails, try to reduce this setting to a lower number to 50, 20 or 10 entries per loop.', 'gamipress' ),
                 'type' => 'text',
                 'attributes' => array(
                     'type'  => 'number',

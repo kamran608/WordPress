@@ -328,6 +328,26 @@
         "uiTag": "hide-desc-button"
     },
     {
+        "key": "cky_optout_show_desc",
+        "type": "data",
+        "content": {
+            "button": "<button class=\"cky-show-desc-btn\" data-cky-tag=\"optout-show-desc-button\" aria-label=\"[cky_showmore_text]\">[cky_showmore_text]</button>"
+        },
+        "attributes": {},
+        "customTag": "",
+        "uiTag": "optout-show-desc-button"
+    },
+    {
+        "key": "cky_optout_hide_desc",
+        "type": "data",
+        "content": {
+            "button": "<button class=\"cky-show-desc-btn\" data-cky-tag=\"optout-hide-desc-button\" aria-label=\"[cky_showless_text]\">[cky_showless_text]</button>"
+        },
+        "attributes": {},
+        "customTag": "",
+        "uiTag": "optout-hide-desc-button"
+    },
+    {
         "key": "cky_readmore",
         "type": "data",
         "content": {
@@ -450,4 +470,4 @@
         "customTag": "",
         "uiTag": ""
     }
-]
+] 

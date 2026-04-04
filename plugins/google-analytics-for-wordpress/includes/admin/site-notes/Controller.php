@@ -40,6 +40,8 @@ class MonsterInsights_SiteNotes_Controller {
 		add_action('wp_ajax_monsterinsights_vue_restore_notes', array($this, 'restore_notes'));
 		add_action('wp_ajax_monsterinsights_vue_delete_notes', array($this, 'delete_notes'));
 		add_action('wp_ajax_monsterinsights_vue_delete_categories', array($this, 'delete_categories'));
+		add_action( 'wp_ajax_monsterinsights_vue_export_notes', array( $this, 'export_notes_to_ga4' ) );
+		add_action( 'wp_ajax_monsterinsights_vue_import_notes', array( $this, 'import_notes_from_ga4' ) );
 
 		add_action('init', array($this, 'register_meta'));
 
@@ -50,7 +52,7 @@ class MonsterInsights_SiteNotes_Controller {
 		}
 
 		add_filter('monsterinsights_report_overview_data', array($this, 'prepare_data_overview_chart'));
-		add_filter('monsterinsights_report_traffic_sessions_chart_data', array($this, 'prepare_traffic_sessions_chart_data'), 10, 3);
+		add_filter('monsterinsights_report_traffic_sessions_chart_data', array($this, 'prepare_traffic_sessions_chart_data'), 10, 4);
 		add_action('save_post', array($this, 'save_custom_fields'));
 		add_filter('monsterinsights_gutenberg_tool_vars', array($this, 'add_categories_to_editor'));
 		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
@@ -551,6 +553,378 @@ class MonsterInsights_SiteNotes_Controller {
 		fclose($outstream);
 		exit;
 	}
+	/**
+	 * AJAX callback function to export notes to GA4.
+	 */
+	public function export_notes_to_ga4() {
+		if (
+			! isset( $_POST['action'] ) ||
+			'monsterinsights_vue_export_notes' !== $_POST['action']
+		) {
+			return;
+		}
+
+		if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
+			wp_die(
+				esc_html__(
+					'You do not have sufficient permissions to access this page.',
+					'google-analytics-for-wordpress'
+				)
+			);
+		}
+
+		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
+
+		$annotations = isset( $_POST['annotations'] ) ? json_decode( stripslashes( $_POST['annotations'] ), true ) : array();
+		if ( empty( $annotations ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'No annotations data provided.', 'google-analytics-for-wordpress' ),
+				)
+			);
+		}
+
+		// Check if user is authenticated.
+		if (
+			! ( MonsterInsights()->auth->is_authed() || MonsterInsights()->auth->is_network_authed() )
+		) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You must be properly authenticated with MonsterInsights to export annotations.', 'google-analytics-for-wordpress' ),
+				)
+			);
+		}
+
+		// Prepare API request options.
+		$api_options = array();
+
+		// Add network flag if needed.
+		if (
+			! MonsterInsights()->auth->is_authed() &&
+			MonsterInsights()->auth->is_network_authed()
+		) {
+			$api_options['network'] = true;
+		}
+
+		// Create API request.
+		$api = new MonsterInsights_API_Request( 'analytics/reports/annotations/', $api_options, 'POST' );
+
+		// Set additional data with annotations.
+		$api->set_additional_data(
+			array(
+				'annotations' => $annotations,
+				'source'      => 'site-notes-export',
+			)
+		);
+
+		// Make the API request.
+		$response = $api->request();
+		if ( is_wp_error( $response ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $response->get_error_message(),
+				)
+			);
+		}
+
+		// Update post meta with GA4 annotation IDs if response is successful
+		if ( isset( $response['success'] ) && $response['success'] && isset( $response['created'] ) && is_array( $response['created'] ) ) {
+			foreach ( $response['created'] as $created_annotation ) {
+				if ( ! isset( $created_annotation['annotation'] ) || ! isset( $created_annotation['annotation']['id'] ) ) {
+					continue;
+				}
+
+				$ga4_annotation_id = $created_annotation['annotation']['id'];
+				$ga4_title = isset( $created_annotation['annotation']['title'] ) ? $created_annotation['annotation']['title'] : '';
+				$ga4_date = isset( $created_annotation['annotation']['annotationDate'] ) ? $created_annotation['annotation']['annotationDate'] : array();
+				// Find matching annotation in the original annotations array
+				foreach ( $annotations as $annotation ) {
+					$annotation_title = isset( $annotation['title'] ) ? $annotation['title'] : '';
+					$annotation_date = isset( $annotation['annotation_date'] ) ? $annotation['annotation_date'] : '';
+					$annotation_id = isset( $annotation['id'] ) ? $annotation['id'] : 0;
+
+					// Format GA4 date to match annotation date format
+					$ga4_formatted_date = '';
+					if ( is_array( $ga4_date ) && isset( $ga4_date['year'] ) && isset( $ga4_date['month'] ) && isset( $ga4_date['day'] ) ) {
+						$ga4_formatted_date = sprintf( '%04d-%02d-%02d', $ga4_date['year'], $ga4_date['month'], $ga4_date['day'] );
+					}
+
+					// Match by title and date
+					if ( $annotation_title === $ga4_title && $annotation_date === $ga4_formatted_date && $annotation_id > 0 ) {
+						update_post_meta( $annotation_id, '_ga4_annotation_id', $ga4_annotation_id );
+						break;
+					}
+				}
+			}
+		}
+
+		monsterinsights_update_option( 'site_notes_export_synced', 1 );
+
+		// Return success response.
+		wp_send_json_success(
+			array(
+				'message' => __( 'Annotations exported successfully.', 'google-analytics-for-wordpress' ),
+				'data'    => $response,
+			)
+		);
+	}
+
+	/**
+	 * Delete a single note from GA4.
+	 *
+	 * @param int $note_id The note ID.
+	 * @param string $ga4_annotation_id The GA4 annotation ID.
+	 * @return bool|WP_Error True on success, WP_Error on failure.
+	 */
+	public function deleted_note_from_ga4_single($ga4_annotation_id) {
+		// Check if user is authenticated
+		if (!(MonsterInsights()->auth->is_authed() || MonsterInsights()->auth->is_network_authed())) {
+			return new WP_Error('not_authenticated', __('You must be properly authenticated with MonsterInsights to delete annotations.', 'google-analytics-for-wordpress'));
+		}
+
+		// Prepare API request options
+		$api_options = array();
+		
+		// Add network flag if needed
+		if (!MonsterInsights()->auth->is_authed() && MonsterInsights()->auth->is_network_authed()) {
+			$api_options['network'] = true;
+		}
+
+		// Create API request with DELETE method
+		$api = new MonsterInsights_API_Request('analytics/reports/annotations/delete', $api_options, 'POST');
+		
+		// Set additional data with GA4 annotation ID
+		$api->set_additional_data(array(
+			'ga_note_ids' => array($ga4_annotation_id),
+		));
+
+		// Make the API request
+		$response = $api->request();
+		if (is_wp_error($response)) {
+			return $response;
+		}
+
+		return true;
+	}
+
+	/**
+	 * AJAX callback function to import notes from GA4.
+	 */
+	public function import_notes_from_ga4() {
+		if (
+			! isset( $_POST['action'] ) ||
+			'monsterinsights_vue_import_notes' !== $_POST['action']
+		) {
+			return;
+		}
+
+		if ( ! current_user_can( 'monsterinsights_save_settings' ) ) {
+			wp_die(
+				esc_html__(
+					'You do not have sufficient permissions to access this page.',
+					'google-analytics-for-wordpress'
+				)
+			);
+		}
+
+		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
+
+		// Check if user is authenticated.
+		if (
+			! ( MonsterInsights()->auth->is_authed() || MonsterInsights()->auth->is_network_authed() )
+		) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__(
+						'You must be properly authenticated with MonsterInsights to import annotations.',
+						'google-analytics-for-wordpress'
+					),
+				)
+			);
+		}
+
+		// Prepare API request options.
+		$api_options = array();
+
+		// Add network flag if needed.
+		if (
+			! MonsterInsights()->auth->is_authed() &&
+			MonsterInsights()->auth->is_network_authed()
+		) {
+			$api_options['network'] = true;
+		}
+
+		// Create API request for GET method.
+		$api = new MonsterInsights_API_Request(
+			'analytics/reports/annotations/',
+			$api_options,
+			'GET'
+		);
+		
+		// Make the API request.
+		$response = $api->request();
+
+		if ( is_wp_error( $response ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $response->get_error_message(),
+				)
+			);
+		}
+		// Check if response contains annotations data.
+		if (
+			empty( $response ) ||
+			! isset( $response['data']['annotations'] ) ||
+			empty( $response['data']['annotations'] )
+		) {
+			wp_send_json_error(
+				array(
+					'message' => __(
+						'No annotations found to import.',
+						'google-analytics-for-wordpress'
+					),
+				)
+			);
+		}
+
+		$imported_count = 0;
+		$errors         = array();
+		$skipped_count  = 0;
+
+		// Process each annotation and create site notes.
+		foreach ( $response['data']['annotations'] as $annotation ) {
+			// Check if annotation already exists by GA4 ID.
+			$ga4_annotation_id = isset( $annotation['id'] ) ? sanitize_text_field( $annotation['id'] ) : '';
+			
+			if ( ! empty( $ga4_annotation_id ) && $this->annotation_exists( $ga4_annotation_id ) ) {
+				$skipped_count++;
+				continue;
+			}
+
+			// Prepare note details based on annotation data.
+			$note_details = array(
+				'note'      => isset( $annotation['title'] ) ? sanitize_text_field( $annotation['title'] ) : '',
+				'category'  => 0, // Default category, can be mapped later if needed.
+				'date'      => $this->format_annotation_date( $annotation['annotationDate'] ),
+				'medias'    => array(),
+				'important' => false, // GA4 doesn't have important flag, default to false
+			);
+
+			// Skip if note is empty.
+			if ( empty( $note_details['note'] ) ) {
+				$errors[] = sprintf(
+					__(
+						'Skipped annotation with empty title (ID: %s)',
+						'google-analytics-for-wordpress'
+					),
+					$ga4_annotation_id ?: 'unknown'
+				);
+				continue;
+			}
+
+			// Create the note using the existing create_note method.
+			$note_id = $this->create_note( $note_details );
+
+			if ( is_wp_error( $note_id ) ) {
+				$errors[] = sprintf(
+					__(
+						'Failed to import annotation "%s": %s',
+						'google-analytics-for-wordpress'
+					),
+					$note_details['note'],
+					$note_id->get_error_message()
+				);
+			} else {
+				// Store the GA4 annotation ID as post meta for future duplicate checking.
+				if ( ! empty( $ga4_annotation_id ) ) {
+					update_post_meta( $note_id, '_ga4_annotation_id', $ga4_annotation_id );
+				}
+				$imported_count++;
+			}
+		}
+
+		// Prepare response message.
+		$message = sprintf(
+			__(
+				'Successfully imported %d annotations.',
+				'google-analytics-for-wordpress'
+			),
+			$imported_count
+		);
+
+		if ( $skipped_count > 0 ) {
+			$message .= ' ' . sprintf(
+				__( '%d annotations were skipped (already exist).', 'google-analytics-for-wordpress' ),
+				$skipped_count
+			);
+		}
+
+		if ( ! empty( $errors ) ) {
+			$message .= ' ' . sprintf(
+				__(
+					'%d annotations could not be imported.',
+					'google-analytics-for-wordpress'
+				),
+				count( $errors )
+			);
+		}
+
+		monsterinsights_update_option( 'site_notes_import_synced', 1 );
+
+		// Return success response.
+		wp_send_json_success(
+			array(
+				'message'        => $message,
+				'imported_count' => $imported_count,
+				'skipped_count'  => $skipped_count,
+				'error_count'    => count( $errors ),
+				'errors'         => $errors,
+				'data'           => $response,
+			)
+		);
+	}
+
+	/**
+	 * Format GA4 annotation date to YYYY-MM-DD format.
+	 *
+	 * @param array $annotation_date The annotation date array from GA4.
+	 * @return string Formatted date string.
+	 */
+	private function format_annotation_date( $annotation_date ) {
+		if ( ! is_array( $annotation_date ) ) {
+			return wp_date( 'Y-m-d' );
+		}
+
+		$year  = isset( $annotation_date['year'] ) ? intval( $annotation_date['year'] ) : 0;
+		$month = isset( $annotation_date['month'] ) ? intval( $annotation_date['month'] ) : 0;
+		$day   = isset( $annotation_date['day'] ) ? intval( $annotation_date['day'] ) : 0;
+
+		// Validate date components
+		if ( $year < 1900 || $year > 2100 || $month < 1 || $month > 12 || $day < 1 || $day > 31 ) {
+			return wp_date( 'Y-m-d' );
+		}
+
+		// Format as YYYY-MM-DD
+		return sprintf( '%04d-%02d-%02d', $year, $month, $day );
+	}
+
+	/**
+	 * Check if an annotation with the given GA4 ID already exists.
+	 *
+	 * @param string $ga4_annotation_id The GA4 annotation ID to check.
+	 * @return bool True if annotation exists, false otherwise.
+	 */
+	private function annotation_exists( $ga4_annotation_id ) {
+		$args = array(
+			'post_type'  => 'monsterinsights_note',
+			'meta_key'   => '_ga4_annotation_id',
+			'meta_value' => $ga4_annotation_id,
+			'post_status' => array( 'publish', 'trash' ), // Check both published and trashed notes
+			'posts_per_page' => 1,
+		);
+		$notes = get_posts( $args );
+		return ! empty( $notes );
+	}
 
 	public function add_categories_to_editor($vars) {
 		$args = array(
@@ -784,11 +1158,34 @@ class MonsterInsights_SiteNotes_Controller {
 	}
 
 	public function load_metabox_assets() {
+		// Don't load classic editor assets on block editor
+		if ( $this->is_gutenberg_editor() ) {
+			return;
+		}
+
 		wp_register_style('monsterinsights-admin-metabox-sitenotes-style', plugins_url('assets/css/admin-metabox-sitenotes.css', MONSTERINSIGHTS_PLUGIN_FILE), array(), monsterinsights_get_asset_version());
 		wp_enqueue_style('monsterinsights-admin-metabox-sitenotes-style');
 
 		wp_register_script('monsterinsights-admin-metabox-sitenotes-script', plugins_url('assets/js/admin-metabox-sitenotes.js', MONSTERINSIGHTS_PLUGIN_FILE), array('jquery'), monsterinsights_get_asset_version());
 		wp_enqueue_script('monsterinsights-admin-metabox-sitenotes-script');
+	}
+
+	/**
+	 * Check if the current screen is the Gutenberg (block) editor.
+	 *
+	 * @return bool True if on block editor, false otherwise.
+	 */
+	private function is_gutenberg_editor() {
+		if ( function_exists( 'is_gutenberg_page' ) && is_gutenberg_page() ) {
+			return true;
+		}
+
+		$current_screen = get_current_screen();
+		if ( method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -800,12 +1197,14 @@ class MonsterInsights_SiteNotes_Controller {
 	 *
 	 * @return array
 	 */
-	public function prepare_traffic_sessions_chart_data( $data, $start_date, $end_date ) {
-
-		if ( ! isset( $data['data']['sessions_chart'] ) ) {
+	public function prepare_traffic_sessions_chart_data( $data, $start_date, $end_date, $custom_chart_type = null ) {
+		$chart_type = 'sessions_chart';
+		if ( ! isset( $data['data']['sessions_chart'] ) && null === $custom_chart_type ) {
 			return $data;
 		}
-
+		if (  isset( $data['data'][ $custom_chart_type ] ) ) {
+			$chart_type = $custom_chart_type;
+		}
 		$params = array(
 			'per_page' => - 1,
 			'filter'   => array(
@@ -834,8 +1233,7 @@ class MonsterInsights_SiteNotes_Controller {
 			);
 		}
 
-		$data['data']['sessions_chart']['notes'] = $prepared_notes;
-
+		$data['data'][ $chart_type ]['notes'] = $prepared_notes;
 		return $data;
 	}
 
@@ -845,6 +1243,7 @@ class MonsterInsights_SiteNotes_Controller {
 	public function create_note( $note_details ) {
 		return $this->db->create( $note_details );
 	}
+
 }
 
 MonsterInsights_SiteNotes_Controller::get_instance()->run();

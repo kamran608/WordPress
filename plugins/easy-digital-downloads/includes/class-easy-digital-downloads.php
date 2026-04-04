@@ -364,7 +364,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Plugin version.
 			if ( ! defined( 'EDD_VERSION' ) ) {
-				define( 'EDD_VERSION', '3.6.0' );
+				define( 'EDD_VERSION', '3.6.6.1' );
 			}
 
 			// Make sure CAL_GREGORIAN is defined.
@@ -595,7 +595,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 			// Emails.
 			require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/emails/recapture.php';
 			require_once EDD_PLUGIN_DIR . 'includes/emails/tags.php';
 			require_once EDD_PLUGIN_DIR . 'includes/emails/tags-inserter.php';
 			require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
@@ -639,7 +638,6 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			require_once EDD_PLUGIN_DIR . 'includes/customer-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/customers/customer-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 			require_once EDD_PLUGIN_DIR . 'includes/taxes/functions.php';
@@ -745,9 +743,7 @@ if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 			add_action(
 				'rest_api_init',
 				function () {
-					$endpoints = array(
-						'\\EDD\\API\\v3\\Notifications',
-					);
+					$endpoints = array();
 
 					foreach ( $endpoints as $endpointClassName ) { // phpcs:ignore
 						$endpointNamePieces = explode( '\\', $endpointClassName ); // phpcs:ignore

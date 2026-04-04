@@ -51,7 +51,7 @@ class PostSettings {
 		add_action( 'add_meta_boxes', [ $this, 'addPostSettingsMetabox' ] );
 
 		// Add metabox (upsell) to terms on init hook.
-		add_action( 'init', [ $this, 'init' ], 1000 );
+		add_action( 'admin_init', [ $this, 'init' ], 1000 );
 
 		// Save metabox.
 		add_action( 'save_post', [ $this, 'saveSettingsMetabox' ] );
@@ -237,7 +237,7 @@ class PostSettings {
 			return;
 		}
 
-		$currentPost = json_decode( wp_unslash( ( $_POST['aioseo-post-settings'] ) ), true );
+		$currentPost = json_decode( wp_unslash( ( $_POST['aioseo-post-settings'] ) ), true ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$currentPost = aioseo()->helpers->sanitize( $currentPost );
 
 		// If there is no data, there likely was an error, e.g. if the hidden field wasn't populated on load and the user saved the post without making changes in the metabox.

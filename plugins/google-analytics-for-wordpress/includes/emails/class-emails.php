@@ -651,11 +651,15 @@ class MonsterInsights_WP_Emails {
 
 		$template_dir = 'monsterinsights-email';
 
+		// When running as ExactMetrics (Pro), use exactmetrics-templates; otherwise use templates (MonsterInsights Pro).
+		$pro_templates_subdir = defined( 'EXACTMETRICS_VERSION' ) ? 'exactmetrics-templates' : 'templates';
+		$pro_templates_path   = 'pro/includes/emails/' . $pro_templates_subdir;
+
 		$file_paths = array(
 			1   => trailingslashit( get_stylesheet_directory() ) . $template_dir,
 			10  => trailingslashit( get_template_directory() ) . $template_dir,
 			100 => trailingslashit( MONSTERINSIGHTS_PLUGIN_DIR ) . 'includes/emails/templates',
-			200 => trailingslashit( MONSTERINSIGHTS_PLUGIN_DIR ) . 'pro/includes/emails/templates',
+			200 => trailingslashit( MONSTERINSIGHTS_PLUGIN_DIR ) . $pro_templates_path,
 			300 => trailingslashit( MONSTERINSIGHTS_PLUGIN_DIR ) . 'lite/includes/emails/templates',
 		);
 

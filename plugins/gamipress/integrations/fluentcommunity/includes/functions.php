@@ -59,13 +59,44 @@ function gamipress_fluentcommunity_ajax_get_posts() {
         wp_send_json_success( $results );
         die;
 
+    } else if( isset( $_REQUEST['post_type'] ) && in_array( 'fluentcommunity_quizzes', $_REQUEST['post_type'] ) ) {
+
+        // Return quizzes
+        $quizzes = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT id, title FROM {$wpdb->prefix}fcom_posts WHERE type = %s AND content_type = %s AND status = %s",
+                'course_lesson',
+                'quiz',
+                'published'
+            )
+        );  
+
+        foreach ( $quizzes as $quiz ) {
+
+            // Results should meet same structure like posts
+            $results[] = array(
+                'ID'    => $quiz->id,
+                'post_title'  => $quiz->title,
+            );   
+
+        }
+
+        // Return our results
+        wp_send_json_success( $results );
+        die;
+
     }
 
 }
 add_action( 'wp_ajax_gamipress_get_posts', 'gamipress_fluentcommunity_ajax_get_posts', 5 );
 
-
-// Get the space title
+/**
+ * Get the space title
+ * 
+ * @param int $space_id
+ *
+ * @since 1.0.0
+ */
 function gamipress_fluentcommunity_get_space_title( $space_id ) {
 
     if( absint( $space_id ) === 0 ) {
@@ -82,7 +113,13 @@ function gamipress_fluentcommunity_get_space_title( $space_id ) {
 
 }
 
-// Get the course title
+/**
+ * Get the course title
+ * 
+ * @param int $course_id
+ *
+ * @since 1.0.0
+ */
 function gamipress_fluentcommunity_get_course_title( $course_id ) {
 
     if( absint( $course_id ) === 0 ) {
@@ -96,5 +133,33 @@ function gamipress_fluentcommunity_get_course_title( $course_id ) {
             return $course['title']; 
         }
     }
+
+}
+
+/**
+ * Get the quiz title
+ * 
+ * @param int $quiz_id
+ *
+ * @since 1.0.0
+ */
+function gamipress_fluentcommunity_get_quiz_title( $quiz_id ) {
+
+    global $wpdb;
+
+    // Empty title if no ID provided
+    if( absint( $quiz_id ) === 0 ) {
+        return '';
+    }
+
+    // Get quiz title
+    $quiz = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT title FROM {$wpdb->prefix}fcom_posts WHERE id = %d",
+            absint( $quiz_id )
+        )
+    );  
+
+    return $quiz;
 
 }

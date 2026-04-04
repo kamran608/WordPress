@@ -50,7 +50,7 @@ class Modal implements SubscriberInterface {
 		// No CSS file needed - styles are embedded in the Web Component's Shadow DOM.
 		wp_register_script(
 			'edd-modal',
-			EDD_PLUGIN_URL . 'assets/js/edd-modal.js',
+			edd_get_assets_url( 'js/frontend/' ) . 'edd-modal.js',
 			array(),
 			EDD_VERSION,
 			true
@@ -73,7 +73,8 @@ class Modal implements SubscriberInterface {
 	 * Render a reusable modal container.
 	 *
 	 * Outputs the HTML structure for a generic EDD modal that can be used
-	 * with the EDDModal JavaScript class. Modal HTML is deferred to wp_footer.
+	 * with the EDDModal JavaScript class. Modal HTML is deferred to wp_footer
+	 * (frontend) or admin_footer (admin).
 	 *
 	 * Uses a custom <edd-modal> Web Component with Shadow DOM for style isolation.
 	 *

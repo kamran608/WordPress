@@ -35,10 +35,6 @@ if ( ! class_exists( 'MonsterInsights_MetaBox_ExcludePage' ) ) {
 			return false;
 		}
 
-		private function posttype_supports_gutenberg() {
-			return post_type_supports( monsterinsights_get_current_post_type(), 'custom-fields' );
-		}
-
 		private function get_current_post_type() {
 			global $post;
 
@@ -72,7 +68,7 @@ if ( ! class_exists( 'MonsterInsights_MetaBox_ExcludePage' ) ) {
 			}
 
 			add_action( 'admin_enqueue_scripts', array( $this, 'load_metabox_styles' ) );
-			if ( $this->is_gutenberg_editor() && $this->posttype_supports_gutenberg() ) {
+			if ( $this->is_gutenberg_editor() ) {
 				return;
 			}
 			if ( 'attachment' !== $post_type ) {

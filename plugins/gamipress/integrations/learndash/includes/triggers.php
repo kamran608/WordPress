@@ -151,6 +151,10 @@ function gamipress_ld_activity_triggers( $triggers ) {
         // Groups
         'gamipress_ld_join_group'            => __( 'Join any group', 'gamipress' ),
         'gamipress_ld_join_specific_group'   => __( 'Join a specific group', 'gamipress' ),
+
+        // Reviews
+        'gamipress_ld_review_course'            => __( 'Review any course', 'gamipress' ),
+        'gamipress_ld_review_specific_course'   => __( 'Review a specific course', 'gamipress' ),
     );
 
     return $triggers;
@@ -212,6 +216,9 @@ function gamipress_ld_specific_activity_triggers( $specific_activity_triggers ) 
 
     // Groups
     $specific_activity_triggers['gamipress_ld_join_specific_group'] = array( 'groups' );
+
+    // Reviews
+    $specific_activity_triggers['gamipress_ld_review_specific_course'] = array( 'sfwd-courses' );
 
     return $specific_activity_triggers;
 }
@@ -494,6 +501,9 @@ function gamipress_ld_specific_activity_trigger_label( $specific_activity_trigge
     // Groups
     $specific_activity_trigger_labels['gamipress_ld_join_specific_group'] = __( 'Join %s group', 'gamipress' );
 
+    // Reviews
+    $specific_activity_trigger_labels['gamipress_ld_review_specific_course'] = __( 'Review %s course', 'gamipress' );
+
     return $specific_activity_trigger_labels;
 }
 add_filter( 'gamipress_specific_activity_trigger_label', 'gamipress_ld_specific_activity_trigger_label' );
@@ -605,6 +615,10 @@ function gamipress_ld_trigger_get_user_id( $user_id, $trigger, $args ) {
         case 'gamipress_ld_approve_assignment_lesson_tag':
         case 'gamipress_ld_complete_lesson_tag':
 
+        // Reviews
+        case 'gamipress_ld_review_course':
+        case 'gamipress_ld_review_specific_course':
+
         // Quiz taxonomies
         case 'gamipress_ld_complete_quiz_category':
         case 'gamipress_ld_complete_quiz_tag':
@@ -655,6 +669,7 @@ function gamipress_ld_specific_trigger_get_id( $specific_id, $trigger = '', $arg
         case 'gamipress_ld_complete_specific_course':
         case 'gamipress_ld_join_specific_group':
         case 'gamipress_ld_submit_essay_specific_quiz':
+        case 'gamipress_ld_review_specific_course':
             $specific_id = $args[0];
             break;
         case 'gamipress_ld_complete_quiz_specific_course':

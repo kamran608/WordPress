@@ -284,16 +284,14 @@ trait WpUri {
 		$path          = str_replace( '%20', ' ', $path );
 		$parts         = explode( '/', trim( $path, '/' ) );
 		$reversedParts = array_reverse( $parts );
-		$postNames     = "'" . implode( "','", $parts ) . "'";
 
 		$postTypes = is_array( $postType ) ? $postType : [ $postType ];
-		$postTypes = "'" . implode( "','", $postTypes ) . "'";
 
 		$posts = aioseo()->core->db->start( 'posts' )
 			->select( 'ID, post_name, post_parent, post_type' )
-			->whereRaw( "post_name in ( $postNames )" )
-			->whereRaw( "post_type in ( $postTypes )" )
-			->whereRaw( "post_status = 'publish'" )
+			->whereIn( 'post_name', $parts )
+			->whereIn( 'post_type', $postTypes )
+			->whereIn( 'post_status', [ 'publish' ] )
 			->run()
 			->result();
 
@@ -550,26 +548,26 @@ trait WpUri {
 			return false;
 		}
 
-		$canonical_url = get_permalink( $post ); // phpcs:ignore Squiz.NamingConventions.ValidVariableName
+		$canonicalUrl = get_permalink( $post );
 
 		// If a canonical is being generated for the current page, make sure it has pagination if needed.
 		if ( get_queried_object_id() === $post->ID ) {
 			$page = get_query_var( 'page', 0 );
 			if ( $page >= 2 ) {
 				if ( ! get_option( 'permalink_structure' ) ) {
-					$canonical_url = add_query_arg( 'page', $page, $canonical_url ); // phpcs:ignore Squiz.NamingConventions.ValidVariableName
+					$canonicalUrl = add_query_arg( 'page', $page, $canonicalUrl );
 				} else {
-					$canonical_url = trailingslashit( $canonical_url ) . user_trailingslashit( $page, 'single_paged' ); // phpcs:ignore Squiz.NamingConventions.ValidVariableName
+					$canonicalUrl = trailingslashit( $canonicalUrl ) . user_trailingslashit( $page, 'single_paged' );
 				}
 			}
 
 			$cpage = aioseo()->helpers->getCommentPageNumber(); // We're calling our own function here to get the correct cpage number.
 			if ( $cpage ) {
-				$canonical_url = get_comments_pagenum_link( $cpage ); // phpcs:ignore Squiz.NamingConventions.ValidVariableName
+				$canonicalUrl = get_comments_pagenum_link( $cpage );
 			}
 		}
 
-		return apply_filters( 'get_canonical_url', $canonical_url, $post ); // phpcs:ignore Squiz.NamingConventions.ValidVariableName
+		return apply_filters( 'get_canonical_url', $canonicalUrl, $post ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 	}
 
 	/**
@@ -582,6 +580,6 @@ trait WpUri {
 	public function usingPermalinks() {
 		global $wp_rewrite; // phpcs:ignore Squiz.NamingConventions.ValidVariableName
 
-		return $wp_rewrite->using_permalinks();  // phpcs:ignore Squiz.NamingConventions.ValidVariableName
+		return $wp_rewrite->using_permalinks(); // phpcs:ignore Squiz.NamingConventions.ValidVariableName
 	}
 }

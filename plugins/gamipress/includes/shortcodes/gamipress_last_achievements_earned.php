@@ -52,7 +52,8 @@ function gamipress_register_last_achievements_earned_shortcode() {
 		'fields'      => array_merge( array(
 			'type' => array(
 				'name'              => __( 'Achievement Type', 'gamipress' ),
-				'description'       => __( 'The type of the last achievement earned.', 'gamipress' ),
+                'tooltip'           => __( 'The type of the last achievement earned.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
 				'type'              => 'select',
                 'classes' 	        => 'gamipress-selector',
 				'option_none'       => true,
@@ -61,30 +62,34 @@ function gamipress_register_last_achievements_earned_shortcode() {
 				'default'           => '',
 			),
 			'current_user' => array(
-				'name'        => __( 'Current User', 'gamipress' ),
-				'description' => __( 'Show the last achievement earned by the current logged in user.', 'gamipress' ),
-				'type' 		  => 'checkbox',
-				'classes' 	  => 'gamipress-switch',
-                'default' 	    => 'yes',
+				'name'      => __( 'Current User', 'gamipress' ),
+                'tooltip'   => __( 'Show the last achievement earned by the current logged in user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'      => 'checkbox',
+				'classes'   => 'gamipress-switch',
+                'default'   => 'yes',
 			),
 			'user_id' => array(
-				'name'        => __( 'User', 'gamipress' ),
-				'description' => __( 'Show the last achievement earned by a specific user.', 'gamipress' ),
-				'type'        => 'select',
-				'default'     => '',
+				'name'      => __( 'User', 'gamipress' ),
+                'tooltip'   => __( 'Show the last achievement earned by a specific user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'      => 'select',
+				'default'   => '',
                 'options_cb'  => 'gamipress_options_cb_users'
 			),
             'limit' => array(
-                'name'        => __( 'Limit', 'gamipress' ),
-                'description' => __( 'Number of achievements to display.', 'gamipress' ),
-                'type'        => 'text',
-                'default'     => '1',
+                'name'      => __( 'Limit', 'gamipress' ),
+                'tooltip'   => __( 'Number of achievements to display.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
+                'default'   => '1',
             ),
             'columns' => array(
-                'name'        => __( 'Columns', 'gamipress' ),
-                'description' => __( 'Columns to divide achievements (only used when limit is higher than 1).', 'gamipress' ),
-                'type' 	=> 'select',
-                'options' => array(
+                'name'      => __( 'Columns', 'gamipress' ),
+                'tooltip'   => __( 'Columns to divide achievements (only used when limit is higher than 1).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'select',
+                'options'   => array(
                     '1' => __( '1 Column', 'gamipress' ),
                     '2' => __( '2 Columns', 'gamipress' ),
                     '3' => __( '3 Columns', 'gamipress' ),
@@ -95,10 +100,11 @@ function gamipress_register_last_achievements_earned_shortcode() {
                 'default' => '1'
             ),
             'columns_small' => array(
-                'name'        => __( 'Columns in small screens', 'gamipress' ),
-                'description' => __( 'Columns to divide achievements in small screens (only used when limit is higher than 1).', 'gamipress' ),
-                'type' 	=> 'select',
-                'options' => array(
+                'name'      => __( 'Columns in small screens', 'gamipress' ),
+                'tooltip'   => __( 'Columns to divide achievements in small screens (only used when limit is higher than 1).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'select',
+                'options'   => array(
                     '1' => __( '1 Column', 'gamipress' ),
                     '2' => __( '2 Columns', 'gamipress' ),
                     '3' => __( '3 Columns', 'gamipress' ),

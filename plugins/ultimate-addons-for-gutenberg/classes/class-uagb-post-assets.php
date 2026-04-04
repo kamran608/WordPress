@@ -217,6 +217,8 @@ class UAGB_Post_Assets {
 	 * @param int $post_id Post ID.
 	 */
 	public function __construct( $post_id ) {
+		// Reset seen refs for each new post.
+		self::$seen_refs = array();
 
 		$this->post_id = intval( $post_id );
 
@@ -668,21 +670,17 @@ class UAGB_Post_Assets {
 				$js_file_path  = $js_asset_info['js'];
 			}
 
-			if ( $version_updated ) {
-				$uagb_filesystem = uagb_filesystem();
+			/**
+			 * CRITICAL FIX: Don't delete files OR meta on version mismatch.
+			 *
+			 * The _uag_page_assets meta is already deleted (line 705).
+			 * This triggers regeneration without orphaning files.
+			 * file_write() will overwrite existing files safely.
+			 * If regeneration fails, old files remain accessible → No 404 error.
+			 */
 
-				if ( ! empty( $css_file_path ) ) {
-					$uagb_filesystem->delete( $css_file_path );
-				}
-
-				if ( ! empty( $js_file_path ) ) {
-					$uagb_filesystem->delete( $js_file_path );
-				}
-
-				// Delete keys.
-				delete_post_meta( $this->post_id, '_uag_css_file_name' );
-				delete_post_meta( $this->post_id, '_uag_js_file_name' );
-			}
+			// Don't delete file name meta - keeps file referenced in DB
+			// Regeneration triggered by _uag_page_assets deletion (line 705).
 
 			if ( empty( $css_file_path ) || ! file_exists( $css_file_path ) ) {
 				return true;
@@ -1236,33 +1234,38 @@ class UAGB_Post_Assets {
 		if ( isset( $block['innerBlocks'] ) ) {
 			foreach ( $block['innerBlocks'] as $j => $inner_block ) {
 				if ( 'core/block' === $inner_block['blockName'] ) {
-					$id            = ( isset( $inner_block['attrs']['ref'] ) ) ? $inner_block['attrs']['ref'] : 0;
-					$is_block_seen = in_array( $id, self::$seen_refs, true );
-					if ( $id && ! $is_block_seen ) {
-						self::$seen_refs[] = $id;
-						$assets            = $this->get_assets_using_post_content( $id );
-						if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
-							$reuse_block_css             = array(
-								'desktop' => '',
-								'tablet'  => '',
-								'mobile'  => '',
-							);
-							$reuse_block_css['desktop'] .= $assets['css'];
-							$css                         = $this->merge_array_string_values( $css, $reuse_block_css );
-							$js                         .= $assets['js'];
-						} else {
-							$this->stylesheet .= $assets['css'];
-							$this->script     .= $assets['js'];
+					$id = ( isset( $inner_block['attrs']['ref'] ) ) ? $inner_block['attrs']['ref'] : 0;
+					if ( $id ) {
+						// Check if we've already processed this block ID to prevent infinite recursion.
+						if ( ! in_array( $id, self::$seen_refs, true ) ) {
+							self::$seen_refs[] = $id;
+							$assets            = $this->get_assets_using_post_content( $id );
+							if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+								$reuse_block_css             = array(
+									'desktop' => '',
+									'tablet'  => '',
+									'mobile'  => '',
+								);
+								$reuse_block_css['desktop'] .= $assets['css'];
+								$css                         = $this->merge_array_string_values( $css, $reuse_block_css );
+								$js                         .= $assets['js'];
+							} else {
+								$this->stylesheet .= $assets['css'];
+								$this->script     .= $assets['js'];
+							}
 						}
 					}
 				} elseif ( 'core/template-part' === $inner_block['blockName'] ) {
-					$id            = $this->get_fse_template_part( $inner_block );
-					$is_block_seen = in_array( $id, self::$seen_refs, true );
-					if ( $id && ! $is_block_seen ) {
-						self::$seen_refs[] = $id;
-						$assets            = $this->get_assets_using_post_content( $id );
-						$this->stylesheet .= $assets['css'];
-						$this->script     .= $assets['js'];
+					$id = $this->get_fse_template_part( $inner_block );
+
+					if ( $id ) {
+						// Check if we've already processed this template part ID.
+						if ( ! in_array( $id, self::$seen_refs, true ) ) {
+							self::$seen_refs[] = $id;
+							$assets            = $this->get_assets_using_post_content( $id );
+							$this->stylesheet .= $assets['css'];
+							$this->script     .= $assets['js'];
+						}
 					}
 				} else {
 					// Get CSS for the Block.
@@ -1386,26 +1389,28 @@ class UAGB_Post_Assets {
 	 */
 	public function prepare_assets( $this_post ) {
 
-		if ( empty( $this_post ) || empty( $this_post->ID ) ) {
+		if ( ! $this_post instanceof WP_Post ) {
 			return;
 		}
+		// Store the original post content into dummy variable.
+		$this_post_post_content = $this_post->post_content;
 
 		$surecart_template_parts = array( 'single_product', 'product_collection', 'cart', 'upsell' );
 
 		foreach ( $surecart_template_parts as $template_part_name ) {
-			$template_part_content = $this->get_surecart_template_part_content( $this_post->ID, $template_part_name );
+			$template_part_content = $this->get_surecart_template_part_content( (string) $this_post->ID, $template_part_name );
 	
-			if ( ! empty( $template_part_content ) && has_blocks( $template_part_content ) && isset( $this_post->post_content ) ) {
+			if ( ! empty( $template_part_content ) && has_blocks( $template_part_content ) && isset( $this_post_post_content ) ) {
 				$template_contents[] = $template_part_content;
 			}
 		}
-
-		if ( ! empty( $template_contents ) && isset( $this_post->post_content ) ) {
-			$this_post->post_content .= implode( '', $template_contents );
+		// Combine all template part contents into a dummy variable.
+		if ( ! empty( $template_contents ) && isset( $this_post_post_content ) ) {
+			$this_post_post_content .= implode( '', $template_contents );
 		}
-
-		if ( $this_post instanceof WP_Post && ( has_blocks( $this_post->ID ) || has_blocks( $this_post ) ) ) {
-			$this->common_function_for_assets_preparation( $this_post->post_content );
+		// Prepare assets.
+		if ( $this_post instanceof WP_Post && ( has_blocks( $this_post->ID ) || has_blocks( $this_post_post_content ) ) ) {
+			$this->common_function_for_assets_preparation( $this_post_post_content );
 		}
 	}
 
@@ -1416,6 +1421,8 @@ class UAGB_Post_Assets {
 	 * @since 2.0.0
 	 */
 	public function common_function_for_assets_preparation( $post_content ) {
+		// Reset seen refs for each new content processing.
+		self::$seen_refs = array();
 
 		$blocks = $this->parse_blocks( $post_content );
 
@@ -1450,18 +1457,6 @@ class UAGB_Post_Assets {
 
 		$this->stylesheet .= $assets['css'];
 		$this->script     .= $assets['js'];
-
-		// Check if self::$seen_refs is not empty before iterating.
-		if ( ! empty( self::$seen_refs ) ) {
-			foreach ( self::$seen_refs as $ref_id ) {
-				// Retrieve the CSS and JS assets for the given post content reference ID.
-				$assets = $this->get_assets_using_post_content( $ref_id );
-
-				// Append the retrieved CSS and JS to the existing stylesheet and script properties.
-				$this->stylesheet .= $assets['css'];
-				$this->script     .= $assets['js'];
-			}
-		}
 
 		// Update fonts.
 		$this->gfonts = array_merge( $this->gfonts, UAGB_Helper::$gfonts );
@@ -1508,12 +1503,12 @@ class UAGB_Post_Assets {
 	 * @since 2.4.1
 	 */
 	public function get_assets_using_post_content( $id ) {
+		// Add to seen refs to prevent processing the same block multiple times.
+		self::$seen_refs[] = $id;
 
-		$content = get_post_field( 'post_content', $id );
-
+		$content         = get_post_field( 'post_content', $id );
 		$reusable_blocks = $this->parse_blocks( $content );
-
-		$assets = $this->get_blocks_assets( $reusable_blocks );
+		$assets          = $this->get_blocks_assets( $reusable_blocks );
 
 		return $assets;
 	}
@@ -1525,6 +1520,7 @@ class UAGB_Post_Assets {
 	 * @since 1.1.0
 	 */
 	public function get_blocks_assets( $blocks ) {
+		// Ensure we're not processing the same blocks repeatedly.
 		$static_and_dynamic_assets = $this->get_static_and_dynamic_assets( $blocks );
 		return array(
 			'css' => $static_and_dynamic_assets['static'] . $static_and_dynamic_assets['dynamic'],
@@ -1559,23 +1555,26 @@ class UAGB_Post_Assets {
 				}
 
 				if ( 'core/block' === $block['blockName'] ) {
-					$id            = ( isset( $block['attrs']['ref'] ) ) ? $block['attrs']['ref'] : 0;
-					$is_block_seen = in_array( $id, self::$seen_refs, true );
+					$id = ( isset( $block['attrs']['ref'] ) ) ? $block['attrs']['ref'] : 0;
 
-					if ( $id && ! $is_block_seen ) {
-						self::$seen_refs[] = $id;
-						$assets            = $this->get_assets_using_post_content( $id );
-						$this->stylesheet .= $assets['css'];
-						$this->script     .= $assets['js'];
+					if ( $id ) {
+						// Check if we've already processed this block ID.
+						if ( ! in_array( $id, self::$seen_refs, true ) ) {
+							$assets            = $this->get_assets_using_post_content( $id );
+							$this->stylesheet .= $assets['css'];
+							$this->script     .= $assets['js'];
+						}
 					}
 				} elseif ( 'core/template-part' === $block['blockName'] ) {
-					$id            = $this->get_fse_template_part( $block );
-					$is_block_seen = in_array( $id, self::$seen_refs, true );
-					if ( $id && ! $is_block_seen ) {
-						self::$seen_refs[] = $id;
-						$assets            = $this->get_assets_using_post_content( $id );
-						$block_css        .= $assets['css'];
-						$js               .= $assets['js'];
+					$id = $this->get_fse_template_part( $block );
+
+					if ( $id ) {
+						// Check if we've already processed this template part ID.
+						if ( ! in_array( $id, self::$seen_refs, true ) ) {
+							$assets     = $this->get_assets_using_post_content( $id );
+							$block_css .= $assets['css'];
+							$js        .= $assets['js'];
+						}
 					}
 				} elseif ( 'core/pattern' === $block['blockName'] ) {
 					$get_assets = $this->get_core_pattern_assets( $block );
@@ -1650,16 +1649,13 @@ class UAGB_Post_Assets {
 
 		$result = false;
 
-		// TODO: This old_assets removal code need to be removed after 3 major releases. from v2.11.0.
-		// Remove if any old file exists for same post.
-		$old_assets = glob( $base_file_path . 'uag-' . $type . '-' . $this->post_id . '-*' );
-		if ( ! empty( $old_assets ) && is_array( $old_assets ) ) {
-			foreach ( $old_assets as $old_asset ) {
-				if ( file_exists( $old_asset ) ) {
-					$file_system->delete( $old_asset );
-				}
-			}
-		}
+		/**
+		 * LEGACY CLEANUP REMOVED (v3.0.0+)
+		 *
+		 * Previously deleted old timestamped files (uag-css-123-1234567890.css).
+		 * Removed as scheduled after 3 major releases from v2.11.0.
+		 * Current format uses static names (uag-css-123.css) that safely overwrite.
+		 */
 
 		if ( wp_mkdir_p( $base_file_path ) ) {
 
@@ -1699,18 +1695,28 @@ class UAGB_Post_Assets {
 
 		if ( '' === $file_data ) {
 			/**
-			 * This is when the generated CSS/JS is blank.
-			 * This means this page does not use UAG block.
-			 * In this scenario we need to delete the existing file.
-			 * This will ensure there are no extra files added for user.
-			*/
+			 * When CSS/JS generation returns empty, KEEP existing file.
+			 *
+			 * CRITICAL FIX: Empty output could mean:
+			 * 1. Page has no Spectra blocks (legitimate)
+			 * 2. Generation failed (parse error, memory limit, cache issue)
+			 *
+			 * We cannot distinguish between these cases, so we keep the old file.
+			 * Better to serve old CSS than no CSS (404 error with page cache).
+			 */
 
-			if ( ! empty( $file_name ) && file_exists( $file_path ) ) {
-				// Delete old file.
-				wp_delete_file( $file_path );
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log(
+					sprintf(
+						'Spectra: CSS/JS generation returned empty for post %d (type: %s). Keeping existing file to prevent 404.',
+						$this->post_id,
+						$type
+					) 
+				);
 			}
 
-			return true;
+			return false; // Signal that generation did not produce new content.
 		}
 
 		/**
@@ -1758,10 +1764,15 @@ class UAGB_Post_Assets {
 
 			if ( $old_data !== $file_data ) {
 
-				// Delete old file.
-				wp_delete_file( $file_path );
+				/**
+				 * CRITICAL FIX: Don't delete old file before creating new one.
+				 *
+				 * Method create_file() uses put_contents() which overwrites existing files.
+				 * If write fails, old file remains intact → No 404 error.
+				 * This prevents CSS 404s with page-level caching.
+				 */
 
-				// Create a new file.
+				// Create a new file (will overwrite existing).
 				$did_create = $this->create_file( $file_data, $type );
 
 				if ( $did_create ) {
@@ -1862,6 +1873,8 @@ class UAGB_Post_Assets {
 	 * @return array of Static and dynamic css and js.
 	 */
 	public function get_static_and_dynamic_css( $post_id ) {
+		// Reset seen refs for each new post processing.
+		self::$seen_refs = array();
 
 		$this_post = get_post( $post_id );
 

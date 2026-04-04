@@ -125,10 +125,10 @@ function gamipress_rank_posts_custom_columns( $column_name, $post_id ) {
                     get_edit_post_link( $post_id ),
                     /* translators: %s: post title */
                     esc_attr( sprintf( __( '&#8220;%s&#8221; (Edit)' ), get_post_field( 'post_title', $post_id ) ) ),
-                    get_the_post_thumbnail( $post_id, array( 32, 32 ) )
+                    gamipress_get_the_post_thumbnail( $post_id, array( 32, 32 ) )
                 );
             } else {
-                echo get_the_post_thumbnail( $post_id, array( 32, 32 ) );
+                echo gamipress_get_the_post_thumbnail( $post_id, array( 32, 32 ) );
             }
 
             break;

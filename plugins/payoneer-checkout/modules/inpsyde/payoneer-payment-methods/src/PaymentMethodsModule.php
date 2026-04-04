@@ -77,6 +77,7 @@ class PaymentMethodsModule implements ServiceModule, ExtendingModule, Executable
             $wcOrder = wc_get_order($refund->get_parent_id());
             assert($wcOrder instanceof WC_Order);
             $payoneerMethodIds = $container->get('payment_gateways');
+            assert(is_array($payoneerMethodIds));
             if (!in_array($wcOrder->get_payment_method(), $payoneerMethodIds, \true)) {
                 return;
             }

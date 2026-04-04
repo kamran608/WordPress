@@ -132,7 +132,7 @@ class Plugin {
 		// Settings component.
 		require_once $includes_path . '/settings/settings-fields.php';
 		require_once $includes_path . '/settings/editor-preview.php';
-	require_once $includes_path . '/settings/class-version-switch.php';
+		require_once $includes_path . '/settings/class-version-switch.php';
 		require_once $includes_path . '/settings/settings.php';
 
 		// Cloud List Table shared functions.
@@ -156,6 +156,10 @@ class Plugin {
 		$upgrade = new Upgrade( $this->version, $this->db );
 		add_action( 'plugins_loaded', array( $upgrade, 'run' ), 0 );
 		$this->licensing = new Licensing();
+
+		// Importers.
+		new Plugins_Import_Manager();
+		new Files_Import_Manager();
 	}
 
 	/**
@@ -310,24 +314,55 @@ class Plugin {
 	}
 
 	/**
+	 * Determine if a subsite user menu is enabled via *Network Settings > Enable administration menus*.
+	 *
+	 * @return bool
+	 */
+	public function is_subsite_menu_enabled(): bool {
+		if ( ! is_multisite() ) {
+			return true;
+		}
+
+		$menu_perms = get_site_option( 'menu_items', array() );
+		return ! empty( $menu_perms['snippets'] );
+	}
+
+	/**
+	 * Determine if the current user should have the network snippets capability.
+	 *
+	 * @return bool
+	 */
+	public function user_can_manage_network_snippets(): bool {
+		return is_super_admin() || current_user_can( $this->get_network_cap_name() );
+	}
+
+	/**
+	 * Determine whether the current request originates in the network admin.
+	 *
+	 * @return bool
+	 */
+	public function is_network_context(): bool {
+		return is_network_admin();
+	}
+
+	/**
 	 * Get the required capability to perform a certain action on snippets.
 	 * Does not check if the user has this capability or not.
 	 *
-	 * If multisite, checks if *Enable Administration Menus: Snippets* is active
-	 * under the *Settings > Network Settings* network admin menu
+	 * If multisite, adjusts the capability based on whether the user is viewing
+	 * the network dashboard or a subsite and whether the menu is enabled for subsites.
 	 *
 	 * @return string The capability required to manage snippets.
 	 *
 	 * @since 2.0
 	 */
 	public function get_cap(): string {
-		if ( is_multisite() ) {
-			$menu_perms = get_site_option( 'menu_items', array() );
+		if ( is_multisite() && $this->is_network_context() ) {
+			return $this->get_network_cap_name();
+		}
 
-			// If multisite is enabled and the snippet menu is not activated, restrict snippet operations to super admins only.
-			if ( empty( $menu_perms['snippets'] ) ) {
-				return $this->get_network_cap_name();
-			}
+		if ( is_multisite() && ! $this->is_subsite_menu_enabled() ) {
+			return $this->get_network_cap_name();
 		}
 
 		return $this->get_cap_name();

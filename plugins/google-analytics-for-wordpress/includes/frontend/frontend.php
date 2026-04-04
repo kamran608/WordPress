@@ -24,27 +24,27 @@ function monsterinsights_is_amp() {
 	if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
 		return true;
 	}
-	
+
 	// Check for AMP theme
 	if ( function_exists( 'amp_is_request' ) && amp_is_request() ) {
 		return true;
 	}
-	
+
 	// Check for AMP query parameter
 	if ( isset( $_GET['amp'] ) && '1' === $_GET['amp'] ) {
 		return true;
 	}
-	
+
 	// Check for AMP in URL path
 	if ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], '/amp/' ) ) {
 		return true;
 	}
-	
+
 	// Check for AMP in theme
 	if ( function_exists( 'amp_is_canonical' ) && amp_is_canonical() ) {
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -210,35 +210,61 @@ function monsterinsights_frontend_admin_bar_scripts() {
 		return;
 	}
 
-	if ( ! class_exists( 'MonsterInsights_Admin_Assets' ) ) {
-		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/admin-assets.php';
+	// React-based admin bar implementation
+	$version = monsterinsights_is_pro_version() ? 'pro' : 'lite';
+	$asset_file = MONSTERINSIGHTS_PLUGIN_DIR . "{$version}/assets/admin-bar/index.asset.php";
+
+	if (!file_exists($asset_file)) {
+		return;
 	}
 
-	if ( ! defined( 'MONSTERINSIGHTS_LOCAL_JS_URL' ) ) {
-		MonsterInsights_Admin_Assets::enqueue_script_specific_css( 'src/modules/frontend/frontend.js' );
-	}
+	// phpcs:ignore PHPCS_SecurityAudit.Misc.IncludeMismatch.ErrMiscIncludeMismatchNoExt -- File path is validated with file_exists() above.
+	$asset_data = require $asset_file;
 
-	$version_path    = monsterinsights_is_pro_version() ? 'pro' : 'lite';
-	$frontend_js_url = MonsterInsights_Admin_Assets::get_js_url( 'src/modules/frontend/frontend.js' );
-	wp_register_script( 'monsterinsights-vue-frontend', $frontend_js_url, array( 'wp-i18n' ), monsterinsights_get_asset_version(), true );
-	wp_enqueue_script( 'monsterinsights-vue-frontend' );
+	// Enqueue styles
+	wp_enqueue_style(
+		'monsterinsights-admin-bar',
+		plugins_url("{$version}/assets/admin-bar/insights.css", MONSTERINSIGHTS_PLUGIN_FILE),
+		array('wp-components'),
+		$asset_data['version']
+	);
 
+	// Ensure wp-util is loaded (provides wp.ajax)
+	wp_enqueue_script('wp-util');
+
+	// Enqueue script
+	wp_enqueue_script(
+		'monsterinsights-admin-bar',
+		plugins_url("{$version}/assets/admin-bar/index.js", MONSTERINSIGHTS_PLUGIN_FILE),
+		$asset_data['dependencies'],
+		$asset_data['version'],
+		true
+	);
+
+	// Set script translations for the admin bar app
+	$textdomain = monsterinsights_is_pro_version() ? 'google-analytics-premium' : 'google-analytics-for-wordpress';
+	wp_set_script_translations(
+		'monsterinsights-admin-bar',
+		$textdomain,
+		plugin_dir_path( MONSTERINSIGHTS_PLUGIN_FILE ) . $version . '/languages'
+	);
+
+	// Localize data (same structure as Vue version for compatibility)
 	$page_title = is_singular() ? get_the_title() : monsterinsights_get_page_title();
-	// We do not have a current auth.
 	$site_auth = MonsterInsights()->auth->get_viewname();
-	$ms_auth   = is_multisite() && MonsterInsights()->auth->get_network_viewname();
+	$ms_auth = is_multisite() && MonsterInsights()->auth->get_network_viewname();
 
 	// Check if any of the other admin scripts are enqueued, if so, use their object.
-	if ( ! wp_script_is( 'monsterinsights-vue-script' ) && ! wp_script_is( 'monsterinsights-vue-reports' ) && ! wp_script_is( 'monsterinsights-vue-widget' ) ) {
-		$reports_url = is_network_admin() ? add_query_arg( 'page', 'monsterinsights_reports', network_admin_url( 'admin.php' ) ) : add_query_arg( 'page', 'monsterinsights_reports', admin_url( 'admin.php' ) );
+	if ( ! wp_script_is( 'monsterinsights-vue-script' ) && ! wp_script_is( 'monsterinsights-vue-reports' ) && ! wp_script_is( 'monsterinsights-vue-widget' ) && ! wp_script_is( 'monsterinsights-vue3-custom-dashboard' ) ) {
+		$reports_url = is_network_admin() ? add_query_arg( 'page', 'monsterinsights_overview_report', network_admin_url( 'admin.php' ) ) : add_query_arg( 'page', 'monsterinsights_reports', admin_url( 'admin.php' ) );
 		wp_localize_script(
-			'monsterinsights-vue-frontend',
+			'monsterinsights-admin-bar',
 			'monsterinsights',
 			array(
 				'ajax'                 => admin_url( 'admin-ajax.php' ),
 				'nonce'                => wp_create_nonce( 'mi-admin-nonce' ),
 				'network'              => is_network_admin(),
-				'assets'               => plugins_url( $version_path . '/assets/vue', MONSTERINSIGHTS_PLUGIN_FILE ),
+				'assets'               => plugins_url( $version . '/assets/admin-bar', MONSTERINSIGHTS_PLUGIN_FILE ),
 				'addons_url'           => is_multisite() ? network_admin_url( 'admin.php?page=monsterinsights_network#/addons' ) : admin_url( 'admin.php?page=monsterinsights_settings#/addons' ),
 				'page_id'              => is_singular() ? get_the_ID() : false,
 				'page_title'           => $page_title,
@@ -248,10 +274,11 @@ function monsterinsights_frontend_admin_bar_scripts() {
 				'is_admin'             => is_admin(),
 				'reports_url'          => $reports_url,
 				'authed'               => $site_auth || $ms_auth,
+				'auth_connect_url'     => is_network_admin() ? network_admin_url( 'index.php?page=monsterinsights-onboarding' ) : admin_url( 'index.php?page=monsterinsights-onboarding' ),
 				'getting_started_url'  => is_multisite() ? network_admin_url( 'admin.php?page=monsterinsights_network#/about/getting-started' ) : admin_url( 'admin.php?page=monsterinsights_settings#/about/getting-started' ),
 				'wizard_url'           => is_network_admin() ? network_admin_url( 'index.php?page=monsterinsights-onboarding' ) : admin_url( 'index.php?page=monsterinsights-onboarding' ),
 				'roles_manage_options' => monsterinsights_get_manage_options_roles(),
-				'user_roles'   => $current_user->roles,
+				'user_roles'           => $current_user->roles,
 				'roles_view_reports'   => monsterinsights_get_option('view_reports'),
 			)
 		);

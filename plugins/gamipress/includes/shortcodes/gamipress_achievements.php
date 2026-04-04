@@ -64,7 +64,8 @@ function gamipress_register_achievements_shortcode() {
 		'fields'      => array_merge( array(
 			'type' => array(
 				'name'              => __( 'Achievement Type(s)', 'gamipress' ),
-				'description'       => __( 'Achievement type(s) to display.', 'gamipress' ),
+				'tooltip'   		=> __( 'Achievement type(s) to display.', 'gamipress' ),
+                'label_cb'  		=> 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'Single or comma-separated list of achievement type(s) to display.', 'gamipress' ),
 				'type'              => 'advanced_select',
                 'classes' 	        => 'gamipress-selector',
@@ -77,7 +78,8 @@ function gamipress_register_achievements_shortcode() {
 			),
 			'columns' => array(
 				'name'        => __( 'Columns', 'gamipress' ),
-				'description' => __( 'Columns to divide achievements.', 'gamipress' ),
+				'tooltip'   => __( 'Columns to divide achievements.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
 				'type' 	=> 'select',
 				'options' => array(
 					'1' => __( '1 Column', 'gamipress' ),
@@ -90,10 +92,11 @@ function gamipress_register_achievements_shortcode() {
 				'default' => '1'
 			),
             'columns_small' => array(
-                'name'        => __( 'Columns in small screens', 'gamipress' ),
-                'description' => __( 'Columns to divide achievements in small screens.', 'gamipress' ),
-                'type' 	=> 'select',
-                'options' => array(
+                'name'		=> __( 'Columns in small screens', 'gamipress' ),
+				'tooltip'   => __( 'Columns to divide achievements in small screens.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 		=> 'select',
+                'options' 	=> array(
                     '1' => __( '1 Column', 'gamipress' ),
                     '2' => __( '2 Columns', 'gamipress' ),
                     '3' => __( '3 Columns', 'gamipress' ),
@@ -104,17 +107,19 @@ function gamipress_register_achievements_shortcode() {
                 'default' => '1'
             ),
 			'filter' => array(
-				'name'        => __( 'Show Filter', 'gamipress' ),
-				'description' => __( 'Display filter input.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'		=> __( 'Show Filter', 'gamipress' ),
+				'tooltip'   => __( 'Display filter input.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 		=> 'checkbox',
+				'classes' 	=> 'gamipress-switch',
+				'default' 	=> 'yes'
 			),
             'filter_value' => array(
-                'name'        => __( 'Initial Filter Value', 'gamipress' ),
-                'description' => __( 'Set filter initial value. If you hide the filter, user won\'t be able to change this value.', 'gamipress' ),
-                'type' 	=> 'select',
-                'options' => array(
+                'name'		=> __( 'Initial Filter Value', 'gamipress' ),
+				'tooltip'   => __( 'Set filter initial value. If you hide the filter, user won\'t be able to change this value.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 		=> 'select',
+                'options' 	=> array(
                     'all'           => __( 'All Achievements', 'gamipress' ),
                     'completed'     => __( 'Completed Achievements', 'gamipress' ),
                     'not-completed' => __( 'Not Completed Achievements', 'gamipress' ),
@@ -122,36 +127,41 @@ function gamipress_register_achievements_shortcode() {
                 'default' => 'all'
             ),
 			'search' => array(
-				'name'        => __( 'Show Search', 'gamipress' ),
-				'description' => __( 'Display a search input.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'		=> __( 'Show Search', 'gamipress' ),
+				'tooltip'   => __( 'Display a search input.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 		=> 'checkbox',
+				'classes' 	=> 'gamipress-switch',
+				'default' 	=> 'yes'
 			),
 			'search_value' => array(
-				'name'        => __( 'Initial Search Value', 'gamipress' ),
-				'description' => __( 'Set search initial value. If you hide the search, user won\'t be able to change this value.', 'gamipress' ),
-				'type' 	=> 'text',
-				'default' => ''
+				'name'		=> __( 'Initial Search Value', 'gamipress' ),
+				'tooltip'   => __( 'Set search initial value. If you hide the search, user won\'t be able to change this value.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 		=> 'text',
+				'default' 	=> ''
 			),
 			'load_more' => array(
-				'name'        => __( 'Show the "Load More" button', 'gamipress' ),
-				'description' => __( 'Display a load more button.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'		=> __( 'Show the "Load More" button', 'gamipress' ),
+				'tooltip'   => __( 'Display a load more button.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 		=> 'checkbox',
+				'classes' 	=> 'gamipress-switch',
+				'default' 	=> 'yes'
 			),
 			'limit' => array(
-				'name'        => __( 'Limit', 'gamipress' ),
-				'description' => __( 'Number of achievements to display.', 'gamipress' ),
-				'type'        => 'text',
-				'default'     => 10,
+				'name'		=> __( 'Limit', 'gamipress' ),
+				'tooltip'   => __( 'Number of achievements to display.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'text',
+				'default'	=> 10,
 			),
 			'orderby' => array(
-				'name'        => __( 'Order By', 'gamipress' ),
-				'description' => __( 'Parameter to use for sorting.', 'gamipress' ),
-				'type'        => 'select',
-				'options'      => array(
+				'name'		=> __( 'Order By', 'gamipress' ),
+				'tooltip'   => __( 'Parameter to use for sorting.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'select',
+				'options'	=> array(
 					'menu_order' 		=> __( 'Menu order', 'gamipress' ),
 					'ID'         		=> __( 'Achievement', 'gamipress' ),
 					'title'      		=> __( 'Title', 'gamipress' ),
@@ -165,28 +175,32 @@ function gamipress_register_achievements_shortcode() {
 				'default'     => 'menu_order',
 			),
 			'order' => array(
-				'name'        => __( 'Order', 'gamipress' ),
-				'description' => __( 'Sort order.', 'gamipress' ),
-				'type'        => 'select',
-				'options'      => array( 'ASC' => __( 'Ascending', 'gamipress' ), 'DESC' => __( 'Descending', 'gamipress' ) ),
-				'default'     => 'ASC',
+				'name'		=> __( 'Order', 'gamipress' ),
+				'tooltip'   => __( 'Sort order.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'select',
+				'options'	=> array( 'ASC' => __( 'Ascending', 'gamipress' ), 'DESC' => __( 'Descending', 'gamipress' ) ),
+				'default'	=> 'ASC',
 			),
 			'current_user' => array(
-				'name'        => __( 'Current User', 'gamipress' ),
-				'description' => __( 'Show achievements earned by the current logged in user.', 'gamipress' ),
-				'type' 		  => 'checkbox',
-				'classes' 	  => 'gamipress-switch',
+				'name'		=> __( 'Current User', 'gamipress' ),
+				'tooltip'   => __( 'Show achievements earned by the current logged in user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'checkbox',
+				'classes'	=> 'gamipress-switch',
 			),
 			'user_id' => array(
-				'name'        => __( 'User', 'gamipress' ),
-				'description' => __( 'Show achievements earned by a specific user.', 'gamipress' ),
-				'type'        => 'select',
-				'default'     => '',
+				'name'		=> __( 'User', 'gamipress' ),
+				'tooltip'   => __( 'Show achievements earned by a specific user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'select',
+				'default'	=> '',
                 'options_cb'  => 'gamipress_options_cb_users'
 			),
 			'include' => array(
 				'name'              => __( 'Include', 'gamipress' ),
-				'description'       => __( 'Achievements to include.', 'gamipress' ),
+				'tooltip'   		=> __( 'Achievements to include.', 'gamipress' ),
+                'label_cb'  		=> 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'Comma-separated list of specific achievement IDs to include.', 'gamipress' ),
 				'type'              => 'advanced_select',
 				'multiple'          => true,
@@ -200,7 +214,8 @@ function gamipress_register_achievements_shortcode() {
 			),
 			'exclude' => array(
 				'name'              => __( 'Exclude', 'gamipress' ),
-				'description'       => __( 'Achievements to exclude.', 'gamipress' ),
+				'tooltip'   		=> __( 'Achievements to exclude.', 'gamipress' ),
+                'label_cb'  		=> 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'Comma-separated list of specific achievement IDs to exclude.', 'gamipress' ),
 				'type'              => 'advanced_select',
 				'multiple'          => true,
@@ -213,10 +228,11 @@ function gamipress_register_achievements_shortcode() {
 				'options_cb'        => 'gamipress_options_cb_posts'
 			),
 			'wpms' => array(
-				'name'        => __( 'Include Multisite Achievements', 'gamipress' ),
-				'description' => __( 'Show achievements from all network sites.', 'gamipress' ),
-				'type' 		  => 'checkbox',
-				'classes' 	  => 'gamipress-switch',
+				'name'		=> __( 'Include Multisite Achievements', 'gamipress' ),
+				'tooltip'   => __( 'Show achievements from all network sites.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'checkbox',
+				'classes'	=> 'gamipress-switch',
 			),
 		), $achievement_fields ),
 	) );

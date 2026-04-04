@@ -316,3 +316,56 @@ function gamipress_is_string_condition( $condition ) {
     return $return;
 
 }
+
+/**
+ * Retrieves the post thumbnail.
+ *
+ * WordPress does not check if the thumbnail could be a WP Error so here is our version to prevent PHP errors.
+ *
+ * @since 7.5.6
+ *
+ * @param int|WP_Post|null $post Optional. Post ID or WP_Post object.  Default is global `$post`.
+ * @param string|int[]     $size Optional. Image size. Accepts any registered image size name, or an array of
+ *                               width and height values in pixels (in that order). Default 'post-thumbnail'.
+ * @param string|array     $attr Optional. Query string or array of attributes. Default empty.
+ * @return string The post thumbnail image tag.
+ */
+function gamipress_get_the_post_thumbnail( $post = null, $size = 'post-thumbnail', $attr = '' ) {
+
+    if( ! gamipress_has_post_thumbnail( $post ) ) {
+        return '';
+    }
+
+    return get_the_post_thumbnail( $post, $size, $attr );
+
+}
+
+/**
+ * Determines whether a post has an image attached.
+ *
+ * WordPress does not check if the thumbnail could be a WP Error so here is our version to prevent PHP errors.
+ *
+ * @since 7.5.6
+ *
+ * @param int|WP_Post|null $post Optional. Post ID or WP_Post object. Default is global `$post`.
+ * @return bool Whether the post has an image attached.
+ */
+function gamipress_has_post_thumbnail( $post ) {
+
+    $post = get_post( $post );
+
+    if ( ! $post ) {
+        return false;
+    }
+
+    $thumbnail_id = get_post_meta( $post->ID, '_thumbnail_id', true );
+
+    if( ! is_wp_error( $thumbnail_id ) ) {
+        $thumbnail_id = absint( $thumbnail_id );
+    }
+
+    $thumbnail_id = apply_filters( 'post_thumbnail_id', $thumbnail_id, $post );
+
+    return ( is_wp_error( $thumbnail_id ) ? false : absint( $thumbnail_id ) );
+
+}

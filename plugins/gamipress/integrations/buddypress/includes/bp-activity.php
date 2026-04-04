@@ -32,16 +32,18 @@ function gamipress_bp_activity_meta_boxes() {
         array( 'points-type' ),
         array(
             $prefix . 'create_points_award_activity' => array(
-                'name' => __( 'Awards activity entries', 'gamipress' ),
-                'desc' => __( 'Create an activity entry on user\'s profile when they get awarded by points award of this type.', 'gamipress' ),
-                'type' => 'checkbox',
-                'classes' => 'gamipress-switch'
+                'name'      => __( 'Awards activity entries', 'gamipress' ),
+                'tooltip'   => __( 'Create an activity entry on user\'s profile when they get awarded by points award of this type.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch'
             ),
             $prefix . 'create_points_deduct_activity' => array(
-                'name' => __( 'Deducts activity entries', 'gamipress' ),
-                'desc' => __( 'Create an activity entry on user\'s profile when they get deducted by a points deduct of this type.', 'gamipress' ),
-                'type' => 'checkbox',
-                'classes' => 'gamipress-switch'
+                'name'      => __( 'Deducts activity entries', 'gamipress' ),
+                'tooltip'   => __( 'Create an activity entry on user\'s profile when they get deducted by a points deduct of this type.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch'
             ),
         )
     );
@@ -53,16 +55,18 @@ function gamipress_bp_activity_meta_boxes() {
         array( 'achievement-type' ),
         array(
             $prefix . 'create_achievement_activity' => array(
-                'name' => __( 'Achievement activity entries', 'gamipress' ),
-                'desc' => __( 'Create an activity entry on user\'s profile when they earn an achievement of this type.', 'gamipress' ),
-                'type' => 'checkbox',
-                'classes' => 'gamipress-switch'
+                'name'      => __( 'Achievement activity entries', 'gamipress' ),
+                'tooltip'   => __( 'Create an activity entry on user\'s profile when they earn an achievement of this type.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch'
             ),
             $prefix . 'create_step_activity' => array(
-                'name' => __( 'Step activity entries', 'gamipress' ),
-                'desc' => __( 'Create an activity entry on user\'s profile when they complete a step of an achievement of this type.', 'gamipress' ),
-                'type' => 'checkbox',
-                'classes' => 'gamipress-switch'
+                'name'      => __( 'Step activity entries', 'gamipress' ),
+                'tooltip'   => __( 'Create an activity entry on user\'s profile when they complete a step of an achievement of this type.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch'
             ),
         )
     );
@@ -74,16 +78,18 @@ function gamipress_bp_activity_meta_boxes() {
         array( 'rank-type' ),
         array(
             $prefix . 'create_rank_activity' => array(
-                'name' => __( 'Rank activity entries', 'gamipress' ),
-                'desc' => __( 'Create an activity entry on user\'s profile when they reach a new rank of this type.', 'gamipress' ),
-                'type' => 'checkbox',
-                'classes' => 'gamipress-switch'
+                'name'      => __( 'Rank activity entries', 'gamipress' ),
+                'tooltip'   => __( 'Create an activity entry on user\'s profile when they reach a new rank of this type.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch'
             ),
             $prefix . 'create_rank_requirement_activity' => array(
-                'name' => __( 'Rank requirement activity entries', 'gamipress' ),
-                'desc' => __( 'Create an activity entry on user\'s profile when they complete a rank requirement of a rank of this type.', 'gamipress' ),
-                'type' => 'checkbox',
-                'classes' => 'gamipress-switch'
+                'name'      => __( 'Rank requirement activity entries', 'gamipress' ),
+                'tooltip'   => __( 'Create an activity entry on user\'s profile when they complete a rank requirement of a rank of this type.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch'
             ),
         )
     );

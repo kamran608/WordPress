@@ -1301,6 +1301,7 @@ function _ckyAttachManualLinksStyles() {
     const manualLinks = document.querySelectorAll('.cky-link, a.cky-link, [data-cky-tag="detail"] a, [data-cky-tag="optout-popup"] a, [data-cky-tag="notice"] a');
     if (manualLinks.length < 1) return;
     Array.from(manualLinks).forEach((link) => {
+        if (link.getAttribute('data-cky-tag') === 'readmore-button') return;
         for (const style in manualLinksStyles) {
             if (!manualLinksStyles[style]) continue;
             link.style[style] = manualLinksStyles[style];

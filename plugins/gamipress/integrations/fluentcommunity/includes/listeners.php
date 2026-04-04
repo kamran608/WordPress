@@ -377,3 +377,57 @@ function gamipress_fluentcommunity_delete_course( $course ) {
 
 }
 add_action( 'fluent_community/course/before_delete', 'gamipress_fluentcommunity_delete_course' );
+
+/**
+ * Quizzes listener
+ *
+ * @since  1.0.0
+ *
+ * @param object    $quizResult
+ * @param object    $user
+ * @param object    $quiz 
+ */
+function gamipress_fluentcommunity_quiz_submitted( $quizResult, $user, $quiz ) {
+
+    // Results data
+    $quiz_result_data = $quizResult->getOriginal();
+
+    // Quiz data
+    $quiz_data = $quiz->getOriginal();
+
+    // Shorthand
+    $user_id = absint( $quiz_result_data['user_id'] );
+    $quiz_id = absint( $quiz_data['id'] );
+    $status = $quiz_result_data['status']; // passed or failed
+
+    // Bail if no user
+    if ( $user_id === 0 ) {
+        return;
+    }
+
+    // Trigger attempt any quiz
+    do_action( 'gamipress_fluentcommunity_attempt_quiz', $quiz_id, $user_id );
+
+    // Trigger attempt specific quiz
+    do_action( 'gamipress_fluentcommunity_attempt_specific_quiz', $quiz_id, $user_id );
+
+    if ( $status === 'passed' ) {
+
+        // Trigger pass any quiz
+        do_action( 'gamipress_fluentcommunity_pass_quiz', $quiz_id, $user_id );
+
+        // Trigger pass specific quiz
+        do_action( 'gamipress_fluentcommunity_pass_specific_quiz', $quiz_id, $user_id );
+
+    } else if ( $status === 'failed' ) {
+
+        // Trigger fail any quiz
+        do_action( 'gamipress_fluentcommunity_fail_quiz', $quiz_id, $user_id );
+
+        // Trigger fail specific quiz
+        do_action( 'gamipress_fluentcommunity_fail_specific_quiz', $quiz_id, $user_id );
+
+    }
+
+}
+add_action( 'fluent_community/quiz/submitted', 'gamipress_fluentcommunity_quiz_submitted', 10, 3 );

@@ -91,13 +91,17 @@ add_action( 'sensei_user_lesson_end', 'gamipress_sensei_complete_lesson', 10, 2 
  * @param  integer $user_id         ID of user being graded
  * @param  integer $course_id       ID of course
  */
-function gamipress_sensei_start_course( $user_id, $course_id ) {
+function gamipress_sensei_start_course( $user_id, $course_id, $is_enrolled ) {
+
+    // Bail if unrolled
+    if ( ! $is_enrolled )
+		return;
 
     // Enroll in a course
     do_action( 'gamipress_sensei_start_course', $course_id, $user_id );
 
 }
-add_action( 'sensei_user_course_start', 'gamipress_sensei_start_course', 10, 2 );
+add_action( 'sensei_course_enrolment_status_changed', 'gamipress_sensei_start_course', 10, 3 );
 
 /**
  * Complete course

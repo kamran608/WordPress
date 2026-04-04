@@ -74,11 +74,12 @@ class Llms {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'init', [ $this, 'scheduleRecurrentGenerationForLlmsTxt' ] );
-		add_action( $this->llmsTxtRecurrentAction, [ $this, 'generateLlmsTxt' ] );
+		add_action( 'admin_init', [ $this, 'scheduleRecurrentGenerationForLlmsTxt' ] );
 
 		add_action( 'wp_insert_post', [ $this, 'scheduleSingleGenerationForLlmsTxt' ] );
 		add_action( 'edited_term', [ $this, 'scheduleSingleGenerationForLlmsTxt' ] );
+
+		add_action( $this->llmsTxtRecurrentAction, [ $this, 'generateLlmsTxt' ] );
 		add_action( $this->llmsTxtSingleAction, [ $this, 'generateLlmsTxt' ] );
 	}
 
@@ -138,7 +139,7 @@ class Llms {
 			$this->title = $isMultisite
 				? get_blog_option( get_current_blog_id(), 'blogname' )
 				: get_bloginfo( 'name' );
-			$this->title = $this->title ?? aioseo()->meta->title->getHomePageTitle();
+			$this->title = $this->title ?: aioseo()->meta->title->getHomePageTitle();
 		}
 
 		// Check for LLMS custom description setting
@@ -151,7 +152,7 @@ class Llms {
 			$this->description = $isMultisite
 				? get_blog_option( get_current_blog_id(), 'blogdescription' )
 				: get_bloginfo( 'description' );
-			$this->description = $this->description ?? aioseo()->meta->description->getHomePageDescription();
+			$this->description = $this->description ?: aioseo()->meta->description->getHomePageDescription();
 		}
 
 		$this->link = $isMultisite
@@ -178,7 +179,7 @@ class Llms {
 		}
 
 		$fs   = aioseo()->core->fs;
-		$file = ABSPATH . sanitize_file_name( 'llms.txt' );
+		$file = $this->getFilePath();
 
 		// Generate the full content
 		$this->setSiteInfo();
@@ -302,8 +303,17 @@ class Llms {
 
 			if ( ! empty( $posts ) ) {
 				$content .= '## ' . $postTypeObject->labels->name . "\n\n";
-				foreach ( $posts as $post ) {
+				foreach ( $posts as $postObject ) {
+					$post = get_post( $postObject->ID );
+					if ( ! is_a( $post, 'WP_Post' ) ) {
+						continue;
+					}
+
+					aioseo()->helpers->setWpQueryPost( $post );
+
 					$content .= $this->getPostContent( $post, $llmsFull );
+
+					aioseo()->helpers->restoreWpQuery();
 				}
 
 				$content .= "\n";
@@ -328,13 +338,18 @@ class Llms {
 
 			if ( ! empty( $terms ) ) {
 				$content .= '## ' . $taxonomyObject->labels->name . "\n\n";
-				foreach ( $terms as $term ) {
-					if ( is_object( $term ) && ! empty( $term->term_id ) ) {
-						// get the term again in case it does not contain the name
-						if ( empty( $term->name ) ) {
-							$term = get_term( $term->term_id, $taxonomy );
+				foreach ( $terms as $termObject ) {
+					if ( is_object( $termObject ) && ! empty( $termObject->term_id ) ) {
+						$term = get_term( $termObject->term_id, $taxonomy );
+						if ( is_wp_error( $term ) ) {
+							continue;
 						}
-						$content .= '- [' . aioseo()->helpers->decodeHtmlEntities( $term->name ) . '](' . aioseo()->helpers->decodeUrl( get_term_link( $term->term_id, $taxonomy ) ) . ")\n";
+
+						aioseo()->helpers->setWpQueryTerm( $term, $taxonomy );
+
+						$content .= $this->getTermContent( $term, $taxonomy, $llmsFull );
+
+						aioseo()->helpers->restoreWpQuery();
 					}
 				}
 				$content .= "\n";
@@ -359,12 +374,38 @@ class Llms {
 	 * @return string             The content of the llms.txt file.
 	 */
 	protected function getPostContent( $post, $llmsFull = false ) { // phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
-		$content = '- [' . aioseo()->helpers->decodeHtmlEntities( $post->post_title ) . '](' . aioseo()->helpers->decodeUrl( get_permalink( $post->ID ) ) . ')';
+		$title   = apply_filters( 'aioseo_llms_post_title', $post->post_title, $post );
+		$content = '- [' . aioseo()->helpers->decodeHtmlEntities( $title ) . '](' . aioseo()->helpers->decodeUrl( get_permalink( $post ) ) . ')';
 
-		$description = aioseo()->meta->description->getPostDescription( $post->ID );
-
+		$description = aioseo()->meta->description->getPostDescription( $post );
+		$description = apply_filters( 'aioseo_llms_post_description', $description, $post );
 		if ( ! empty( $description ) ) {
-			$content .= ' - ' . $description;
+			$content .= ' - ' . aioseo()->helpers->decodeHtmlEntities( $description );
+		}
+
+		$content .= "\n";
+
+		return $content;
+	}
+
+	/**
+	 * Gets the term content section of the llms.txt file.
+	 *
+	 * @since 4.9.3
+	 *
+	 * @param  \WP_Term $term     The term object.
+	 * @param  string   $taxonomy The taxonomy name.
+	 * @param  bool     $llmsFull Whether to include the llms-full.txt file.
+	 * @return string             The content of the llms.txt file.
+	 */
+	protected function getTermContent( $term, $taxonomy, $llmsFull = false ) { // phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+		$title   = apply_filters( 'aioseo_llms_term_title', $term->name, $term );
+		$content = '- [' . aioseo()->helpers->decodeHtmlEntities( $title ) . '](' . aioseo()->helpers->decodeUrl( get_term_link( $term, $taxonomy ) ) . ')';
+
+		$description = aioseo()->meta->description->getTermDescription( $term );
+		$description = apply_filters( 'aioseo_llms_term_description', $description, $term );
+		if ( ! empty( $description ) ) {
+			$content .= ' - ' . aioseo()->helpers->decodeHtmlEntities( $description );
 		}
 
 		$content .= "\n";
@@ -381,9 +422,26 @@ class Llms {
 	 */
 	public function deleteLlmsFile() {
 		$fs   = aioseo()->core->fs;
-		$file = ABSPATH . sanitize_file_name( 'llms.txt' );
+		$file = $this->getFilePath();
 		if ( $fs->isWpfsValid() ) {
 			$fs->fs->delete( $file, false, 'f' );
 		}
+	}
+
+	/**
+	 * Gets the file path for the llms.txt or llms-full.txt file.
+	 *
+	 * Uses `dirname( WP_CONTENT_DIR )` instead of `ABSPATH` to support non-standard
+	 * WordPress installations where `ABSPATH` doesn't point to the web root.
+	 *
+	 * @since 4.9.5
+	 *
+	 * @param  bool   $full Whether to get the full version path.
+	 * @return string       The file path.
+	 */
+	public function getFilePath( $full = false ) {
+		$filename = $full ? 'llms-full.txt' : 'llms.txt';
+
+		return trailingslashit( dirname( WP_CONTENT_DIR ) ) . sanitize_file_name( $filename );
 	}
 }

@@ -7,7 +7,7 @@
  * Author:              MonsterInsights
  * Author URI:          https://www.monsterinsights.com/lite/?utm_source=liteplugin&utm_medium=pluginheader&utm_campaign=authoruri&utm_content=7%2E0%2E0
  *
- * Version:             9.9.0
+ * Version:             10.1.2
  * Requires at least:   5.6.0
  * Requires PHP:        7.2
  *
@@ -79,7 +79,7 @@ final class MonsterInsights_Lite {
 	 * @access public
 	 * @var string $version Plugin version.
 	 */
-	public $version = '9.9.0';
+	public $version = '10.1.2';
 	/**
 	 * Plugin file.
 	 *
@@ -249,7 +249,7 @@ final class MonsterInsights_Lite {
 
 			// This does the version to version background upgrade routines and initial install
 			$mi_version = get_option( 'monsterinsights_current_version', '5.5.3' );
-			if ( version_compare( $mi_version, '8.13.0', '<' ) ) {
+			if ( version_compare( $mi_version, '9.11.0', '<' ) ) {
 				monsterinsights_lite_call_install_and_upgrade();
 			}
 
@@ -322,6 +322,14 @@ final class MonsterInsights_Lite {
 				self::$instance->auth = new MonsterInsights_Auth();
 			}
 
+			return self::$instance->$key;
+		} else if ( $key === 'license' ) {
+			if ( empty( self::$instance->license ) ) {
+				// LazyLoad Licensing for Frontend
+				require_once MONSTERINSIGHTS_PLUGIN_DIR . 'lite/includes/license-compat.php';
+				self::$instance->license = new MonsterInsights_License_Compat();
+			}
+			
 			return self::$instance->$key;
 		} else {
 			return self::$instance->$key;
@@ -424,6 +432,9 @@ final class MonsterInsights_Lite {
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/options.php';
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/helpers.php';
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/deprecated.php';
+		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/database/loader.php';
+		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/cache/functions.php';
+		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/cache/cron-handler.php';
 		$monsterinsights_settings = monsterinsights_get_options();
 	}
 
@@ -516,6 +527,9 @@ final class MonsterInsights_Lite {
 			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/notification-event-runner.php';
 			// Add notification manual events for lite version.
 			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/notifications/notification-events.php';
+
+			// Product Feed Cronjob
+			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/product-feed-cronjob.php';
 		}
 
 		require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/exclude-page-metabox.php';
@@ -525,7 +539,7 @@ final class MonsterInsights_Lite {
 
 		if ( is_admin() || ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
 			// Late loading classes (self instantiating)
-			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/tracking.php';
+			require_once MONSTERINSIGHTS_PLUGIN_DIR . 'includes/admin/class-monsterinsights-usage-tracking.php';
 		}
 
 		if (is_admin()) {
@@ -835,6 +849,9 @@ function monsterinsights_lite_deactivation_hook() {
 	wp_clear_scheduled_hook( 'monsterinsights_usage_tracking_cron' );
 	wp_clear_scheduled_hook( 'monsterinsights_email_summaries_cron' );
 	wp_clear_scheduled_hook( 'monsterinsights_charitable_notice_cron' );
+
+	// Unschedule cache cleanup
+	monsterinsights_unschedule_cache_cleanup();
 
 	// Hook to trigger on deactivation.
 	do_action( 'monsterinsights_plugin_deactivated' );

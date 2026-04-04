@@ -57,6 +57,7 @@ class MonsterInsights_Rest_Routes {
 		) );
 		add_action( 'wp_ajax_monsterinsights_vue_update_included_metrics', array( $this, 'update_included_metrics' ) );
 		add_action( 'wp_ajax_monsterinsights_vue_get_user_included_metrics', array( $this, 'get_user_included_metrics' ) );
+		add_action( 'wp_ajax_monsterinsights_vue_get_overview_bundle', array( $this, 'get_overview_bundle' ) );
 		add_action( 'wp_ajax_monsterinsights_vue_capture_last_used_report', array( $this, 'capture_last_used_report' ) );
 	}
 
@@ -202,6 +203,14 @@ class MonsterInsights_Rest_Routes {
 
 		if ( isset( $_POST['setting'] ) ) {
 			$setting = sanitize_text_field( wp_unslash( $_POST['setting'] ) );
+
+			// Prevent non-admin users from modifying access-control settings.
+			if ( monsterinsights_is_admin_only_setting( $setting ) && ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array(
+					'message' => esc_html__( 'You do not have permission to update this setting.', 'google-analytics-for-wordpress' ),
+				) );
+			}
+
 			if ( isset( $_POST['value'] ) ) {
 				$value = $this->handle_sanitization( $setting, $_POST['value'] ); // phpcs:ignore
 				monsterinsights_update_option( $setting, $value );
@@ -231,6 +240,10 @@ class MonsterInsights_Rest_Routes {
 		if ( isset( $_POST['settings'] ) ) {
 			$settings = json_decode( sanitize_text_field( wp_unslash( $_POST['settings'] ) ), true );
 			foreach ( $settings as $setting => $value ) {
+				// Skip admin-only settings for non-admin users.
+				if ( monsterinsights_is_admin_only_setting( $setting ) && ! current_user_can( 'manage_options' ) ) {
+					continue;
+				}
 				$value = $this->handle_sanitization( $setting, $value );
 				monsterinsights_update_option( $setting, $value );
 				do_action( 'monsterinsights_after_update_settings', $setting, $value );
@@ -288,8 +301,33 @@ class MonsterInsights_Rest_Routes {
 			return $value;
 		}
 
-		return sanitize_text_field( $value );
+		$value = sanitize_text_field( $value );
+
+		// Handle custom value manipulation.
+		$value = $this->handle_custom_value_manipulation( $field, $value );
+
+		return $value;
 	}
+
+	/**
+	 * Handle custom value manipulation for specific fields.
+	 *
+	 * @param string $field The key of the field.
+	 * @param mixed  $value The value to manipulate.
+	 *
+	 * @return mixed The manipulated value.
+	 */
+	private function handle_custom_value_manipulation( $field, $value ) {
+		// Ensure ads_google_conversion_id starts with 'AW-'.
+		if ( 'ads_google_conversion_id' === $field && ! empty( $value ) ) {
+			if ( 0 !== strpos( $value, 'AW-' ) ) {
+				$value = 'AW-' . $value;
+			}
+		}
+
+		return $value;
+	}
+
 	/**
 	 * Return the addons as an array instead of JSON format.
 	 *
@@ -455,6 +493,10 @@ class MonsterInsights_Rest_Routes {
 		// Cookie Yes
 		$parsed_addons['cookie_yes'] = array(
 			'active' => defined( 'CLI_SETTINGS_FIELD' ),
+		);
+		// Consent Manager
+		$parsed_addons['consentmanager'] = array(
+			'active' => class_exists( 'ConsentManagerMain' ),
 		);
 		// Google AMP.
 		$parsed_addons['google_amp'] = array(
@@ -810,6 +852,19 @@ class MonsterInsights_Rest_Routes {
 		$parsed_addons['formidable_forms'] = array(
 			'active' => class_exists( 'FrmHooksController' ),
 		);
+
+		// OptinMonster.
+		$parsed_addons['optinmonster'] = array(
+			'active'    => class_exists( 'OMAPI' ),
+			'icon'      => plugin_dir_url( MONSTERINSIGHTS_PLUGIN_FILE ) . 'assets/images/plugins/plugin-om.png',
+			'title'     => 'OptinMonster',
+			'excerpt'   => __( 'Instantly get more subscribers, leads, and sales with the #1 conversion optimization toolkit. Create high converting popups, announcement bars, spin a wheel, and more with smart targeting and personalization.', 'google-analytics-for-wordpress' ),
+			'installed' => array_key_exists( 'optinmonster/optin-monster-wp-api.php', $installed_plugins ),
+			'basename'  => 'optinmonster/optin-monster-wp-api.php',
+			'slug'      => 'optinmonster',
+			'settings'  => admin_url( 'admin.php?page=optin-monster-dashboard' ),
+		);
+
 		// Manual UA Addon.
 		if ( ! isset( $parsed_addons['manual_ua'] ) ) {
 			$parsed_addons['manual_ua'] = array(
@@ -1024,7 +1079,18 @@ class MonsterInsights_Rest_Routes {
 
 		foreach ( $exclude as $e ) {
 			if ( ! empty( $settings[ $e ] ) ) {
-				$new_settings = $settings[ $e ];
+				$new_settings[ $e ] = $settings[ $e ];
+			}
+		}
+
+		// Prevent non-admin users from importing access-control settings.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$admin_only_settings = monsterinsights_get_admin_only_settings();
+			foreach ( $admin_only_settings as $admin_setting ) {
+				unset( $new_settings[ $admin_setting ] );
+				if ( isset( $settings[ $admin_setting ] ) ) {
+					$new_settings[ $admin_setting ] = $settings[ $admin_setting ];
+				}
 			}
 		}
 
@@ -1457,7 +1523,7 @@ class MonsterInsights_Rest_Routes {
 		if ( ! current_user_can( 'monsterinsights_view_dashboard' ) ) {
 			// Translators: Link tag starts with url and link tag ends.
 			$message = sprintf(
-				esc_html__( 'Oops! You don not have permissions to view or access Popular Posts. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s.', 'google-analytics-for-wordpress' ),
+				esc_html__( 'Oops! You do not have permissions to view or access Popular Posts. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s.', 'google-analytics-for-wordpress' ),
 				'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'cannot-view-dashboard', 'https://www.monsterinsights.com/docs/how-to-allow-user-roles-to-access-the-monsterinsights-reports-and-settings/' ) . '">',
 				'</a>'
 			);
@@ -1665,19 +1731,11 @@ class MonsterInsights_Rest_Routes {
 	public function update_included_metrics() {
 		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
 		if ( isset( $_POST['selected_metrics'] ) ) {
-			$current_metrics  = get_user_meta( get_current_user_id(), 'monsterinsights_included_metrics', false );
 			$selected_metrics = sanitize_text_field( wp_unslash( $_POST['selected_metrics'] ) );
-			if ( $current_metrics !== $selected_metrics ) {
-				// If the metrics change, let's clear the cache so we can load the new metrics.
-				delete_transient( 'monsterinsights_report_data_overview' );
-				delete_site_option( 'monsterinsights_report_data_overview' );
-				delete_transient( 'monsterinsights_network_report_data_overview' );
-				delete_site_option( 'monsterinsights_network_report_data_overview' );
-				delete_site_option( 'monsterinsights_report_data_compare_overview' );
-				delete_transient( 'monsterinsights_report_data_compare_overview' );
-
-			}
 			update_user_meta( get_current_user_id(), 'monsterinsights_included_metrics', $selected_metrics );
+
+			// Note: No cache flushing needed since metrics are part of cache key (since 9.11.0)
+			// Different metrics = different cache key, so old cache entries expire naturally
 		}
 		wp_send_json_success();
 	}
@@ -1693,9 +1751,272 @@ class MonsterInsights_Rest_Routes {
 		if ( false === $user_included_metrics || empty( $user_included_metrics ) ) {
 			$user_included_metrics = 'pageviews,sessions';
 		}
+
+		// Auto-trim to max 5 metrics for legacy users who had 7 metrics before update.
+		if ( ! empty( $user_included_metrics ) && is_string( $user_included_metrics ) ) {
+			$metrics_array = array_filter( array_map( 'trim', explode( ',', $user_included_metrics ) ) );
+
+			if ( count( $metrics_array ) > 5 ) {
+				// Keep only first 5 metrics.
+				$metrics_array = array_slice( $metrics_array, 0, 5 );
+				$user_included_metrics = implode( ',', $metrics_array );
+
+				// Update user meta to persist the corrected value.
+				update_user_meta( get_current_user_id(), 'monsterinsights_included_metrics', $user_included_metrics );
+			}
+		}
+
 		$user_included_metrics = $this->remove_premium_metrics( $user_included_metrics );
 		wp_send_json_success( $user_included_metrics );
 	}
+
+	/**
+	 * Ajax handler to get bundled overview data (user metrics, overview report, and site summary).
+	 * Combines three separate calls into one for improved performance.
+	 *
+	 * @since 9.3.0
+	 * @return void
+	 */
+	public function get_overview_bundle() {
+
+		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
+
+		// Check user permissions.
+		if ( ! current_user_can( 'monsterinsights_view_dashboard' ) ) {
+			// Translators: link tag starts with url, link tag ends.
+			$message = sprintf(
+				esc_html__( 'Oops! You don not have permissions to view MonsterInsights reporting. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s.', 'google-analytics-for-wordpress' ),
+				'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'cannot-view-reports', 'https://www.monsterinsights.com/docs/how-to-allow-user-roles-to-access-the-monsterinsights-reports-and-settings/' ) . '">',
+				'</a>'
+			);
+			wp_send_json_error( array( 'message' => $message ) );
+		}
+
+		if ( ! empty( $_REQUEST['isnetwork'] ) && $_REQUEST['isnetwork'] ) {
+			define( 'WP_NETWORK_ADMIN', true );
+		}
+
+		$settings_page = admin_url( 'admin.php?page=monsterinsights_settings' );
+
+		// Only for Pro users, require a license key to be entered first so we can link to things.
+		if ( monsterinsights_is_pro_version() ) {
+			if ( ! MonsterInsights()->license->is_site_licensed() && ! MonsterInsights()->license->is_network_licensed() ) {
+				// Translators: Support link tag starts with url and Support link tag ends.
+				$message = sprintf(
+					esc_html__( 'Oops! You cannot view MonsterInsights reports because you are not licensed. Please try again in a few minutes. If the issue continues, please %1$scontact our support%2$s team.', 'google-analytics-for-wordpress' ),
+					'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'cannot-view-reports', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
+					'</a>'
+				);
+				wp_send_json_error( array(
+					'message' => $message,
+					'footer'  => '<a href="' . $settings_page . '">' . __( 'Add your license', 'google-analytics-for-wordpress' ) . '</a>',
+				) );
+			} else if ( MonsterInsights()->license->is_site_licensed() && ! MonsterInsights()->license->site_license_has_error() ) {
+				// Good to go: site licensed.
+			} else if ( MonsterInsights()->license->is_network_licensed() && ! MonsterInsights()->license->network_license_has_error() ) {
+				// Good to go: network licensed.
+			} else {
+				// Translators: Support link tag starts with url and Support link tag ends.
+				$message = sprintf(
+					esc_html__( 'Oops! We had a problem due to a license key error. Please try again in a few minutes. If the problem persists, please %1$scontact our support%2$s team.', 'google-analytics-for-wordpress' ),
+					'<a target="_blank" href="' . monsterinsights_get_url( 'notice', 'cannot-view-reports', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
+					'</a>'
+				);
+				wp_send_json_error( array( 'message' => $message ) );
+			}
+		}
+
+		// We do not have a current auth.
+		$site_auth = MonsterInsights()->auth->get_viewname();
+		$ms_auth   = is_multisite() && MonsterInsights()->auth->get_network_viewname();
+		if ( ! $site_auth && ! $ms_auth ) {
+			$url = admin_url( 'admin.php?page=monsterinsights-onboarding' );
+
+			// Check for MS dashboard.
+			if ( is_network_admin() ) {
+				$url = network_admin_url( 'admin.php?page=monsterinsights-onboarding' );
+			}
+			// Translators: Wizard link tag starts with url and Wizard link tag ends.
+			$message = sprintf(
+				esc_html__( 'You need to authenticate into MonsterInsights before viewing reports. Please run our %1$ssetup wizard%2$s.', 'google-analytics-for-wordpress' ),
+				'<a href="' . esc_url( $url ) . '">',
+				'</a>'
+			);
+			wp_send_json_error( array( 'message' => $message ) );
+		}
+
+		// Get user included metrics for cache key generation.
+		$user_included_metrics = get_user_meta( get_current_user_id(), 'monsterinsights_included_metrics', true );
+		if ( false === $user_included_metrics || empty( $user_included_metrics ) ) {
+			$user_included_metrics = 'pageviews,sessions';
+		}
+
+		// Auto-trim to max 5 metrics for legacy users who had 7 metrics before update.
+		if ( ! empty( $user_included_metrics ) && is_string( $user_included_metrics ) ) {
+			$metrics_array = array_filter( array_map( 'trim', explode( ',', $user_included_metrics ) ) );
+
+			if ( count( $metrics_array ) > 5 ) {
+				// Keep only first 5 metrics.
+				$metrics_array = array_slice( $metrics_array, 0, 5 );
+				$user_included_metrics = implode( ',', $metrics_array );
+
+				// Update user meta to persist the corrected value.
+				update_user_meta( get_current_user_id(), 'monsterinsights_included_metrics', $user_included_metrics );
+			}
+		}
+
+		$user_included_metrics = $this->remove_premium_metrics( $user_included_metrics );
+
+		// Get overview report for date defaults.
+		$overview_report = MonsterInsights()->reporting->get_report( 'overview' );
+
+		$isnetwork = ! empty( $_REQUEST['isnetwork'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['isnetwork'] ) ) : '';
+		$start     = ! empty( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : $overview_report->default_start_date();
+		$end       = ! empty( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : $overview_report->default_end_date();
+
+		// Generate cache key components.
+		$network_id = $isnetwork ? get_current_network_id() : 0;
+		$metrics_hash = md5( $user_included_metrics );
+
+		// Handle compare mode hash.
+		$compare_hash = 'none';
+		if ( isset( $_POST['compare_report'] ) ) {
+			$compare_start = ! empty( $_POST['compare_start'] ) ? sanitize_text_field( wp_unslash( $_POST['compare_start'] ) ) : $overview_report->default_compare_start_date();
+			$compare_end   = ! empty( $_POST['compare_end'] ) ? sanitize_text_field( wp_unslash( $_POST['compare_end'] ) ) : $overview_report->default_compare_end_date();
+			$compare_hash = md5( $compare_start . '_' . $compare_end );
+		}
+
+		// Generate bundle cache key.
+		$cache_key = sprintf(
+			'bundle_overview_%s_%s_%s_%s_%s',
+			$start,
+			$end,
+			$compare_hash,
+			$network_id,
+			$metrics_hash
+		);
+
+		// Check cache for bundled data.
+		$cached_bundle = monsterinsights_cache_get( $cache_key, 'reports' );
+		if ( false !== $cached_bundle ) {
+			wp_send_json_success( $cached_bundle );
+			return;
+		}
+
+		// Cache miss - fetch all data.
+		$args = array(
+			'start' => $start,
+			'end'   => $end,
+		);
+
+		// User want to show compare report.
+		if ( isset( $_POST['compare_report'] ) ) {
+			$args['compare_start'] = ! empty( $_POST['compare_start'] ) ? sanitize_text_field( wp_unslash( $_POST['compare_start'] ) ) : $overview_report->default_compare_start_date();
+			$args['compare_end']   = ! empty( $_POST['compare_end'] ) ? sanitize_text_field( wp_unslash( $_POST['compare_end'] ) ) : $overview_report->default_compare_end_date();
+		}
+
+		if ( $isnetwork ) {
+			$args['network'] = true;
+		}
+		$args['included_metrics'] = $user_included_metrics;
+
+		if ( monsterinsights_is_pro_version() && ! MonsterInsights()->license->license_can( $overview_report->level ) ) {
+			$overview_data = array(
+				'success' => false,
+				'error'   => 'license_level',
+			);
+		} else {
+			$overview_data = apply_filters( 'monsterinsights_vue_reports_data', $overview_report->get_data( $args ), 'overview', $overview_report );
+		}
+
+		// Handle overview report errors.
+		if ( empty( $overview_data['success'] ) ) {
+			if ( isset( $overview_data['success'] ) && false === $overview_data['success'] && ! empty( $overview_data['error'] ) ) {
+				// Use a custom handler for invalid_grant errors.
+				if ( strpos( $overview_data['error'], 'invalid_grant' ) > 0 ) {
+					wp_send_json_error(
+						array(
+							'message' => 'invalid_grant',
+							'footer'  => '',
+						)
+					);
+				}
+
+				wp_send_json_error(
+					array(
+						'message' => $overview_data['error'],
+						'footer'  => isset( $overview_data['data']['footer'] ) ? $overview_data['data']['footer'] : '',
+						'type'    => isset( $overview_data['data']['type'] ) ? $overview_data['data']['type'] : '',
+					)
+				);
+			}
+
+			// Translators: Support link tag starts with url and Support link tag ends.
+			$message = sprintf(
+				esc_html__( 'Oops! We encountered an error while generating your reports. Please wait a few minutes and try again. If the issue persists, please %1$scontact our support%2$s team.', 'google-analytics-for-wordpress' ),
+				'<a href="' . monsterinsights_get_url( 'notice', 'error-generating-reports', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
+				'</a>'
+			);
+			wp_send_json_error( array( 'message' => $message ) );
+		}
+
+		// 3. Get site_summary report.
+		$site_summary_report = MonsterInsights()->reporting->get_report( 'site_summary' );
+
+		if ( monsterinsights_is_pro_version() && ! MonsterInsights()->license->license_can( $site_summary_report->level ) ) {
+			$site_summary_data = array(
+				'success' => false,
+				'error'   => 'license_level',
+			);
+		} else {
+			$site_summary_data = apply_filters( 'monsterinsights_vue_reports_data', $site_summary_report->get_data( $args ), 'site_summary', $site_summary_report );
+		}
+
+		// Handle site_summary report errors.
+		if ( empty( $site_summary_data['success'] ) ) {
+			if ( isset( $site_summary_data['success'] ) && false === $site_summary_data['success'] && ! empty( $site_summary_data['error'] ) ) {
+				// Use a custom handler for invalid_grant errors.
+				if ( strpos( $site_summary_data['error'], 'invalid_grant' ) > 0 ) {
+					wp_send_json_error(
+						array(
+							'message' => 'invalid_grant',
+							'footer'  => '',
+						)
+					);
+				}
+
+				wp_send_json_error(
+					array(
+						'message' => $site_summary_data['error'],
+						'footer'  => isset( $site_summary_data['data']['footer'] ) ? $site_summary_data['data']['footer'] : '',
+						'type'    => isset( $site_summary_data['data']['type'] ) ? $site_summary_data['data']['type'] : '',
+					)
+				);
+			}
+
+			// Translators: Support link tag starts with url and Support link tag ends.
+			$message = sprintf(
+				esc_html__( 'Oops! We encountered an error while generating your reports. Please wait a few minutes and try again. If the issue persists, please %1$scontact our support%2$s team.', 'google-analytics-for-wordpress' ),
+				'<a href="' . monsterinsights_get_url( 'notice', 'error-generating-reports', 'https://www.monsterinsights.com/my-account/support/' ) . '">',
+				'</a>'
+			);
+			wp_send_json_error( array( 'message' => $message ) );
+		}
+
+		// Prepare bundled data.
+		$bundle_data = array(
+			'user_metrics'  => $user_included_metrics,
+			'overview'      => ! empty( $overview_data['data'] ) ? $overview_data['data'] : new stdClass(),
+			'site_summary'  => ! empty( $site_summary_data['data'] ) ? $site_summary_data['data'] : new stdClass(),
+		);
+
+		// Cache the bundle for 1 hour (3600 seconds).
+		monsterinsights_cache_set( $cache_key, $bundle_data, 'reports', 3600 );
+
+		// Return bundled data.
+		wp_send_json_success( $bundle_data );
+	}
+
 	/**
 	 * If license has expired, removes access to the premium metrics.
 	 *

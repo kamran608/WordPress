@@ -24,14 +24,16 @@ function gamipress_settings_general_meta_boxes( $meta_boxes ) {
         'title' => gamipress_dashicon( 'admin-generic' ) . __( 'General Settings', 'gamipress' ),
         'fields' => apply_filters( 'gamipress_general_settings_fields', array(
             'minimum_role' => array(
-                'name' => __( 'Minimum role to administer GamiPress', 'gamipress' ),
-                'desc' => __( 'Minimum role a user needs to access to GamiPress management areas.', 'gamipress' ),
+                'name' => __( 'Minimum Access Role', 'gamipress' ),
+                'tooltip'   => __( 'Minimum role a user needs to access to GamiPress management areas.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => gamipress_get_allowed_manager_capabilities(),
             ),
             'points_image_size' => array(
                 'name' => __( 'Points Image Size', 'gamipress' ),
-                'desc' => __( 'Maximum dimensions for the points featured image.', 'gamipress' ),
+                'tooltip'   => __( 'Maximum dimensions for the points featured image.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'size',
                 'default' => array(
                     'width' => 50,
@@ -40,30 +42,35 @@ function gamipress_settings_general_meta_boxes( $meta_boxes ) {
             ),
             'achievement_image_size' => array(
                 'name' => __( 'Achievement Image Size', 'gamipress' ),
-                'desc' => __( 'Maximum dimensions for the achievements featured image.', 'gamipress' ),
+                'tooltip'   => __( 'Maximum dimensions for the achievements featured image.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'size',
             ),
             'rank_image_size' => array(
                 'name' => __( 'Rank Image Size', 'gamipress' ),
-                'desc' => __( 'Maximum dimensions for ranks featured image.', 'gamipress' ),
+                'tooltip'   => __( 'Maximum dimensions for ranks featured image.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'size',
             ),
             'disable_admin_bar_menu' => array(
                 'name' => __( 'Disable Top Bar Menu', 'gamipress' ),
-                'desc' => __( 'Check this option to disable the GamiPress top bar menu.', 'gamipress' ),
+                'tooltip'   => __( 'Disable the GamiPress top bar menu.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch',
             ),
             'disable_shortcodes_editor' => array(
                 'name' => __( 'Disable Shortcodes Editor', 'gamipress' ),
-                'desc' => __( 'Check this option to disable the shortcodes editor.', 'gamipress' ) . '<br>'
+                'tooltip'   => __( 'Disable the shortcodes editor.', 'gamipress' ) . '<br>'
                 . '<small>' . __( 'Check this option if you are experiencing black screens in your theme settings or in your page builder forms.', 'gamipress' ) . '</small>',
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch',
             ),
             'debug_mode' => array(
                 'name' => __( 'Debug Mode', 'gamipress' ),
-                'desc' => __( 'Check this option to enable the debug mode.', 'gamipress' ),
+                'tooltip'   => __( 'Enable the GamiPress debug mode.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch',
             ),

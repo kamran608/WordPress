@@ -271,7 +271,7 @@ class ListTable extends \WP_List_Table {
 
 		?>
 		<div class="tablenav edd-emails__tablenav--top <?php echo esc_attr( $which ); ?>">
-			<div class="edd-emails__filters">
+			<div class="edd-emails__filters actions">
 				<?php
 				$this->do_status_filter();
 				$this->do_sender_filter();
@@ -291,7 +291,7 @@ class ListTable extends \WP_List_Table {
 			$add_new_actions = $this->registry->get_add_new_actions();
 			if ( ! empty( $add_new_actions ) ) :
 				?>
-				<div class="edd-emails__actions">
+				<div class="edd-emails__actions actions">
 					<?php $this->do_new_actions_overlay( $add_new_actions ); ?>
 				</div>
 				<?php
@@ -376,6 +376,14 @@ class ListTable extends \WP_List_Table {
 				}
 			}
 		}
+
+		/**
+		 * Filters the email keys before they are added to the list table.
+		 *
+		 * @since 3.6.5
+		 * @param array $emails Array of email IDs and class names.
+		 */
+		$emails = apply_filters( 'edd_email_list_table_emails', $emails );
 
 		// The key is important as it is used to manage dynamic emails.
 		foreach ( $emails as $key => $email_class_name ) {

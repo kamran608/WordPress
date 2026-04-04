@@ -602,6 +602,15 @@ function gamipress_post_exists( $post_id  ) {
     if( $post_id === 0 )
         return false;
 
+    $blog_id = get_current_blog_id();
+
+    $cache = gamipress_get_cache( 'posts_exists_' . $blog_id, array(), false );
+
+    // If result already cached, return it
+    if( isset( $cache[$post_id] ) ) {
+        return $cache[$post_id];
+    }
+
     global $wpdb;
 
     // GamiPress post are stored on main site, so if we are not on main site, then we need to get their fields from global table
@@ -611,6 +620,11 @@ function gamipress_post_exists( $post_id  ) {
         "SELECT ID FROM {$posts} WHERE ID = %d",
         $post_id
     ) );
+
+    // Cache function result
+    $cache[$post_id] = absint( $found ) === $post_id;
+
+    gamipress_set_cache( 'posts_exists_' . $blog_id, $cache );
 
     return absint( $found ) === $post_id;
 }

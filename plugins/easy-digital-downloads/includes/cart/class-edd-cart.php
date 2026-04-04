@@ -217,12 +217,20 @@ class EDD_Cart {
 	/**
 	 * Sets the tax rate.
 	 *
-	 * @param float $tax_rate
+	 * @param float|null $tax_rate The tax rate to set, or null to reset.
 	 *
 	 * @since 3.0
+	 * @since 3.6.5 Invalidate the cart cache when the tax rate is reset to null.
 	 */
 	public function set_tax_rate( $tax_rate ) {
 		$this->tax_rate = $tax_rate;
+
+		// When the tax rate is reset, invalidate the cache since cached calculations
+		// contain tax amounts based on the previous rate.
+		// @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2159
+		if ( null === $tax_rate && $this->is_caching_enabled() ) {
+			$this->invalidate_cache();
+		}
 	}
 
 	/**
@@ -293,7 +301,13 @@ class EDD_Cart {
 		global $edd_is_last_cart_item, $edd_flat_discount_total;
 
 		if ( empty( $this->contents ) ) {
-			return array();
+			// If the contents haven't been fetched yet, fetch them.
+			if ( ! did_action( 'edd_cart_contents_loaded' ) ) {
+				$this->get_contents();
+			}
+			if ( empty( $this->contents ) ) {
+				return array();
+			}
 		}
 
 		$details = array();
@@ -324,12 +338,18 @@ class EDD_Cart {
 			// Subtotal for tax calculation must exclude fees that are greater than 0. See $this->get_tax_on_fees().
 			$subtotal_for_tax = $subtotal;
 
-			foreach ( $fees as $fee ) {
+			foreach ( $fees as $id => $fee ) {
 
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
 
 				if ( $fee_amount > 0 ) {
+					// Calculate tax on positive item-specific fees.
+					if ( edd_use_taxes() && empty( $fee['no_tax'] ) ) {
+						add_filter( 'edd_prices_include_tax', '__return_false' );
+						$fees[ $id ]['tax'] = edd_calculate_tax( $fee_amount, '', '', true, $this->get_tax_rate() );
+						remove_filter( 'edd_prices_include_tax', '__return_false' );
+					}
 					continue;
 				}
 
@@ -388,11 +408,11 @@ class EDD_Cart {
 	 * Get Discounts.
 	 *
 	 * @since 2.7
+	 * @since 3.6.6 Uses get_discounts_from_session() for normalization.
 	 * @return array $discounts The active discount codes
 	 */
 	public function get_discounts() {
-		$this->cart_session->get_discounts();
-		$this->discounts = ! empty( $this->discounts ) ? explode( '|', $this->discounts ) : array();
+		$this->discounts = $this->get_discounts_from_session();
 
 		return $this->discounts;
 	}
@@ -566,11 +586,11 @@ class EDD_Cart {
 			$to_add = $item;
 
 			if ( ! is_array( $to_add ) ) {
-				return;
+				continue;
 			}
 
 			if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) ) {
-				return;
+				continue;
 			}
 
 			if ( edd_item_in_cart( $to_add['id'], $to_add['options'] ) && edd_item_quantities_enabled() ) {
@@ -590,7 +610,6 @@ class EDD_Cart {
 
 		unset( $item );
 
-		$this->invalidate_cache();
 		$this->update_cart();
 
 		do_action( 'edd_post_add_to_cart', $download_id, $options, $items );
@@ -622,7 +641,6 @@ class EDD_Cart {
 		}
 
 		$this->contents = $cart;
-		$this->invalidate_cache();
 		$this->update_cart();
 
 		do_action( 'edd_post_remove_from_cart', $key, $item_id );
@@ -692,7 +710,6 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function empty_cart() {
-		$this->invalidate_cache();
 		$this->cart_session->empty_cart();
 
 		do_action( 'edd_empty_cart' );
@@ -721,9 +738,6 @@ class EDD_Cart {
 
 			// Update the active discounts.
 			EDD()->session->set( 'cart_discounts', $this->discounts );
-
-			// Invalidate cache when discounts change.
-			$this->invalidate_cache();
 		}
 
 		do_action( 'edd_cart_discount_removed', $code, $this->discounts );
@@ -839,31 +853,35 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int   $download_id Download ID of the item to check.
-	 * @param array $options
+	 * @param array $options      Cart item options.
 	 * @return bool
 	 */
 	public function is_item_in_cart( $download_id = 0, $options = array() ) {
 		$cart = $this->get_contents();
 
-		$ret = false;
+		$is_in_cart = false;
 
 		if ( is_array( $cart ) ) {
 			foreach ( $cart as $item ) {
 				if ( $item['id'] == $download_id ) {
+					if ( ! empty( $options['hash'] ) && ! empty( $item['hash'] ) && hash_equals( $item['hash'], $options['hash'] ) ) {
+						$is_in_cart = true;
+						break;
+					}
 					if ( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
 						if ( $options['price_id'] == $item['options']['price_id'] ) {
-							$ret = true;
+							$is_in_cart = true;
 							break;
 						}
 					} else {
-						$ret = true;
+						$is_in_cart = true;
 						break;
 					}
 				}
 			}
 		}
 
-		return (bool) apply_filters( 'edd_item_in_cart', $ret, $download_id, $options );
+		return (bool) apply_filters( 'edd_item_in_cart', $is_in_cart, $download_id, $options );
 	}
 
 	/**
@@ -940,7 +958,6 @@ class EDD_Cart {
 		}
 
 		$this->contents[ $key ]['quantity'] = $quantity;
-		$this->invalidate_cache();
 		$this->update_cart();
 
 		do_action( 'edd_after_set_cart_item_quantity', $download_id, $quantity, $options, $this->contents );
@@ -1381,7 +1398,6 @@ class EDD_Cart {
 		$cart_tax = $this->get_tax();
 		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
 
-		$tax = max( $cart_tax, 0 );
 		$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 
 		if ( $should_echo ) {
@@ -1670,14 +1686,21 @@ class EDD_Cart {
 	}
 
 	/**
-	 * Populate the discounts with the data stored in the session.
+	 * Gets the discounts from the session.
 	 *
 	 * @since  2.7
-	 * @deprecated 3.3.0
-	 * @return void
+	 * @since 3.6.6 Now returns an array of discounts.
+	 * @return array The active discount codes.
 	 */
 	public function get_discounts_from_session() {
 		$this->cart_session->get_discounts();
+
+		// If the discounts are a string, explode them into an array.
+		if ( is_string( $this->discounts ) && ! empty( $this->discounts ) ) {
+			$this->discounts = explode( '|', $this->discounts );
+		}
+
+		return ! empty( $this->discounts ) ? (array) $this->discounts : array();
 	}
 
 	/**

@@ -1,10 +1,10 @@
 === WooCommerce ===
 Contributors: automattic, woocommerce, mikejolley, jameskoster, claudiosanches, rodrigosprimo, peterfabian1000, vedjain, jamosova, obliviousharmony, konamiman, sadowski, wpmuguru, royho, barryhughes-1, claudiulodro, tiagonoronha, ryelle, levinmedia, aljullu, nerrad, joshuawold, assassinateur, haszari, mppfeiffer, nielslange, opr18, ralucastn, tjcafferkey, danielwrobert, patriciahillebrandt, albarin, dinhtungdu, imanish003, karolmanijak, sunyatasattva, alexandrelara, gigitux, danieldudzic, samueljseay, alexflorisca, opr18, tarunvijwani, pauloarromba, saadtarhi, bor0, kloon, coreymckrill, jorgeatorres, leifsinger, neosinner
 Tags: online store, ecommerce, shop, shopping cart, sell online
-Requires at least: 6.7
-Tested up to: 6.8
+Requires at least: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 10.3.3
+Stable tag: 10.6.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -144,7 +144,7 @@ Check out [Frequently Asked Questions](https://woocommerce.com/document/frequent
 
 * PHP 7.4 or greater is required (PHP 8.0 or greater is recommended)
 * MySQL 5.5.5 or greater, OR MariaDB version 10.1 or greater, is required
-* WordPress 6.7 or greater
+* WordPress 6.8 or greater
 * (Recommended) WordPress [memory limit](https://woocommerce.com/document/increasing-the-wordpress-memory-limit/) of 256 MB or greater.
 * (Recommended) [HTTPS](https://woocommerce.com/document/ssl-and-https/) support.
 
@@ -170,19 +170,17 @@ WooCommerce comes with some sample data you can use to see how products look; im
 
 == Changelog ==
 
-= 10.3.4 2025-10-31 =
+= 10.6.2 2026-03-31 =
 
 **WooCommerce**
 
-* Fix - Attempts to identify the PayPal two-letter country code from a three-letter code using the `league/iso3166` composer package, and applies minor additional fixes [#61741](https://github.com/woocommerce/woocommerce/pull/61741)
-* Fix - Fixes the locale code sent when creating a PayPal Standard order, limiting it to two characters. [#61688](https://github.com/woocommerce/woocommerce/pull/61688)
-* Fix - Fixes the SHIPPING_CALLBACK_CONFIG_NOT_SUPPORTED errors for PayPal Standard [#61689](https://github.com/woocommerce/woocommerce/pull/61689)
-* Fix - Improves how the city and postal code field requirements are defined based on the official PayPal address requirements table for the Orders V2 API. [#61724](https://github.com/woocommerce/woocommerce/pull/61724)
-* Fix - Prevent autocomplete scripts loading if the setting is disabled [#61684](https://github.com/woocommerce/woocommerce/pull/61684)
-* Fix - Properly handling PayPal order items with negative amounts. [#61719](https://github.com/woocommerce/woocommerce/pull/61719)
-* Fix - Sets the country code sent to PayPal when using PayPal Standard to the expected two-letter format [#61691](https://github.com/woocommerce/woocommerce/pull/61691)
-* Fix - Unifies how order items total amount is calculated for PayPal Standard purchases [#61692](https://github.com/woocommerce/woocommerce/pull/61692)
-* Dev - Remove deprecation notices from legacy script handles [#61693](https://github.com/woocommerce/woocommerce/pull/61693)
+* Fix - Fix a small punctuation issue at the LYS page. [#63873](https://github.com/woocommerce/woocommerce/pull/63873)
+* Fix - Fix extra padding on analytics tables, dashboard charts, leaderboards, and store alerts on WordPress 7.0 by setting Card/CardBody size to "none". [#63827](https://github.com/woocommerce/woocommerce/pull/63827)
+* Fix - Fix order meta box action buttons stacking poorly on smaller viewports (~1200px) with WordPress 7.0. [#63836](https://github.com/woocommerce/woocommerce/pull/63836)
+* Fix - Fix styling issues with WP 7.0 [#63825](https://github.com/woocommerce/woocommerce/pull/63825)
+* Fix - Fix variable products not working when name is different than the slug [#63771](https://github.com/woocommerce/woocommerce/pull/63771)
+* Fix - Prevent Activity panel abbreviated notification SlotFill from triggering repeated re-renders by creating the slot at module scope. [#63829](https://github.com/woocommerce/woocommerce/pull/63829)
+* Tweak - Remove unused code from the Product Collection cart-contents handler. [#63927](https://github.com/woocommerce/woocommerce/pull/63927)
 
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce/trunk/changelog.txt).

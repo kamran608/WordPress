@@ -134,6 +134,23 @@ function gamipress_get_block_fields( $shortcode ) {
             $field['options'] = gamipress_blocks_parse_options_cb( $field );
         }
 
+        // Move tooltip to desc
+        if( isset( $field['tooltip'] ) ) {
+
+            if( ! isset( $field['desc'] ) ) {
+                $field['desc'] = '';
+            }
+
+            if( ! is_array( $field['tooltip'] ) ) {
+                // tooltip => description
+                $field['desc'] .= $field['tooltip'];
+            } else {
+                // tooltip => array()
+                $field['desc'] .= ( isset( $field['tooltip']['desc'] ) ? $field['tooltip']['desc'] : '' );
+            }
+
+        }
+
         // Set the definitive object field
         $fields[$field_id] = $field;
     }

@@ -710,17 +710,15 @@ abstract class NextendSocialProvider extends NextendSocialProviderDummy {
 
     public function getUnLinkButton() {
 
-        $args = array(
-            'action' => 'unlink'
-        );
-
-        $redirect = NextendSocialLogin::getCurrentPageURL();
+        $unlinkButtonUrl = $this->getUnLinkButtonUrl();
+        $redirect        = NextendSocialLogin::getCurrentPageURL();
         if ($redirect !== false) {
             $args['redirect'] = urlencode($redirect);
+            $unlinkButtonUrl  = add_query_arg($args, $unlinkButtonUrl);
         }
 
         $defaultLinkAttributes = [
-            "href"          => add_query_arg($args, $this->getLoginUrl()),
+            "href"          => $unlinkButtonUrl,
             "rel"           => "nofollow",
             "aria-label"    => __($this->settings->get('unlink_label'), 'nextend-facebook-connect'),
             "style"         => "text-decoration:none;display:inline-block;box-shadow:none;",
@@ -748,6 +746,15 @@ abstract class NextendSocialProvider extends NextendSocialProviderDummy {
         return $buttonLinkOpeningTagStart . $this->getDefaultButton($this->settings->get('unlink_label')) . $buttonLinkClosingTag;
     }
 
+    protected function getUnLinkButtonUrl() {
+        $args = array(
+            'action' => 'unlink'
+        );
+
+        return wp_nonce_url(add_query_arg($args, $this->getLoginUrl()), 'nsl_unlink_provider');
+    }
+
+
     public function redirectToLoginForm() {
         $this->redirectWithAuthenticationError(NextendSocialLogin::getLoginUrl());
     }
@@ -770,11 +777,42 @@ abstract class NextendSocialProvider extends NextendSocialProviderDummy {
         if (is_user_logged_in() && $this->isCurrentUserConnected()) {
 
             if (isset($_GET['action']) && $_GET['action'] == 'unlink') {
-                if ($this->unlinkUser()) {
-                    Notices::addSuccess(__('Unlink successful.', 'nextend-facebook-connect'));
+
+                if (isset($_REQUEST['_wpnonce'])) {
+                    if (wp_verify_nonce($_REQUEST['_wpnonce'], 'nsl_unlink_provider')) {
+                        if ($this->unlinkUser()) {
+                            Notices::addSuccess(__('Unlink successful.', 'nextend-facebook-connect'));
+                        } else {
+                            Notices::addError(__('Unlink is not allowed!', 'nextend-facebook-connect'));
+                        }
+                    } else {
+                        Notices::addError(__('Unlink failed: nonce is invalid', 'nextend-facebook-connect'));
+                    }
                 } else {
-                    Notices::addError(__('Unlink is not allowed!', 'nextend-facebook-connect'));
+                    /**
+                     * If the nonce is missing, we have to ask the user for confirmation!
+                     * For  this, we mimic the logics of the WordPress log out, when there is no nonce set for it - see wp_nonce_ays()
+                     */
+
+                    $title         = sprintf(__('You are attempting to unlink your WordPress account from %s.'), $this->getLabel());
+                    $response_code = 403;
+
+                    $unlinkButtonUrl        = $this->getUnLinkButtonUrl();
+                    $lastLocationRedirectTo = $this->getLastLocationRedirectTo();
+                    if ($lastLocationRedirectTo) {
+                        $args            = [
+                            'redirect' => urlencode($lastLocationRedirectTo)
+                        ];
+                        $unlinkButtonUrl = add_query_arg($args, $unlinkButtonUrl);
+                    }
+
+                    $html = $title;
+                    $html .= '<p>';
+                    $html .= sprintf(__('Do you really want to %1$s unlink %2$s it?'), '<a href="' . $unlinkButtonUrl . '">', '</a>', 'nsl_unlink_provider');
+                    $html .= '</p>';
+                    wp_die($html, $title, $response_code);
                 }
+
             }
 
             $this->redirectToLastLocationOther(true);

@@ -148,14 +148,35 @@ class MonsterInsights_Report {
 
 	// Deletes the report data from the cache
 	public function delete_cache( $where = 'site' ) {
+		$start = $this->default_start_date();
+		$end   = $this->default_end_date();
+
+		// Build cache key for default date range
+		$cache_key = 'report_' . $this->name . '_' . $start . '_' . $end;
 
 		if ( $where === 'site' || $where === 'both' ) {
-			delete_option( 'monsterinsights_report_data_' . $this->name );
+			monsterinsights_cache_delete( $cache_key );
 		}
 
 		if ( $where === 'network' || $where === 'both' ) {
-			delete_option( 'monsterinsights_network_report_data_' . $this->name );
+			// For network, append network identifier to key
+			$network_cache_key = 'network_report_' . $this->name . '_' . $start . '_' . $end;
+			monsterinsights_cache_delete( $network_cache_key );
 		}
+	}
+
+	/**
+	 * Get cache key suffix for this report.
+	 *
+	 * Override this method in child classes to add custom cache key suffixes.
+	 * Useful for reports that need different cache entries based on parameters.
+	 *
+	 * @param array $extra_params Extra parameters passed to get_data().
+	 * @return string Cache key suffix (should start with underscore if non-empty).
+	 * @since 9.11.0
+	 */
+	protected function get_cache_key_suffix( $extra_params ) {
+		return '';
 	}
 
 	// Get report data
@@ -227,63 +248,51 @@ class MonsterInsights_Report {
 		$site_auth         = MonsterInsights()->auth->get_viewname();
 		$ms_auth           = is_multisite() && MonsterInsights()->auth->get_network_viewname();
 
+		// Build unified cache key
+		$cache_key_prefix = ( ! $site_auth && $ms_auth ) ? 'network_report_' : 'report_';
+		$cache_key_suffix = $this->get_cache_key_suffix( $extra_params );
+
 		if ( $compare_start && $compare_end ) {
-			$transient = 'monsterinsights_report_' . $this->name . '_' . $start . '_' . $end . '_to_' . $compare_start . '_' . $compare_end;
+			$cache_key = $cache_key_prefix . $this->name . '_' . $start . '_' . $end . '_to_' . $compare_start . '_' . $compare_end . $cache_key_suffix;
 		} else {
-			$transient = 'monsterinsights_report_' . $this->name . '_' . $start . '_' . $end;
+			$cache_key = $cache_key_prefix . $this->name . '_' . $start . '_' . $end . $cache_key_suffix;
 		}
 
-		$current_timestamp = current_time( 'U' );
-		// Set to same time as MI cache. MI caches same day to 15 and others to 1 day, so there's no point pinging MI before then.
-		$expiration = apply_filters( 'monsterinsights_report_transient_expiration',
-			date( 'Y-m-d' ) === $end ? ( 15 * MINUTE_IN_SECONDS ) : ( strtotime( 'Tomorrow 12:05am', $current_timestamp ) - $current_timestamp ), $this->name ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We need this to depend on the runtime timezone.
+		// Cache duration
+		// Same-day data: 60 minutes (more stable, reduces API calls)
+		// Historical data: 24 hours (data won't change, safe to cache longer)
+		//
+		// Filter: monsterinsights_report_cache_expiration
+		// @param int $expiration Cache duration in seconds
+		// @param string $name Report name
+		//
+		// Note: Filter name changed from 'monsterinsights_report_transient_expiration' in v9.11.0
+		// to reflect new cache system. Old filter is deprecated but still works via compatibility layer.
+		$expiration = apply_filters( 'monsterinsights_report_cache_expiration',
+			date( 'Y-m-d' ) === $end ? ( HOUR_IN_SECONDS ) : ( DAY_IN_SECONDS ), $this->name ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We need this to depend on the runtime timezone.
+
+		// Backward compatibility: Support old filter name
+		$expiration = apply_filters( 'monsterinsights_report_transient_expiration', $expiration, $this->name );
 
 		// Default date range, check.
 		if ( $site_auth || $ms_auth ) {
-			// Single site or MS with auth at subsite
-			if ( $compare_start && $compare_end ) {
-				$option_name = $site_auth ? 'monsterinsights_report_data_compare_' . $this->name : 'monsterinsights_network_report_data_compare_' . $this->name;
-			} else {
-				$option_name = $site_auth ? 'monsterinsights_report_data_' . $this->name : 'monsterinsights_network_report_data_' . $this->name;
-			}
-
 			$p = $site_auth ? MonsterInsights()->auth->get_viewid() : MonsterInsights()->auth->get_network_viewid();
 
-			$data = array();
-			// If default date range then get cache data from option.
-			if ( $check_cache ) {
-				$data = ! $site_auth && $ms_auth ? get_site_option( $option_name, array() ) : get_option( $option_name, array() );
-			} else {
-				$data = ! $site_auth && $ms_auth ? get_site_transient( $transient ) : get_transient( $transient );
-			}
+			// Retrieve from unified cache
+			$data = monsterinsights_cache_get( $cache_key );
 
-			$user_included_metrics = get_user_meta( get_current_user_id(), 'monsterinsights_included_metrics', true );
-			if ( $compare_start && $compare_end ) {
-				$previous_included_metrics = get_user_meta( get_current_user_id(), 'monsterinsights_previous_included_metrics_' . $start . '_' . $end . '_to_' . $compare_start . '_' . $compare_end, true );
-			} else {
-				$previous_included_metrics = get_user_meta( get_current_user_id(), 'monsterinsights_previous_included_metrics_' . $start . '_' . $end, true );
-			}
-
-			if ( $user_included_metrics === $previous_included_metrics ) {
-				if ( ! empty( $data ) &&
-						! empty( $data['expires'] ) &&
-						$data['expires'] >= time() &&
-						! empty( $data['data'] ) &&
-						! empty( $data['p'] ) &&
-						$data['p'] === $p
-				) {
-					return $this->prepare_report_data( array(
-						'success' => true,
-						'data'    => $data['data'],
-					) );
-				}
-			} else {
-				// if the metrics has changed, then lets ignore the cache report and trigger a request.
-				if ( $compare_start && $compare_end ) {
-					update_user_meta( get_current_user_id(), 'monsterinsights_previous_included_metrics_' . $start . '_' . $end . '_to_' . $compare_start . '_' . $compare_end, $user_included_metrics );
-				} else {
-					update_user_meta( get_current_user_id(), 'monsterinsights_previous_included_metrics_' . $start . '_' . $end, $user_included_metrics );
-				}
+			// Check if cache is valid (not expired and correct viewid)
+			// Cache system handles expiration automatically, false = expired/not found
+			// Since 9.11.0: Metrics are included in cache key, so no need for per-user validation
+			if ( $data !== false &&
+					! empty( $data['data'] ) &&
+					! empty( $data['p'] ) &&
+					$data['p'] === $p
+			) {
+				return $this->prepare_report_data( array(
+					'success' => true,
+					'data'    => $data['data'],
+				) );
 			}
 
 			// Nothing in cache, either not saved before, expired or mismatch. Let's grab from API.
@@ -332,16 +341,12 @@ class MonsterInsights_Report {
 				$ret['data'] = json_decode($ret['data'], true);
 
 				$data = array(
-					'expires' => time() + $expiration,
-					'p'       => $p,
-					'data'    => $ret['data'],
+					'p'    => $p,
+					'data' => $ret['data'],
 				);
 
-				if ( $check_cache ) {
-					! $site_auth && $ms_auth ? update_site_option( $option_name, $data ) : update_option( $option_name, $data );
-				} else {
-					! $site_auth && $ms_auth ? set_site_transient( $transient, $data, $expiration ) : set_transient( $transient, $data, $expiration );
-				}
+				// Store in unified cache with TTL
+				monsterinsights_cache_set( $cache_key, $data, 'reports', $expiration );
 
 				return $this->prepare_report_data( array(
 					'success' => true,
@@ -371,11 +376,11 @@ class MonsterInsights_Report {
 	}
 
 	public function default_start_date() {
-		return date( 'Y-m-d', strtotime( '-30 days' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We need this to depend on the runtime timezone.
+		return wp_date( 'Y-m-d', strtotime( '-30 days' ) );
 	}
 
 	public function default_end_date() {
-		return date( 'Y-m-d', strtotime( '-1 day' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We need this to depend on the runtime timezone.
+		return wp_date( 'Y-m-d', strtotime( '-1 day' ) );
 	}
 
 	/**
@@ -384,7 +389,7 @@ class MonsterInsights_Report {
 	 * @return string
 	 */
 	public function default_compare_start_date() {
-		return date( 'Y-m-d', strtotime( '-60 days' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We need this to depend on the runtime timezone.
+		return wp_date( 'Y-m-d', strtotime( '-60 days' ) );
 	}
 
 	/**
@@ -393,7 +398,7 @@ class MonsterInsights_Report {
 	 * @return string
 	 */
 	public function default_compare_end_date() {
-		return date( 'Y-m-d', strtotime( '-31 day' ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- We need this to depend on the runtime timezone.
+		return wp_date( 'Y-m-d', strtotime( '-31 day' ) );
 	}
 
 	// Checks to see if date range is valid. Should be 30-yesterday always for lite & any valid date range to today for Pro.

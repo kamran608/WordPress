@@ -38,9 +38,13 @@ class Ai {
 
 		aioseo()->ai->updateCredits( true );
 
+		// Build response manually since we know we just set a valid access token.
+		$aiOptions                   = self::getAiOptionsPayload();
+		$aiOptions['hasAccessToken'] = true;
+
 		return new \WP_REST_Response( [
 			'success'   => true,
-			'aiOptions' => aioseo()->internalOptions->internal->ai->all()
+			'aiOptions' => $aiOptions
 		], 200 );
 	}
 
@@ -56,11 +60,12 @@ class Ai {
 		$body    = $request->get_json_params();
 		$refresh = isset( $body['refresh'] ) ? boolval( $body['refresh'] ) : false;
 
+		aioseo()->ai->getAccessToken( $refresh );
 		aioseo()->ai->updateCredits( $refresh );
 
 		return new \WP_REST_Response( [
 			'success'   => true,
-			'aiOptions' => aioseo()->internalOptions->internal->ai->all()
+			'aiOptions' => self::getAiOptionsPayload()
 		], 200 );
 	}
 
@@ -153,7 +158,7 @@ class Ai {
 		return new \WP_REST_Response( [
 			'success'   => true,
 			'titles'    => $titles,
-			'aiOptions' => aioseo()->internalOptions->internal->ai->all()
+			'aiOptions' => self::getAiOptionsPayload()
 		], 200 );
 	}
 
@@ -246,7 +251,7 @@ class Ai {
 		return new \WP_REST_Response( [
 			'success'      => true,
 			'descriptions' => $descriptions,
-			'aiOptions'    => aioseo()->internalOptions->internal->ai->all()
+			'aiOptions'    => self::getAiOptionsPayload()
 		], 200 );
 	}
 
@@ -347,7 +352,7 @@ class Ai {
 		return new \WP_REST_Response( [
 			'success'   => true,
 			'snippets'  => $aioseoPost->ai->socialPosts, // Return all the social posts, not just the new ones.
-			'aiOptions' => aioseo()->internalOptions->internal->ai->all()
+			'aiOptions' => self::getAiOptionsPayload()
 		], 200 );
 	}
 
@@ -367,7 +372,17 @@ class Ai {
 			ob_end_flush();
 		}
 
-		$body           = $request->get_json_params();
+		$body          = $request->get_json_params();
+		$postId        = ! empty( $body['postId'] ) ? (int) $body['postId'] : 0;
+		$sseDataPrefix = 'data: ';
+
+		if ( ! current_user_can( 'edit_post', $postId ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SSE format with JSON-encoded data.
+			echo $sseDataPrefix . wp_json_encode( [ 'error' => 'Unauthorized.' ] ) . "\n\n";
+			flush();
+			exit;
+		}
+
 		$requestHeaders = self::getRequestHeaders();
 
 		// phpcs:disable WordPress.WP.AlternativeFunctions
@@ -382,25 +397,27 @@ class Ai {
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_USERAGENT      => aioseo()->helpers->getApiUserAgent(),
 			CURLOPT_ENCODING       => '',
-			CURLOPT_HTTPHEADER     => array_merge(
-				[ 'Accept: application/json' ],
-				array_map( function( $key, $value ) {
+			CURLOPT_HTTPHEADER     => array_map(
+				function ( $key, $value ) {
 					return $key . ': ' . $value;
-				}, array_keys( $requestHeaders ), $requestHeaders )
+				},
+				array_keys( $requestHeaders ),
+				$requestHeaders
 			),
-			CURLOPT_WRITEFUNCTION  => function( $_ch, $data ) {
+			CURLOPT_WRITEFUNCTION  => function ( $ch, $data ) use ( $sseDataPrefix ) {
 				$lines = explode( "\n", $data );
 				foreach ( $lines as $line ) {
-					if ( strpos( $line, 'data: ' ) !== 0 ) {
+					if ( strpos( $line, $sseDataPrefix ) !== 0 ) {
 						continue;
 					}
 
-					$json = json_decode( substr( $line, 6 ), true ); // Decode and remove 'data: ' prefix.
+					$json = json_decode( substr( $line, strlen( $sseDataPrefix ) ), true );
 
 					$content = $json['content'] ?? null;
 					$content = $content ? strip_tags( $content ) : null;
 
-					echo 'data: ' . wp_json_encode( [
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SSE format with JSON-encoded data.
+					echo $sseDataPrefix . wp_json_encode( [
 						'content' => $content,
 						'error'   => $json['error'] ?? null
 					] ) . "\n\n";
@@ -417,12 +434,11 @@ class Ai {
 
 		$result = curl_exec( $ch );
 		$error  = curl_error( $ch );
-
-		curl_close( $ch );
 		// phpcs:enable WordPress.WP.AlternativeFunctions
 
 		if ( false === $result || ! empty( $error ) ) {
-			echo 'data: ' . wp_json_encode( [ 'error' => 'Connection error: ' . $error ] ) . "\n\n";
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SSE format with JSON-encoded data.
+			echo $sseDataPrefix . wp_json_encode( [ 'error' => 'Connection error: ' . $error ] ) . "\n\n";
 			flush();
 		}
 
@@ -446,6 +462,13 @@ class Ai {
 		$aspectRatio     = ! empty( $body['aspectRatio'] ) ? sanitize_text_field( $body['aspectRatio'] ) : '';
 		$postId          = ! empty( $body['postId'] ) ? (int) $body['postId'] : 0;
 		$selectedImageId = ! empty( $body['selectedImageId'] ) ? (int) $body['selectedImageId'] : 0;
+
+		if ( ! current_user_can( 'edit_post', $postId ) ) {
+			return new \WP_REST_Response( [
+				'success' => false,
+				'message' => 'Unauthorized.'
+			], 401 );
+		}
 
 		try {
 			if ( ! $prompt || ! $postId ) {
@@ -503,9 +526,8 @@ class Ai {
 			}
 
 			return new \WP_REST_Response( [
-				'success'   => true,
-				'data'      => $attachment,
-				'aiOptions' => aioseo()->internalOptions->internal->ai->all()
+				'success' => true,
+				'data'    => $attachment
 			], 200 );
 		} catch ( \Exception $e ) {
 			$responseCode = isset( $response ) ? wp_remote_retrieve_response_code( $response ) : null;
@@ -528,7 +550,15 @@ class Ai {
 	 */
 	public static function fetchImages( $request ) {
 		$params = $request->get_params();
-		$postId = ! empty( $params['postId'] ) ? $params['postId'] : 0;
+		$postId = ! empty( $params['postId'] ) ? (int) $params['postId'] : 0;
+
+		if ( ! current_user_can( 'edit_post', $postId ) ) {
+			return new \WP_REST_Response( [
+				'success' => false,
+				'message' => 'Unauthorized.'
+			], 401 );
+		}
+
 		$images = aioseo()->ai->image->getByPostId( $postId );
 
 		return new \WP_REST_Response( [
@@ -559,10 +589,30 @@ class Ai {
 			], 400 );
 		}
 
-		aioseo()->ai->image->deleteImages( $ids );
+		// Filter to only IDs the user can delete.
+		$authorizedIds   = [];
+		$unauthorizedIds = [];
+		foreach ( $ids as $id ) {
+			$id = (int) $id;
+			if ( current_user_can( 'delete_post', $id ) ) {
+				$authorizedIds[] = $id;
+			} else {
+				$unauthorizedIds[] = $id;
+			}
+		}
+
+		if ( empty( $authorizedIds ) ) {
+			return new \WP_REST_Response( [
+				'success' => false,
+				'message' => 'Unauthorized.'
+			], 401 );
+		}
+
+		aioseo()->ai->image->deleteImages( $authorizedIds );
 
 		return new \WP_REST_Response( [
-			'success' => true
+			'success'   => true,
+			'failedIds' => $unauthorizedIds
 		], 200 );
 	}
 
@@ -655,7 +705,7 @@ class Ai {
 		return new \WP_REST_Response( [
 			'success'   => true,
 			'faqs'      => $faqs,
-			'aiOptions' => aioseo()->internalOptions->internal->ai->all()
+			'aiOptions' => self::getAiOptionsPayload()
 		], 200 );
 	}
 
@@ -748,7 +798,7 @@ class Ai {
 		return new \WP_REST_Response( [
 			'success'   => true,
 			'keyPoints' => $keyPoints,
-			'aiOptions' => aioseo()->internalOptions->internal->ai->all()
+			'aiOptions' => self::getAiOptionsPayload()
 		], 200 );
 	}
 
@@ -774,6 +824,10 @@ class Ai {
 			aioseo()->internalOptions->internal->ai->credits->license->remaining = (int) $responseBody->license->remaining ?? 0;
 			aioseo()->internalOptions->internal->ai->credits->license->expires   = (int) $responseBody->license->expires ?? 0;
 		}
+
+		if ( ! empty( $responseBody->costPerFeature ) ) {
+			aioseo()->internalOptions->internal->ai->costPerFeature = json_decode( wp_json_encode( $responseBody->costPerFeature ), true );
+		}
 	}
 
 	/**
@@ -783,7 +837,7 @@ class Ai {
 	 *
 	 * @return array The default request headers.
 	 */
-	protected static function getRequestHeaders() {
+	public static function getRequestHeaders() {
 		$headers = [
 			'Content-Type'       => 'application/json',
 			'X-AIOSEO-Ai-Token'  => aioseo()->internalOptions->internal->ai->accessToken,
@@ -823,7 +877,27 @@ class Ai {
 
 		return new \WP_REST_Response( [
 			'success' => true,
-			'aiData'  => $internalOptions->internal->ai->all()
+			'aiData'  => self::getAiOptionsPayload()
 		], 200 );
+	}
+
+	/**
+	 * Returns the AI options payload for API responses.
+	 *
+	 * This helper ensures we never accidentally expose the access token
+	 * and maintains consistency across all AI API endpoints.
+	 *
+	 * @since 4.9.4
+	 *
+	 * @return array The AI options payload.
+	 */
+	public static function getAiOptionsPayload() {
+		return [
+			'hasAccessToken'      => ! empty( aioseo()->internalOptions->internal->ai->accessToken ),
+			'isTrialAccessToken'  => aioseo()->internalOptions->internal->ai->isTrialAccessToken,
+			'isManuallyConnected' => aioseo()->internalOptions->internal->ai->isManuallyConnected,
+			'credits'             => aioseo()->internalOptions->internal->ai->credits->all(),
+			'costPerFeature'      => aioseo()->internalOptions->internal->ai->costPerFeature
+		];
 	}
 }

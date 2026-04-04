@@ -3,18 +3,18 @@
 /**
  * Plugin Name: Payoneer Checkout
  * Description: Payoneer Checkout for WooCommerce
- * Version: 3.5.4
+ * Version: 3.5.6
  * Author:      Payoneer
- * Requires at least: 5.4
- * Tested up to: 6.8.3
- * WC requires at least: 5.0
- * WC tested up to: 10.2.2
+ * Requires at least: 6.5
+ * Tested up to: 6.9
+ * WC requires at least: 8.0
+ * WC tested up to: 10.5
  * Requires PHP: 7.4
  * Author URI:  https://www.payoneer.com/
  * License:     MPL-2.0
  * Text Domain: payoneer-checkout
  * Domain Path: /languages
- * SHA: 36c7cf0f4b6acfe59029c7a94d6320ce818db252
+ * SHA: d38e1885c5d36224df012ae61bc8ef3ba44718a0
  */
 declare (strict_types=1);
 namespace Syde\Vendor\Inpsyde\PayoneerForWoocommerce;

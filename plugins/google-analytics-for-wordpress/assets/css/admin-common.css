@@ -89,3 +89,8 @@
 	vertical-align:super;
 	font-size:9px
 }
+
+.monsterinsights-sidebar-label--tight,
+.monsterinsights-sidebar-label--tight + .monsterinsights-menu-new-indicator {
+	flex: 1;
+}

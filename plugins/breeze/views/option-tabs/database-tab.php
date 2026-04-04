@@ -43,6 +43,7 @@ if ( is_multisite() && is_network_admin() ) {
 	$sites = get_sites(
 		array(
 			'fields' => 'ids',
+			'number' => 0,
 		)
 	);
 
@@ -241,9 +242,13 @@ $myListTable = new Breeze_Db_Summary_List_Table();
 
 ?>
 <section>
+    <?php
+    Breeze_One_Click_Optimization::one_click_optimization_notice();
+    ?>
+
 	<div class="br-section-title">
-		<img src="<?php echo $icon; ?>"/>
-		<?php _e( 'DATABASE OPTIONS', 'breeze' ); ?>
+		<img src="<?php echo esc_url( $icon ); ?>"/>
+		<?php esc_html_e( 'DATABASE OPTIONS', 'breeze' ); ?>
 	</div>
 	<br/>
 	<div class="cta-cleanall">
@@ -255,21 +260,21 @@ $myListTable = new Breeze_Db_Summary_List_Table();
 				</div>
 			</label><br>
 		</div>
-		<label for="br-clean-all" class="br-clean-label"><?php _e( 'Clean All', 'breeze' ); ?> <span
+		<label for="br-clean-all" class="br-clean-label"><?php esc_html_e( 'Clean All', 'breeze' ); ?> <span
 					class="br-has">( <?php echo esc_html( $total_no ); ?> )</span></label>
 		<p>
-			<?php _e( 'Cleall the trashed posts and pages.', 'breeze' ); ?>
+			<?php esc_html_e( 'Cleall the trashed posts and pages.', 'breeze' ); ?>
 		</p>
 		<p class="br-important">
 			<?php
 			echo '<strong>';
-			_e( 'Important: ', 'breeze' );
+			esc_html_e( 'Important: ', 'breeze' );
 			echo '</strong>';
-			_e( 'Backup your database before using the following options!', 'breeze' );
+			esc_html_e( 'Backup your database before using the following options!', 'breeze' );
 			?>
 		</p>
 
-		<input type="button" class="simple-btn" value="<?php _e( 'Clean Now', 'breeze' ); ?>" disabled
+		<input type="button" class="simple-btn" value="<?php esc_attr_e( 'Clean Now', 'breeze' ); ?>" disabled
 			   id="br-clean-all-cta">
 	</div>
 
@@ -292,18 +297,19 @@ $myListTable = new Breeze_Db_Summary_List_Table();
 				?>
 				<div class="br-db-item" data-section-title="<?php echo esc_attr( $section_data['title'] ); ?>"
 					 data-section="<?php echo esc_attr( $section_slug ); ?>">
-					<img src="<?php echo BREEZE_PLUGIN_URL . 'assets/images/' . esc_attr( $section_slug ) . '.png'; ?>">
+					<img src="<?php echo esc_url( BREEZE_PLUGIN_URL . 'assets/images/' . $section_slug . '.png' ); ?>">
 					<h3>
 						<?php
-						echo $section_data['title'];
-						echo $no_data;
+						echo esc_html( $section_data['title'] );
+						echo wp_kses_post( $no_data );
 						?>
 					</h3>
 					<p>
-						<?php echo $section_data['describe']; ?>
+						<?php echo esc_html( $section_data['describe'] ); ?>
 					</p>
-
+<?php /*
 					<!--<a href="#<?php echo esc_attr( $section_slug ); ?>" data-section="<?php echo esc_attr( $section_slug ); ?>" class="do_clean_action <?php echo $css_opacity; ?>"><?php echo _e( 'Clean now', 'breeze' ); ?></a>-->
+					*/ ?>
 				</div>
 				<?php
 			}
@@ -313,7 +319,7 @@ $myListTable = new Breeze_Db_Summary_List_Table();
 
 
 	<div class="cta-cleanall">
-	<input type="button" class="simple-btn" id="optimize-selected-services" value="<?php _e( 'Optimize', 'breeze' ); ?>">
+	<input type="button" class="simple-btn" id="optimize-selected-services" value="<?php esc_attr_e( 'Optimize', 'breeze' ); ?>">
 	<br/><br/>
 	</div>
 
@@ -321,8 +327,8 @@ $myListTable = new Breeze_Db_Summary_List_Table();
 
 <section>
 	<div class="br-section-title">
-		<img src="<?php echo $summary_icon; ?>"/>
-		<?php _e( 'AUTOLOAD SUMMARY', 'breeze' ); ?>
+		<img src="<?php echo esc_url( $summary_icon ); ?>"/>
+		<?php esc_html_e( 'AUTOLOAD SUMMARY', 'breeze' ); ?>
 	</div>
 	<div>
 		<!-- START OPTION -->
@@ -331,7 +337,7 @@ $myListTable = new Breeze_Db_Summary_List_Table();
 
 				<?php
 				// Get statistics data
-				echo $myListTable->get_statistics();
+				echo wp_kses_post( $myListTable->get_statistics() );
 
 				// Invoke table helper
 				$myListTable->prepare_items();

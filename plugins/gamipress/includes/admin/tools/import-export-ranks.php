@@ -28,7 +28,8 @@ function gamipress_import_export_ranks_tool_meta_boxes( $meta_boxes ) {
 
             'export_ranks_rank_types' => array(
                 'name' => __( 'Rank Types To Export', 'gamipress' ),
-                'desc' => __( 'Choose the rank types to export.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the rank types to export.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'multicheck',
                 'classes' => 'gamipress-switch',
                 'options_cb' => 'gamipress_options_cb_rank_types',
@@ -36,7 +37,8 @@ function gamipress_import_export_ranks_tool_meta_boxes( $meta_boxes ) {
             ),
             'export_ranks_user_field' => array(
                 'name' => __( 'User Field', 'gamipress' ),
-                'desc' => __( 'Choose the field to display on user column.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the field to display on user column.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => array(
                     'id'        => __( 'ID', 'gamipress' ),
@@ -47,7 +49,8 @@ function gamipress_import_export_ranks_tool_meta_boxes( $meta_boxes ) {
             ),
             'export_ranks_rank_field' => array(
                 'name' => __( 'Rank Field', 'gamipress' ),
-                'desc' => __( 'Choose the field to display on rank column.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the field to display on rank column.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => array(
                     'id'        => __( 'ID', 'gamipress' ),

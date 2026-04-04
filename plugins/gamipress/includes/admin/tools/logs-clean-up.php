@@ -57,21 +57,24 @@ function gamipress_logs_clean_up_tool_meta_boxes( $meta_boxes ) {
         'fields' => apply_filters( 'gamipress_logs_clean_up_tool_fields', array(
             'logs_type' => array(
                 'name' => __( 'Type', 'gamipress' ),
-                'desc' => __( 'Choose the log\'s type you want to clean up.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the log\'s type you want to clean up.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'multicheck',
                 'classes' => 'gamipress-switch',
                 'options' => $log_types,
             ),
             'from' => array(
                 'name' => __( 'From (Optional)', 'gamipress' ),
-                'desc' => '<br>' . __( 'Choose the date from you want to clean up. Logs registered <strong>after</strong> this date will be deleted.', 'gamipress' )
+                'tooltip'   => __( 'Choose the date from you want to clean up. Logs registered <strong>after</strong> this date will be deleted.', 'gamipress' )
                     . '<br>' . __( 'Leave blank to no filter by this date.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text_date_timestamp',
             ),
             'to' => array(
                 'name' => __( 'To (Optional)', 'gamipress' ),
-                'desc' => '<br>' . __( 'Choose the date until you want to clean up. Logs registered <strong>before</strong> this date will be deleted.', 'gamipress' )
+                'tooltip'   => __( 'Choose the date until you want to clean up. Logs registered <strong>before</strong> this date will be deleted.', 'gamipress' )
                     . '<br>' . __( 'Leave blank to no filter by this date.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text_date_timestamp',
             ),
             'logs_clean_up_actions' => array(

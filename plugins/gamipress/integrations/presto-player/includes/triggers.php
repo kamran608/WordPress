@@ -26,6 +26,8 @@ function gamipress_presto_player_activity_triggers( $triggers ) {
         'gamipress_presto_player_watch_specific_video_min_percent'      => __( 'Watch a percent of a specific video', 'gamipress' ),
         'gamipress_presto_player_watch_video_between_percent'           => __( 'Watch a percent range of any video', 'gamipress' ),
         'gamipress_presto_player_watch_specific_video_between_percent'  => __( 'Watch a percent range of a specific video', 'gamipress' ),
+        // Platform
+        'gamipress_presto_player_watch_video_platform'                  => __( 'Watch a video from a specific platform', 'gamipress' ),        
     );
 
     return $triggers;
@@ -67,6 +69,8 @@ function gamipress_presto_player_activity_trigger_label( $title, $requirement_id
     $percent = ( isset( $requirement['presto_player_percent'] ) ) ? absint( $requirement['presto_player_percent'] ) : 0;
     $min_percent = ( isset( $requirement['presto_player_min_percent'] ) ) ? absint( $requirement['presto_player_min_percent'] ) : 0;
     $max_percent = ( isset( $requirement['presto_player_max_percent'] ) ) ? absint( $requirement['presto_player_max_percent'] ) : 0;
+    $platform = ( isset( $requirement['presto_player_platform'] ) ) ? $requirement['presto_player_platform'] : '';
+    $platform_conditions = gamipress_preto_player_get_platforms();
 
     switch( $requirement['trigger_type'] ) {
         // Specific percent
@@ -88,6 +92,10 @@ function gamipress_presto_player_activity_trigger_label( $title, $requirement_id
             $achievement_post_id = absint( $requirement['achievement_post'] );
             $title = gamipress_get_specific_activity_trigger_post_title( $achievement_post_id, $requirement['trigger_type'], $requirement['achievement_post_site_id'] );
             return sprintf( __( 'Watch a percent between %s and %s of %s video', 'gamipress' ), $min_percent . '%', $max_percent . '%', $title );
+            break;
+        // Platform
+        case 'gamipress_presto_player_watch_video_platform':
+            return sprintf( __( 'Watch a video from %s', 'gamipress' ), $platform_conditions[$platform] );
             break;
     }
 
@@ -181,6 +189,7 @@ function gamipress_presto_player_trigger_get_user_id( $user_id, $trigger, $args 
         case 'gamipress_presto_player_watch_specific_video_min_percent':
         case 'gamipress_presto_player_watch_video_between_percent':
         case 'gamipress_presto_player_watch_specific_video_between_percent':
+        case 'gamipress_presto_player_watch_video_platform':
             $user_id = $args[1];
             break;
     }

@@ -117,6 +117,7 @@ function gamipress_fetch_remote_file( $url ) {
 
     // get placeholder file in the upload dir with a unique, sanitized filename
     $upload = wp_upload_bits( $file_name, 0, '', null );
+    
     if ( $upload['error'] )
         return new WP_Error( 'upload_dir_error', $upload['error'] );
 
@@ -153,6 +154,30 @@ function gamipress_fetch_remote_file( $url ) {
     if ( 0 == $filesize ) {
         @unlink( $upload['file'] );
         return new WP_Error( 'import_file_error', __('Zero size file downloaded', 'gamipress') );
+    }
+
+    // To verify the file type
+    $file_verify = wp_check_filetype_and_ext( $upload['file'], $file_name );
+
+    // To check extension
+    if ( $file_verify['proper_filename_change_key'] ) {
+        @unlink( $upload['file'] );
+        return new WP_Error( 'security_error', __('The contents of the file do not match its extension.', 'gamipress') );
+    }
+
+    // Multimedia MIMES allowed
+    $allowed_mimes = array( 
+        'image/jpeg', 
+        'image/png', 
+        'image/gif', 
+        'image/webp',
+        'video/mp4',
+        'audio/mpeg' 
+    );
+
+    if ( ! in_array( $file_verify['type'], $allowed_mimes ) ) {
+        @unlink( $upload['file'] );
+        return new WP_Error( 'security_error', __('File type not allowed. Only multimedia files are accepted.', 'gamipress') );
     }
 
     return $upload;

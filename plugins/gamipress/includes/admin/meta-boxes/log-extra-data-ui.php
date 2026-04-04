@@ -141,14 +141,16 @@ function gamipress_log_extra_data_ui_html( $object, $object_id, $type ) {
         $fields = array(
             array(
                 'name' 	=> __( 'Trigger', 'gamipress' ),
-                'desc' 	=> __( 'The event user has triggered.', 'gamipress' ),
+                'tooltip'   =>  __( 'The event user has triggered.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'id'   	=> ( ( ! is_gamipress_upgraded_to( '1.4.7' ) ) ? $prefix : '' ) . 'trigger_type',
                 'type' 	=> 'advanced_select',
                 'options' 	=> gamipress_get_activity_triggers(),
             ),
             array(
                 'name' 	=> __( 'Count', 'gamipress' ),
-                'desc' 	=> __( 'Number of times user triggered this event until this log.', 'gamipress' ),
+                'tooltip'   =>  __( 'Number of times user triggered this event until this log.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'id'   	=> $prefix . 'count',
                 'type' 	=> 'text',
             ),
@@ -168,7 +170,8 @@ function gamipress_log_extra_data_ui_html( $object, $object_id, $type ) {
 
             $fields[] = array(
                 'name' 	=> __( 'Assigned Post', 'gamipress' ),
-                'desc' 	=> __( 'Attached post to this log.', 'gamipress' ),
+                'tooltip'   =>  __( 'Attached post to this log.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'id'   	=> $prefix . 'achievement_post',
                 'type' 	=> 'select',
                 'options' 	=> array(
@@ -182,7 +185,8 @@ function gamipress_log_extra_data_ui_html( $object, $object_id, $type ) {
         $fields = array(
             array(
                 'name' 	=> __( 'Achievement', 'gamipress' ),
-                'desc' 	=> __( 'Achievement user has earned.', 'gamipress' ),
+                'tooltip'   => __( 'Achievement user has earned.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'id'   	=> $prefix . 'achievement_id',
                 'type' 	=> 'select',
                 'options' 	=> array(
@@ -203,20 +207,23 @@ function gamipress_log_extra_data_ui_html( $object, $object_id, $type ) {
         $fields = array(
             array(
                 'name' 	=> __( 'Points', 'gamipress' ),
-                'desc' 	=> ( $type === 'points_award' || $type === 'points_earn' ? __( 'Points user has earned.', 'gamipress' ) : __( 'Points deducted to user.', 'gamipress' ) ),
+                'tooltip'   => ( $type === 'points_award' || $type === 'points_earn' ? __( 'Points user has earned.', 'gamipress' ) : __( 'Points deducted to user.', 'gamipress' ) ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'id'   	=> $prefix . 'points',
                 'type' 	=> 'text_small',
             ),
             array(
                 'name' 	=> __( 'Points Type', 'gamipress' ),
-                'desc' 	=> ( $type === 'points_award' || $type === 'points_earn' ? __( 'Points type user has earned.', 'gamipress' ) : __( 'Points type deducted to user.', 'gamipress' ) ),
+                'tooltip'   => ( $type === 'points_award' || $type === 'points_earn' ? __( 'Points type user has earned.', 'gamipress' ) : __( 'Points type deducted to user.', 'gamipress' ) ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'id'   	=> $prefix . 'points_type',
                 'type' 	=> 'select',
                 'options' => $points_types_options
             ),
             array(
                 'name' 	=> __( 'Total Points', 'gamipress' ),
-                'desc' 	=> __( 'Total points user has earned until this log.', 'gamipress' ),
+                'tooltip'   => __( 'Total points user has earned until this log.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'id'   	=> $prefix . 'total_points',
                 'type' 	=> 'text_small',
             ),
@@ -228,7 +235,8 @@ function gamipress_log_extra_data_ui_html( $object, $object_id, $type ) {
         $fields = array(
             array(
                 'name' 	=> __( 'Rank', 'gamipress' ),
-                'desc' 	=> __( 'Rank user has earned.', 'gamipress' ),
+                'tooltip'   => __( 'Rank user has earned.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'id'   	=> $prefix . 'rank_id',
                 'type' 	=> 'select',
                 'options' 	=> array(
@@ -244,7 +252,8 @@ function gamipress_log_extra_data_ui_html( $object, $object_id, $type ) {
 
         $fields[] = array(
             'name' 	=> __( 'Administrator', 'gamipress' ),
-            'desc' 	=> ( $type === 'points_revoke' ? __( 'User has made the revoke.', 'gamipress' ) : __( 'User has made the award.', 'gamipress' ) ),
+            'tooltip'   => ( $type === 'points_revoke' ? __( 'User has made the revoke.', 'gamipress' ) : __( 'User has made the award.', 'gamipress' ) ),
+            'label_cb' => 'cmb_tooltip_label_cb',
             'id'   	=> $prefix . 'admin_id',
             'type' 	=> 'select',
             'options' 	=> array(

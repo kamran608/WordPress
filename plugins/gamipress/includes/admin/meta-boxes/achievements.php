@@ -41,45 +41,52 @@ function gamipress_achievements_meta_boxes( $post_type ) {
         __( 'Achievement Data', 'gamipress' ),
         $achievement_types,
         array(
-            $prefix . 'points' => array(
-                'name' => __( 'Points Awarded', 'gamipress' ),
-                'desc' => __( 'Points awarded for earning this achievement (optional). Leave empty if no points are awarded.', 'gamipress' ),
-                'type' => 'gamipress_points',
-                'default' => '0',
-            ),
             $prefix . 'earned_by' => array(
                 'name'    => __( 'Earned By:', 'gamipress' ),
-                'desc'    => __( 'How this achievement can be earned.', 'gamipress' ),
+                'tooltip'   => __( 'How this achievement can be earned.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type'    => 'select',
                 'options' => apply_filters( 'gamipress_achievement_earned_by', array(
                     'triggers' 			=> __( 'Completing Steps', 'gamipress' ),
                     'points' 			=> __( 'Minimum Number of Points', 'gamipress' ),
-                    'rank' 				=> __( 'Reach a Rank', 'gamipress' ),
+                    'rank' 				=> __( 'Reaching a Rank', 'gamipress' ),
                     'admin' 			=> __( 'Admin-awarded Only', 'gamipress' ),
-                ) )
+                ) ),
+                'default' => 'triggers',
+            ),
+            $prefix . 'points' => array(
+                'name' => __( 'Points Awarded', 'gamipress' ),
+                'tooltip'   => __( 'Points awarded for earning this achievement (optional). Leave empty if no points are awarded.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
+                'type' => 'gamipress_points',
+                'default' => '0',
             ),
             $prefix . 'points_required' => array(
                 'name' => __( 'Minimum Points Required', 'gamipress' ),
-                'desc' => __( 'Fewest number of points required for earning this achievement.', 'gamipress' ),
+                'tooltip'   => __( 'Fewest points required to earn this achievement.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'gamipress_points',
                 'points_type_key' => $prefix . 'points_type_required',
                 'default' => '0',
             ),
             $prefix . 'rank_type_required' => array(
                 'name' => __( 'Rank Type Required', 'gamipress' ),
-                'desc' => __( 'Rank Type of the required rank for earning this achievement.', 'gamipress' ),
+                'tooltip'   => __( 'Rank Type of the required rank to earn this achievement.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => $rank_types_options
             ),
             $prefix . 'rank_required' => array(
                 'name' => __( 'Rank Required', 'gamipress' ),
-                'desc' => __( 'Rank required for earning this achievement.', 'gamipress' ),
+                'tooltip'   => __( 'Rank required to earn this achievement.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options_cb' => 'gamipress_options_cb_posts'
             ),
             $prefix . 'congratulations_text' => array(
                 'name' => __( 'Congratulations Text', 'gamipress' ),
-                'desc' => __( 'Displayed after achievement is earned.', 'gamipress' ),
+                'tooltip'   => __( 'Displayed after achievement is earned.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'wysiwyg',
                 'options' => array(
                     'textarea_rows' => 8,
@@ -87,7 +94,8 @@ function gamipress_achievements_meta_boxes( $post_type ) {
             ),
             $prefix . 'maximum_earnings' => array(
                 'name' => __( 'Maximum Earnings Per User', 'gamipress' ),
-                'desc' => __( 'Number of times a user can earn this achievement (set it to 0 for no maximum).', 'gamipress' ),
+                'tooltip'   => __( 'Number of times a user can earn this achievement (set it to 0 for no maximum).', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text_small',
                 'attributes' => array(
                     'type' => 'number'
@@ -96,8 +104,9 @@ function gamipress_achievements_meta_boxes( $post_type ) {
             ),
             $prefix . 'global_maximum_earnings' => array(
                 'name' => __( 'Global Maximum Earnings', 'gamipress' ),
-                'desc' => __( 'Number of times this achievement can be earned globally (set it to 0 for no maximum).', 'gamipress' )
-                . '<br>' . '<strong>Note:</strong> This limit decides how many times this achievement can be earned on your site. Setting it to 10, for example, will limit this achievement to only the first 10 users who achieve it.',
+                'tooltip'   => __( 'Number of times this achievement can be earned globally (set it to 0 for no maximum).', 'gamipress' )
+                . '<br>' . __( '<strong>Note:</strong> This limit decides how many times this achievement can be earned on your site. Setting it to 10, for example, will limit this achievement to only the first 10 users who achieve it.' , 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text_small',
                 'attributes' => array(
                     'type' => 'number'
@@ -105,7 +114,10 @@ function gamipress_achievements_meta_boxes( $post_type ) {
                 'default' => '0',
             ),
             $prefix . 'hidden' => array(
-                'name'    => __( 'Hidden?', 'gamipress' ),
+                'name'    => __( 'Hide', 'gamipress' ),
+                'tooltip'   => __( 'Hide this achievement at frontend.', 'gamipress' )
+                    . '<br>' . __( 'Check this option to hide this achievement on achievements listings.' , 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type'    => 'select',
                 'options' => array(
                     'show' 		=> __( 'Show to User', 'gamipress' ),
@@ -113,14 +125,16 @@ function gamipress_achievements_meta_boxes( $post_type ) {
                 ),
             ),
             $prefix . 'unlock_with_points' => array(
-                'name' => __( 'Allow unlock with points', 'gamipress' ),
-                'desc' => __( 'Check this option to allow users to unlock this achievement by expend an amount of points.', 'gamipress' ),
+                'name' => __( 'Unlock using points', 'gamipress' ),
+                'tooltip'   => __( 'Allow users to unlock this achievement by expending an amount of points.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch'
             ),
             $prefix . 'points_to_unlock' => array(
                 'name' => __( 'Points to Unlock', 'gamipress' ),
-                'desc' => __( 'Amount of points needed to optionally unlock this achievement by expending them.', 'gamipress' ),
+                'tooltip'   => __( 'Amount of points needed to optionally unlock this achievement by expending them.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'gamipress_points',
                 'points_type_key' => $prefix . 'points_type_to_unlock',
                 'default' => '0',
@@ -140,25 +154,29 @@ function gamipress_achievements_meta_boxes( $post_type ) {
         array(
             $prefix . 'show_times_earned' => array(
                 'name' => __( 'Show Times Earned', 'gamipress' ),
-                'desc' => __( 'Check this option to display the times the user has earned this achievement (only if the achievement can be earned more that 1 time).', 'gamipress' ),
+                'tooltip'   => __( 'Display the times the user has earned this achievement if it has been earned more than once.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch'
             ),
             $prefix . 'show_global_times_earned' => array(
                 'name' => __( 'Show Times Earned By All Users', 'gamipress' ),
-                'desc' => __( 'Check this option to display the times that all users have earned this achievement.', 'gamipress' ),
+                'tooltip'   => __( 'Display the number of times all users have earned this achievement.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch'
             ),
             $prefix . 'show_earners' => array(
                 'name' => __( 'Show Earners', 'gamipress' ),
-                'desc' => __( 'Check this option to display a list of users who have earned this achievement.', 'gamipress' ),
+                'tooltip'   => __( 'Display a list of users who have earned this achievement.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch'
             ),
             $prefix . 'maximum_earners' => array(
                 'name' => __( 'Maximum Earners', 'gamipress' ),
-                'desc' => __( 'Set the maximum number of earners to show (0 for no maximum).', 'gamipress' ),
+                'tooltip'   => __( 'Set the maximum number of earners to show (0 for no maximum).', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text',
                 'attributes' => array(
                     'type' => 'number',
@@ -167,22 +185,24 @@ function gamipress_achievements_meta_boxes( $post_type ) {
                 'default' => '0'
             ),
             $prefix . 'layout' => array(
-                'name'        => __( 'Layout', 'gamipress' ),
-                'description' => __( 'Layout to show the achievement.', 'gamipress' ),
-                'type' 		  => 'radio',
-                'options' 	  => gamipress_get_layout_options(),
-                'default' 	  => 'left',
-                'inline' 	  => true,
-                'classes' 	  => 'gamipress-image-options'
+                'name'          => __( 'Layout', 'gamipress' ),
+                'tooltip'       => __( 'Layout to show the achievement.', 'gamipress' ),
+                'label_cb'      => 'cmb_tooltip_label_cb',
+                'type' 		    => 'radio',
+                'options' 	    => gamipress_get_layout_options(),
+                'default' 	    => 'left',
+                'inline' 	    => true,
+                'classes' 	    => 'gamipress-image-options'
             ),
             $prefix . 'align' => array(
-                'name'        => __( 'Alignment', 'gamipress' ),
-                'description' => __( 'Alignment to show the achievement.', 'gamipress' ),
-                'type' 		  => 'radio',
-                'options' 	  => gamipress_get_alignment_options(),
-                'default' 	  => 'none',
-                'inline' 	  => true,
-                'classes' 	  => 'gamipress-image-options'
+                'name'          => __( 'Alignment', 'gamipress' ),
+                'tooltip'       => __( 'Alignment to show the achievement.', 'gamipress' ),
+                'label_cb'      => 'cmb_tooltip_label_cb',
+                'type' 		    => 'radio',
+                'options' 	    => gamipress_get_alignment_options(),
+                'default' 	    => 'none',
+                'inline' 	    => true,
+                'classes' 	    => 'gamipress-image-options'
             ),
         ),
         array( 'context'  => 'side', )

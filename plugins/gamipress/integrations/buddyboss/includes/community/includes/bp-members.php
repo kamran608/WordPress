@@ -276,10 +276,11 @@ function gamipress_bp_activity_content( $content ) {
     gamipress_bp_user_details_display( $user_id, 'activity' );
     $details = ob_get_clean();
 
-    return $details . $content;
+    echo '<div class="activity-content gamipress-buddyboss-gamipress-elements">' . $details . '</div>';
 
 }
-add_filter( 'bp_get_activity_content_body', 'gamipress_bp_activity_content' );
+
+add_action( 'bp_before_activity_activity_content', 'gamipress_bp_activity_content' );
 
 /**
  * Displays user information for activities with no content

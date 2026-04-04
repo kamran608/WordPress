@@ -25,7 +25,8 @@ function gamipress_register_logs_shortcode() {
         'fields'      => array(
             'type' => array(
                 'name'              => __( 'Log Type(s)', 'gamipress' ),
-                'description'       => __( 'Log type(s) to display.', 'gamipress' ),
+                'tooltip'           => __( 'Log type(s) to display.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
                 'shortcode_desc'    => __( 'Single or comma-separated list of log type(s) to display.', 'gamipress' ),
                 'type'              => 'advanced_select',
                 'multiple'          => true,
@@ -37,23 +38,26 @@ function gamipress_register_logs_shortcode() {
                 'default'           => 'all',
             ),
             'current_user' => array(
-                'name'        => __( 'Current User', 'gamipress' ),
-                'description' => __( 'Show logs of the current logged in user.', 'gamipress' ),
-                'type' 		  => 'checkbox',
-                'classes' 	  => 'gamipress-switch',
+                'name'      => __( 'Current User', 'gamipress' ),
+                'tooltip'   => __( 'Show logs of the current logged in user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
             ),
             'user_id' => array(
-                'name'        => __( 'User', 'gamipress' ),
-                'description' => __( 'Show logs by a specific user. Leave blank to show logs of all users.', 'gamipress' ),
-                'type'        => 'select',
-                'default'     => '',
+                'name'      => __( 'User', 'gamipress' ),
+                'tooltip'   => __( 'Show logs by a specific user. Leave blank to show logs of all users.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'default'   => '',
                 'options_cb'  => 'gamipress_options_cb_users'
             ),
             'access' => array(
-                'name'        => __( 'Log Access', 'gamipress' ),
-                'description' => __( 'Set the access type of logs to display. Some logs has a private access like event trigger logs.', 'gamipress' ),
-                'type'        => 'select',
-                'options'     => array(
+                'name'      => __( 'Log Access', 'gamipress' ),
+                'tooltip'   => __( 'Set the access type of logs to display. Some logs has a private access like event trigger logs.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'options'   => array(
                     'any'       => __( 'Any', 'gamipress' ),
                     'public'    => __( 'Public', 'gamipress' ),
                     'private'   => __( 'Private', 'gamipress' ),
@@ -61,23 +65,26 @@ function gamipress_register_logs_shortcode() {
                 'default'     => 'any',
             ),
             'limit' => array(
-                'name'        => __( 'Limit', 'gamipress' ),
-                'description' => __( 'Number of log entries to display.', 'gamipress' ),
-                'type'        => 'text',
-                'default'     => 10,
+                'name'      => __( 'Limit', 'gamipress' ),
+                'tooltip'   => __( 'Number of log entries to display.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
+                'default'   => 10,
             ),
             'pagination' => array(
-                'name'        => __( 'Enable Pagination', 'gamipress' ),
-                'description' => __( 'Show pagination links to navigate through all logs.', 'gamipress' ),
-                'type' 		  => 'checkbox',
-                'classes' 	  => 'gamipress-switch',
-                'default' 	  => 'yes',
+                'name'      => __( 'Enable Pagination', 'gamipress' ),
+                'tooltip'   => __( 'Show pagination links to navigate through all logs.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes',
             ),
             'orderby' => array(
-                'name'        => __( 'Order By', 'gamipress' ),
-                'description' => __( 'Parameter to use for sorting.', 'gamipress' ),
-                'type'        => 'select',
-                'options'      => array(
+                'name'      => __( 'Order By', 'gamipress' ),
+                'tooltip'   => __( 'Parameter to use for sorting.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'options'   => array(
                     'date'       => __( 'Date', 'gamipress' ),
                     'log_id'     => __( 'Log ID', 'gamipress' ),
                     'title'      => __( 'Log Title', 'gamipress' ),
@@ -87,21 +94,24 @@ function gamipress_register_logs_shortcode() {
                 'default_cb'     => 'gamipress_logs_order_by_default_cb', // Added this callback to avoid CMB2 warning about 'date' function
             ),
             'order' => array(
-                'name'        => __( 'Order', 'gamipress' ),
-                'description' => __( 'Sort order.', 'gamipress' ),
-                'type'        => 'select',
-                'options'      => array( 'DESC' => __( 'Descending', 'gamipress' ), 'ASC' => __( 'Ascending', 'gamipress' ) ),
-                'default'     => 'DESC',
+                'name'      => __( 'Order', 'gamipress' ),
+                'tooltip'   => __( 'Sort order.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'options'   => array( 'DESC' => __( 'Descending', 'gamipress' ), 'ASC' => __( 'Ascending', 'gamipress' ) ),
+                'default'   => 'DESC',
             ),
             'include' => array(
-                'name'              => __( 'Include', 'gamipress' ),
-                'description'       => __( 'Comma-separated list of specific log entries IDs to include.', 'gamipress' ),
-                'type'              => 'text',
+                'name'      => __( 'Include', 'gamipress' ),
+                'tooltip'   => __( 'Comma-separated list of specific log entries IDs to include.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
             ),
             'exclude' => array(
-                'name'              => __( 'Exclude', 'gamipress' ),
-                'description'       => __( 'Comma-separated list of specific log entries IDs to exclude.', 'gamipress' ),
-                'type'              => 'text',
+                'name'      => __( 'Exclude', 'gamipress' ),
+                'tooltip'   => __( 'Comma-separated list of specific log entries IDs to exclude.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
             ),
         ),
     ) );
@@ -183,6 +193,13 @@ function gamipress_logs_shortcode( $atts = array(), $content = '' ) {
             return '';
 
         $atts['user_id'] = get_current_user_id();
+
+    }
+
+    // Change the atribute to display only public logs if current user is different
+    if( in_array( $atts['access'], array( 'private', 'both' ) ) ) {
+        if ( get_current_user_id() !== absint( $atts['user_id'] ) )
+            $atts['access'] = 'public';
     }
 
     // GamiPress template args global

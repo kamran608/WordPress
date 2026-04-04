@@ -81,6 +81,9 @@ final class GamiPress_Integration_Elementor_Forms {
             require_once GAMIPRESS_ELEMENTOR_FORMS_DIR . 'includes/scripts.php';
             require_once GAMIPRESS_ELEMENTOR_FORMS_DIR . 'includes/triggers.php';
 
+            // Widgets
+            require_once GAMIPRESS_ELEMENTOR_FORMS_DIR . 'widgets/elementor-widgets.php';
+
         }
     }
 

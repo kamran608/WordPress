@@ -27,17 +27,21 @@ function gamipress_rank_type_meta_boxes() {
         array(
             'post_title' => array(
                 'name' 	=> __( 'Singular Name', 'gamipress' ),
-                'desc' 	=> __( 'The singular name for this rank type.', 'gamipress' ),
+                'tooltip'   => __( 'The singular name for this rank type.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' 	=> 'text_medium',
             ),
             $prefix . 'plural_name' => array(
                 'name' 	=> __( 'Plural Name', 'gamipress' ),
-                'desc' 	=> __( 'The plural name for this rank type.', 'gamipress' ),
+                'tooltip'   => __( 'The plural name for this rank type.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' 	=> 'text_medium',
             ),
             'post_name' => array(
                 'name' 	=> __( 'Slug', 'gamipress' ),
-                'desc' 	=> '<span class="gamipress-permalink hide-if-no-js">' . site_url() . '/<strong class="gamipress-post-name"></strong>/</span><br>' . __( 'Slug is used for internal references, as some shortcode attributes, to completely differentiate this rank type from any other (leave blank to automatically generate one).', 'gamipress' ),
+                'desc' 	=> '<span class="gamipress-permalink hide-if-no-js">' . site_url() . '/<strong class="gamipress-post-name"></strong>/</span><br>',
+                'tooltip'   => __( 'Slug is used for internal references, as some shortcode attributes, to completely differentiate this rank type from any other (leave blank to automatically generate one).', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' 	=> 'text_medium',
                 'attributes' => array(
                     'maxlength' => 20

@@ -181,6 +181,7 @@ return array(
     'Syde\\Vendor\\Dhii\\Versions\\StringVersionFactory' => $vendorDir . '/dhii/versions/src/StringVersionFactory.php',
     'Syde\\Vendor\\Dhii\\Versions\\Version' => $vendorDir . '/dhii/versions/src/Version.php',
     'Syde\\Vendor\\Inpsyde\\Assets\\Asset' => $vendorDir . '/inpsyde/assets/src/Asset.php',
+    'Syde\\Vendor\\Inpsyde\\Assets\\AssetCollection' => $vendorDir . '/inpsyde/assets/src/AssetCollection.php',
     'Syde\\Vendor\\Inpsyde\\Assets\\AssetFactory' => $vendorDir . '/inpsyde/assets/src/AssetFactory.php',
     'Syde\\Vendor\\Inpsyde\\Assets\\AssetManager' => $vendorDir . '/inpsyde/assets/src/AssetManager.php',
     'Syde\\Vendor\\Inpsyde\\Assets\\BaseAsset' => $vendorDir . '/inpsyde/assets/src/BaseAsset.php',

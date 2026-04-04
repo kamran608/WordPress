@@ -9,6 +9,7 @@ use Syde\Vendor\Inpsyde\Assets\ConfigureAutodiscoverVersionTrait;
 use Syde\Vendor\Inpsyde\Assets\Exception\FileNotFoundException;
 use Syde\Vendor\Inpsyde\Assets\Exception\InvalidResourceException;
 use Syde\Vendor\Inpsyde\Assets\Script;
+use Syde\Vendor\Inpsyde\Assets\ScriptModule;
 use Syde\Vendor\Inpsyde\Assets\Style;
 abstract class AbstractWebpackLoader implements LoaderInterface
 {
@@ -86,16 +87,14 @@ abstract class AbstractWebpackLoader implements LoaderInterface
      */
     protected function buildAsset(string $handle, string $fileUrl, string $filePath): ?Asset
     {
-        $extensionsToClass = ['css' => Style::class, 'js' => Script::class];
         /** @var array{filename?:string, extension?:string} $pathInfo */
         $pathInfo = pathinfo($filePath);
         $filename = $pathInfo['filename'] ?? '';
-        $extension = $pathInfo['extension'] ?? '';
-        if (!in_array($extension, array_keys($extensionsToClass), \true)) {
+        $class = $this->resolveClassByExtension($filePath);
+        if (!$class) {
             return null;
         }
-        $class = $extensionsToClass[$extension];
-        /** @var Style|Script $asset */
+        /** @var Style|Script|ScriptModule $asset */
         $asset = new $class($handle, $fileUrl, $this->resolveLocation($filename));
         $asset->withFilePath($filePath);
         $asset->canEnqueue(\true);
@@ -103,6 +102,31 @@ abstract class AbstractWebpackLoader implements LoaderInterface
             $this->autodiscoverVersion ? $asset->enableAutodiscoverVersion() : $asset->disableAutodiscoverVersion();
         }
         return $asset;
+    }
+    protected function resolveClassByExtension(string $filePath): ?string
+    {
+        $extensionsToClass = ['css' => Style::class, 'js' => Script::class, 'mjs' => ScriptModule::class, 'module.js' => ScriptModule::class];
+        // TODO Maybe make use of \SplFileInfo since it's typed and we can share it
+        //      we have to just make a factory method and that's it.
+        /** @var array{filename?:string, extension?:string} $pathInfo */
+        $pathInfo = pathinfo($filePath);
+        $baseName = $pathInfo['basename'] ?? '';
+        $extension = $pathInfo['extension'] ?? '';
+        if (self::isModule($baseName)) {
+            $extension = 'module.js';
+        }
+        if (!in_array($extension, array_keys($extensionsToClass), \true)) {
+            return null;
+        }
+        return $extensionsToClass[$extension];
+    }
+    protected static function isModule(string $fileName): bool
+    {
+        // TODO replace it with `str_ends_with` once dropping support for php 7.4
+        $strEndsWith = static function (string $haystack, string $needle): bool {
+            return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+        };
+        return $strEndsWith($fileName, '.module.js') || $strEndsWith($fileName, '.mjs');
     }
     /**
      * The "file"-value can contain:
@@ -118,10 +142,34 @@ abstract class AbstractWebpackLoader implements LoaderInterface
      */
     protected function sanitizeFileName(string $file): string
     {
-        // Check, if the given "file"-value is an URL
+        // Check if the given "file"-value is a URL
         $parsedUrl = parse_url($file);
         // the "file"-value can contain "./file.css" or "/file.css".
         return ltrim($parsedUrl['path'] ?? $file, './');
+    }
+    /**
+     * Internal function to sanitize the handle based on the file
+     * by taking into consideration that @vendor can be present.
+     *
+     * @param string $file
+     *
+     * @return string
+     * @example /path/to/@vendor/script.module.js   -> @vendor/script.module
+     *
+     * @example /path/to/script.js                  -> script
+     * @example @vendor/script.module.js            -> @vendor/script.module
+     */
+    protected function normalizeHandle(string $file): string
+    {
+        $pathInfo = pathinfo($file);
+        $dirName = $pathInfo['dirname'] ?? '';
+        $parts = explode('@', $dirName);
+        $vendor = $parts[1] ?? null;
+        $handle = $pathInfo['filename'];
+        if ($vendor !== null) {
+            $handle = "@{$vendor}/{$handle}";
+        }
+        return $handle;
     }
     /**
      * Internal function to resolve a location for a given file name.

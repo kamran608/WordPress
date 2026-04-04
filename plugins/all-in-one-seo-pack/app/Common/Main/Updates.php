@@ -86,7 +86,7 @@ class Updates {
 		}
 
 		// The dynamic options have not yet fully loaded, so let's refresh here to force that to happen.
-		aioseo()->dynamicOptions->refresh(); // TODO: Check if we still need this since it already runs on 999 in the main AIOSEO file.
+		aioseo()->dynamicOptions->refresh();
 
 		if ( version_compare( $lastActiveVersion, '4.0.5', '<' ) ) {
 			$this->addImageScanDateColumn();
@@ -130,7 +130,7 @@ class Updates {
 		if ( version_compare( $lastActiveVersion, '4.1.5', '<' ) ) {
 			aioseo()->actionScheduler->unschedule( 'aioseo_cleanup_action_scheduler' );
 			// Schedule routine to remove our old transients from the options table.
-			aioseo()->actionScheduler->scheduleSingle( aioseo()->core->cachePrune->getOptionCacheCleanAction(), MINUTE_IN_SECONDS );
+			aioseo()->actionScheduler->scheduleSingle( aioseo()->core->cache->getOptionCacheCleanAction(), MINUTE_IN_SECONDS );
 
 			// Refresh with new Redirects capability.
 			$this->accessControlNewCapabilities();
@@ -274,6 +274,15 @@ class Updates {
 
 		if ( version_compare( $lastActiveVersion, '4.8.7', '<' ) ) {
 			$this->addColumnIndexForCornerstoneContent();
+		}
+
+		if ( version_compare( $lastActiveVersion, '4.9.1', '<' ) ) {
+			$this->addAiInsightsKeywordReportsTable();
+			aioseo()->access->addCapabilities();
+		}
+
+		if ( version_compare( $lastActiveVersion, '4.9.4', '<' ) ) {
+			$this->addSeoChecklistToDashboardWidgets();
 		}
 
 		do_action( 'aioseo_run_updates', $lastActiveVersion );
@@ -554,11 +563,12 @@ class Updates {
 		}
 
 		foreach ( $duplicates as $duplicate ) {
-			$postId        = $duplicate->post_id;
-			$firstRecordId = $duplicate->id;
+			$postId        = esc_sql( $duplicate->post_id );
+			$firstRecordId = esc_sql( $duplicate->id );
 
 			aioseo()->core->db->delete( 'aioseo_posts' )
-				->whereRaw( "( id > $firstRecordId AND post_id = $postId )" )
+				->where( 'id >', $firstRecordId )
+				->where( 'post_id', $postId )
 				->run();
 		}
 	}
@@ -1088,7 +1098,7 @@ class Updates {
 	public function migratePostSchema() {
 		$posts = aioseo()->core->db->start( 'aioseo_posts' )
 			->select( '*' )
-			->whereRaw( '`schema` IS NULL' )
+			->where( 'schema', null )
 			->limit( 40 )
 			->run()
 			->models( 'AIOSEO\\Plugin\\Common\\Models\\Post' );
@@ -1125,7 +1135,7 @@ class Updates {
 	 * @return void
 	 */
 	public function migratePostSchemaDefault() {
-		$migrationStartDate = aioseo()->core->cache->get( 'v4_migrate_post_schema_default_date' );
+		$migrationStartDate = esc_sql( aioseo()->core->cache->get( 'v4_migrate_post_schema_default_date' ) );
 		if ( ! $migrationStartDate ) {
 			return;
 		}
@@ -1133,7 +1143,7 @@ class Updates {
 		$posts = aioseo()->core->db->start( 'aioseo_posts' )
 			->select( '*' )
 			->where( 'schema_type =', 'default' )
-			->whereRaw( "updated < '$migrationStartDate'" )
+			->where( 'updated <', $migrationStartDate )
 			->limit( 40 )
 			->run()
 			->models( 'AIOSEO\\Plugin\\Common\\Models\\Post' );
@@ -1482,6 +1492,32 @@ class Updates {
 			$widgets[] = 'seoOverview';
 			$widgets[] = 'seoSetup';
 		}
+
+		aioseo()->options->advanced->dashboardWidgets = $widgets;
+	}
+
+	/**
+	 * Adds the seoChecklist widget to existing dashboardWidgets arrays.
+	 *
+	 * @since 4.9.4
+	 *
+	 * @return void
+	 */
+	private function addSeoChecklistToDashboardWidgets() {
+		$rawOptions = $this->getRawOptions();
+
+		if ( empty( $rawOptions ) || ! isset( $rawOptions['advanced']['dashboardWidgets'] ) || ! is_array( $rawOptions['advanced']['dashboardWidgets'] ) ) {
+			return;
+		}
+
+		$widgets = $rawOptions['advanced']['dashboardWidgets'];
+
+		// If seoChecklist is already in the array, don't add it again.
+		if ( in_array( 'seoChecklist', $widgets, true ) ) {
+			return;
+		}
+
+		$widgets[] = 'seoChecklist';
 
 		aioseo()->options->advanced->dashboardWidgets = $widgets;
 	}
@@ -2073,5 +2109,50 @@ class Updates {
 			"ALTER TABLE {$tableName}
 			ADD INDEX ndx_aioseo_posts_pillar_content (pillar_content)"
 		);
+	}
+
+	/**
+	 * Adds tables for AI Insights Keyword Reports.
+	 *
+	 * @since 4.9.1
+	 *
+	 * @return void
+	 */
+	private function addAiInsightsKeywordReportsTable() {
+		$db             = aioseo()->core->db->db;
+		$charsetCollate = '';
+
+		if ( ! empty( $db->charset ) ) {
+			$charsetCollate .= "DEFAULT CHARACTER SET {$db->charset}";
+		}
+		if ( ! empty( $db->collate ) ) {
+			$charsetCollate .= " COLLATE {$db->collate}";
+		}
+
+		// Check for keyword tracker reports table.
+		if ( ! aioseo()->core->db->tableExists( 'aioseo_ai_insights_keyword_reports' ) ) {
+			$tableName = $db->prefix . 'aioseo_ai_insights_keyword_reports';
+
+			aioseo()->core->db->execute(
+				"CREATE TABLE {$tableName} (
+					`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+					`uuid` varchar(40) NOT NULL,
+					`keyword` varchar(255) NOT NULL,
+					`status` varchar(20) NOT NULL DEFAULT 'pending',
+					`brands` longtext DEFAULT NULL,
+					`brands_mentioned` int(11) DEFAULT 0,
+					`results` longtext DEFAULT NULL,
+					`created` datetime NOT NULL,
+					`updated` datetime NOT NULL,
+					PRIMARY KEY (id),
+					KEY ndx_aioseo_ai_insights_keyword_reports_uuid (uuid),
+					KEY ndx_aioseo_ai_insights_keyword_reports_keyword (keyword),
+					KEY ndx_aioseo_ai_insights_keyword_reports_status (status)
+				) {$charsetCollate};"
+			);
+		}
+
+		// Reset the cache for the installed tables.
+		aioseo()->core->cache->delete( 'db_schema' );
 	}
 }

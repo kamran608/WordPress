@@ -50,6 +50,17 @@ function gamipress_presto_player_check_if_meets_requirements( $requirement_id, $
         $return = (bool) ( $percent >= $min_percent && $percent <= $max_percent );
     }
 
+    // Platform
+    if( $trigger === 'gamipress_presto_player_watch_video_platform' ) {
+
+        $platform_selected = $args[3];
+        
+        $platform = get_post_meta( $requirement_id, '_gamipress_presto_player_platform', true );
+        
+        // True if platform is selected
+        $return = (bool) ( $platform_selected === $platform );
+    }
+
     return $return;
 
 }

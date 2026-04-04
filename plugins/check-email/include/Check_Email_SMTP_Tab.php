@@ -114,10 +114,20 @@ class Check_Email_SMTP_Tab {
 
 		// (Re)create it, if it's gone missing.
 		if ( ! ( $phpmailer instanceof PHPMailer\PHPMailer\PHPMailer ) ) {
-			require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
-			require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
-			require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
-			$phpmailer = new PHPMailer\PHPMailer\PHPMailer( true );
+
+		    // For WP 6.0+ (PHPMailer as namespace)
+		    if ( file_exists( ABSPATH . WPINC . '/PHPMailer/PHPMailer.php' ) ) {
+		        require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
+		        require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
+		        require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+		        $phpmailer = new PHPMailer\PHPMailer\PHPMailer( true );
+
+		    // For WP 5.x (older PHPMailer class files)
+		    } elseif ( file_exists( ABSPATH . WPINC . '/class-phpmailer.php' ) ) {
+		        require_once ABSPATH . WPINC . '/class-phpmailer.php';
+		        require_once ABSPATH . WPINC . '/class-smtp.php';
+		        $phpmailer = new PHPMailer( true );
+		    }
 		}
 
 		// Set the timeout to 15 seconds, so if it doesn't connect to not let the user in standby.
@@ -414,6 +424,7 @@ class Check_Email_SMTP_Tab {
 			if ( isset( $_POST['check-email-smtp-options']) ) {
 				$smtp_password = "";
 				if ( isset($_POST['check-email-smtp-options']['smtp_password']) && !empty( $_POST['check-email-smtp-options']['smtp_password'] ) ) {
+					// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason this is the password, sanitization is not needed here
 					$smtp_password = wp_unslash($_POST['check-email-smtp-options']['smtp_password']);
 				}
 				$smtp_opt = array_map('sanitize_text_field', wp_unslash($_POST['check-email-smtp-options']));
@@ -438,6 +449,7 @@ class Check_Email_SMTP_Tab {
 				}
 				update_option('check-email-smtp-options', $smtp_opt);
 				delete_option( 'check_email_smtp_status' );
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 				do_action( 'check_mail_smtp_admin_update' );
 	
 				wp_safe_redirect(admin_url('admin.php?page=check-email-settings&tab=smtp'));

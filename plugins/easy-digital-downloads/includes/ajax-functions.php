@@ -220,16 +220,13 @@ function edd_ajax_add_to_cart() {
 		}
 
 		if ( isset( $options['price_id'] ) && isset( $post_data[ 'edd_download_quantity_' . $options['price_id'] ] ) ) {
-
 			$options['quantity'] = absint( $post_data[ 'edd_download_quantity_' . $options['price_id'] ] );
-
 		} else {
-
 			$options['quantity'] = isset( $post_data['edd_download_quantity'] ) ? absint( $post_data['edd_download_quantity'] ) : 1;
-
 		}
 
-		$key = edd_add_to_cart( $_POST['download_id'], $options );
+		$key      = edd_add_to_cart( $_POST['download_id'], $options );
+		$price_id = isset( $options['price_id'] ) ? $options['price_id'] : null;
 
 		$item = array(
 			'id'      => $_POST['download_id'],
@@ -245,6 +242,8 @@ function edd_ajax_add_to_cart() {
 		'total'         => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' ),
 		'cart_item'     => $items,
 		'cart_quantity' => html_entity_decode( edd_get_cart_quantity() ),
+		/* translators: %s is the product name */
+		'addedToCart'   => sprintf( __( '%s added to cart.', 'easy-digital-downloads' ), edd_get_download_name( $download_id, $price_id ) ),
 	);
 
 	if ( edd_use_taxes() ) {
@@ -540,6 +539,13 @@ function edd_ajax_recalculate_taxes() {
 		'total_raw'    => edd_get_cart_total(),
 	);
 
+	/**
+	 * Fires after cart taxes have been recalculated (e.g. when the customer changes country or state on checkout).
+	 *
+	 * @since 3.6.5
+	 */
+	do_action( 'edd_cart_tax_recalculated' );
+
 	echo json_encode( $response );
 
 	edd_die();
@@ -695,8 +701,10 @@ add_action( 'wp_ajax_edd_customer_search', 'edd_ajax_customer_search' );
  * @return void
  */
 function edd_ajax_download_category_search() {
-	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
-	$results = array();
+	$search     = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$value_type = isset( $_GET['value_type'] ) && 'id' === $_GET['value_type'] ? 'id' : 'slug';
+	$show_count = ! empty( $_GET['count'] );
+	$results    = array();
 
 	$category_args = array(
 		'taxonomy'   => array( 'download_category' ),
@@ -711,9 +719,13 @@ function edd_ajax_download_category_search() {
 
 	if ( ! empty( $categories_found ) ) {
 		foreach ( $categories_found as $category ) {
+			$name = $category->name;
+			if ( $show_count ) {
+				$name .= ' (' . $category->count . ')';
+			}
 			$results[] = array(
-				'id'   => $category->slug,
-				'name' => $category->name . ' (' . $category->count . ')',
+				'id'   => 'id' === $value_type ? $category->term_id : $category->slug,
+				'name' => $name,
 			);
 		}
 	} else {

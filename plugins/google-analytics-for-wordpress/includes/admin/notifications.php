@@ -243,6 +243,8 @@ class MonsterInsights_Notifications {
 
 		$option = $this->get_option();
 
+		$this->update();
+
 		// Update notifications using async task.
 		if ( empty( $option['update'] ) || time() > $option['update'] + DAY_IN_SECONDS ) {
 			if ( false === wp_next_scheduled( 'monsterinsights_admin_notifications_update' ) ) {

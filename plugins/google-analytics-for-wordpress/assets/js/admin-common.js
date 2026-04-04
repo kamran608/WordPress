@@ -48,11 +48,25 @@ jQuery(document).ready(function ($) {
     );
   });
 
-  $('div.wp-menu-name > .monsterinsights-menu-notification-indicator').click(function (event) {
+  $('div.wp-menu-name > .monsterinsights-menu-notification-indicator').on('click', function (event) {
     event.preventDefault();
     event.stopPropagation();
 
     location.href = monsterinsights.reports_url + '&open=monsterinsights_notification_sidebar';
+  });
+
+  // Persist dismissal of Ads addon installed notice for 30 days
+  $('#monsterinsights-ads-addon-notice').on('click', 'button.notice-dismiss', function (e) {
+    e.preventDefault();
+    $.post(
+      monsterinsights_admin_common.ajax,
+      {
+        action: 'monsterinsights_dismiss_ads_addon_notice',
+        nonce: monsterinsights_admin_common.dismiss_notice_nonce
+      },
+      function () {},
+      'json'
+    );
   });
 });
 

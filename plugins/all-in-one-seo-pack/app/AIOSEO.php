@@ -135,7 +135,7 @@ namespace AIOSEO\Plugin {
 
 			foreach ( $constants as $constant => $value ) {
 				if ( ! defined( $constant ) ) {
-					define( $constant, $value );
+					define( $constant, $value ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound
 				}
 			}
 
@@ -265,11 +265,13 @@ namespace AIOSEO\Plugin {
 			$this->options            = $this->pro ? new Pro\Options\Options() : new Lite\Options\Options();
 			$this->networkOptions     = ( $this->pro && $this->helpers->isPluginNetworkActivated() ) ? new Pro\Options\NetworkOptions() : new Common\Options\NetworkOptions();
 			$this->dynamicOptions     = $this->pro ? new Pro\Options\DynamicOptions() : new Common\Options\DynamicOptions();
+			$this->settings           = new Common\Utils\VueSettings( '_aioseo_settings' );
 			$this->backup             = new Common\Utils\Backup();
 			$this->access             = $this->pro ? new Pro\Utils\Access() : new Common\Utils\Access();
 			$this->usage              = $this->pro ? new Pro\Admin\Usage() : new Lite\Admin\Usage();
 			$this->siteHealth         = $this->pro ? new Pro\Admin\SiteHealth() : new Common\Admin\SiteHealth();
 			$this->networkLicense     = $this->pro && $this->helpers->isPluginNetworkActivated() ? new Pro\Admin\NetworkLicense() : null;
+			$this->seoChecklist       = $this->pro ? new Pro\SeoChecklist\SeoChecklist() : new Common\SeoChecklist\SeoChecklist();
 			$this->license            = $this->pro ? new Pro\Admin\License() : null;
 			$this->autoUpdates        = $this->pro ? new Pro\Admin\AutoUpdates() : null;
 			$this->updates            = $this->pro ? new Pro\Main\Updates() : new Common\Main\Updates();
@@ -291,7 +293,7 @@ namespace AIOSEO\Plugin {
 			$this->templates          = $this->pro ? new Pro\Utils\Templates() : new Common\Utils\Templates();
 			$this->categoryBase       = new Common\Main\CategoryBase();
 			$this->postSettings       = $this->pro ? new Pro\Admin\PostSettings() : new Lite\Admin\PostSettings();
-			$this->standalone         = new Common\Standalone\Standalone();
+			$this->standalone         = $this->pro ? new Pro\Standalone\Standalone() : new Common\Standalone\Standalone();
 			$this->searchStatistics   = $this->pro ? new Pro\SearchStatistics\SearchStatistics() : new Common\SearchStatistics\SearchStatistics();
 			$this->slugMonitor        = new Common\Admin\SlugMonitor();
 			$this->schema             = $this->pro ? new Pro\Schema\Schema() : new Common\Schema\Schema();
@@ -306,6 +308,7 @@ namespace AIOSEO\Plugin {
 			$this->thirdParty         = new Common\ThirdParty\ThirdParty();
 			$this->writingAssistant   = new Common\WritingAssistant\WritingAssistant();
 			$this->llms               = $this->pro ? new Pro\Llms\Llms() : new Common\Llms\Llms();
+			$this->redirects          = $this->pro ? new Pro\Redirects\Redirects() : null;
 
 			if ( ! wp_doing_ajax() && ! wp_doing_cron() ) {
 				$this->rss       = new Common\Rss();
@@ -320,7 +323,7 @@ namespace AIOSEO\Plugin {
 		}
 
 		/**
-		 * Things that need to load after init.
+		 * Things that need to load on init.
 		 *
 		 * @since 4.0.0
 		 *
@@ -328,9 +331,10 @@ namespace AIOSEO\Plugin {
 		 */
 		public function loadInit() {
 			$this->settings = new Common\Utils\VueSettings( '_aioseo_settings' );
+
 			$this->sitemap->init();
 
-			// We call this again to reset any post types/taxonomies that have not yet been set up.
+			// We call this again to reset reload post types/taxonomies that had not yet been set up.
 			$this->dynamicOptions->refresh();
 		}
 

@@ -49,9 +49,8 @@ class Semrush {
 	 */
 	public static function authenticate( $authorizationCode ) {
 		$time     = time();
-		$response = wp_remote_post( self::$url, [
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body'    => wp_json_encode( [
+		$response = aioseo()->helpers->wpRemotePostExternal( self::$url, [
+			'body' => wp_json_encode( [
 				'client_id'     => self::$clientId,
 				'client_secret' => self::$clientSecret,
 				'grant_type'    => 'authorization_code',
@@ -86,9 +85,8 @@ class Semrush {
 		}
 
 		$time     = time();
-		$response = wp_remote_post( self::$url, [
-			'headers' => [ 'Content-Type' => 'application/json' ],
-			'body'    => wp_json_encode( [
+		$response = aioseo()->helpers->wpRemotePostExternal( self::$url, [
+			'body' => wp_json_encode( [
 				'client_id'     => self::$clientId,
 				'client_secret' => self::$clientSecret,
 				'grant_type'    => 'refresh_token',
@@ -184,13 +182,16 @@ class Semrush {
 	 *
 	 * @param  string      $keyphrase A primary keyphrase.
 	 * @param  string      $database  A country database.
-	 * @return object|bool            The response object or false if the tokens could not be refreshed.
+	 * @return object|array|bool      The response object or false if the tokens could not be refreshed.
 	 */
 	public static function getKeyphrases( $keyphrase, $database ) {
 		if ( self::hasExpired() ) {
 			$success = self::refreshTokens();
 			if ( ! $success ) {
-				return false;
+				return [
+					'success' => false,
+					'message' => 'Could not connect to Semrush.'
+				];
 			}
 		}
 
@@ -219,11 +220,8 @@ class Semrush {
 
 		$url = 'https://oauth.semrush.com/api/v1/keywords/phrase_fullsearch?' . http_build_query( $params );
 
-		$response = wp_remote_get( $url, [
-			'timeout' => 30,
-			'headers' => [
-				'User-Agent' => 'AIOSEO/' . AIOSEO_VERSION
-			]
+		$response = aioseo()->helpers->wpRemoteGetExternal( $url, [
+			'timeout' => 30
 		] );
 
 		if ( is_wp_error( $response ) ) {
@@ -235,7 +233,7 @@ class Semrush {
 			return false;
 		}
 
-		$body = json_decode( wp_remote_retrieve_body( $response ) );
+		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		aioseo()->core->cache->update( $transientKey, $body );
 

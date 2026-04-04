@@ -138,6 +138,11 @@ class MonsterInsights_EEA_Compliance {
 			return true;
 		}
 
+		// WPConsent.
+		if ( function_exists( 'WPConsent' ) ) {
+			return true;
+		}
+
 		return false;
 	}
 

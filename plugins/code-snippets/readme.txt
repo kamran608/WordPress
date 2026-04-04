@@ -4,8 +4,8 @@ Donate link: https://codesnippets.pro
 Tags: code, snippets, multisite, php, css
 License: GPL-2.0-or-later
 License URI: license.txt
-Stable tag: 3.8.1
-Tested up to: 6.8.2
+Stable tag: 3.9.5
+Tested up to: 6.9
 
 An easy, clean and simple way to enhance your site with code snippets.
 
@@ -63,10 +63,10 @@ Network Activating Code Snippets through the Network Dashboard will enable a spe
 
 == Frequently Asked Questions ==
 
-A full list of our Frequently Asked Questions can be found at [help.codesnippets.pro](https://help.codesnippets.pro/collection/3-faq).
+A full list of our Frequently Asked Questions can be found at [codesnippets.pro](https://codesnippets.pro/docs/faq/).
 
 = How can I recover my site if it is crashed by a buggy snippet? =
-You can recover your site by enabling the Code Snippets safe mode feature. Instructions for how to turn it on are available here: <https://help.codesnippets.pro/article/12-safe-mode>.
+You can recover your site by enabling the Code Snippets safe mode feature. Instructions for how to turn it on are available here: <https://codesnippets.pro/doc/safe-mode/>.
 
 = Will I lose my snippets if I change the theme or upgrade WordPress? =
 No, the snippets are stored in the WordPress database, independent of the theme and unaffected by WordPress upgrades.
@@ -104,8 +104,109 @@ You can report security bugs found in the source code of this plugin through the
 
 == Changelog ==
 
+= 3.9.5 (2026-02-05) =
+
+__Added__
+
+* Confirmed WordPress 6.9 compatability
+
+__Changed__
+
+* Improved nonce handling for cloud snippet download and update actions to for enhanced security
+
+= 3.9.4 (2026-01-14) =
+
+__Added__
+
+* New import functionality to migrate snippets from file uploads with drag-and-drop interface
+* Support for importing snippets from other popular plugins (Header Footer Code Manager, Insert Headers and Footers, Insert PHP Code Snippet)
+* Enhanced file based execution support with improved multisite mode compatibility
+
+__Changed__
+
+* Updated links to more recent documentation pages 
+
+__Fixed__
+
+* Fixed multisite capability checks in Plugin class
+* Fixed snippet execution logic for multisite support by centralizing trashed snippet handling
+* Fixed multisite snippet handling to ensure local snippets use correct table and filter out trashed snippets
+
+= 3.9.3 (2025-12-03) =
+
+__Added__
+
+* Enhanced end-to-end tests to verify the toggle visual state in the snippets list page, improving UI verification and test reliability
+
+__Fixed__
+
+* Fix missing import of common/direction in src/css/manage.scss to restore correct styling and direction-aware layout
+* Fix toggle activation check to ensure the correct transformation value is used when detecting active/inactive state
+
+= 3.9.2 (2025-11-17) =
+
+__Changed__
+
+* Introduced a custom scissors icon and updated button title for the TinyMCE extension.
+* Improved back-navigation styling on the edit page.
+* Refined layout for column names and action buttons in the Cloud Snippets list.
+* Enhanced overall styling of cloud-related UI components.
+* Optimized cloud search with more efficient pagination and snippet retrieval.
+* Introduced groundwork to prevent Composer dependency collisions with other plugins.
+
+__Fixed__
+
+* Improved sanitization and normalization across Cloud API and pagination outputs.
+* Resolved various TinyMCE issues reported in the WordPress support forum.
+
+= 3.9.1 (2025-11-14) =
+
+__Changed__
+
+* Migrated to native CSS direction handling (RTL/LTR) for improved compatibility and simpler styling
+* Updated dependencies to the latest compatible versions
+
+__Fixed__
+
+* Fixed TinyMCE menu button registration to prevent initialization failure
+* Fixed the position of the 'code direction' control in the editor
+
+= 3.9.0 (2025-11-13) =
+
+__Added__
+
+* Added contextual notices in the Snippets list table to surface action results and warnings in the UI
+* Expanded Multisite Sharing settings for clearer control over network-wide snippet sharing
+
+__Changed__
+
+* Modernized browser support targets and polished admin UI (clearer row-action badges, improved Pro badge hover, refined active snippet name styling)
+
+__Fixed__
+
+* Fixed REST API pagination to return correct results and page counts
+* Resolved styling selector so the active snippet name highlights reliably
+
+= 3.8.2 (2025-10-31) =
+
+__Fixed__
+
+* Improved namespaced PHP snippet handling with file based execution.
 
 = 3.8.1 (2025-10-28) =
+
+__Added__
+
+* Code line explanation widget with apply and remove actions for AI-generated comments. (PRO)
+
+__Changed__
+
+* Improved pagination handling and display structure for cloud search results. (PRO)
+* Enhanced styling for codevault rows and inactive tabs in cloud interface. (PRO)
+
+__Removed__
+
+* Removed `guzzlehttp/guzzle` dependency to reduce package conflicts. (PRO)
 
 __Fixed__
 

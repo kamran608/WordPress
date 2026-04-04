@@ -29,7 +29,7 @@ if( ! function_exists( 'cmb2_render_size_field_type' ) ) :
         <div class="cmb-inline">
             <ul>
                 <li>
-                    <label for="<?php echo $field_type->_id( '_width' ); ?>"><?php _e( 'Max Width' ); ?></label>
+                    <label for="<?php echo $field_type->_id( '_width' ); ?>"><?php _e( 'Width:', 'gamipress' ); ?> </label>
                     <?php echo $field_type->input( array(
                         'name'  => $field_type->_name( '[width]' ),
                         'id'    => $field_type->_id( '_width' ),
@@ -42,7 +42,7 @@ if( ! function_exists( 'cmb2_render_size_field_type' ) ) :
                     ) ); ?>
                 </li>
                 <li>
-                    <label for="<?php echo $field_type->_id( '_height' ); ?>"><?php _e( 'Max Height' ); ?></label>
+                    <label for="<?php echo $field_type->_id( '_height' ); ?>"><?php _e( 'Height:', 'gamipress' ); ?> </label>
                     <?php echo $field_type->input( array(
                         'name'  => $field_type->_name( '[height]' ),
                         'id'    => $field_type->_id( '_height' ),

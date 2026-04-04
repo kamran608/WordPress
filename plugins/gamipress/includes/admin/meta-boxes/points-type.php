@@ -30,17 +30,21 @@ function gamipress_points_type_meta_boxes() {
         array(
             'post_title' => array(
                 'name' 	=> __( 'Singular Name', 'gamipress' ),
-                'desc' 	=> __( 'The singular name for this points type.', 'gamipress' ),
+                'tooltip'   => __( 'The singular name for this points type.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' 	=> 'text_medium',
             ),
             $prefix . 'plural_name' => array(
                 'name' 	=> __( 'Plural Name', 'gamipress' ),
-                'desc' 	=> __( 'The plural name for this points type.', 'gamipress' ),
+                'tooltip'   => __( 'The plural name for this points type.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' 	=> 'text_medium',
             ),
             'post_name' => array(
                 'name' 	=> __( 'Slug', 'gamipress' ),
-                'desc' 	=>  (( $public_points_type ) ? '<span class="gamipress-permalink hide-if-no-js">' . site_url() . '/<strong class="gamipress-post-name"></strong>/</span><br>' : '' ) . __( 'Slug is used for internal references, as some shortcode attributes, to completely differentiate this points type from any other (leave blank to automatically generate one).', 'gamipress' ),
+                'desc' 	=>  (( $public_points_type ) ? '<span class="gamipress-permalink hide-if-no-js">' . site_url() . '/<strong class="gamipress-post-name"></strong>/</span><br>' : '' ),
+                'tooltip'   => __( 'Slug is used for internal references, as some shortcode attributes, to completely differentiate this points type from any other (leave blank to automatically generate one).', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' 	=> 'text_medium',
                 'attributes' => array(
                     'maxlength' => 20
@@ -58,14 +62,16 @@ function gamipress_points_type_meta_boxes() {
         array(
             $prefix . 'label_position' => array(
                 'name' => __( 'Label position', 'gamipress' ),
-                'desc' => __( 'Location of the points type label.', 'gamipress' ),
+                'tooltip'   => __( 'Location of the points type label.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options_cb' => 'gamipress_options_cb_points_label_position',
                 'default' => 'after'
             ),
             $prefix . 'thousands_separator' => array(
                 'name' => __( 'Thousands separator', 'gamipress' ),
-                'desc' => __( 'The symbol (usually , or .) to separate thousands.', 'gamipress' ),
+                'tooltip'   => __( 'The symbol (usually , or .) to separate thousands.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text_small',
                 'default' => ''
             ),

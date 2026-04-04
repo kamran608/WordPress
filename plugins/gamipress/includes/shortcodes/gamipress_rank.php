@@ -37,76 +37,86 @@ function gamipress_register_rank_shortcode() {
 				'options_cb'        => 'gamipress_options_cb_posts'
 			),
 			'title' => array(
-				'name'        => __( 'Show Title', 'gamipress' ),
-				'description' => __( 'Display the rank title.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Title', 'gamipress' ),
+                'tooltip'   => __( 'Display the rank title.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'title_size' => array(
-                'name'              => __( 'Title Size', 'gamipress' ),
-                'description'       => __( 'The rank title size.', 'gamipress' ),
-                'type' 		        => 'select',
-                'classes' 		    => 'gamipress-font-size',
-                'options' 	        => gamipress_title_size_options(),
-                'default'           => 'h2'
+                'name'      => __( 'Title Size', 'gamipress' ),
+                'tooltip'   => __( 'The rank title size.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'classes'   => 'gamipress-font-size',
+                'options'   => gamipress_title_size_options(),
+                'default'   => 'h2'
             ),
 			'link' => array(
-				'name'        => __( 'Show Link', 'gamipress' ),
-				'description' => __( 'Add a link on rank title to the rank page.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Link', 'gamipress' ),
+                'tooltip'   => __( 'Add a link on rank title to the rank page.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'  	=> 'checkbox',
+				'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
 			'thumbnail' => array(
-				'name'        => __( 'Show Thumbnail', 'gamipress' ),
-				'description' => __( 'Display the rank featured image.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Thumbnail', 'gamipress' ),
+                'tooltip'   => __( 'Display the rank featured image.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'thumbnail_size' => array(
-                'name'        => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
-                'description' => __( 'The rank featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
-                'type' 	=> 'text',
+                'name'      => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
+                'tooltip'   => __( 'The rank featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'text',
                 'attributes' => array(
                     'type' => 'number',
                 )
             ),
 			'excerpt' => array(
-				'name'        => __( 'Show Excerpt', 'gamipress' ),
-				'description' => __( 'Display the rank short description.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Excerpt', 'gamipress' ),
+                'tooltip'   => __( 'Display the rank short description.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
 			'requirements' => array(
-				'name'        => __( 'Show Requirements', 'gamipress' ),
-				'description' => __( 'Display the rank requirements.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Requirements', 'gamipress' ),
+                'tooltip'   => __( 'Display the rank requirements.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
 			'toggle' => array(
-				'name'        => __( 'Show Requirements Toggle', 'gamipress' ),
-				'description' => __( 'Display the rank requirements toggle.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Requirements Toggle', 'gamipress' ),
+                'tooltip'   => __( 'Display the rank requirements toggle.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'heading' => array(
-                'name'        => __( 'Show Requirements Heading', 'gamipress' ),
-                'description' => __( 'Display the rank requirements heading text.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes'
+                'name'      => __( 'Show Requirements Heading', 'gamipress' ),
+                'tooltip'   => __( 'Display the rank requirements heading text.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'  	=> 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'heading_size' => array(
-                'name'              => __( 'Requirements Heading Size', 'gamipress' ),
-                'description'       => __( 'The rank requirements heading text size.', 'gamipress' ),
-                'type' 		        => 'select',
-                'classes' 		    => 'gamipress-font-size',
-                'options' 	        => array(
+                'name'      => __( 'Requirements Heading Size', 'gamipress' ),
+                'tooltip'   => __( 'The rank requirements heading text size.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'classes'   => 'gamipress-font-size',
+                'options'   => array(
                     'h1'    => __( 'Heading 1', 'gamipress' ),
                     'h2'    => __( 'Heading 2', 'gamipress' ),
                     'h3'    => __( 'Heading 3', 'gamipress' ),
@@ -118,21 +128,24 @@ function gamipress_register_rank_shortcode() {
                 'default'           => 'h4'
             ),
 			'unlock_button' => array(
-				'name'        => __( 'Show Unlock Button', 'gamipress' ),
-				'description' => __( 'Display the "Unlock using points" (on ranks where unlock with points is allowed).', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch'
+				'name'      => __( 'Show Unlock Button', 'gamipress' ),
+                'tooltip'   => __( 'Display the "Unlock using points" (on ranks where unlock with points is allowed).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch'
 			),
 			'earners' => array(
-				'name'        => __( 'Show Earners', 'gamipress' ),
-				'description' => __( 'Display a list of users that actually are in this rank.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch'
+				'name'      => __( 'Show Earners', 'gamipress' ),
+                'tooltip'   => __( 'Display a list of users that actually are in this rank.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch'
 			),
             'earners_limit' => array(
-                'name'        => __( 'Maximum Earners', 'gamipress' ),
-                'description' => __( 'Set the maximum number of earners to show (0 for no maximum).', 'gamipress' ),
-                'type' => 'text',
+                'name'      => __( 'Maximum Earners', 'gamipress' ),
+                'tooltip'   => __( 'Set the maximum number of earners to show (0 for no maximum).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
                 'attributes' => array(
                     'type' => 'number',
                     'step' => '1',
@@ -141,7 +154,8 @@ function gamipress_register_rank_shortcode() {
             ),
 			'layout' => array(
 				'name'        => __( 'Layout', 'gamipress' ),
-				'description' => __( 'Layout to show the rank.', 'gamipress' ),
+                'tooltip'   => __( 'Layout to show the rank.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
 				'type' 		  => 'radio',
 				'options' => gamipress_get_layout_options(),
 				'default' 	  => 'left',
@@ -149,13 +163,14 @@ function gamipress_register_rank_shortcode() {
 				'classes' 	  => 'gamipress-image-options'
 			),
             'align' => array(
-                'name'        => __( 'Alignment', 'gamipress' ),
-                'description' => __( 'Alignment to show the rank.', 'gamipress' ),
-                'type' 		  => 'radio',
-                'options' 	  => gamipress_get_alignment_options(),
-                'default' 	  => 'none',
-                'inline' 	  => true,
-                'classes' 	  => 'gamipress-image-options'
+                'name'      => __( 'Alignment', 'gamipress' ),
+                'tooltip'   => __( 'Alignment to show the rank.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'radio',
+                'options'   => gamipress_get_alignment_options(),
+                'default'   => 'none',
+                'inline'    => true,
+                'classes'   => 'gamipress-image-options'
             ),
 		),
 	) );
@@ -202,6 +217,10 @@ function gamipress_rank_shortcode( $atts = array(), $content = '' ) {
     // Check if we're dealing with a rank post
     if ( ! $is_rank )
         return gamipress_shortcode_error( __( 'The id provided doesn\'t belong to a valid rank.', 'gamipress' ), $shortcode );
+
+    // Prevent infinite loop
+    if ( absint( $atts['id'] ) === absint( get_the_ID() ) )
+        return gamipress_shortcode_error( __( 'Please, provide a different rank ID.', 'gamipress' ), $shortcode );
 
     // ---------------------------
     // Shortcode Processing

@@ -8,6 +8,7 @@
         var percent_input = $(this).siblings('.presto-player-percent');
         var min_percent_input = $(this).siblings('.presto-player-min-percent');
         var max_percent_input = $(this).siblings('.presto-player-max-percent');
+        var platform_input = $(this).siblings('.presto-player-platform');
 
         if( trigger_type === 'gamipress_presto_player_watch_video_min_percent'
             || trigger_type === 'gamipress_presto_player_watch_specific_video_min_percent' ) {
@@ -23,6 +24,12 @@
         } else {
             min_percent_input.hide();
             max_percent_input.hide();
+        }
+
+        if( trigger_type === 'gamipress_presto_player_watch_video_platform' ) {
+            platform_input.show();
+        } else {
+            platform_input.hide();
         }
 
     });
@@ -35,6 +42,7 @@
         var percent_input = $(this).find('.presto-player-percent');
         var min_percent_input = $(this).find('.presto-player-min-percent');
         var max_percent_input = $(this).find('.presto-player-max-percent');
+        var platform_input = $(this).find('.presto-player-platform');
 
         if( trigger_type === 'gamipress_presto_player_watch_video_min_percent'
             || trigger_type === 'gamipress_presto_player_watch_specific_video_min_percent' ) {
@@ -50,6 +58,12 @@
         } else {
             min_percent_input.hide();
             max_percent_input.hide();
+        }
+
+        if( trigger_type === 'gamipress_presto_player_watch_video_platform' ) {
+            platform_input.show();
+        } else {
+            platform_input.hide();
         }
 
     });
@@ -65,6 +79,10 @@
             || requirement_details.trigger_type === 'gamipress_presto_player_watch_specific_video_between_percent' ) {
             requirement_details.presto_player_min_percent = requirement.find( '.presto-player-min-percent input' ).val();
             requirement_details.presto_player_max_percent = requirement.find( '.presto-player-max-percent input' ).val();
+        }
+
+        if( requirement_details.trigger_type === 'gamipress_presto_player_watch_video_platform' ) {
+            requirement_details.presto_player_platform = requirement.find( '.presto-player-platform select' ).val();
         }
 
     });

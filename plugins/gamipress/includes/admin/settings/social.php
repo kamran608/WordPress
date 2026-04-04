@@ -24,8 +24,9 @@ function gamipress_settings_social_meta_boxes( $meta_boxes ) {
         'title' => gamipress_dashicon( 'share' ) . __( 'Social Settings', 'gamipress' ),
         'fields' => apply_filters( 'gamipress_social_settings_fields', array(
             'enable_share' => array(
-                'name' => __( 'Enable social sharing', 'gamipress' ),
-                'desc' => __( 'Check this option to allow users share the achievements and ranks they have earned.', 'gamipress' ),
+                'name' => __( 'Enable Social Sharing', 'gamipress' ),
+                'tooltip'   => __( 'Allow users share the achievements and ranks they have earned.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch',
             ),
@@ -53,7 +54,7 @@ function gamipress_settings_social_meta_boxes( $meta_boxes ) {
                 'default' => array( 'facebook', 'twitter', 'linkedin', 'pinterest' )
             ),
             'social_button_style' => array(
-                'name' => __( 'Button style', 'gamipress' ),
+                'name' => __( 'Buttons Style', 'gamipress' ),
                 'type' => 'radio_inline',
                 'options' => array(
                     'square'   =>  __( 'Square', 'gamipress' ),
@@ -63,26 +64,29 @@ function gamipress_settings_social_meta_boxes( $meta_boxes ) {
                 'default' => 'square',
             ),
             'twitter_achievement_text' => array(
-                'name' => __( 'Twitter achievement text', 'gamipress' ),
-                'desc' => __( 'Default text when sharing an earned achievement on Twitter. Maximum 280 characters (leave at least 24 characters empty for the achievement URL).', 'gamipress' )
-                    . '<br>' . __( 'Available tags:', 'gamipress' ) . gamipress_get_pattern_tags_html( 'achievement_earned' ),
+                'name' => __( 'Twitter Achievement Text', 'gamipress' ),
+                'tooltip'   => __( 'Default text when sharing an earned achievement on Twitter. Maximum 280 characters (leave at least 24 characters empty for the achievement URL).', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
+                'desc' => __( 'Available tags:', 'gamipress' ) . gamipress_get_pattern_tags_html( 'achievement_earned' ),
                 'type' => 'textarea_small',
                 'char_counter' => true,
                 'char_max' => 280,
                 'default' => __( 'I earned the {achievement_type} {achievement_title} on {site_title}', 'gamipress' ),
             ),
             'twitter_rank_text' => array(
-                'name' => __( 'Twitter rank text', 'gamipress' ),
-                'desc' => __( 'Default text when sharing an earned rank on Twitter. Maximum 280 characters (leave at least 24 characters empty for the rank URL).', 'gamipress' )
-                    . '<br>' . __( 'Available tags:', 'gamipress' ) . gamipress_get_pattern_tags_html( 'rank_earned' ),
+                'name' => __( 'Twitter Rank Text', 'gamipress' ),
+                'tooltip'   => __( 'Default text when sharing an earned rank on Twitter. Maximum 280 characters (leave at least 24 characters empty for the rank URL).', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
+                'desc' => __( 'Available tags:', 'gamipress' ) . gamipress_get_pattern_tags_html( 'rank_earned' ),
                 'type' => 'textarea_small',
                 'char_counter' => true,
                 'char_max' => 280,
                 'default' => __( 'I reached the {rank_type} {rank_title} on {site_title}', 'gamipress' ),
             ),
             'enable_open_graph_tags' => array(
-                'name' => __( 'Open Graph meta tags', 'gamipress' ),
-                'desc' => __( 'Open Graph meta tags are human-invisible information required to format the look of your website URLs when shared on social networks. There are plugins that already place them like Yoast SEO, if you don\'t have one, check this option to let GamiPress insert those tags on the achievements and ranks pages.', 'gamipress' ),
+                'name' => __( 'Open Graph Tags', 'gamipress' ),
+                'tooltip'   => __( 'Open Graph meta tags are human-invisible information required to format the look of your website URLs when shared on social networks. There are plugins that already place them like Yoast SEO, if you don\'t have one, check this option to let GamiPress insert those tags on the achievements and ranks pages.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch',
             ),

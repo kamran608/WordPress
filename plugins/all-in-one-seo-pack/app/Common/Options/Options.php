@@ -63,16 +63,14 @@ class Options {
 			'before' => [ 'type' => 'html' ],
 			'after'  => [
 				'type'    => 'html',
-				'default' => <<<TEMPLATE
-&lt;p&gt;The post #post_link first appeared on #site_link.&lt;/p&gt;
-TEMPLATE
+				'default' => '&lt;p&gt;The post #post_link first appeared on #site_link.&lt;/p&gt;'
 			]
 		],
 		'advanced'         => [
 			'truSeo'           => [ 'type' => 'boolean', 'default' => true ],
 			'headlineAnalyzer' => [ 'type' => 'boolean', 'default' => true ],
 			'seoAnalysis'      => [ 'type' => 'boolean', 'default' => true ],
-			'dashboardWidgets' => [ 'type' => 'array', 'default' => [ 'seoSetup', 'seoOverview', 'seoNews' ] ],
+			'dashboardWidgets' => [ 'type' => 'array', 'default' => [ 'seoSetup', 'seoChecklist', 'seoOverview', 'seoNews' ] ],
 			'announcements'    => [ 'type' => 'boolean', 'default' => true ],
 			'postTypes'        => [
 				'all'      => [ 'type' => 'boolean', 'default' => true ],
@@ -173,8 +171,8 @@ TEMPLATE
 				]
 			],
 			'llms'    => [
-				'enable'           => [ 'type' => 'boolean', 'default' => true ],
-				'convertToMd'      => [ 'type' => 'boolean', 'default' => true ],
+				'enable'           => [ 'type' => 'boolean', 'default' => false ],
+				'convertToMd'      => [ 'type' => 'boolean', 'default' => false ],
 				'advancedSettings' => [
 					'title'           => [ 'type' => 'string', 'localized' => true, 'default' => '#site_title' ],
 					'description'     => [ 'type' => 'string', 'localized' => true, 'default' => '#tagline' ],

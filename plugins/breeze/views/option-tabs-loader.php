@@ -1,8 +1,10 @@
 <?php
-
 /**
  * Handles the ajax load for tabs.
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 class Breeze_Tab_Loader {
 
 	function __construct() {
@@ -21,6 +23,7 @@ class Breeze_Tab_Loader {
 			'faq',
 			'varnish',
 			'heartbeat',
+			'one-click-optimization',
 		);
 
 		$requested_tab = ( isset( $_GET['request_tab'] ) ? $_GET['request_tab'] : 'basic' );
@@ -33,6 +36,8 @@ class Breeze_Tab_Loader {
 		$html_tab_data = ob_get_contents();
 		ob_end_clean();
 
+		// Output trusted admin HTML content from plugin's own render function
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $html_tab_data;
 		wp_die();
 	}

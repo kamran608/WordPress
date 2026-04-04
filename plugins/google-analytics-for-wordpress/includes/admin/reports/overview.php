@@ -36,6 +36,21 @@ final class MonsterInsights_Report_Overview extends MonsterInsights_Report {
 	}
 
 	/**
+	 * Get cache key suffix based on included metrics.
+	 *
+	 * Different metric combinations should have separate cache entries
+	 * to prevent cache overwrites between users with different preferences.
+	 *
+	 * @param array $extra_params Extra parameters passed to get_data().
+	 * @return string Cache key suffix with metrics hash.
+	 * @since 9.11.0
+	 */
+	protected function get_cache_key_suffix( $extra_params ) {
+		$included_metrics = ! empty( $extra_params['included_metrics'] ) ? $extra_params['included_metrics'] : 'sessions,pageviews';
+		return '_' . md5( $included_metrics );
+	}
+
+	/**
 	 * Prepare report-specific data for output.
 	 *
 	 * @param array $data The data from the report before it gets sent to the frontend.

@@ -2,9 +2,9 @@
 Contributors: magazine3
 Tags: Schema, Structured Data, Rich Snippets, SEO, AMP
 Requires at least: 4.5
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.6.20
-Stable tag: 1.52
+Stable tag: 1.58
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Schema & Structured Data adds Google Rich Snippets markup according to Schema.org guidelines to structure your site for SEO.
@@ -12,6 +12,8 @@ Schema & Structured Data adds Google Rich Snippets markup according to Schema.or
 == Description ==
 
 Schema & Structured Data for WP & AMP adds Google Rich Snippets markup according to Schema.org guidelines to structure your site for SEO. (AMP Compatible) 
+
+[Home](https://structured-data-for-wp.com/) | [Help & Tech Support](https://structured-data-for-wp.com/contact-us/) | [Documentation](https://structured-data-for-wp.com/docs/)  | [Pro version Features](https://structured-data-for-wp.com/pricing/)
 
 ### Features 
 
@@ -93,7 +95,23 @@ Schema & Structured Data for WP & AMP adds Google Rich Snippets markup according
 
 ### Extensions
 
-Some useful extensions to extend Schema & Structured Data for WP & AMP features, check [Woocommerce Compatibility For Schema](https://structured-data-for-wp.com/extensions/woocommerce-compatibility-for-schema/), [Cooked Compatibility For Schema](https://structured-data-for-wp.com/extensions/cooked-compatibility-for-schema/) and We are going to add more.
+Some useful extensions to extend Schema & Structured Data for WP & AMP features
+
+1. [Woocommerce Compatibility For Schema](https://structured-data-for-wp.com/extensions/woocommerce-compatibility-for-schema/) 
+2. [WPML Schema Compatibility](https://structured-data-for-wp.com/wpml-schema-compatibility/) 
+3. [Polylang Compatibility For SASWP](https://structured-data-for-wp.com/polylang-compatibility-for-saswp)
+4. [FAQ Schema Compatibility](https://structured-data-for-wp.com/faq-schema-compatibility/)
+5. [Event Schema](https://structured-data-for-wp.com/event-schema/)
+6. [Google News Schema Setup](https://structured-data-for-wp.com/services/google-news-schema-setup/)
+7. [Show Business Reviews in Google SERP!](https://structured-data-for-wp.com/reviews-for-schema)
+8. [Classifieds Plugin Compatibility](https://structured-data-for-wp.com/classifieds-plugin-compatibility/)
+9. [1-Click Indexing API Integration](https://structured-data-for-wp.com/1-click-indexing-api-integration/)
+10. [JobPosting Schema Compatibility](https://structured-data-for-wp.com/jobposting-schema-compatibility/)
+11. [Recipe Schema](https://structured-data-for-wp.com/recipe-schema/)
+12. [Course Schema](https://structured-data-for-wp.com/course-schema/)
+13. [Real Estate Schema](https://structured-data-for-wp.com/extensions/real-estate-schema/)
+14. [Q&A Schema Compatibility](https://structured-data-for-wp.com/qanda-schema-for-saswp/)
+15. [WooCommerce Compatibility for Schema](https://structured-data-for-wp.com/extensions/woocommerce-compatibility-for-schema/)
 
 ### Support
 
@@ -131,6 +149,63 @@ Yes, Absolutely! We would suggest you send your feature request by creating an i
 You can contact us from [here](http://structured-data-for-wp.com/contact-us/)
 
 == Changelog ==
+
+= 1.58 (23 March 2026) =
+* Enhancement: FAQ classic editor improvement #2422
+* Fixed: PHP Warning: foreach() argument must be of type array|object #2424
+* Fixed: Unable to Edit FAQ in WordPress Editor After Recent Update (Schema Still Visible on Frontend) #2425
+
+= 1.57 (13 March 2026) =
+* Fixed: Fatal error on single-region job postings #2411
+* Enhancement: Fields Not Translating on Article Edit Page After Using Loco Translate #2412
+* Fixed: PHP Warning: unserialize(): Error at offset 0 of 1070 bytes #2415
+* Enhancement: Striped unused properties from _transient_saswp_nav_menu to reduce autoload load size #2416
+* Fixed: Lastet Version Causing Unicode in Title, Rankmath Compatibility issue #2420
+
+= 1.56 (06 March 2026) =
+* Enhancement: Product JSON-LD schema issues: incorrect data types and case sensitivity #2396
+* Fixed: ItemList feature not generating schema despite H3 tags #2397
+* Enhancement: PHP warnings triggered by 404/missing images in post content #2401
+* Fixed: SASWP Schema Block Breaks Content After Anchor Links (Classic Editor) #2402
+* Fixed: Fatal Error: explode() Receives Array Instead of String in Schema Output #2407
+* Enhancement: Removed empty properties from the webpage schema. #2409
+* Enhancement: Fields Not Translating on Article Edit Page After Using Loco Translate #2412
+* Fixed: Vulnerability reported by CyberXplore #2413
+* Feature: Added SportsTeam Schema Type #2414
+
+= 1.55 (06 February 2026) =
+* Fixed: Error appears after recent update #2379
+* Enhancement: When the Knowledge Graph is disabled and the defragment option is enabled, it adds an empty @type to the @graph in the schema markup #2383
+* Enhancement: Added educationRequirements and experienceRequirements Fields to Job Posting Schema #2390
+* Feature: Add website schema seperately as we have article and other schema #2394
+* Enhancement: Custom schema improvement #2395
+* Fixed: Custom JSON Schema: <script type="application/ld+json"> tags removed on save after latest update #2399
+* Enhancement: Do not include empty properties in JSON-LD when generating schema #2403
+* Feature: Create compatibility with omnireview and generate schema #2404
+* Fixed: Reviewer image render issue in schema markup #2405
+
+= 1.54.2 (20 January 2026)
+* Added: Omni-review Banner integration #2384
+
+= 1.54.1 (17 January 2026) =
+* Fixed: Vulnerability reported by Wordfence Security and researched by type5afe #2395
+* Fixed: Role based access issue #2398
+
+= 1.54 (31 December 2025) =
+* Fixed: Heading and description translation issue in schema due to incomatibility with tranlatepress #2373
+* Feature: Added more fields in Physician schema #2375
+* Fixed: Double star rating options appearing in comment box when enabling comment rating module #2378
+* Fixed: Keywords field not working with blog posting schema #2381
+* Feature: Added compatibility for Capterra platform #2382
+* Fixed: Removed promotion banner BFCM #2386
+* Feature: Added compatibility for Meta Box #2388
+* Fixed: Issue with course schema #2391
+* Fixed: Review collection sorting issue #2392
+
+= 1.53 (28 November 2025) =
+* Promotion Banner BFCM #2386
+* Added Fields: legalName, contactPoint to the Organization schema #2385
+* Tested Upto WordPress 6.9.
 
 = 1.52 (30 October 2025) =
 * Fixed: Time issue with LiveBlogPosting schema #2371
@@ -256,66 +331,5 @@ You can contact us from [here](http://structured-data-for-wp.com/contact-us/)
 * Fixed: PHP textdomain translation notices on WordPress 6.7 #2246
 * Fixed: context attribute is missing in Person schema #2249
 * Enhancement: Merchant Listing schema Invalid string length in field "name" #2250
-
-= 1.40 (17 January 2025) =
-* Feature: Added compatibility with translatepress plugin #2090
-* Enhancement: Added Weight Field to Product Schema with Support for Multiple Units #2221
-* Feature: Added compatibility with WPBakery page builder accordion #2228
-* Fixed: Houzz platform reviews compatibility issue #2229
-* Fixed: Homestars reviews compatibility issue #2230
-* Fixed: Code Improvement #2232
-* Fixed: Issue with creating new review collection #2233
-* Fixed: Deprecated error #2236
-* Enhancement: Fixed the format date time issue with timezone offset #2239
-
-= 1.39 (04 December 2024) =
-* Major Feature: Schema Template Builder #2138
-* Feature: Added Genre and Actor fields for TVSeries schema #2207
-* Fixed: Tested with new version of wordpress i.e. 6.7v #2209
-* Fixed: Fixed issue with FAQ repeater field #2215
-* Enhancement: Added some modification in VideoObject schema #2218
-* Fixed: PHP translation notices on WordPress 6.7 #2219
-* Fixed: PHP Notice releated to comment id #2220
-* Enhancement: Added hasCourseInatance attribute for LearnPress plugin compatibility #2224
-
-= 1.38.1 (06 November 2024) =
-* Enhancement: Rankmath keyword issue with Category and Tag for WebPage schema #2201
-* Enhancement: Primary image size was not reflected properly in Schema #2213
-
-= 1.38 (02 November 2024) =
-* Feature: Added ProductGroup Schema Type #2071
-* Feature: Added option to show/hide schema markup inside elementor widget #2171
-* Enhancement: Fixed issue of correct image in ImageObject schema #2188
-* Enhancement: Schema meta fields should not be appeared inside custom fields. #2189
-* Feature: Automated the faqs data added manually in classic editor #2193
-* Fixed: Code improvement  #2194
-* Fixed: ACF time picker conflict issue in block editor #2195
-* Enhancement: Schema markup shown for the AMP pages showing the same markup as non-AMP #2199
-* Enhancement: Rankmath keyword issue with Category and Tag for WebPage schema #2201
-* Enhancement: Added FAQ compatibility with Elementor accordian #2202
-* Feature: Added Compatibility with wpForo plugin #2204
-* Enhancement: Issue with adding a live YouTube video to post #2205
-* Feature: Added compatibility with the plugin RealtyPress Premium #2206
-
-= 1.37 (09 October 2024) =
-* Fixed: Avatars are disabled still they are being added to the schema markup #2184
-* Feature: Added compatibility with Discout Rules plugin #2190
-* Fixed: Issue with Taxonomy placement setup #2191
-* Fixed: ACF time picker conflict issue in block editor #2195
-
-= 1.36 (18 September 2024) =
-* Feature: Added URL Parameter placement to targer URL's #2117
-* Enhancement: Categories text appears in headline fields #2155
-* Fixed: Conflict between the DiscussionForumPosting schema placement and the wpForo plugin #2157
-* Enhancement: Removed the Article type from webpages schema #2158
-* Feature: Added missing field in car schema #2159
-* Feature: Jackrabbit compatibility with course and event schema #2163
-* Feature: Added compatibility with the WP Job Board Pro plugin #2166
-* Fixed: Warnings appearing on user end #2167
-* Fixed: Time picker issue with plugin Advanced Custom Fields in the Admin mode #2173
-* Feature: Added compatability for ACF CPT with JobPosting schema #2174
-* Enhancement: Delete files after importing settings #2176
-* Enhancement: Fixed GTIN12 issue with the product schema for variable products #2180
-* Fixed: Comments was not appears in Recipes #2182
 
 All changelog available on [GitHub](https://github.com/ahmedkaludi/schema-and-structured-data-for-wp/releases).

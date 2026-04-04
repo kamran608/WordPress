@@ -187,6 +187,23 @@ class MonsterInsights_Tracking_Gtag extends MonsterInsights_Tracking_Abstract {
 		$reason         = '';
 		$attr_string    = monsterinsights_get_frontend_analytics_script_atts();
 		$gtag_async     = apply_filters( 'monsterinsights_frontend_gtag_script_async', true ) ? 'async' : '';
+		if ( defined('cmplz_plugin') || defined('cmplz_premium') || defined('cmplz_free') ) {
+			add_filter( 'cmplz_known_script_tags', function( $tags ) {
+				$tags[] = array(
+					'name' => 'google-analytics',
+					'category' => 'statistics',
+					'urls' => array(
+						'www.googletagmanager.com/gtag/js',
+						'googletagmanager.com/gtag/js',
+						'googletagmanager.com',
+						'__gtagTracker',
+						'MonsterInsightsDualTracker',
+						'monsterinsights_frontend_tracking_gtag_after_pageview',
+					),
+				);
+				return $tags;
+			});
+		}
 		ob_start(); ?>
 		<!-- This site uses the Google Analytics by MonsterInsights plugin v<?php echo MONSTERINSIGHTS_VERSION; // phpcs:ignore ?> - Using Analytics tracking - https://www.monsterinsights.com/ -->
 		<?php if ( ! $track_user ) {
@@ -445,7 +462,6 @@ class MonsterInsights_Tracking_Gtag extends MonsterInsights_Tracking_Abstract {
 					<?php } ?>
 				}
 			</script>
-			
 			<?php
 			/*
 			 * New separate script tags for conversion tracking and other post-pageview actions
@@ -453,22 +469,22 @@ class MonsterInsights_Tracking_Gtag extends MonsterInsights_Tracking_Abstract {
 			 *
 			 * @since 9.6.2
 			 */
-			
+
 			// Get all actions hooked to this action
 			global $wp_filter;
 			$hook_name = 'monsterinsights_frontend_tracking_gtag_after_pageview';
-			
+
 			if ( isset( $wp_filter[ $hook_name ] ) ) {
 				$callbacks = $wp_filter[ $hook_name ]->callbacks;
-				
+
 				// Sort by priority
 				ksort( $callbacks );
-				
+
 				foreach ( $callbacks as $priority => $priority_callbacks ) {
 					foreach ( $priority_callbacks as $callback_key => $callback_data ) {
 						// Capture output for this specific callback
 						ob_start();
-						
+
 						// Execute this specific callback
 						if ( is_array( $callback_data['function'] ) ) {
 							// Class method
@@ -482,9 +498,9 @@ class MonsterInsights_Tracking_Gtag extends MonsterInsights_Tracking_Abstract {
 							// Function
 							call_user_func( $callback_data['function'] );
 						}
-						
+
 						$callback_output = ob_get_clean();
-						
+
 						// Only create script tag if there's output
 						if ( ! empty( trim( $callback_output ) ) ) {
 							?>
@@ -540,6 +556,6 @@ class MonsterInsights_Tracking_Gtag extends MonsterInsights_Tracking_Abstract {
 			return true;
 		}
 
-		return false;
+		return apply_filters( 'monsterinsights_is_utm_stripped_server', false );
 	}
 }

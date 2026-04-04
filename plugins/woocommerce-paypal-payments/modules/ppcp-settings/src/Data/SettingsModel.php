@@ -9,6 +9,7 @@ declare (strict_types=1);
 namespace WooCommerce\PayPalCommerce\Settings\Data;
 
 use RuntimeException;
+use WooCommerce\PayPalCommerce\Settings\Data\Definition\FeaturesDefinition;
 use WooCommerce\PayPalCommerce\Settings\Service\DataSanitizer;
 /**
  * Class SettingsModel
@@ -24,7 +25,7 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
      *
      * @var string
      */
-    protected const OPTION_KEY = 'woocommerce-ppcp-data-settings';
+    public const OPTION_KEY = 'woocommerce-ppcp-data-settings';
     /**
      * Valid options for subtotal adjustment.
      *
@@ -80,6 +81,7 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
             'invoice_prefix' => $this->invoice_prefix,
             'brand_name' => '',
             'soft_descriptor' => '',
+            'ships_from_postal_code' => '',
             // Enum-type string values.
             'subtotal_adjustment' => 'correction',
             // Options: [correction|no_details].
@@ -92,14 +94,17 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
             // Boolean flags.
             'authorize_only' => \false,
             'capture_virtual_orders' => \false,
-            'save_paypal_and_venmo' => \false,
+            FeaturesDefinition::FEATURE_SAVE_PAYPAL_AND_VENMO => \false,
+            'instant_payments_only' => \false,
             'enable_contact_module' => \true,
             'save_card_details' => \false,
             'enable_pay_now' => \false,
             'enable_logging' => \false,
             'stay_updated' => \true,
+            'payment_level_processing' => \true,
             // Array of string values.
             'disabled_cards' => array(),
+            'card_icons' => array(),
         );
     }
     /**
@@ -195,6 +200,17 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
         $this->data['landing_page'] = $this->sanitizer->sanitize_enum($page, self::LANDING_PAGE_OPTIONS);
     }
     /**
+     * Converts the landing page setting value to the corresponding API enum string.
+     *
+     * @return string The corresponding API enum string ('NO_PREFERENCE', 'LOGIN', 'GUEST_CHECKOUT').
+     */
+    public function get_landing_page_enum(): string
+    {
+        $landing_page = $this->get_landing_page();
+        $map = array('any' => 'NO_PREFERENCE', 'login' => 'LOGIN', 'guest_checkout' => 'GUEST_CHECKOUT');
+        return $map[$landing_page] ?? 'NO_PREFERENCE';
+    }
+    /**
      * Gets the button language setting.
      *
      * @return string The button language.
@@ -246,6 +262,24 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
         $this->data['three_d_secure'] = $this->sanitizer->sanitize_enum($setting, self::THREE_D_SECURE_OPTIONS);
     }
     /**
+     * Gets the Ship-from ZIP code.
+     *
+     * @return string The Ship-from ZIP code.
+     */
+    public function get_ships_from_postal_code(): string
+    {
+        return !empty($this->data['ships_from_postal_code']) ? $this->data['ships_from_postal_code'] : get_option('woocommerce_store_postcode', '');
+    }
+    /**
+     * Sets the Ship-from ZIP code.
+     *
+     * @param string $zip_code The Ship-from ZIP code to set.
+     */
+    public function set_ships_from_postal_code(string $zip_code): void
+    {
+        $this->data['ships_from_postal_code'] = $this->sanitizer->sanitize_text($zip_code);
+    }
+    /**
      * Gets the authorize only setting.
      *
      * @return bool True if authorize only is enabled, false otherwise.
@@ -288,7 +322,7 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
      */
     public function get_save_paypal_and_venmo(): bool
     {
-        return $this->data['save_paypal_and_venmo'];
+        return $this->data[FeaturesDefinition::FEATURE_SAVE_PAYPAL_AND_VENMO];
     }
     /**
      * Sets the save PayPal and Venmo setting.
@@ -297,7 +331,25 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
      */
     public function set_save_paypal_and_venmo(bool $save): void
     {
-        $this->data['save_paypal_and_venmo'] = $this->sanitizer->sanitize_bool($save);
+        $this->data[FeaturesDefinition::FEATURE_SAVE_PAYPAL_AND_VENMO] = $this->sanitizer->sanitize_bool($save);
+    }
+    /**
+     * Gets the instant payments only setting.
+     *
+     * @return bool True if instant payments only setting is enabled, false otherwise.
+     */
+    public function get_instant_payments_only(): bool
+    {
+        return $this->data['instant_payments_only'] ?? \false;
+    }
+    /**
+     * Sets the instant payments only setting.
+     *
+     * @param bool $save Whether to use instant payments only.
+     */
+    public function set_instant_payments_only(bool $save): void
+    {
+        $this->data['instant_payments_only'] = $this->sanitizer->sanitize_bool($save);
     }
     /**
      * Gets the custom-shipping-contact flag ("Contact Module").
@@ -390,6 +442,24 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
         $this->data['disabled_cards'] = array_map(array($this->sanitizer, 'sanitize_text'), $cards);
     }
     /**
+     * Gets the card icons.
+     *
+     * @return array The array of card icons.
+     */
+    public function get_card_icons(): array
+    {
+        return $this->data['card_icons'];
+    }
+    /**
+     * Sets the card icons.
+     *
+     * @param array $icons The array of card icons.
+     */
+    public function set_card_icons(array $icons): void
+    {
+        $this->data['card_icons'] = array_map(array($this->sanitizer, 'sanitize_text'), $icons);
+    }
+    /**
      * Gets the Stay Updated setting.
      *
      * @return bool True if Stay Updated is enabled, false otherwise.
@@ -406,5 +476,24 @@ class SettingsModel extends \WooCommerce\PayPalCommerce\Settings\Data\AbstractDa
     public function set_stay_updated(bool $save): void
     {
         $this->data['stay_updated'] = $this->sanitizer->sanitize_bool($save);
+    }
+    /**
+     * Get payment level processing.
+     *
+     * @return bool
+     */
+    public function get_payment_level_processing(): bool
+    {
+        return (bool) $this->data['payment_level_processing'];
+    }
+    /**
+     * Set payment level processing.
+     *
+     * @param bool $save Whether to save the payment level processing.
+     * @return void
+     */
+    public function set_payment_level_processing(bool $save): void
+    {
+        $this->data['payment_level_processing'] = $this->sanitizer->sanitize_bool($save);
     }
 }

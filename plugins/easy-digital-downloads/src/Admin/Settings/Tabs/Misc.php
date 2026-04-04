@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
  * @since 3.1.4
  */
 class Misc extends Tab {
+	use \EDD\Admin\Settings\Traits\Helpers;
 
 	/**
 	 * Get the ID for this tab.
@@ -65,12 +66,6 @@ class Misc extends Tab {
 
 		$settings = array(
 			'main'           => array(
-				'debug_mode'          => array(
-					'id'    => 'debug_mode',
-					'name'  => __( 'Debug Mode', 'easy-digital-downloads' ),
-					'check' => __( 'Record important information to the debug log while troubleshooting.', 'easy-digital-downloads' ) . ' ' . $this->get_debug_log_link(),
-					'type'  => 'checkbox_toggle',
-				),
 				'session_handling'    => array(
 					'id'      => 'session_handling',
 					'name'    => __( 'Session Handling', 'easy-digital-downloads' ),
@@ -93,10 +88,9 @@ class Misc extends Tab {
 				'item_quantities'     => array(
 					'id'    => 'item_quantities',
 					'name'  => __( 'Cart Item Quantities', 'easy-digital-downloads' ),
-					/* translators: %s: Downloads plural label */
-					'check' => sprintf( __( 'Allow quantities to be adjusted when adding %s to the cart, and while viewing the checkout cart.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ),
 					'type'  => 'checkbox_toggle',
 					'desc'  => '',
+					'class' => 'edd-hidden',
 				),
 				'uninstall_on_delete' => array(
 					'id'    => 'uninstall_on_delete',
@@ -104,6 +98,7 @@ class Misc extends Tab {
 					'check' => __( 'Completely remove all EDD core data when the plugin is deleted.', 'easy-digital-downloads' ),
 					'type'  => 'checkbox_toggle',
 				),
+				'hide_cart_recovery'  => $this->get_hide_cart_recovery_setting(),
 			),
 			'button_text'    => array(
 				'button_style'         => array(
@@ -217,38 +212,10 @@ class Misc extends Tab {
 					),
 				),
 			),
-			'captcha'        => array(
-				'recaptcha'            => array(
-					'id'   => 'recaptcha',
-					'name' => __( 'reCAPTCHA v3', 'easy-digital-downloads' ),
-					'desc' => sprintf(
-					/* translators: 1. opening anchor tag; 2. closing anchor tag */
-						__( '%1$sRegister with Google%2$s to get reCAPTCHA v3 keys. Setting the keys here will enable reCAPTCHA on your registration block and when a user requests a password reset using the login block.', 'easy-digital-downloads' ),
-						'<a href="https://www.google.com/recaptcha/admin#list" target="_blank">',
-						'</a>'
-					),
-					'type' => 'descriptive_text',
-				),
-				'recaptcha_site_key'   => array(
-					'id'   => 'recaptcha_site_key',
-					'name' => __( 'reCAPTCHA Site Key', 'easy-digital-downloads' ),
-					'type' => 'text',
-					'std'  => '',
-				),
-				'recaptcha_secret_key' => array(
-					'id'   => 'recaptcha_secret_key',
-					'name' => __( 'reCAPTCHA Secret Key', 'easy-digital-downloads' ),
-					'type' => 'password',
-					'std'  => '',
-				),
-				'recaptcha_checkout'   => $this->get_recaptcha_checkout_setting(),
-			),
+			'captcha'        => array(),
 		);
 
-		$rate_limiting = $this->get_recaptcha_rate_limiting_setting();
-		if ( $rate_limiting ) {
-			$settings['captcha']['recaptcha_rate_limiting'] = $rate_limiting;
-		}
+		$settings['captcha'] = $this->get_captcha_settings();
 
 		return $settings;
 	}
@@ -269,6 +236,32 @@ class Misc extends Tab {
 		unset( $input['session_handling'] );
 
 		return $input;
+	}
+
+	/**
+	 * Gets the hide cart recovery setting.
+	 *
+	 * Pro users can only hide the menu item when Cart Recovery is disabled.
+	 *
+	 * @since 3.6.5
+	 *
+	 * @return array
+	 */
+	private function get_hide_cart_recovery_setting() {
+		$setting = array(
+			'id'    => 'hide_cart_recovery',
+			'name'  => __( 'Hide Cart Recovery', 'easy-digital-downloads' ),
+			'check' => __( 'Hide the Cart Recovery menu item.', 'easy-digital-downloads' ),
+			'type'  => 'checkbox_toggle',
+		);
+
+		// Pro users with ACR enabled cannot hide the menu item.
+		if ( edd_is_pro() && ! edd_is_inactive_pro() && edd_get_option( 'acr_enabled' ) ) {
+			$setting['options']['disabled'] = true;
+			$setting['check']               = __( 'Cart Recovery is currently enabled. Disable it to hide the menu item.', 'easy-digital-downloads' );
+		}
+
+		return $setting;
 	}
 
 	/**
@@ -298,23 +291,6 @@ class Misc extends Tab {
 	}
 
 	/**
-	 * Gets the link for the debug log.
-	 *
-	 * @since 3.1.4
-	 * @return string
-	 */
-	private function get_debug_log_link() {
-		$debug_log_url = edd_get_admin_url(
-			array(
-				'page' => 'edd-tools',
-				'tab'  => 'debug_log',
-			)
-		);
-
-		return '<a href="' . esc_url( $debug_log_url ) . '">' . __( 'View the Log', 'easy-digital-downloads' ) . '</a>';
-	}
-
-	/**
 	 * Gets the recaptcha checkout setting.
 	 *
 	 * @since 3.5.3
@@ -325,9 +301,9 @@ class Misc extends Tab {
 
 		return array(
 			'id'       => 'recaptcha_checkout',
-			'name'     => __( 'reCAPTCHA on Checkout', 'easy-digital-downloads' ),
+			'name'     => __( 'CAPTCHA on Checkout', 'easy-digital-downloads' ),
 			'desc'     => $checkout_has_block ?
-				__( 'Enable reCAPTCHA on the checkout block.', 'easy-digital-downloads' ) :
+				__( 'Enable CAPTCHA on the checkout block.', 'easy-digital-downloads' ) :
 				__( 'This setting requires the checkout block and will not work with the shortcode.', 'easy-digital-downloads' ),
 			'type'     => 'select',
 			'options'  => array(
@@ -336,6 +312,7 @@ class Misc extends Tab {
 				'guests' => __( 'Only for guests', 'easy-digital-downloads' ),
 			),
 			'disabled' => ! $checkout_has_block,
+			'class'    => $this->get_requires_css_class( 'captcha_provider', array(), $this->get_provider_ids() ),
 		);
 	}
 
@@ -352,13 +329,76 @@ class Misc extends Tab {
 
 		return array(
 			'id'      => 'recaptcha_rate_limiting',
-			'name'    => __( 'reCAPTCHA on Demand', 'easy-digital-downloads' ),
-			'check'   => __( 'Enable reCAPTCHA on checkout when Stripe determines that your site is experiencing card testing.', 'easy-digital-downloads' ),
-			'desc'    => __( 'If reCAPTCHA is always enabled on checkout, this setting is ignored. When needed, this will affect both guests and logged in users.', 'easy-digital-downloads' ),
+			'name'    => __( 'CAPTCHA on Demand', 'easy-digital-downloads' ),
+			'check'   => __( 'Enable CAPTCHA on checkout when Stripe determines that your site is experiencing card testing.', 'easy-digital-downloads' ),
+			'desc'    => __( 'If CAPTCHA is always enabled on checkout, this setting is ignored. When needed, this will affect both guests and logged in users.', 'easy-digital-downloads' ),
 			'type'    => 'checkbox_toggle',
 			'options' => array(
 				'disabled' => 'always' === edd_get_option( 'recaptcha_checkout' ),
 			),
+			'class'   => $this->get_requires_css_class( 'captcha_provider', array(), $this->get_provider_ids() ),
 		);
+	}
+
+	/**
+	 * Gets the captcha settings.
+	 *
+	 * @since 3.6.1
+	 * @return array
+	 */
+	private function get_captcha_settings(): array {
+		$providers        = \EDD\Captcha\Providers\Provider::get_available_providers();
+		$provider_options = array( 'none' => __( 'None', 'easy-digital-downloads' ) );
+
+		foreach ( $providers as $provider ) {
+			$provider_options[ $provider->get_id() ] = $provider->get_name();
+		}
+
+		$active_provider = \EDD\Captcha\Providers\Provider::get_active_provider();
+
+		$settings = array(
+			'captcha_provider' => array(
+				'id'      => 'captcha_provider',
+				'name'    => __( 'CAPTCHA Provider', 'easy-digital-downloads' ),
+				'desc'    => __( 'Choose which CAPTCHA provider to use for spam protection.', 'easy-digital-downloads' ),
+				'type'    => 'select',
+				'options' => $provider_options,
+				'std'     => $active_provider ? $active_provider->get_id() : 'none',
+				'data'    => array(
+					'edd-requirement' => 'captcha_provider',
+				),
+			),
+		);
+
+		// Add settings from each provider.
+		foreach ( $providers as $provider ) {
+			$settings = array_merge( $settings, $provider->get_settings() );
+		}
+
+		// Add checkout setting (applies to all providers).
+		$settings['recaptcha_checkout'] = $this->get_recaptcha_checkout_setting();
+
+		// Add rate limiting setting if applicable.
+		$rate_limiting = $this->get_recaptcha_rate_limiting_setting();
+		if ( $rate_limiting ) {
+			$settings['recaptcha_rate_limiting'] = $rate_limiting;
+		}
+
+		return $settings;
+	}
+
+	/**
+	 * Gets the provider IDs.
+	 *
+	 * @since 3.6.2
+	 * @return array
+	 */
+	private function get_provider_ids(): array {
+		$providers = \EDD\Captcha\Providers\Provider::get_available_providers();
+		$ids       = array();
+		foreach ( $providers as $provider ) {
+			$ids[] = $provider->get_id();
+		}
+		return $ids;
 	}
 }

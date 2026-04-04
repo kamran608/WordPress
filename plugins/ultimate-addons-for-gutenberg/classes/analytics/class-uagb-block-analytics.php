@@ -76,8 +76,8 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 			$this->incremental_tracker = UAGB_Incremental_Block_Tracker::get_instance();
 
 			// Hook into analytics option changes.
-			add_action( 'update_option_spectra_analytics_optin', array( $this, 'handle_analytics_optin_change' ), 10, 3 );
-			add_action( 'add_option_spectra_analytics_optin', array( $this, 'handle_analytics_optin_add' ), 10, 2 );
+			add_action( 'update_option_spectra_usage_optin', array( $this, 'handle_analytics_optin_change' ), 10, 3 );
+			add_action( 'add_option_spectra_usage_optin', array( $this, 'handle_analytics_optin_add' ), 10, 2 );
 
 			// Hook into plugin activation for first-run stats collection.
 			add_action( 'init', array( $this, 'maybe_start_first_run_collection' ) );
@@ -125,7 +125,7 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 		 */
 		public function maybe_start_first_run_collection() {
 			// Check if this is a first-run (plugin just installed).
-			$status = get_option( 'uagb_block_analytics_status', array() );
+			$status = get_option( 'uagb_block_usage_status', array() );
 
 			if ( ! is_array( $status ) ) {
 				$status = array();
@@ -134,7 +134,7 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 			if ( empty( $status['first_run_check'] ) ) {
 				// Mark first run check as done.
 				$status['first_run_check'] = true;
-				update_option( 'uagb_block_analytics_status', $status );
+				update_option( 'uagb_block_usage_status', $status );
 
 				// Start initial stats collection and setup incremental tracking.
 				$this->start_initial_setup();
@@ -152,8 +152,8 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 		 */
 		public function start_stats_collection() {
 			// Only start if analytics is enabled or this is first run.
-			$analytics_enabled = get_option( 'spectra_analytics_optin', 'no' ) === 'yes';
-			$status            = get_option( 'uagb_block_analytics_status', array() );
+			$analytics_enabled = get_option( 'spectra_usage_optin', 'no' ) === 'yes';
+			$status            = get_option( 'uagb_block_usage_status', array() );
 
 			if ( ! is_array( $status ) ) {
 				$status = array();
@@ -171,7 +171,7 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 			}
 
 			// Only run background scan if we don't have existing stats or this is forced refresh.
-			$analytics_data = get_option( 'uagb_block_analytics_data', array() );
+			$analytics_data = get_option( 'uagb_block_usage_data', array() );
 
 			if ( ! is_array( $analytics_data ) ) {
 				$analytics_data = array();
@@ -192,31 +192,74 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 		/**
 		 * Get block usage statistics for analytics reporting.
 		 *
+		 * This method merges block usage statistics with existing spectra stats,
+		 * ensuring numeric_values are added (not replaced) if they already exist.
+		 *
 		 * @since 2.19.13
-		 * @return array Block usage statistics formatted for analytics.
+		 * @param array $existing_stats Existing spectra stats to merge with.
+		 * @return array Merged stats with block usage data.
 		 */
-		public function get_block_stats_for_analytics() {
+		public function get_block_stats_for_analytics( $existing_stats = array() ) {
 			// Only return stats if analytics is enabled.
-			if ( get_option( 'spectra_analytics_optin', 'no' ) !== 'yes' ) {
-				return array();
+			if ( get_option( 'spectra_usage_optin', 'no' ) !== 'yes' ) {
+				return $existing_stats;
 			}
 
 			$stats               = UAGB_Block_Stats_Processor::get_block_stats();
 			$collection_complete = UAGB_Block_Stats_Processor::is_collection_complete();
 			$last_collection     = UAGB_Block_Stats_Processor::get_last_collection_time();
 
+			// Format block usage stats to add 'block_usage_' prefix to the keys.
+			$formatted_block_usage_stats = array_combine(
+				array_map(
+					function ( $key ) {
+						return 'block_usage_' . $key;
+					},
+					array_keys( $stats )
+				),
+				array_values( $stats )
+			);
+
+			// Ensure array_combine succeeded, otherwise use empty array.
+			if ( ! is_array( $formatted_block_usage_stats ) ) {
+				$formatted_block_usage_stats = array();
+			}
+
+			// Get site activity level for Active Site / Super Site KPIs.
+			$site_activity = $this->get_site_activity_level();
+
 			// Prepare advanced stats structure.
 			$advanced_stats = array(
-				'block_usage_stats'          => $stats,
+				'numeric_values'             => $formatted_block_usage_stats,
 				'block_usage_stats_metadata' => array(
 					'collection_complete'  => $collection_complete,
 					'last_collected'       => $last_collection ? gmdate( 'Y-m-d H:i:s', $last_collection ) : null,
 					'total_blocks_tracked' => count( array_filter( $stats ) ),
 					'most_used_blocks'     => $this->get_most_used_blocks( $stats, 10 ),
 				),
+				'site_activity'              => $site_activity,
 			);
 
-			return $advanced_stats;
+			// Merge numeric_values by adding numbers if they already exist.
+			// Check if numeric_values array exists in existing_stats and validate it's an array.
+			if ( isset( $existing_stats['numeric_values'] ) && is_array( $existing_stats['numeric_values'] ) ) {
+
+				// Loop through each block's usage count from advanced_stats.
+				foreach ( $advanced_stats['numeric_values'] as $key => $value ) {
+					// If the key exists in existing_stats and both values are numeric, add them together.
+					// Otherwise, use the new value from advanced_stats (either new key or non-numeric value).
+					$existing_stats['numeric_values'][ $key ] = ( isset( $existing_stats['numeric_values'][ $key ] )
+						&& is_numeric( $value )
+						&& is_numeric( $existing_stats['numeric_values'][ $key ] ) )
+						? $existing_stats['numeric_values'][ $key ] + $value
+						: $value;
+				}
+				// Remove numeric_values from advanced_stats to prevent duplication in array_merge_recursive below.
+				unset( $advanced_stats['numeric_values'] );
+			}
+
+			// Merge remaining advanced stats (metadata, etc.) with existing stats.
+			return array_merge_recursive( $existing_stats, $advanced_stats );
 		}
 
 		/**
@@ -231,7 +274,7 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 			// Filter out blocks with 0 usage and sort by usage count.
 			$filtered_stats = array_filter( $stats );
 			arsort( $filtered_stats );
-			
+
 			// Return top blocks.
 			return array_slice( $filtered_stats, 0, $limit, true );
 		}
@@ -247,14 +290,14 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 		 */
 		public function force_refresh_stats() {
 			// Clear existing processing flag to allow new collection.
-			$status = get_option( 'uagb_block_analytics_status', array() );
+			$status = get_option( 'uagb_block_usage_status', array() );
 
 			if ( ! is_array( $status ) ) {
 				$status = array();
 			}
 
 			$status['is_processing'] = false;
-			update_option( 'uagb_block_analytics_status', $status );
+			update_option( 'uagb_block_usage_status', $status );
 
 			// Reinitialize post tracking metadata.
 			$this->incremental_tracker->initialize_existing_posts();
@@ -274,8 +317,8 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 		 */
 		public function start_initial_setup() {
 			// Only setup if analytics is enabled or this is first run.
-			$analytics_enabled = get_option( 'spectra_analytics_optin', 'no' ) === 'yes';
-			$status            = get_option( 'uagb_block_analytics_status', array() );
+			$analytics_enabled = get_option( 'spectra_usage_optin', 'no' ) === 'yes';
+			$status            = get_option( 'uagb_block_usage_status', array() );
 
 			if ( ! is_array( $status ) ) {
 				$status = array();
@@ -301,8 +344,8 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 		 * @return array Status information about stats collection.
 		 */
 		public function get_collection_status() {
-			$status         = get_option( 'uagb_block_analytics_status', array() );
-			$analytics_data = get_option( 'uagb_block_analytics_data', array() );
+			$status         = get_option( 'uagb_block_usage_status', array() );
+			$analytics_data = get_option( 'uagb_block_usage_data', array() );
 
 			if ( ! is_array( $status ) ) {
 				$status = array();
@@ -317,11 +360,63 @@ if ( ! class_exists( 'UAGB_Block_Analytics' ) ) {
 				'is_complete'          => ! empty( $status['collection_complete'] ),
 				'last_collected'       => isset( $status['last_collected'] ) ? $status['last_collected'] : false,
 				'last_updated'         => isset( $analytics_data['last_updated'] ) ? $analytics_data['last_updated'] : false,
-				'analytics_enabled'    => get_option( 'spectra_analytics_optin', 'no' ) === 'yes',
+				'analytics_enabled'    => get_option( 'spectra_usage_optin', 'no' ) === 'yes',
 				'first_run_done'       => ! empty( $status['first_run_check'] ),
 				'has_stats'            => ! empty( $analytics_data['block_usage_stats'] ),
 				'tracking_method'      => 'incremental', // Now using incremental tracking instead of batch processing.
 				'total_tracked_blocks' => ! empty( $analytics_data['block_usage_stats'] ) && is_array( $analytics_data['block_usage_stats'] ) ? count( array_filter( $analytics_data['block_usage_stats'] ) ) : 0,
+			);
+		}
+
+		/**
+		 * Get site activity level based on Spectra block edits in the last 180 days.
+		 *
+		 * Calculates KPIs for:
+		 * - Active Site: Spectra blocks manually added/edited on at least 1 page in last 180 days
+		 * - Super Site: Spectra blocks manually added/edited on at least 15 pages in last 180 days
+		 *
+		 * @since 2.19.19
+		 * @return array Site activity data with classification.
+		 */
+		public function get_site_activity_level() {
+			$days_threshold = 180;
+			$cutoff_time    = time() - ( $days_threshold * DAY_IN_SECONDS );
+
+			$post_types = get_post_types( array( 'public' => true ), 'names' );
+
+			// Query posts where Spectra blocks have been edited in the last 180 days.
+			$posts = get_posts(
+				array(
+					'post_type'      => $post_types,
+					'post_status'    => array( 'publish', 'private', 'draft' ),
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Required for site activity KPI calculation.
+						array(
+							'key'     => '_uagb_last_spectra_edit',
+							'value'   => $cutoff_time,
+							'compare' => '>=',
+							'type'    => 'NUMERIC',
+						),
+					),
+				)
+			);
+
+			$active_pages_count = count( $posts );
+
+			// Determine site classification.
+			$site_type = 'inactive';
+			if ( $active_pages_count >= 15 ) {
+				$site_type = 'super_site';
+			} elseif ( $active_pages_count >= 1 ) {
+				$site_type = 'active_site';
+			}
+
+			return array(
+				'active_pages_180d' => $active_pages_count,
+				'site_type'         => $site_type,
+				'is_active_site'    => $active_pages_count >= 1,
+				'is_super_site'     => $active_pages_count >= 15,
 			);
 		}
 	}

@@ -122,6 +122,10 @@ if ( ! class_exists( 'UAGB_Loader' ) ) {
 
 			// Initialize block analytics after BSF analytics is set up.
 			$this->block_analytics = UAGB_Block_Analytics::get_instance();
+
+			// Initialize event tracker for milestone analytics.
+			require_once UAGB_DIR . 'classes/analytics/class-uagb-analytics-event-tracker.php';
+			UAGB_Analytics_Event_Tracker::get_instance();
 		}
 
 		/**
@@ -133,7 +137,7 @@ if ( ! class_exists( 'UAGB_Loader' ) ) {
 			define( 'UAGB_BASE', plugin_basename( UAGB_FILE ) );
 			define( 'UAGB_DIR', plugin_dir_path( UAGB_FILE ) );
 			define( 'UAGB_URL', plugins_url( '/', UAGB_FILE ) );
-			define( 'UAGB_VER', '2.19.15' );
+			define( 'UAGB_VER', '2.19.22' );
 			define( 'UAGB_MODULES_DIR', UAGB_DIR . 'modules/' );
 			define( 'UAGB_MODULES_URL', UAGB_URL . 'modules/' );
 			define( 'UAGB_SLUG', 'spectra' );
@@ -788,6 +792,30 @@ if ( ! class_exists( 'UAGB_Loader' ) ) {
 					)
 				);
 			}
+			// Structured boolean values for analytics backend.
+			$global_data['boolean_values'] = array(
+				'beta'                      => 'yes' === get_option( 'uagb_beta' ),
+				'enable_legacy_blocks'      => 'enabled' === get_option( 'uag_enable_legacy_blocks' ),
+				'file_generation'           => 'enabled' === get_option( '_uagb_allow_file_generation' ),
+				'templates_button'          => 'yes' === get_option( 'uag_enable_templates_button' ),
+				'on_page_css_button'        => 'yes' === get_option( 'uag_enable_on_page_css_button' ),
+				'block_condition'           => 'enabled' === get_option( 'uag_enable_block_condition' ),
+				'quick_action_sidebar'      => 'enabled' === get_option( 'uag_enable_quick_action_sidebar' ),
+				'gbs_extension'             => 'enabled' === get_option( 'uag_enable_gbs_extension' ),
+				'block_responsive'          => 'enabled' === get_option( 'uag_enable_block_responsive' ),
+				'load_gfonts_locally'       => 'enabled' === get_option( 'uag_load_gfonts_locally' ),
+				'collapse_panels'           => 'enabled' === get_option( 'uag_collapse_panels' ),
+				'copy_paste'                => 'enabled' === get_option( 'uag_copy_paste' ),
+				'preload_local_fonts'       => 'enabled' === get_option( 'uag_preload_local_fonts' ),
+				'btn_inherit_from_theme'    => 'enabled' === get_option( 'uag_btn_inherit_from_theme' ),
+				'load_font_awesome_5'       => 'enabled' === get_option( 'uag_load_font_awesome_5' ),
+				'auto_block_recovery'       => 'enabled' === get_option( 'uag_auto_block_recovery' ),
+				'load_fse_font_globally'    => 'enabled' === get_option( 'uag_load_fse_font_globally' ),
+				'load_select_font_globally' => 'enabled' === get_option( 'uag_load_select_font_globally' ),
+				'visibility_mode'           => 'enabled' === get_option( 'uag_visibility_mode' ),
+				'spectra_pro_active'        => function_exists( 'is_plugin_active' ) && is_plugin_active( 'spectra-pro/spectra-pro.php' ),
+			);
+
 			// Return the global data.
 			return $global_data;
 		}
@@ -806,17 +834,137 @@ if ( ! class_exists( 'UAGB_Loader' ) ) {
 				'migration_status'     => get_option( 'uag_migration_status' ), // Retrieves migration status.
 			);
 			$default_stats['plugin_data']['spectra'] = array_merge_recursive( $default_stats['plugin_data']['spectra'], $this->global_settings_data() );
-			$default_stats['plugin_data']['spectra'] = array_merge_recursive( $default_stats['plugin_data']['spectra'], $this->create_block_status_array() );
-			
+			$block_status_data                       = $this->create_block_status_array();
+			$default_stats['plugin_data']['spectra'] = array_merge_recursive( $default_stats['plugin_data']['spectra'], $block_status_data );
+
 			// Add advanced block usage statistics.
 			if ( is_object( $this->block_analytics ) ) {
-				$advanced_stats = $this->block_analytics->get_block_stats_for_analytics();
-				if ( ! empty( $advanced_stats ) ) {
-					$default_stats['plugin_data']['spectra'] = array_merge_recursive( $default_stats['plugin_data']['spectra'], $advanced_stats );
-				}
+				$default_stats['plugin_data']['spectra'] = $this->block_analytics->get_block_stats_for_analytics( $default_stats['plugin_data']['spectra'] );
+			}
+
+			// Add additional numeric values.
+			$additional_numerics = $this->get_additional_numeric_values( $block_status_data );
+			if ( ! isset( $default_stats['plugin_data']['spectra']['numeric_values'] ) || ! is_array( $default_stats['plugin_data']['spectra']['numeric_values'] ) ) {
+				$default_stats['plugin_data']['spectra']['numeric_values'] = array();
+			}
+			$default_stats['plugin_data']['spectra']['numeric_values'] = array_merge(
+				$default_stats['plugin_data']['spectra']['numeric_values'],
+				$additional_numerics
+			);
+
+			// Add KPI records for daily time-series data.
+			$kpi_data = $this->get_kpi_tracking_data();
+			if ( ! empty( $kpi_data ) ) {
+				$default_stats['plugin_data']['spectra']['kpi_records'] = $kpi_data;
+			}
+
+			// Add pending milestone events.
+			$events = UAGB_Analytics_Events::flush_pending();
+			if ( ! empty( $events ) ) {
+				$default_stats['plugin_data']['spectra']['events_record'] = $events;
 			}
 
 			return $default_stats;
+		}
+
+		/**
+		 * Get KPI tracking data for the last 2 days (excluding today).
+		 *
+		 * @since 2.19.22
+		 * @return array Keyed by date, each containing numeric_values.
+		 */
+		private function get_kpi_tracking_data() {
+			$kpi_data = array();
+			$today    = current_time( 'Y-m-d' );
+
+			for ( $i = 1; $i <= 2; $i++ ) {
+				$timestamp         = strtotime( $today . ' -' . $i . ' days' );
+				$date              = is_int( $timestamp ) ? gmdate( 'Y-m-d', $timestamp ) : gmdate( 'Y-m-d' );
+				$kpi_data[ $date ] = array(
+					'numeric_values' => array(
+						'posts_modified_with_spectra' => $this->get_daily_spectra_modified_count( $date ),
+					),
+				);
+			}
+
+			return $kpi_data;
+		}
+
+		/**
+		 * Get count of posts modified with Spectra blocks on a specific date.
+		 *
+		 * Uses the _uagb_last_spectra_edit post meta set by the incremental block tracker.
+		 *
+		 * @since 2.19.22
+		 * @param string $date Date in Y-m-d format.
+		 * @return int Count of posts modified.
+		 */
+		private function get_daily_spectra_modified_count( $date ) {
+			$start_timestamp = strtotime( $date . ' 00:00:00' );
+			$end_timestamp   = strtotime( $date . ' 23:59:59' );
+
+			$post_types = get_post_types( array( 'public' => true ), 'names' );
+
+			$posts = get_posts(
+				array(
+					'post_type'      => $post_types,
+					'post_status'    => array( 'publish', 'private', 'draft' ),
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Required for daily KPI calculation during analytics cycle.
+						array(
+							'key'     => '_uagb_last_spectra_edit',
+							'value'   => array( $start_timestamp, $end_timestamp ),
+							'compare' => 'BETWEEN',
+							'type'    => 'NUMERIC',
+						),
+					),
+				)
+			);
+
+			return count( $posts );
+		}
+
+		/**
+		 * Get additional numeric values for analytics payload.
+		 *
+		 * @since 2.19.22
+		 * @param array $block_status_data Block enable/disable status array.
+		 * @return array Numeric values.
+		 */
+		private function get_additional_numeric_values( $block_status_data ) {
+			$block_stats = UAGB_Block_Stats_Processor::get_block_stats();
+
+			$total_forms = isset( $block_stats['uagb/forms'] ) ? (int) $block_stats['uagb/forms'] : 0;
+
+			$total_popups = 0;
+			if ( post_type_exists( 'spectra-popup' ) ) {
+				$popup_count  = wp_count_posts( 'spectra-popup' );
+				$total_popups = is_object( $popup_count ) ? (int) $popup_count->publish + (int) $popup_count->draft : 0;
+			}
+
+			$disabled_count = is_array( $block_status_data )
+				? count(
+					array_filter(
+						$block_status_data,
+						function ( $v ) {
+							return 'disabled' === $v;
+						}
+					)
+				)
+				: 0;
+
+			$unique_blocks = is_array( $block_stats ) ? count( array_filter( $block_stats ) ) : 0;
+
+			return array(
+				'total_published_forms'    => $total_forms,
+				'total_popups'             => $total_popups,
+				'disabled_blocks_count'    => $disabled_count,
+				'unique_blocks_in_use'     => $unique_blocks,
+				'total_pages_with_spectra' => $this->block_analytics instanceof \UAGB_Block_Analytics
+					? $this->block_analytics->get_site_activity_level()['active_pages_180d']
+					: 0,
+			);
 		}
 	}
 }

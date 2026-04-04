@@ -58,8 +58,8 @@ function gamipress_add_ons_page() {
 
             foreach ( $plugins as $plugin ) {
 
-                // Skip if is an asset
-                if( gamipress_is_plugin_asset( $plugin ) )
+                // Skip if is an asset or pass
+                if( gamipress_is_plugin_asset( $plugin ) || gamipress_is_plugin_pass( $plugin ) )
                     continue;
 
                 gamipress_render_plugin_card( $plugin );
@@ -129,15 +129,11 @@ function gamipress_render_plugin_card( $plugin ) {
 
         $class = 'gamipress-third-party-add-on';
 
-        $details_link = '';
-
         // "More Information" action
         $action_links[] = '<a href="https://gamipress.com/add-ons/' . $plugin->info->slug . '" class="button" target="_blank">' . __( 'More Information', 'gamipress' ) . '</a>';
 
     } else if( gamipress_plugin_has_category( $plugin, 'integrations' ) ) {
         $class = 'gamipress-integration-add-on';
-
-        $details_link = '';
 
         // "More Information" action
         $action_links[] = '<a href="https://gamipress.com/add-ons/' . $plugin->info->slug . '" class="button" target="_blank">' . __( 'More Information', 'gamipress' ) . '</a>';
@@ -271,6 +267,8 @@ function gamipress_render_plugin_card( $plugin ) {
 
         } else if( gamipress_is_plugin_asset( $plugin ) ) {
 
+            $class = 'gamipress-asset-add-on';
+
             // "Get this asset" action
             $action_links[] = '<a href="https://gamipress.com/add-ons/' . $plugin->info->slug . '" class="button button-primary" target="_blank">' . __( 'Get this asset', 'gamipress' ) . '</a>';
 
@@ -282,14 +280,66 @@ function gamipress_render_plugin_card( $plugin ) {
         }
     }
 
-    if( ! empty( $details_link ) ) {
+    if(  ! gamipress_plugin_has_category( $plugin, '3rd-party' ) &&  ! gamipress_plugin_has_category( $plugin, 'integrations' ) ) {
         // "More Details" action
-        $action_links[] = '<a href="https://gamipress.com/add-ons/' . $plugin->info->slug . '" class="more-details" aria-label="' . esc_attr( sprintf( __( 'More information about %s' ), $name ) ) . '" data-title="' . esc_attr( $name ) . '" target="_blank">' . __( 'More Details' ) . '</a>';
-    } ?>
+        // $action_links[] = '<a href="https://gamipress.com/add-ons/' . $plugin->info->slug . '" class="more-details" aria-label="' . esc_attr( sprintf( __( 'More information about %s' ), $name ) ) . '" data-title="' . esc_attr( $name ) . '" target="_blank">' . __( 'More Details' ) . '</a>';
+    }
 
-    <div class="gamipress-plugin-card plugin-card plugin-card-<?php echo sanitize_html_class( $slug ); ?> <?php echo $class; ?>">
+    /**
+     * Plugin card actions
+     *
+     * @since 1.0.0
+     *
+     * @param array $actions
+     * @param string $slug
+     *
+     * @return array
+     */
+    $action_links = apply_filters( 'gamipress_plugin_card_actions', $action_links, $slug );
 
-        <div class="plugin-card-top">
+    // Status
+    $status = '';
+
+    if( is_plugin_active( $slug . '/' . $slug . '.php' ) ) {
+        $status = 'active';
+    } else if( is_dir( WP_PLUGIN_DIR . '/' . $slug ) ) {
+        $status = 'installed';
+    }
+
+    /**
+     * Plugin card status
+     *
+     * @since 1.0.0
+     *
+     * @param string $status
+     * @param string $slug
+     *
+     * @return string
+     */
+    $status = apply_filters( 'gamipress_plugin_card_status', $status, $slug );
+    $status_label = '';
+
+    switch( $status ) {
+        case 'active': $status_label = __( 'Active', 'gamipress' ); break;
+        case 'inactive': $status_label = __( 'Inactive', 'gamipress' ); break;
+        case 'installed': $status_label = __( 'Installed', 'gamipress' ); break;
+    }
+
+    ?>
+
+    <div class="gamipress-plugin-card plugin-card plugin-card-<?php echo sanitize_html_class( $slug ); ?> <?php echo $class; ?> gamipress-plugin-card-status-<?php echo sanitize_html_class( $status ); ?>">
+
+        <div class="plugin-card-top cmb-tooltip">
+
+            <?php
+
+            ?>
+
+            <?php if( $status !== '' ) : ?>
+                <div class="<?php echo esc_attr( $status ); ?> column-status">
+                    <span><?php echo esc_html( $status_label ) ?></span>
+                </div>
+            <?php endif; ?>
 
             <div class="thumbnail column-thumbnail">
                 <a href="<?php echo esc_url( $details_link ); ?>" class="open-plugin-details-modal" target="_blank">
@@ -305,7 +355,7 @@ function gamipress_render_plugin_card( $plugin ) {
                 </h3>
             </div>
 
-            <div class="desc column-description">
+            <div class="desc column-description cmb-tooltip-desc cmb-tooltip-top">
                 <p><?php echo gamipress_esc_plugin_excerpt( $plugin->info->excerpt ); ?></p>
             </div>
 
@@ -333,9 +383,16 @@ function gamipress_render_plugin_card( $plugin ) {
  */
 function gamipress_plugins_api() {
 
+    $cache = gamipress_get_cache( 'gamipress_plugins_api', false, false );
+
+    // If result already cached, return it
+    if( $cache !== false ) {
+        return $cache;
+    }
+
     // If a plugins api request has been cached already, then use cached plugins
     if ( false !== ( $res = get_transient( 'gamipress_plugins_api' ) ) ) {
-        return $res;
+        return apply_filters( 'gamipress_plugins_api', $res );
     }
 
     $url = $http_url = 'https://gamipress.com/wp-json/api/add-ons/';
@@ -377,9 +434,11 @@ function gamipress_plugins_api() {
 
         // Set a transient for 1 week with api plugins
         set_transient( 'gamipress_plugins_api', $res, ( 24 * 7 ) * HOUR_IN_SECONDS );
+
+        gamipress_set_cache( 'gamipress_plugins_api', $res );
     }
 
-    return $res;
+    return apply_filters( 'gamipress_plugins_api', $res );
 
 }
 

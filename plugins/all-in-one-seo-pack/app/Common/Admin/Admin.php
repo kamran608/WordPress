@@ -190,8 +190,7 @@ class Admin {
 			add_action( 'admin_footer', [ $this, 'addAioseoModalPortal' ] );
 		}
 
-		$this->loadTextDomain();
-
+		add_action( 'init', [ $this, 'loadTextDomain' ], 1 );
 		add_action( 'init', [ $this, 'setPages' ] );
 	}
 
@@ -204,7 +203,10 @@ class Admin {
 	 * @return void
 	 */
 	public function setPages() {
-		// TODO: Remove this after a couple months.
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
 		$newIndicator = '<span class="aioseo-menu-new-indicator">&nbsp;NEW!</span>';
 
 		$this->pages = [
@@ -239,6 +241,11 @@ class Admin {
 				'menu_title' => esc_html__( 'Redirects', 'all-in-one-seo-pack' ),
 				'parent'     => $this->pageSlug
 			],
+			'aioseo-ai-insights'       => [
+				'menu_title' => esc_html__( 'AI Suite', 'all-in-one-seo-pack' ) . $newIndicator,
+				'page_title' => esc_html__( 'AI Suite', 'all-in-one-seo-pack' ),
+				'parent'     => $this->pageSlug
+			],
 			'aioseo-local-seo'         => [
 				'menu_title' => esc_html__( 'Local SEO', 'all-in-one-seo-pack' ),
 				'parent'     => $this->pageSlug
@@ -248,8 +255,7 @@ class Admin {
 				'parent'     => $this->pageSlug
 			],
 			'aioseo-search-statistics' => [
-				'menu_title' => esc_html__( 'Search Statistics', 'all-in-one-seo-pack' ) . $newIndicator,
-				'page_title' => esc_html__( 'Search Statistics', 'all-in-one-seo-pack' ),
+				'menu_title' => esc_html__( 'Search Statistics', 'all-in-one-seo-pack' ),
 				'parent'     => $this->pageSlug
 			],
 			'aioseo-tools'             => [
@@ -844,6 +850,7 @@ class Admin {
 			'sitemaps',
 			'link-assistant',
 			'redirects',
+			'ai-insights',
 			'local-seo',
 			'seo-analysis',
 			'search-statistics',
@@ -984,7 +991,7 @@ class Admin {
 	 */
 	public function addFooterText() {
 		$linkText = esc_html__( 'Give us a 5-star rating!', 'all-in-one-seo-pack' );
-		$href     = 'https://wordpress.org/support/plugin/all-in-one-seo-pack/reviews/?filter=5#new-post';
+		$href     = 'https://aioseo.com/aioseo-wordpress-rating';
 
 		$link1 = sprintf(
 			'<a href="%1$s" target="_blank" title="%2$s">&#9733;&#9733;&#9733;&#9733;&#9733;</a>',
@@ -1092,11 +1099,11 @@ class Admin {
 	 */
 	public function unslashEscapedDataPosts() {
 		$postsToUnslash = apply_filters( 'aioseo_debug_unslash_escaped_posts', 200 );
-		$timeStarted    = gmdate( 'Y-m-d H:i:s', aioseo()->core->cache->get( 'unslash_escaped_data_posts' ) );
+		$timeStarted    = esc_sql( gmdate( 'Y-m-d H:i:s', aioseo()->core->cache->get( 'unslash_escaped_data_posts' ) ) );
 
 		$posts = aioseo()->core->db->start( 'aioseo_posts' )
 			->select( '*' )
-			->whereRaw( "updated < '$timeStarted'" )
+			->where( 'updated <', $timeStarted )
 			->orderBy( 'updated ASC' )
 			->limit( $postsToUnslash )
 			->run()
@@ -1194,11 +1201,11 @@ class Admin {
 			return $messages;
 		}
 
-		if ( function_exists( 'aioseoRedirects' ) && aioseoRedirects()->options->monitor->trash ) {
+		if ( ! empty( aioseo()->redirects->options ) && aioseo()->redirects->options->monitor->trash ) {
 			return $messages;
 		}
 
-		if ( empty( $_GET['ids'] ) ) { // phpcs:ignore HM.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Recommended  
+		if ( empty( $_GET['ids'] ) ) { // phpcs:ignore HM.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Recommended
 			return $messages;
 		}
 
@@ -1273,6 +1280,10 @@ class Admin {
 	 * @return void
 	 */
 	public function loadTextDomain() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
 		aioseo()->helpers->loadTextDomain( 'all-in-one-seo-pack' );
 	}
 

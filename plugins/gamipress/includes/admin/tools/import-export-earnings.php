@@ -59,14 +59,16 @@ function gamipress_import_export_earnings_tool_meta_boxes( $meta_boxes ) {
         'fields' => apply_filters( 'gamipress_import_export_earnings_tool_fields', array(
             'export_earnings_types' => array(
                 'name' => __( 'Earnings Types To Export', 'gamipress' ),
-                'desc' => __( 'Choose the earnings types to export.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the earnings types to export.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'multicheck',
                 'classes' => 'gamipress-switch gamipress-all-types-multicheck',
                 'options' => $options,
             ),
             'export_earnings_user_field' => array(
                 'name' => __( 'User Field', 'gamipress' ),
-                'desc' => __( 'Choose the field to display on user column.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the field to display on user column.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => array(
                     'id'        => __( 'ID', 'gamipress' ),
@@ -77,7 +79,8 @@ function gamipress_import_export_earnings_tool_meta_boxes( $meta_boxes ) {
             ),
             'export_earnings_post_field' => array(
                 'name' => __( 'Element Field', 'gamipress' ),
-                'desc' => __( 'Choose the field to display for the element (achievement, step, rank, etc) assigned to the earning.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the field to display for the element (achievement, step, rank, etc) assigned to the earning.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => array(
                     'id'        => __( 'ID', 'gamipress' ),
@@ -88,14 +91,16 @@ function gamipress_import_export_earnings_tool_meta_boxes( $meta_boxes ) {
             ),
             'export_earnings_from' => array(
                 'name' => __( 'From (Optional)', 'gamipress' ),
-                'desc' => '<br>' . __( 'Choose the date from you want to export. User earnings registered <strong>after</strong> this date will be exported.', 'gamipress' )
+                'tooltip'   => __( 'Choose the date from you want to export. User earnings registered <strong>after</strong> this date will be exported.', 'gamipress' )
                     . '<br>' . __( 'Leave blank to no filter by this date.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text_date_timestamp',
             ),
             'export_earnings_to' => array(
                 'name' => __( 'To (Optional)', 'gamipress' ),
-                'desc' => '<br>' . __( 'Choose the date until you want to export. User earnings registered <strong>before</strong> this date will be exported.', 'gamipress' )
+                'tooltip'   => __( 'Choose the date until you want to export. User earnings registered <strong>before</strong> this date will be exported.', 'gamipress' )
                     . '<br>' . __( 'Leave blank to no filter by this date.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text_date_timestamp',
             ),
             'export_earnings' => array(

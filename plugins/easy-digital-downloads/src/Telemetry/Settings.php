@@ -82,7 +82,7 @@ class Settings {
 				$settings = $profiler['class']::get_settings();
 				foreach ( (array) $settings as $setting ) {
 					if ( ! empty( $setting['id'] ) ) {
-						$data[ $setting['id'] ] = 1;
+						$data[ $setting['id'] ] = (int) (bool) edd_get_option( $setting['id'] );
 					}
 				}
 			}
@@ -117,6 +117,10 @@ class Settings {
 			if ( 'base_country' === $setting['id'] ) {
 				return strtoupper( edd_get_option( 'stripe_connect_account_country', $value ) );
 			}
+		}
+		// Use the helper function for stripe_elements_mode as it contains business logic for the default.
+		if ( 'stripe_elements_mode' === $setting['id'] && function_exists( 'edds_get_elements_mode' ) ) {
+			return edds_get_elements_mode();
 		}
 		if ( in_array( $setting['type'], $this->text_settings(), true ) ) {
 			return $this->anonymize( $value );
@@ -178,7 +182,6 @@ class Settings {
 				'rich_editor',
 				'upload',
 				'color',
-				'recapture',
 				'password',
 			)
 		);

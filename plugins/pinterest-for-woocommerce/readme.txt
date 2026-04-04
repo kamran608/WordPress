@@ -2,9 +2,9 @@
 Contributors: automattic, pinterest, woocommerce
 Tags: pinterest, woocommerce, marketing, product catalog feed, pixel
 Requires at least: 5.6
-Tested up to: 6.7
-Requires PHP: 7.3
-Stable tag: 1.4.17
+Tested up to: 6.9
+Requires PHP: 7.4
+Stable tag: 1.4.25
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -63,8 +63,8 @@ Pinterest is a visual discovery engine people use to find inspiration for their 
 = Minimum Requirements =
 
 * WordPress 5.6 or greater
-* WooCommerce 5.3 or greater
-* PHP version 7.3 or greater (PHP 7.4 or greater is recommended)
+* WooCommerce 7.0 or greater
+* PHP version 7.4 or greater
 * MySQL version 5.6 or greater
 
 Visit the [WooCommerce server requirements documentation](https://woocommerce.com/document/server-requirements/) for a detailed list of server requirements.
@@ -90,6 +90,39 @@ Yes you can! Join in on our [GitHub repository](https://github.com/woocommerce/p
 Release and roadmap notes available on the [WooCommerce Developers Blog](https://developer.woocommerce.com/)
 
 == Changelog ==
+
+= 1.4.25 - 2026-03-06 =
+* Tweak - WC 10.6 compatibility.
+* Update - Minimum required WooCommerce version bumped to 7.0.
+
+= 1.4.24 - 2026-01-27 =
+* Tweak - PHP 8.5 compatibility.
+* Tweak - WC 10.5 compatibility.
+
+= 1.4.23 - 2025-11-24 =
+* Fix - Remove feed file on deactivation.
+* Tweak - WC 10.4 compatibility.
+* Tweak - WP 6.9 compatibility.
+
+= 1.4.22 - 2025-10-28 =
+* Fix - Issue where `product_type` include more then 5 categories if a product included more.
+* Tweak - Update use of `wp_json_encode` to avoid potential browser parsing issues.
+* Tweak - WC 10.3 compatibility.
+* Tweak - WP 6.8 compatibility.
+
+= 1.4.21 - 2025-06-16 =
+* Update WP Consent API to affect all tracking with improved architecture.
+* [dev] Pin GitHub actions to immutable references of commits instead of tags.
+
+= 1.4.20 - 2025-06-03 =
+* Tweak - Reenable WP Consent API tracking integration.
+
+= 1.4.19 - 2025-05-29 =
+* Add CAPI enablement modal to encourage merchants to enable Conversions API.
+* Enable Conversions API in OAuth flow and settings UI.
+
+= 1.4.18 - 2025-05-20 =
+* Tweak - WC 9.9 compatibility.
 
 = 1.4.17 - 2025-03-18 =
 * Add - PHP 8.4 compatibility.
@@ -121,7 +154,7 @@ Release and roadmap notes available on the [WooCommerce Developers Blog](https:/
 * Add - API method to get commerce integration.
 * Add - Commerce Integration `partner_metadata` weekly sync.
 * Add - Failed Create Commerce Integration API call retries procedure.
-* Add - Weakly heartbeat action.
+* Add - Weekly heartbeat action.
 * Update - Make `integration_data` optional for the extension.
 
 = 1.4.10 - 2024-09-24 =

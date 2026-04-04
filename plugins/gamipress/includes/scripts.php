@@ -73,6 +73,7 @@ function gamipress_admin_register_scripts() {
     // Libraries
     wp_register_style( 'gamipress-select2-css', GAMIPRESS_URL . 'assets/libs/select2/css/select2' . $suffix . '.css', array( ), GAMIPRESS_VER, 'all' );
     wp_register_script( 'gamipress-select2-js', GAMIPRESS_URL . 'assets/js/gamipress-select2' . $suffix . '.js', array( 'jquery' ), GAMIPRESS_VER, true );
+    wp_register_script( 'gamipress-fabric-js', GAMIPRESS_URL . 'assets/libs/fabric/fabric.min.js', array( 'jquery' ), GAMIPRESS_VER, true );
 
     // Stylesheets
     wp_register_style( 'gamipress-admin-css', GAMIPRESS_URL . 'assets/css/gamipress-admin' . $suffix . '.css', array( ), GAMIPRESS_VER, 'all' );
@@ -85,6 +86,8 @@ function gamipress_admin_register_scripts() {
     wp_register_script( 'gamipress-log-extra-data-ui-js', GAMIPRESS_URL . 'assets/js/gamipress-log-extra-data-ui' . $suffix . '.js', array( 'jquery' ), GAMIPRESS_VER, true );
     wp_register_script( 'gamipress-admin-settings-js', GAMIPRESS_URL . 'assets/js/gamipress-admin-settings' . $suffix . '.js', array( 'jquery' ), GAMIPRESS_VER, true );
     wp_register_script( 'gamipress-admin-tools-js', GAMIPRESS_URL . 'assets/js/gamipress-admin-tools' . $suffix . '.js', array( 'jquery', 'jquery-ui-dialog', 'gamipress-admin-functions-js', 'gamipress-select2-js' ), GAMIPRESS_VER, true );
+    wp_register_script( 'gamipress-admin-badge-builder-js', GAMIPRESS_URL . 'assets/js/gamipress-admin-badge-builder' . $suffix . '.js', array( 'jquery', 'gamipress-fabric-js' ), GAMIPRESS_VER, true );
+    wp_register_script( 'gamipress-badge-builder-editor-js', GAMIPRESS_URL . 'assets/js/gamipress-badge-builder-editor.min.js', array( 'jquery', 'gamipress-admin-badge-builder-js' ), GAMIPRESS_VER, true );
 
 }
 add_action( 'admin_init', 'gamipress_admin_register_scripts' );
@@ -187,6 +190,35 @@ function gamipress_admin_enqueue_scripts( $hook ) {
 
         // Enqueue WordPress jQuery UI Dialog style
         wp_enqueue_style ( 'wp-jquery-ui-dialog' );
+
+    }
+
+    // Badge Builder
+    if( $hook === 'gamipress_page_gamipress_badge_builder' ) {
+
+        $icons = gamipress_badge_builder_get_icons();
+        $shapes_ids = array_keys( $icons['shapes']['icons'] );
+        $icons_ids = array();
+        foreach( $icons as $group_id => $group ) {
+            if( in_array( $group_id, array( 'shapes', 'editor', 'logos' ) ) ) continue;
+
+            $icons_ids = array_merge( $icons_ids, array_keys( $icons[$group_id]['icons'] ) );
+        }
+
+        // Scripts
+        wp_localize_script( 'gamipress-admin-badge-builder-js', 'gamipress_admin_badge_builder', array(
+            'nonce'                     => gamipress_get_admin_nonce(),
+            'color_palettes'            => gamipress_badge_builder_get_color_palettes(),
+            'insert_text_here'          => __( 'Insert text here', 'gamipress' ),
+            'show_text'                 => __( 'Show', 'gamipress' ),
+            'hide_text'                 => __( 'Hide', 'gamipress' ),
+            'shapes'                    => $shapes_ids,
+            'icons'                     => $icons_ids,
+        ) );
+
+        wp_enqueue_script( 'gamipress-fabric-js' );
+        wp_enqueue_script( 'gamipress-admin-badge-builder-js' );
+        wp_enqueue_script( 'gamipress-badge-builder-editor-js' );
 
     }
 

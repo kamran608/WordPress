@@ -147,6 +147,16 @@ function gamipress_apply_single_template( $content, $single_template = '' ) {
         $gamipress_template_args['align'] = 'none';
     }
 
+    /**
+     * Single template arguments
+     *
+     * @since 7.6.5
+     *
+     * @param array     $gamipress_template_args
+     * @param string    $single_template
+     */
+    $gamipress_template_args = apply_filters( 'gamipress_single_template_args', $gamipress_template_args, $single_template );
+
 	ob_start();
 
 	// Try to load single-{template}-{post_type}.php, if not exists load single-{template}.php

@@ -116,6 +116,9 @@ add_filter( 'gamipress_tools_import_export_meta_boxes', 'gamipress_import_export
  */
 function gamipress_ajax_export_setup_tool() {
 
+    // Security check, forces to die if not security passed
+    check_ajax_referer( 'gamipress_admin', 'nonce' );
+
     global $wpdb;
 
     $postmeta = GamiPress()->db->postmeta;
@@ -337,6 +340,9 @@ add_action( 'wp_ajax_gamipress_export_setup_tool', 'gamipress_ajax_export_setup_
  * @since 1.7.0
  */
 function gamipress_ajax_import_setup_tool() {
+
+    // Security check, forces to die if not security passed
+    check_ajax_referer( 'gamipress_admin', 'nonce' );
 
     // Check parameters received
     if( ! isset( $_FILES['file'] ) ) {

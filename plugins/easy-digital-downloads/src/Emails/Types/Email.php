@@ -305,6 +305,12 @@ abstract class Email {
 			remove_filter( 'edd_email_show_links', '__return_false' );
 		}
 
+		if ( empty( $this->heading ) ) {
+			$this->set_heading();
+		}
+
+		$this->processor()->__set( 'heading', $this->heading );
+
 		return $this->processor()->build_email( $this->message );
 	}
 
@@ -318,6 +324,9 @@ abstract class Email {
 		if ( is_null( $this->processor ) ) {
 			$this->processor = new Base();
 		}
+
+		// Ensure the processor knows about this email object for template access.
+		$this->processor->set_email_object( $this );
 
 		return $this->processor;
 	}

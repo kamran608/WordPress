@@ -45,6 +45,14 @@ function gamipress_presto_player_progress_listener( $video_id, $percent ) {
 
         // Trigger event for watch a specific video
         do_action( 'gamipress_presto_player_watch_specific_video', $video_id, $user_id, $percent );
+
+        // Get the platform
+        $model = new \PrestoPlayer\Models\Video();
+        $video = $model->get( $video_id );
+        $platform = $video->__get( 'type' );
+
+        // Trigger event for watch a video from a specific platform
+        do_action( 'gamipress_presto_player_watch_video_platform', $video_id, $user_id, $percent, $platform );
     }
 
 }

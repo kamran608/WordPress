@@ -28,7 +28,8 @@ function gamipress_import_export_achievements_tool_meta_boxes( $meta_boxes ) {
 
             'export_achievements_achievement_types' => array(
                 'name' => __( 'Achievement Types To Export', 'gamipress' ),
-                'desc' => __( 'Choose the achievement types to export.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the achievement types to export.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'multicheck',
                 'classes' => 'gamipress-switch',
                 'options_cb' => 'gamipress_options_cb_achievement_types',
@@ -36,7 +37,8 @@ function gamipress_import_export_achievements_tool_meta_boxes( $meta_boxes ) {
             ),
             'export_achievements_user_field' => array(
                 'name' => __( 'User Field', 'gamipress' ),
-                'desc' => __( 'Choose the field to display on user column.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the field to display on user column.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => array(
                     'id'        => __( 'ID', 'gamipress' ),
@@ -47,7 +49,8 @@ function gamipress_import_export_achievements_tool_meta_boxes( $meta_boxes ) {
             ),
             'export_achievements_achievement_field' => array(
                 'name' => __( 'Achievement Field', 'gamipress' ),
-                'desc' => __( 'Choose the field to display on achievements column.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the field to display on achievements column.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => array(
                     'id'        => __( 'ID', 'gamipress' ),

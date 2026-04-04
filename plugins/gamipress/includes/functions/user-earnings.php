@@ -184,6 +184,30 @@ function gamipress_get_earnings_count( $query = array() ) {
 }
 
 /**
+ * Get a specific earning points sum
+ *
+ * @since  1.8.6
+ *
+ * @param  array $query User earning query parameters
+ *
+ * @return int          The sum of points of user earnings found
+ */
+function gamipress_get_earnings_points_sum( $query = array() ) {
+
+    global $wpdb;
+
+    $where = gamipress_get_earnings_where( $query );
+
+    // Merge all wheres
+    $where = implode( ' AND ', $where );
+
+    $user_earnings = GamiPress()->db->user_earnings;
+
+    return absint( $wpdb->get_var( "SELECT SUM(ue.points) FROM {$user_earnings} AS ue WHERE {$where}" ) );
+
+}
+
+/**
  * Get the last earning
  *
  * @since  2.1.2
@@ -371,6 +395,21 @@ function gamipress_get_earnings_where( $query = array() ) {
         $where[] = 'ue.points_type IN ( "' . implode( '", "', $query['points_type'] ) . '" )';
     } else if ( ! empty( $query['points_type'] ) ) {
         $where[] = 'ue.points_type = "' . $query['points_type'] . '"';
+    }
+
+    // Points
+    if( isset( $query['points'] ) ) {
+
+        $compare = '=';
+
+        if( isset( $query['points_compare'] ) ) {
+            $allowed_operators = array( '=', '<', '>', '<=', '>=' );
+            if( in_array( $query['points_compare'], $allowed_operators ) ) {
+                $compare = $query['points_compare'];
+            }
+        }
+
+        $where[] = 'ue.points ' . $compare . ' ' . $query['points'];
     }
 
     // Since

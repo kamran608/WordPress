@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Breeze
- * Description: Breeze is a WordPress cache plugin with extensive options to speed up your website. All the options including Varnish Cache are compatible with Cloudways hosting.
- * Version: 2.2.20
+ * Description: Breeze is a cache plugin with extensive options to speed up your website. All the options including Varnish Cache are compatible with Cloudways hosting.
+ * Version: 2.4.2
  * Text Domain: breeze
  * Domain Path: /languages
  * Author: Cloudways
@@ -37,7 +37,7 @@ if ( ! defined( 'BREEZE_PLUGIN_DIR' ) ) {
 	define( 'BREEZE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
 if ( ! defined( 'BREEZE_VERSION' ) ) {
-	define( 'BREEZE_VERSION', '2.2.20' );
+	define( 'BREEZE_VERSION', '2.4.2' );
 }
 if ( ! defined( 'BREEZE_SITEURL' ) ) {
 	define( 'BREEZE_SITEURL', get_site_url() );
@@ -71,6 +71,7 @@ define( 'BREEZE_CACHE_NOGZIP', true );
 define( 'BREEZE_ROOT_DIR', str_replace( BREEZE_WP_CONTENT_NAME, '', WP_CONTENT_DIR ) );
 // Options reader
 require_once BREEZE_PLUGIN_DIR . 'inc/class-breeze-options-reader.php';
+require_once BREEZE_PLUGIN_DIR . 'inc/class-breeze-htaccess-settings.php';
 require_once BREEZE_PLUGIN_DIR . 'inc/class-breeze-cloudflare-helper.php';
 
 // Compatibility checks
@@ -109,6 +110,7 @@ register_deactivation_hook( __FILE__, array( 'Breeze_Admin', 'plugin_deactive_ho
 require_once BREEZE_PLUGIN_DIR . 'inc/breeze-admin.php';
 require_once BREEZE_PLUGIN_DIR . 'inc/class-breeze-prefetch.php';
 require_once BREEZE_PLUGIN_DIR . 'inc/class-breeze-preload-fonts.php';
+require_once BREEZE_PLUGIN_DIR . 'inc/class-breeze-one-click-optimization.php';
 
 
 // Load Store Local Files class.
@@ -178,7 +180,8 @@ add_action(
 	5
 );
 
-// Compatibility with ShortPixel.
+// Compatibilities.
+require_once BREEZE_PLUGIN_DIR . 'inc/compatibility/class-breeze-the-events-calendar.php';
 require_once BREEZE_PLUGIN_DIR . 'inc/compatibility/class-breeze-shortpixel-compatibility.php';
 require_once BREEZE_PLUGIN_DIR . 'inc/compatibility/class-breeze-avada-cache.php';
 require_once BREEZE_PLUGIN_DIR . 'inc/compatibility/class-breeze-elementor-template.php';
@@ -271,3 +274,32 @@ require_once BREEZE_PLUGIN_DIR . 'inc/wp-cli/class-breeze-wp-cli-core.php';
 
 // Reset to default
 add_action( 'breeze_reset_default', array( 'Breeze_Admin', 'plugin_deactive_hook' ), 80 );
+
+/**
+ * Get all password protected page URLs
+ *
+ * @return array Array of password protected page URLs
+ */
+function breeze_get_password_protected_page_urls()
+{
+	$password_protected_urls = array();
+
+	// Use WordPress API instead of direct SQL for safety and maintainability
+	$post_ids = get_posts(array(
+		'post_type'      => array('post', 'page'),
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'has_password'   => true,
+		'fields'         => 'ids', // Only get IDs
+		'no_found_rows'  => true,  // Skip pagination count for performance
+	));
+
+	foreach ($post_ids as $post_id) {
+		$url = get_permalink($post_id);
+		if ($url) {
+			$password_protected_urls[] = $url;
+		}
+	}
+
+	return $password_protected_urls;
+}

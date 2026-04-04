@@ -788,14 +788,14 @@ add_action( 'trash_post', 'gamipress_bust_rank_based_achievements_cache' );
 function gamipress_get_achievement_post_thumbnail( $post_id = 0, $image_size = 'gamipress-achievement', $class = 'gamipress-achievement-thumbnail' ) {
 
 	// Get our achievement thumbnail
-	$image = get_the_post_thumbnail( $post_id, $image_size, array( 'class' => $class ) );
+	$image = gamipress_get_the_post_thumbnail( $post_id, $image_size, array( 'class' => $class ) );
 
-	// If we don't have an image...
+	// If achievement don't have an image...
 	if ( ! $image ) {
 
 		// Grab our achievement type's post thumbnail
 		$achievement = get_page_by_path( gamipress_get_post_type( $post_id ), OBJECT, 'achievement-type' );
-		$image = is_object( $achievement ) ? get_the_post_thumbnail( $achievement->ID, $image_size, array( 'class' => $class ) ) : false;
+		$image = is_object( $achievement ) ? gamipress_get_the_post_thumbnail( $achievement->ID, $image_size, array( 'class' => $class ) ) : false;
 
 		// If we still have no image
 		if ( ! $image ) {

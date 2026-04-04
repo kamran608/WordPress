@@ -15,6 +15,25 @@ use AIOSEO\Plugin\Common\Integrations\BuddyPress as BuddyPressIntegration;
  */
 class Content {
 	/**
+	 * Methods that can be called dynamically based on sitemap index name.
+	 * This prevents collisions with user-defined post type slugs that match internal method names.
+	 *
+	 * @since 4.9.3
+	 *
+	 * @var array
+	 */
+	private $dynamicIndexMethods = [
+		'addl',
+		'author',
+		'date',
+		'postArchive',
+		'rss',
+		'bpActivity',
+		'bpGroup',
+		'bpMember'
+	];
+
+	/**
 	 * Returns the entries for the requested sitemap.
 	 *
 	 * @since 4.0.0
@@ -50,7 +69,11 @@ class Content {
 
 		// Check if requested index has a dedicated method.
 		$methodName = aioseo()->helpers->dashesToCamelCase( aioseo()->sitemap->indexName );
-		if ( method_exists( $this, $methodName ) ) {
+		if (
+			in_array( $methodName, $this->dynamicIndexMethods, true ) &&
+			method_exists( $this, $methodName ) &&
+			! in_array( aioseo()->sitemap->indexName, [ 'posts', 'terms' ], true ) // Skip posts and terms indexes because they are handled differently.
+		) {
 			return $this->$methodName();
 		}
 
@@ -114,7 +137,11 @@ class Content {
 
 		// Check if requested index has a dedicated method.
 		$methodName = aioseo()->helpers->dashesToCamelCase( aioseo()->sitemap->indexName );
-		if ( method_exists( $this, $methodName ) ) {
+		if (
+			in_array( $methodName, $this->dynamicIndexMethods, true ) &&
+			method_exists( $this, $methodName ) &&
+			! in_array( aioseo()->sitemap->indexName, [ 'posts', 'terms' ], true ) // Skip posts and terms indexes because they are handled differently.
+		) {
 			$res = $this->$methodName();
 
 			return ! empty( $res ) ? count( $res ) : 0;
@@ -600,7 +627,7 @@ class Content {
 			GROUP BY
 				YEAR(post_date),
 				MONTH(post_date)
-			ORDER BY post_date ASC 
+			ORDER BY post_date ASC
 			LIMIT 50000",
 			true
 		)->result();
@@ -715,7 +742,9 @@ class Content {
 		$query    = aioseo()->core->db
 			->start( 'bp_activity as a' )
 			->select( '`a`.`id`, `a`.`date_recorded`' )
-			->whereRaw( "a.is_spam = 0 AND a.hide_sitewide = 0 AND a.type NOT IN ('activity_comment', 'last_activity')" )
+			->where( 'a.is_spam', 0 )
+			->where( 'a.hide_sitewide', 0 )
+			->whereNotIn( 'a.type', [ 'activity_comment', 'last_activity' ] )
 			->limit( aioseo()->sitemap->linksPerIndex, aioseo()->sitemap->offset )
 			->orderBy( 'a.date_recorded DESC' );
 
@@ -771,7 +800,8 @@ class Content {
 			->start( 'bp_groups as g' )
 			->select( '`g`.`id`, `g`.`date_created`, `gm`.`meta_value` as date_modified' )
 			->leftJoin( 'bp_groups_groupmeta as gm', 'g.id = gm.group_id' )
-			->whereRaw( "g.status = 'public' AND gm.meta_key = 'last_activity'" )
+			->where( 'g.status', 'public' )
+			->where( 'gm.meta_key', 'last_activity' )
 			->limit( aioseo()->sitemap->linksPerIndex, aioseo()->sitemap->offset )
 			->orderBy( 'gm.meta_value DESC' )
 			->orderBy( 'g.date_created DESC' );
@@ -828,7 +858,8 @@ class Content {
 		$query    = aioseo()->core->db
 			->start( 'bp_activity as a' )
 			->select( '`a`.`user_id` as id, `a`.`date_recorded`' )
-			->whereRaw( "a.component = 'members' AND a.type = 'last_activity'" )
+			->where( 'a.component', 'members' )
+			->where( 'a.type', 'last_activity' )
 			->limit( aioseo()->sitemap->linksPerIndex, aioseo()->sitemap->offset )
 			->orderBy( 'a.date_recorded DESC' );
 
@@ -885,7 +916,7 @@ class Content {
 		}
 
 		$joinClause   = aioseo()->pro ? "LEFT JOIN {$aioseoTermsTable} AS at ON tt.term_id = at.term_id" : '';
-		$whereClause  = aioseo()->pro ? 'AND (at.robots_noindex IS NULL OR at.robots_noindex = 0)' : '';
+		$whereClause  = aioseo()->pro ? "AND (at.robots_noindex IS NULL OR at.robots_noindex = 0) AND (at.canonical_url IS NULL OR at.canonical_url = '')" : '';
 		$limitClause  = $count ? '' : 'LIMIT 50000';
 
 		$result = aioseo()->core->db->execute(

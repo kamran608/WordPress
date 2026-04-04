@@ -46,7 +46,13 @@ function gamipress_ajax_get_logs() {
     }
 
     $atts = $_REQUEST;
-
+    
+	// Change the atribute to display only public logs if current user is different
+    if( in_array( $atts['access'], array( 'private', 'both' ) ) ) {
+        if ( get_current_user_id() !== absint( $atts['user_id'] ) )
+            $atts['access'] = 'public';
+    }
+	
     // Unset non required shortcode atts
     unset( $atts['action'] );
     unset( $atts['page'] );
@@ -84,7 +90,7 @@ function gamipress_ajax_get_user_earnings() {
     }
 
     $atts = $_REQUEST;
-
+    
     // Unset non required shortcode atts
     unset( $atts['action'] );
     unset( $atts['page'] );
@@ -182,6 +188,10 @@ function gamipress_ajax_get_users() {
     // Security check, forces to die if not security passed
     check_ajax_referer( 'gamipress_admin', 'nonce' );
 
+	if( ! current_user_can( gamipress_get_manager_capability() ) ) {
+		return;
+    }
+
 	// If no word query sent, initialize it
 	if ( ! isset( $_REQUEST['q'] ) ) {
 		$_REQUEST['q'] = '';
@@ -262,6 +272,10 @@ add_action( 'wp_ajax_gamipress_get_users', 'gamipress_ajax_get_users' );
 function gamipress_ajax_get_posts() {
     // Security check, forces to die if not security passed
     check_ajax_referer( 'gamipress_admin', 'nonce' );
+
+	if( ! current_user_can( gamipress_get_manager_capability() ) ) {
+		return;
+    }
 
 	global $wpdb;
 

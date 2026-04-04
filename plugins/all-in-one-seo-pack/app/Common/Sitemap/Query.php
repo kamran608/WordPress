@@ -85,7 +85,8 @@ class Query {
 			->select( $fields )
 			->leftJoin( 'aioseo_posts as ap', 'ap.post_id = p.ID' )
 			->where( 'p.post_status', 'attachment' === $includedPostTypes ? 'inherit' : 'publish' )
-			->whereRaw( "p.post_type IN ( '$includedPostTypes' )" );
+			->where( 'p.post_password', '' )
+			->whereIn( 'p.post_type', $postTypesArray );
 
 		$homePageId = (int) get_option( 'page_on_front' );
 
@@ -113,6 +114,9 @@ class Query {
 			$query->whereRaw( "( `p`.`ID` NOT IN ( $excludedPosts ) OR post_id = $homePageId )" );
 		}
 
+		// Exclude posts with custom canonical URLs pointing to different URLs.
+		$query->whereRaw( "( `ap`.`canonical_url` IS NULL OR `ap`.`canonical_url` = '' )" );
+
 		// Exclude posts assigned to excluded terms.
 		$excludedTerms = aioseo()->sitemap->helpers->excludedTerms();
 		if ( $excludedTerms ) {
@@ -128,7 +132,7 @@ class Query {
 		}
 
 		if ( $maxAge ) {
-			$query->whereRaw( "( `p`.`post_date_gmt` >= '$maxAge' )" );
+			$query->where( 'p.post_date_gmt >=', $maxAge );
 		}
 
 		if (
@@ -150,7 +154,7 @@ class Query {
 			if ( in_array( 'page', $postTypesArray, true ) ) {
 				// Exclude the blog page from the pages post type.
 				if ( $blogPageId ) {
-					$query->whereRaw( "`p`.`ID` != $blogPageId" );
+					$query->where( 'p.ID !=', $blogPageId );
 				}
 
 				// Custom order by statement to always move the home page to the top.
@@ -250,10 +254,11 @@ class Query {
 			foreach ( $hiddenProducts as $hiddenProduct ) {
 				$hiddenProductIds[] = (int) $hiddenProduct->object_id;
 			}
-			$hiddenProductIds = esc_sql( implode( ', ', $hiddenProductIds ) );
-		}
 
-		$query->whereRaw( "p.ID NOT IN ( $hiddenProductIds )" );
+			if ( ! empty( $hiddenProductIds ) ) {
+				$query->whereNotIn( 'p.ID', $hiddenProductIds );
+			}
+		}
 
 		return $query;
 	}

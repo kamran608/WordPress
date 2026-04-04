@@ -3,13 +3,13 @@
  * Plugin Name:           GamiPress - Presto Player integration
  * Plugin URI:            https://wordpress.org/plugins/gamipress-presto-player-integration/
  * Description:           Connect GamiPress with Presto Player.
- * Version:               1.0.3
+ * Version:               1.0.4
  * Author:                GamiPress
  * Author URI:            https://gamipress.com/
  * Text Domain:           gamipress-presto-player-integration
  * Domain Path:           /languages/
  * Requires at least:     4.4
- * Tested up to:          6.2
+ * Tested up to:          6.9
  * License:               GNU AGPL v3.0 (http://www.gnu.org/licenses/agpl.txt)
  *
  * @package               GamiPress\Presto_Player
@@ -53,7 +53,7 @@ final class GamiPress_Integration_Presto_Player {
      */
     private function constants() {
         // Plugin version
-        define( 'GAMIPRESS_PRESTO_PLAYER_VER', '1.0.3' );
+        define( 'GAMIPRESS_PRESTO_PLAYER_VER', '1.0.4' );
 
         // Plugin path
         define( 'GAMIPRESS_PRESTO_PLAYER_DIR', plugin_dir_path( __FILE__ ) );

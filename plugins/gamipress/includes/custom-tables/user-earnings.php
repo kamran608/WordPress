@@ -347,14 +347,14 @@ function gamipress_manage_user_earnings_columns( $columns = array() ) {
     } else if( $pagenow === 'admin.php' ) {
 
         // admin.php is for the user earnings screen
-        $columns['name']    = __( 'Name', 'gamipress' );
+        $columns['name']    = __( 'Title', 'gamipress' );
         $columns['user_id'] = __( 'User', 'gamipress' );
         $columns['points']  = __( 'Points', 'gamipress' );
         $columns['date']    = __( 'Date', 'gamipress' );
 
     } else {
 
-        $columns['name']    = __( 'Name', 'gamipress' );
+        $columns['name']    = __( 'Title', 'gamipress' );
         $columns['points']  = __( 'Points', 'gamipress' );
         $columns['date']    = __( 'Date', 'gamipress' );
 

@@ -1422,6 +1422,6 @@ function gamipress_get_points_type_thumbnail( $points_type = '', $image_size = '
 	}
 
 	// Return our image tag with custom size
-	return get_the_post_thumbnail( $post_id, $image_size, array( 'class' => $class ) );
+	return gamipress_get_the_post_thumbnail( $post_id, $image_size, array( 'class' => $class ) );
 
 }

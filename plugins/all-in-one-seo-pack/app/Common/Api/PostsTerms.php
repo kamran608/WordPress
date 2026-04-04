@@ -354,8 +354,8 @@ class PostsTerms {
 			update_post_meta( $postId, '_wp_attachment_image_alt', sanitize_text_field( $body['imageAltTag'] ) );
 		}
 
-		$aioseoPost->title       = $body['title'];
-		$aioseoPost->description = $body['description'];
+		$aioseoPost->title       = ! empty( $body['title'] ) ? sanitize_text_field( $body['title'] ) : null;
+		$aioseoPost->description = ! empty( $body['description'] ) ? sanitize_textarea_field( $body['description'] ) : null;
 		$aioseoPost->updated     = gmdate( 'Y-m-d H:i:s' );
 		$aioseoPost->save();
 
@@ -564,7 +564,7 @@ class PostsTerms {
 		}
 
 		// Check if we can process it using a page builder integration.
-		$pageBuilder = aioseo()->helpers->getPostPageBuilderName( $args['postId'] );
+		$pageBuilder = $body['integration'] ?? aioseo()->helpers->getPostPageBuilderName( $args['postId'] );
 		if ( ! empty( $pageBuilder ) ) {
 			return new \WP_REST_Response( [
 				'success' => true,
@@ -577,7 +577,7 @@ class PostsTerms {
 
 		return new \WP_REST_Response( [
 			'success' => true,
-			'content' => apply_filters( 'the_content', $content ),
+			'content' => apply_filters( 'the_content', $content ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		], 200 );
 	}
 }

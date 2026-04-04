@@ -24,6 +24,8 @@ function gamipress_armember_activity_triggers( $triggers ) {
         'gamipress_armember_add_specific_membership'    => __( 'Add to specific membership plan', 'gamipress' ),
         'gamipress_armember_cancel_membership'          => __( 'Cancel any membership plan', 'gamipress' ),
         'gamipress_armember_cancel_specific_membership' => __( 'Cancel a specific membership plan', 'gamipress' ),
+        'gamipress_armember_renew_membership'           => __( 'Renew any membership plan', 'gamipress' ),
+        'gamipress_armember_renew_specific_membership'  => __( 'Renew a specific membership plan', 'gamipress' ),
     );
 
     return $triggers;
@@ -43,6 +45,7 @@ function gamipress_armember_specific_activity_triggers( $specific_activity_trigg
     
     $specific_activity_triggers['gamipress_armember_add_specific_membership'] = array( 'armember_membership' );
     $specific_activity_triggers['gamipress_armember_cancel_specific_membership'] = array( 'armember_membership' );
+    $specific_activity_triggers['gamipress_armember_renew_specific_membership'] = array( 'armember_membership' );
     
     return $specific_activity_triggers;
 }
@@ -60,6 +63,7 @@ function gamipress_armember_specific_activity_trigger_label( $specific_activity_
 
     $specific_activity_trigger_labels['gamipress_armember_add_specific_membership'] = __( 'Add to %s membership plan', 'gamipress' );
     $specific_activity_trigger_labels['gamipress_armember_cancel_specific_membership'] = __( 'Cancel %s membership plan', 'gamipress' );
+    $specific_activity_trigger_labels['gamipress_armember_renew_specific_membership'] = __( 'Renew %s membership plan', 'gamipress' );
     
     return $specific_activity_trigger_labels;
 }
@@ -81,6 +85,7 @@ function gamipress_armember_specific_activity_trigger_post_title( $post_title, $
     switch( $trigger_type ) {
         case 'gamipress_armember_add_specific_membership':
         case 'gamipress_armember_cancel_specific_membership':
+        case 'gamipress_armember_renew_specific_membership':
             if( absint( $specific_id ) !== 0 ) {
                 // Get the membership plan title
                 $plan_title = gamipress_armember_get_plan_title( $specific_id );
@@ -112,6 +117,7 @@ function gamipress_armember_specific_activity_trigger_permalink( $permalink, $sp
     switch( $trigger_type ) {
         case 'gamipress_armember_add_specific_membership':
         case 'gamipress_armember_cancel_specific_membership':
+        case 'gamipress_armember_renew_specific_membership':
             $permalink = '';
             break;
     }
@@ -139,6 +145,8 @@ function gamipress_armember_trigger_get_user_id( $user_id, $trigger, $args ) {
         case 'gamipress_armember_add_specific_membership':
         case 'gamipress_armember_cancel_membership':
         case 'gamipress_armember_cancel_specific_membership':
+        case 'gamipress_armember_renew_membership':
+        case 'gamipress_armember_renew_specific_membership':
             $user_id = $args[1];
             break;
     }
@@ -164,6 +172,7 @@ function gamipress_armember_specific_trigger_get_id( $specific_id, $trigger, $ar
     switch ( $trigger ) {
         case 'gamipress_armember_add_specific_membership':
         case 'gamipress_armember_cancel_specific_membership':
+        case 'gamipress_armember_renew_specific_membership':
             $specific_id = $args[0];
             break;
     }
@@ -194,6 +203,8 @@ function gamipress_armember_log_event_trigger_meta_data( $log_meta, $user_id, $t
         case 'gamipress_armember_add_specific_membership':
         case 'gamipress_armember_cancel_membership':
         case 'gamipress_armember_cancel_specific_membership':
+        case 'gamipress_armember_renew_membership':
+        case 'gamipress_armember_renew_specific_membership':
             // Add the membership ID
             $log_meta['membership_id'] = $args[0];
             break;

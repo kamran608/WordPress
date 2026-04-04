@@ -25,7 +25,8 @@ function gamipress_register_inline_rank_shortcode() {
 		'fields'      	  => array(
 			'id' => array(
 				'name'              => __( 'Rank', 'gamipress' ),
-				'description'       => __( 'Rank to render.', 'gamipress' ),
+                'tooltip'           => __( 'Rank to render.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'The ID of the rank to render.', 'gamipress' ),
 				'type'              => 'select',
                 'classes' 	        => 'gamipress-post-selector',
@@ -37,23 +38,26 @@ function gamipress_register_inline_rank_shortcode() {
 				'options_cb'        => 'gamipress_options_cb_posts'
 			),
 			'link' => array(
-				'name'        => __( 'Show Link', 'gamipress' ),
-				'description' => __( 'Add a link on rank title to the rank page.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Link', 'gamipress' ),
+                'tooltip'   => __( 'Add a link on rank title to the rank page.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
 			'thumbnail' => array(
-				'name'        => __( 'Show Thumbnail', 'gamipress' ),
-				'description' => __( 'Display the rank featured image.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Thumbnail', 'gamipress' ),
+                'tooltip'   => __( 'Display the rank featured image.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'thumbnail_size' => array(
-                'name'        => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
-                'description' => __( 'The rank featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
-                'type' 	=> 'text',
+                'name'      => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
+                'tooltip'   => __( 'The rank featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'text',
                 'attributes' => array(
                     'type' => 'number',
                 )

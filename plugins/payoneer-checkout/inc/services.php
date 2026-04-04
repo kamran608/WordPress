@@ -160,7 +160,7 @@ return static function (string $rootPath): array {
         'core.wp_environment_factory' => static function (ContainerInterface $container): WpEnvironmentFactoryInterface {
             /** @var StringVersionFactoryInterface $versionFactory */
             $versionFactory = $container->get('core.string_version_factory');
-            /** @var string $eventNameEnvironmentValidationFailed */
+            /** @psalm-var non-empty-string $eventNameEnvironmentValidationFailed */
             $eventNameEnvironmentValidationFailed = $container->get('core.event_name_environment_validation_failed');
             return new WpEnvironmentFactory($versionFactory, $eventNameEnvironmentValidationFailed);
         },

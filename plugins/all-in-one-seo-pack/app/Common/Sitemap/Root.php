@@ -127,7 +127,7 @@ class Root {
 			)
 		) {
 			$result = aioseo()->core->db->execute(
-				"SELECT count(*) as amountOfUrls FROM (
+				"SELECT (COUNT(DISTINCT YEAR(post_date)) + COUNT(*)) as amountOfUrls FROM (
 					SELECT post_date
 					FROM {$postsTable}
 					WHERE post_type = 'post' AND post_status = 'publish'
@@ -381,6 +381,9 @@ class Root {
 			)";
 		}
 
+		// Exclude posts with custom canonical URLs pointing to different URLs.
+		$whereClause .= " AND (ap.canonical_url IS NULL OR ap.canonical_url = '')";
+
 		// Include the blog page in the posts post type unless manually excluded.
 		$blogPageId = (int) get_option( 'page_for_posts' );
 		if (
@@ -534,14 +537,13 @@ class Root {
 				$ids = array_map( function( $post ) {
 					return $post->ID;
 				}, $chunk );
-				$ids = implode( "', '", $ids );
 
 				$lastModified = null;
 				if ( ! apply_filters( 'aioseo_sitemap_lastmod_disable', false ) ) {
 					$lastModified = aioseo()->core->db
 						->start( aioseo()->core->db->db->posts . ' as p', true )
 						->select( 'MAX(`p`.`post_modified_gmt`) as last_modified' )
-						->whereRaw( "( `p`.`ID` IN ( '$ids' ) )" )
+						->whereIn( 'p.ID', $ids )
 						->run()
 						->result();
 				}

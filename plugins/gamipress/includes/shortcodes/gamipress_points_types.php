@@ -25,7 +25,8 @@ function gamipress_register_points_types_shortcode() {
         'fields'      => array(
             'type' => array(
                 'name'              => __( 'Points Type(s)', 'gamipress' ),
-                'description'       => __( 'Points type(s) to display.', 'gamipress' ),
+                'tooltip'           => __( 'Points type(s) to display.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
                 'shortcode_desc'    => __( 'Single or comma-separated list of points type(s) to display.', 'gamipress' ),
                 'type'              => 'advanced_select',
                 'multiple'          => true,
@@ -37,10 +38,11 @@ function gamipress_register_points_types_shortcode() {
                 'default'           => 'all',
             ),
             'columns' => array(
-                'name'        => __( 'Columns', 'gamipress' ),
-                'description' => __( 'Columns to divide each points type.', 'gamipress' ),
-                'type' 	=> 'select',
-                'options' => array(
+                'name'      => __( 'Columns', 'gamipress' ),
+                'tooltip'   => __( 'Columns to divide each points type.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'select',
+                'options'   => array(
                     '1' => __( '1 Column', 'gamipress' ),
                     '2' => __( '2 Columns', 'gamipress' ),
                     '3' => __( '3 Columns', 'gamipress' ),
@@ -51,10 +53,11 @@ function gamipress_register_points_types_shortcode() {
                 'default' => '1'
             ),
             'columns_small' => array(
-                'name'        => __( 'Columns in small screens', 'gamipress' ),
-                'description' => __( 'Columns to divide each points type in small screens.', 'gamipress' ),
-                'type' 	=> 'select',
-                'options' => array(
+                'name'      => __( 'Columns in small screens', 'gamipress' ),
+                'tooltip'   => __( 'Columns to divide each points type in small screens.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'select',
+                'options'   => array(
                     '1' => __( '1 Column', 'gamipress' ),
                     '2' => __( '2 Columns', 'gamipress' ),
                     '3' => __( '3 Columns', 'gamipress' ),
@@ -65,62 +68,70 @@ function gamipress_register_points_types_shortcode() {
                 'default' => '1'
             ),
             'title_size' => array(
-                'name'              => __( 'Title Size', 'gamipress' ),
-                'description'       => __( 'The points type title size.', 'gamipress' ),
-                'type' 		        => 'select',
-                'classes' 		    => 'gamipress-font-size',
-                'options' 	        => gamipress_title_size_options(),
-                'default'           => 'h2'
+                'name'      => __( 'Title Size', 'gamipress' ),
+                'tooltip'   => __( 'The points type title size.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'classes'   => 'gamipress-font-size',
+                'options'   => gamipress_title_size_options(),
+                'default'   => 'h2'
             ),
             'thumbnail' => array(
-                'name'        => __( 'Show Thumbnail', 'gamipress' ),
-                'description' => __( 'Display the points type featured image.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes'
+                'name'      => __( 'Show Thumbnail', 'gamipress' ),
+                'tooltip'   => __( 'Display the points type featured image.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'thumbnail_size' => array(
-                'name'        => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
-                'description' => __( 'The points type featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
-                'type' 	=> 'text',
+                'name'      => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
+                'tooltip'   => __( 'The points type featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'text',
                 'attributes' => array(
                     'type' => 'number',
                 )
             ),
             'awards' => array(
-                'name'        => __( 'Show Points Awards', 'gamipress' ),
-                'description' => __( 'Display the points type awards.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes',
+                'name'      => __( 'Show Points Awards', 'gamipress' ),
+                'tooltip'   => __( 'Display the points type awards.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'  	=> 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes',
             ),
             'deducts' => array(
-                'name'        => __( 'Show Points Deductions', 'gamipress' ),
-                'description' => __( 'Display the points type deducts.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes',
+                'name'      => __( 'Show Points Deductions', 'gamipress' ),
+                'tooltip'   => __( 'Display the points type deducts.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes',
             ),
             'toggle' => array(
-                'name'        => __( 'Show Points Awards/Deducts Toggle', 'gamipress' ),
-                'description' => __( 'Display the points type awards and deducts toggle.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes'
+                'name'      => __( 'Show Points Awards/Deducts Toggle', 'gamipress' ),
+                'tooltip'   => __( 'Display the points type awards and deducts toggle.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'heading' => array(
-                'name'        => __( 'Show Points Awards/Deducts Heading', 'gamipress' ),
-                'description' => __( 'Display the points type awards and deducts heading text.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes'
+                'name'      => __( 'Show Points Awards/Deducts Heading', 'gamipress' ),
+                'tooltip'   => __( 'Display the points type awards and deducts heading text.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'heading_size' => array(
-                'name'              => __( 'Points Awards/Deducts Heading Size', 'gamipress' ),
-                'description'       => __( 'The the points type awards and deducts heading text size.', 'gamipress' ),
-                'type' 		        => 'select',
-                'classes' 		    => 'gamipress-font-size',
-                'options' 	        => array(
+                'name'      => __( 'Points Awards/Deducts Heading Size', 'gamipress' ),
+                'tooltip'   => __( 'The the points type awards and deducts heading text size.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'classes'   => 'gamipress-font-size',
+                'options'   => array(
                     'h1'    => __( 'Heading 1', 'gamipress' ),
                     'h2'    => __( 'Heading 2', 'gamipress' ),
                     'h3'    => __( 'Heading 3', 'gamipress' ),
@@ -132,42 +143,47 @@ function gamipress_register_points_types_shortcode() {
                 'default'           => 'h4'
             ),
             'layout' => array(
-                'name'        => __( 'Layout', 'gamipress' ),
-                'description' => __( 'Layout to show the points type.', 'gamipress' ),
-                'type' 		  => 'radio',
-                'options' 	  => gamipress_get_layout_options(),
-                'default' 	  => 'left',
-                'inline' 	  => true,
-                'classes' 	  => 'gamipress-image-options'
+                'name'      => __( 'Layout', 'gamipress' ),
+                'tooltip'   => __( 'Layout to show the points type.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'radio',
+                'options'   => gamipress_get_layout_options(),
+                'default'   => 'left',
+                'inline'    => true,
+                'classes'   => 'gamipress-image-options'
             ),
             'align' => array(
-                'name'        => __( 'Alignment', 'gamipress' ),
-                'description' => __( 'Alignment to show the points.', 'gamipress' ),
-                'type' 		  => 'radio',
-                'options' 	  => gamipress_get_alignment_options(),
-                'default' 	  => 'none',
-                'inline' 	  => true,
-                'classes' 	  => 'gamipress-image-options'
+                'name'      => __( 'Alignment', 'gamipress' ),
+                'tooltip'   => __( 'Alignment to show the points.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'radio',
+                'options'   => gamipress_get_alignment_options(),
+                'default'   => 'none',
+                'inline'    => true,
+                'classes'   => 'gamipress-image-options'
             ),
             'current_user' => array(
-                'name'          => __( 'Current User', 'gamipress' ),
-                'description'   => __( 'Show points awards and deducts earned by the current logged in user.', 'gamipress' ),
-                'type' 		    => 'checkbox',
-                'classes' 	    => 'gamipress-switch',
-                'default' 	  => 'yes',
+                'name'      => __( 'Current User', 'gamipress' ),
+                'tooltip'   => __( 'Show points awards and deducts earned by the current logged in user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes',
             ),
             'user_id' => array(
-                'name'          => __( 'User', 'gamipress' ),
-                'description'   => __( 'Show points awards and deducts earned by a specific user.', 'gamipress' ),
-                'type'          => 'select',
-                'default'       => '',
+                'name'      => __( 'User', 'gamipress' ),
+                'tooltip'   => __( 'Show points awards and deducts earned by a specific user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'default'   => '',
                 'options_cb'    => 'gamipress_options_cb_users'
             ),
             'wpms' => array(
-                'name'        => __( 'Include Multisite Points Types', 'gamipress' ),
-                'description' => __( 'Show points types from all network sites.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
+                'name'      => __( 'Include Multisite Points Types', 'gamipress' ),
+                'tooltip'   => __( 'Show points types from all network sites.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
             ),
         ),
     ) );

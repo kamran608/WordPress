@@ -25,7 +25,8 @@ function gamipress_register_inline_achievement_shortcode() {
 		'fields'      		=> array(
 			'id' => array(
 				'name'              => __( 'Achievement', 'gamipress' ),
-				'description'       => __( 'The achievement to render.', 'gamipress' ),
+                'tooltip'           => __( 'The achievement to render.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'The ID of the achievement to render.', 'gamipress' ),
 				'type'              => 'select',
                 'classes' 	        => 'gamipress-post-selector',
@@ -37,23 +38,26 @@ function gamipress_register_inline_achievement_shortcode() {
 				'options_cb'        => 'gamipress_options_cb_posts'
 			),
 			'link' => array(
-				'name'        => __( 'Show Link', 'gamipress' ),
-				'description' => __( 'Show achievement as a link to the achievement page.', 'gamipress' ),
-				'type' 	        => 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Link', 'gamipress' ),
+                'tooltip'   => __( 'Show achievement as a link to the achievement page.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'      => 'checkbox',
+				'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
 			'thumbnail' => array(
-				'name'        => __( 'Show Thumbnail', 'gamipress' ),
-				'description' => __( 'Display the achievement featured image.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Thumbnail', 'gamipress' ),
+                'tooltip'   => __( 'Display the achievement featured image.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'thumbnail_size' => array(
-                'name'        => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
-                'description' => __( 'The achievement featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
-                'type' 	=> 'text',
+                'name'      => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
+                'tooltip'   => __( 'The achievement featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'text',
                 'attributes' => array(
                     'type' => 'number',
                 )

@@ -32,7 +32,7 @@ function gamipress_assets_page() {
         <h1 class="wp-heading-inline"><?php _e( 'GamiPress Assets', 'gamipress' ); ?></h1>
         <hr class="wp-header-end">
 
-        <p><?php _e( 'Resources to decorate your gamification elements and take their design to the next level!.', 'gamipress' ); ?></p>
+        <p><?php esc_html_e( 'Resources to decorate your gamification elements and take their design to the next level!', 'gamipress' ); ?></p>
 
         <form id="plugin-filter" method="post">
             <div class="wp-list-table widefat gamipress-assets">

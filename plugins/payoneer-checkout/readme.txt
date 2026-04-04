@@ -1,44 +1,44 @@
 === Payoneer Checkout ===
 Contributors: payoneercheckout, inpsyde
 Tags: payment, woocommerce, checkout
-Requires at least: 5.3
-Tested up to: 6.8.3
+Requires at least: 6.5
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.5.4
+Stable tag: 3.5.6
 License: MPL-2.0
 License URI: https://www.mozilla.org/en-US/MPL/2.0/
 
-Payoneer Checkout for WooCommerce - Build beautiful checkout flows + manage payments in one place 
+Payoneer Checkout for WooCommerce - Build beautiful checkout flows + manage payments in one place
 
 == Description ==
 
-Payoneer Checkout is the next generation of payment processing platforms, giving merchants around the world the solutions and direction they need to succeed in today’s hyper-competitive global market. 
+Payoneer Checkout is the next generation of payment processing platforms, giving merchants around the world the solutions and direction they need to succeed in today’s hyper-competitive global market.
 
-We’re talking, out of the box payments pages, major payment methods supported, critical currencies provisioned, fraud prevention, chargeback management, developer tools, multi-store support, analytics capabilities, supplier payment options, fund withdrawal from your local account, virtual and physical cards, capital advances and many more.  
+We’re talking, out of the box payments pages, major payment methods supported, critical currencies provisioned, fraud prevention, chargeback management, developer tools, multi-store support, analytics capabilities, supplier payment options, fund withdrawal from your local account, virtual and physical cards, capital advances and many more.
 
-All managed from one place. 
+All managed from one place.
 
-Be like the brands you look up to: offer frictionless payment experiences through Payoneer Checkout, that make customers want to buy. 
+Be like the brands you look up to: offer frictionless payment experiences through Payoneer Checkout, that make customers want to buy.
 
-* Increase acceptance rates 
-* Reduce cart abandonment 
-* Speed up your settlement times 
-* Save on foreign exchange fees 
-* Reduce fraudulent payments 
-* Ensure store compliance 
+* Increase acceptance rates
+* Reduce cart abandonment
+* Speed up your settlement times
+* Save on foreign exchange fees
+* Reduce fraudulent payments
+* Ensure store compliance
 
 = Why are global merchants switching to Payoneer Checkout? =
 
 * Over 17 years’ experience delivering high quality financial solutions at budget prices
-* The world’s biggest brands, like Ebay, Amazon and Airbnb, trust us… 
-* … And smallest, with over 5 million customers and counting around the globe 
-* Transparent pricing now and forever 
-* Cast iron compliance: we are regularly audited by the world’s top financial institutions 
-* Security built into every single transaction, protecting you 365 days of the year 
-* 24/7 support, in your local language, delivered by business experts 
-* Endorsements by Forbes, Bloomberg, Reuters and many more 
- 
-= Reach customers in 190+ countries worldwide = 
+* The world’s biggest brands, like Ebay, Amazon and Airbnb, trust us…
+* … And smallest, with over 5 million customers and counting around the globe
+* Transparent pricing now and forever
+* Cast iron compliance: we are regularly audited by the world’s top financial institutions
+* Security built into every single transaction, protecting you 365 days of the year
+* 24/7 support, in your local language, delivered by business experts
+* Endorsements by Forbes, Bloomberg, Reuters and many more
+
+= Reach customers in 190+ countries worldwide =
 
 Our global banking and payment networks stretch around the world so we can support you and your customers no matter where they are.
 
@@ -58,6 +58,26 @@ Our global banking and payment networks stretch around the world so we can suppo
 == Screenshots ==
 
 == Changelog ==
+
+= [3.5.6] - 2026-02-23 =
+* Fixed:
+    * No longer creating List sessions for logged in users before visiting relevant cart or checkout pages
+    * No longer creating duplicate List sessions on the pay-for-order page, reducing webhook calls
+
+* Changed:
+    * Validating List session before payment to prevent paid orders staying in on-hold state
+
+= [3.5.5] - 2026-01-28 =
+* Fixed:
+  * Endless spinner issue after changing country during checkout. Country selection now properly triggers checkout updates without indefinite loading states
+  * Embedded WooCommerce checkout form loading failure caused by conflict with FunnelKit Funnel Builder Pro plugin
+
+* Changed:
+  * Minimum required WordPress and WooCommerce versions have been updated . Please ensure your site meets the new requirements before upgrading
+  * Updated WebSDK to version 1.24, which properly handles declined test card payments in production mode, preventing endless spinner and cart clearing issues
+  * Classic checkout form is now blocked when a page reload is initiated, preventing submission during page transitions
+  * Added buyer-facing message during payment processing to discourage manual page reloads, reducing payment failures and duplicate order attempts
+  * Smaller plugin zip file, as legacy files were removed from the package
 
 = [3.5.4] - 2025-10-30 =
 * Fixed:
@@ -346,7 +366,7 @@ Our global banking and payment networks stretch around the world so we can suppo
 
 = 0.2.1 - 2022-05-25 =
 ### Fixed
-* Fix: Unpaid orders also show a working transation ID on the orders page
+* Fix: Unpaid orders also show a working transaction ID on the orders page
 * Fix: Removed giant error message during checkout that coiuld appear in rare cases
 * Fix: LIST session is only stored on the order if it was paid for with our gateway
 * Fix: Checkout widget handles removal of payment gateway during checkout more gracefully

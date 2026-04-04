@@ -77,3 +77,22 @@ function gamipress_presto_player_ajax_get_posts() {
 
 }
 add_action( 'wp_ajax_gamipress_get_posts', 'gamipress_presto_player_ajax_get_posts', 5 );
+
+/**
+ * Get Presto Player platforms
+ * 
+ * @since 1.0.0
+ *
+ * @return array
+ */
+function gamipress_preto_player_get_platforms() {
+
+    return array(
+        'youtube'       => __( 'Youtube', 'gamipress' ),
+        'vimeo'         => __( 'Vimeo', 'gamipress' ),
+        'self-hosted'   => __( 'Self-hosted', 'gamipress' ),
+        'bunny'         => __( 'Bunny', 'gamipress' ),
+        'audio'         => __( 'Audio', 'gamipress' ),
+    );
+
+}

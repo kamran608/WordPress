@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\SEO\General\User_Interface;
 
+use WPSEO_Addon_Manager;
 use WPSEO_Admin_Asset_Manager;
 use Yoast\WP\SEO\Actions\Alert_Dismissal_Action;
 use Yoast\WP\SEO\Conditionals\Admin\Non_Network_Admin_Conditional;
@@ -16,6 +17,7 @@ use Yoast\WP\SEO\Helpers\Short_Link_Helper;
 use Yoast\WP\SEO\Helpers\User_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Promotions\Application\Promotion_Manager;
+use Yoast\WP\SEO\Task_List\Application\Configuration\Task_List_Configuration;
 
 /**
  * Class General_Page_Integration.
@@ -40,6 +42,13 @@ class General_Page_Integration implements Integration_Interface {
 	 * @var Dashboard_Configuration
 	 */
 	private $dashboard_configuration;
+
+	/**
+	 * The task list configuration.
+	 *
+	 * @var Task_List_Configuration
+	 */
+	private $task_list_configuration;
 
 	/**
 	 * Holds the WPSEO_Admin_Asset_Manager.
@@ -105,6 +114,13 @@ class General_Page_Integration implements Integration_Interface {
 	private $woocommerce_conditional;
 
 	/**
+	 * Holds the WPSEO_Addon_Manager.
+	 *
+	 * @var WPSEO_Addon_Manager
+	 */
+	private $addon_manager;
+
+	/**
 	 * Constructs Academy_Integration.
 	 *
 	 * @param WPSEO_Admin_Asset_Manager $asset_manager           The WPSEO_Admin_Asset_Manager.
@@ -118,6 +134,8 @@ class General_Page_Integration implements Integration_Interface {
 	 * @param User_Helper               $user_helper             The user helper.
 	 * @param Options_Helper            $options_helper          The options helper.
 	 * @param WooCommerce_Conditional   $woocommerce_conditional The WooCommerce conditional.
+	 * @param WPSEO_Addon_Manager       $addon_manager           The WPSEO_Addon_Manager.
+	 * @param Task_List_Configuration   $task_list_configuration The task list configuration.
 	 */
 	public function __construct(
 		WPSEO_Admin_Asset_Manager $asset_manager,
@@ -130,7 +148,9 @@ class General_Page_Integration implements Integration_Interface {
 		Dashboard_Configuration $dashboard_configuration,
 		User_Helper $user_helper,
 		Options_Helper $options_helper,
-		WooCommerce_Conditional $woocommerce_conditional
+		WooCommerce_Conditional $woocommerce_conditional,
+		WPSEO_Addon_Manager $addon_manager,
+		Task_List_Configuration $task_list_configuration
 	) {
 		$this->asset_manager           = $asset_manager;
 		$this->current_page_helper     = $current_page_helper;
@@ -143,6 +163,8 @@ class General_Page_Integration implements Integration_Interface {
 		$this->user_helper             = $user_helper;
 		$this->options_helper          = $options_helper;
 		$this->woocommerce_conditional = $woocommerce_conditional;
+		$this->addon_manager           = $addon_manager;
+		$this->task_list_configuration = $task_list_configuration;
 	}
 
 	/**
@@ -193,7 +215,7 @@ class General_Page_Integration implements Integration_Interface {
 					self::PAGE,
 					[ $this, 'display_page' ],
 				],
-			]
+			],
 		);
 
 		return $pages;
@@ -235,6 +257,7 @@ class General_Page_Integration implements Integration_Interface {
 			'preferences'           => [
 				'isPremium'              => $this->product_helper->is_premium(),
 				'isRtl'                  => \is_rtl(),
+				'userLocale'             => \get_user_locale(),
 				'pluginUrl'              => \plugins_url( '', \WPSEO_FILE ),
 				'upsellSettings'         => [
 					'actionId'     => 'load-nfd-ctb',
@@ -242,6 +265,13 @@ class General_Page_Integration implements Integration_Interface {
 				],
 				'llmTxtEnabled'          => $this->options_helper->get( 'enable_llms_txt', true ),
 				'isWooCommerceActive'    => $this->woocommerce_conditional->is_met(),
+				'addonsStatus'           => [
+					'isWooSeoActive'         => \is_plugin_active( $this->addon_manager->get_plugin_file( WPSEO_Addon_Manager::WOOCOMMERCE_SLUG ) ),
+					'isLocalSEOActive'       => \is_plugin_active( $this->addon_manager->get_plugin_file( WPSEO_Addon_Manager::LOCAL_SLUG ) ),
+					'isNewsSEOActive'        => \is_plugin_active( $this->addon_manager->get_plugin_file( WPSEO_Addon_Manager::NEWS_SLUG ) ),
+					'isVideoSEOActive'       => \is_plugin_active( $this->addon_manager->get_plugin_file( WPSEO_Addon_Manager::VIDEO_SLUG ) ),
+					'isDuplicatePostActive'  => \defined( 'DUPLICATE_POST_FILE' ),
+				],
 			],
 			'adminUrl'              => \admin_url( 'admin.php' ),
 			'linkParams'            => $this->shortlink_helper->get_query_params(),
@@ -251,8 +281,9 @@ class General_Page_Integration implements Integration_Interface {
 			'dismissedAlerts'       => $this->alert_dismissal_action->all_dismissed(),
 			'dashboard'             => $this->dashboard_configuration->get_configuration(),
 			'optInNotificationSeen' => [
-				'wpseo_seen_llm_txt_opt_in_notification' => $this->is_llms_txt_opt_in_notification_seen(),
+				'task_list' => $this->is_task_list_opt_in_notification_seen(),
 			],
+			'taskListConfiguration' => $this->task_list_configuration->get_configuration(),
 		];
 	}
 
@@ -261,8 +292,8 @@ class General_Page_Integration implements Integration_Interface {
 	 *
 	 * @return bool True if the notification has been seen, false otherwise.
 	 */
-	private function is_llms_txt_opt_in_notification_seen(): bool {
+	private function is_task_list_opt_in_notification_seen(): bool {
 		$current_user_id = $this->user_helper->get_current_user_id();
-		return (bool) $this->user_helper->get_meta( $current_user_id, 'wpseo_seen_llm_txt_opt_in_notification', true );
+		return (bool) $this->user_helper->get_meta( $current_user_id, '_yoast_wpseo_task_list_opt_in_notification_seen', true );
 	}
 }

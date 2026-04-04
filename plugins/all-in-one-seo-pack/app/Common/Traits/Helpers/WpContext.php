@@ -357,7 +357,7 @@ trait WpContext {
 		// The order of the function calls below is intentional and should NOT change.
 		$postContent = $this->doBlocks( $postContent );
 		$postContent = wpautop( $postContent );
-		$postContent = $this->doShortcodes( $postContent );
+		$postContent = @$this->doShortcodes( $postContent );
 
 		$this->restoreWpQuery();
 
@@ -661,7 +661,6 @@ trait WpContext {
 	 */
 	public function attachmentUrlToPostId( $url ) {
 		$cacheName = 'attachment_url_to_post_id_' . sha1( "aioseo_attachment_url_to_post_id_$url" );
-
 		$cachedId = aioseo()->core->cache->get( $cacheName );
 		if ( $cachedId ) {
 			return 'none' !== $cachedId && is_numeric( $cachedId ) ? (int) $cachedId : false;
@@ -972,6 +971,44 @@ trait WpContext {
 		// phpcs:enable Squiz.NamingConventions.ValidVariableName
 
 		$post = $wpPost;
+	}
+
+	/**
+	 * Sets the given term as the queried object of the main query.
+	 *
+	 * @since 4.9.3
+	 *
+	 * @param  \WP_Term|int $wpTerm   The term object or ID.
+	 * @param  string       $taxonomy The taxonomy name. Required if $wpTerm is an ID.
+	 * @return void
+	 */
+	public function setWpQueryTerm( $wpTerm, $taxonomy = '' ) {
+		$wpTerm = is_a( $wpTerm, 'WP_Term' ) ? $wpTerm : get_term( $wpTerm, $taxonomy );
+		if ( ! is_a( $wpTerm, 'WP_Term' ) ) {
+			return;
+		}
+
+		// phpcs:disable Squiz.NamingConventions.ValidVariableName
+		global $wp_query;
+		$this->originalQuery = $this->deepClone( $wp_query );
+
+		$wp_query->queried_object    = $wpTerm;
+		$wp_query->queried_object_id = (int) $wpTerm->term_id;
+		$wp_query->is_archive        = true;
+
+		// Set the appropriate taxonomy flag.
+		switch ( $wpTerm->taxonomy ) {
+			case 'category':
+				$wp_query->is_category = true;
+				break;
+			case 'post_tag':
+				$wp_query->is_tag = true;
+				break;
+			default:
+				$wp_query->is_tax = true;
+				break;
+		}
+		// phpcs:enable Squiz.NamingConventions.ValidVariableName
 	}
 
 	/**

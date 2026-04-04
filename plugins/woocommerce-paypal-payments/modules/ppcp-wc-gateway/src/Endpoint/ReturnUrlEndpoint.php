@@ -112,7 +112,7 @@ class ReturnUrlEndpoint
             exit;
         }
         $wc_order = wc_get_order($wc_order_id);
-        if (!is_a($wc_order, \WC_Order::class)) {
+        if (!$wc_order instanceof \WC_Order) {
             $this->logger->warning("Return URL endpoint {$token}: WC order {$wc_order_id} not found.");
             wc_add_notice(__('Order not found. Please try placing your order again.', 'woocommerce-paypal-payments'), 'error');
             wp_safe_redirect($this->get_checkout_url_with_error());
@@ -144,13 +144,20 @@ class ReturnUrlEndpoint
         exit;
     }
     /**
-     * Get checkout URL with Fastlane error parameter.
+     * Get checkout URL with additional error parameters.
      *
-     * @return string
+     * Applies the 'ppcp_return_url_error_args' filter to allow external modules to add error parameters.
+     *
+     * @return string Checkout URL with error query arguments, if any.
      */
     private function get_checkout_url_with_error(): string
     {
-        return add_query_arg('ppcp_fastlane_error', '1', wc_get_checkout_url());
+        $url = wc_get_checkout_url();
+        $args = apply_filters('ppcp_return_url_error_args', array(), $this);
+        if (!empty($args)) {
+            $url = add_query_arg($args, $url);
+        }
+        return $url;
     }
     /**
      * Check if order needs 3DS completion.

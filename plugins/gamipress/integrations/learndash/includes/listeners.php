@@ -733,3 +733,25 @@ function gamipress_ld_join_group( $user_id, $group_id ) {
 
 }
 add_action( 'ld_added_group_access', 'gamipress_ld_join_group', 10, 2 );
+
+/**
+ * Review course
+ *
+ * @since 1.1.3
+ *
+ * @param int $user_id
+ * @param int $group_id
+ */
+function gamipress_ld_review_course( $comment, $depth, $args ) {
+
+    $user_id = $comment->user_id;
+    $course_id = $comment->comment_post_ID;
+
+    // Join a group
+    do_action( 'gamipress_ld_review_course', $course_id, $user_id );
+
+    // Join a specific group
+    do_action( 'gamipress_ld_review_specific_course', $course_id, $user_id );
+
+}
+add_action( 'learndash_course_reviews_before_review', 'gamipress_ld_review_course', 10, 3 );

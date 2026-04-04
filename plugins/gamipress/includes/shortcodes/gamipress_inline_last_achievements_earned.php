@@ -23,7 +23,8 @@ function gamipress_register_inline_last_achievements_earned_shortcode() {
     // Register as singular to keep backward compatibility
 	gamipress_register_shortcode( 'gamipress_inline_last_achievements_earned', array(
 		'name'              => __( 'Inline Last Achievements Earned', 'gamipress' ),
-		'description'       => __( 'Display the last achievements earned by the current user or a desired user inline.', 'gamipress' ),
+        'tooltip'           => __( 'Display the last achievements earned by the current user or a desired user inline.', 'gamipress' ),
+        'label_cb'          => 'cmb_tooltip_label_cb',
         'icon' 	            => 'awards',
         'group' 	        => 'gamipress',
 		'output_callback'   => 'gamipress_inline_last_achievements_earned_shortcode',
@@ -49,7 +50,8 @@ function gamipress_register_inline_last_achievements_earned_shortcode() {
 		'fields'      => array_merge( array(
 			'type' => array(
 				'name'              => __( 'Achievement Type', 'gamipress' ),
-				'description'       => __( 'The type of the last achievement earned.', 'gamipress' ),
+                'tooltip'           => __( 'The type of the last achievement earned.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
 				'type'              => 'select',
                 'classes' 	        => 'gamipress-selector',
 				'option_none'       => true,
@@ -58,24 +60,27 @@ function gamipress_register_inline_last_achievements_earned_shortcode() {
 				'default'           => '',
 			),
 			'current_user' => array(
-				'name'        => __( 'Current User', 'gamipress' ),
-				'description' => __( 'Show the last achievement earned by the current logged in user.', 'gamipress' ),
-				'type' 		  => 'checkbox',
-				'classes' 	  => 'gamipress-switch',
-                'default' 	    => 'yes',
+				'name'      => __( 'Current User', 'gamipress' ),
+                'tooltip'   => __( 'Show the last achievement earned by the current logged in user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'      => 'checkbox',
+				'classes'   => 'gamipress-switch',
+                'default'   => 'yes',
 			),
 			'user_id' => array(
-				'name'        => __( 'User', 'gamipress' ),
-				'description' => __( 'Show the last achievement earned by a specific user.', 'gamipress' ),
-				'type'        => 'select',
-				'default'     => '',
+				'name'      => __( 'User', 'gamipress' ),
+                'tooltip'   => __( 'Show the last achievement earned by a specific user.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'      => 'select',
+				'default'   => '',
                 'options_cb'  => 'gamipress_options_cb_users'
 			),
             'limit' => array(
-                'name'        => __( 'Limit', 'gamipress' ),
-                'description' => __( 'Number of achievements to display.', 'gamipress' ),
-                'type'        => 'text',
-                'default'     => '1',
+                'name'      => __( 'Limit', 'gamipress' ),
+                'tooltip'   => __( 'Number of achievements to display.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
+                'default'   => '1',
             ),
 		), $achievement_fields ),
 	) );

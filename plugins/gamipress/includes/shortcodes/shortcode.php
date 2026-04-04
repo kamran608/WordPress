@@ -123,6 +123,25 @@ class GamiPress_Shortcode {
 
 		// Filter to register custom shortcode fields
 		$this->fields      	    = apply_filters( "gamipress_{$this->slug}_shortcode_fields", $args['fields'] );
+
+        // Make some adjustments to fields attributes
+        foreach( $this->fields as $field_id => $field ) {
+
+            // Update tooltip position to left
+            if( isset( $field['tooltip'] ) ) {
+
+                if( ! is_array( $field['tooltip'] ) ) {
+                    // tooltip => description
+                    $field['tooltip'] = array(
+                        'desc' => $field['tooltip'],
+                        'position' => 'left',
+                    );
+                }
+
+            }
+
+            $this->fields[$field_id] = $field;
+        }
 	}
 
 	public function register_shortcode( $shortcodes = array() ) {

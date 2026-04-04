@@ -1805,7 +1805,13 @@ function gamipress_revoke_achievement_to_user( $achievement_id = 0, $user_id = 0
 
         if( $earning ) {
             // Get the points and points type from the user earning entry
+            // Check if negative points
+            $is_negative = $earning->points < 0;
             $points = absint( $earning->points );
+
+            if( $is_negative )
+                $points *= -1; 
+
             $points_type = $earning->points_type;
         } else {
             // Get the points and points type from the post provided

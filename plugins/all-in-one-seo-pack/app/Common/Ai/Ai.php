@@ -14,6 +14,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Ai {
 	/**
+	 * The assistant class.
+	 *
+	 * @since 4.9.1
+	 *
+	 * @var Assistant|null
+	 */
+	public $assistant = null;
+
+	/**
 	 * The image class.
 	 *
 	 * @since 4.8.8
@@ -42,6 +51,15 @@ class Ai {
 	private $aiGeneratorApiUrl = 'https://ai-generator.aioseo.com/v1/';
 
 	/**
+	 * The action name for getting the access token.
+	 *
+	 * @since 4.9.1
+	 *
+	 * @var string
+	 */
+	protected $getAccessTokenAction = 'aioseo_ai_get_access_token';
+
+	/**
 	 * The action name for fetching credits.
 	 *
 	 * @since 4.8.4
@@ -56,22 +74,31 @@ class Ai {
 	 * @since 4.8.4
 	 */
 	public function __construct() {
-		add_action( 'init', [ $this, 'getAccessToken' ] );
+		add_action( 'admin_init', [ $this, 'scheduleGetAccessToken' ] );
+		add_action( 'admin_init', [ $this, 'scheduleCreditFetchAction' ] );
 
-		add_action( 'init', [ $this, 'scheduleCreditFetchAction' ] );
+		add_action( $this->getAccessTokenAction, [ $this, 'getAccessToken' ] );
 		add_action( $this->creditFetchAction, [ $this, 'updateCredits' ] );
 
-		// If param is set, fetch credits but just once per 5 minutes to prevent abuse.
-		if (
-			isset( $_REQUEST['aioseo-ai-credits'] ) && // phpcs:ignore HM.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Recommended
-			! aioseo()->core->cache->get( 'ai_get_credits' )
-		) {
-			add_action( 'init', [ $this, 'updateCredits' ] );
+		$this->assistant = new Assistant();
+		$this->image     = new Image();
+	}
 
-			aioseo()->core->cache->update( 'ai_get_credits', true, 5 * MINUTE_IN_SECONDS );
+	/**
+	 * Schedules the initial access token fetch action if no access token is set.
+	 *
+	 * @since 4.9.1
+	 *
+	 * @return void
+	 */
+	public function scheduleGetAccessToken() {
+		if ( aioseo()->internalOptions->internal->ai->accessToken ) {
+			return;
 		}
 
-		$this->image = new Image();
+		if ( ! aioseo()->actionScheduler->isScheduled( $this->getAccessTokenAction ) ) {
+			aioseo()->actionScheduler->scheduleSingle( $this->getAccessTokenAction, 0, [], true );
+		}
 	}
 
 	/**
@@ -89,14 +116,20 @@ class Ai {
 			return;
 		}
 
+		// Don't overwrite manually connected tokens.
+		// Credits can still be refreshed via updateCredits() independently.
+		if ( aioseo()->internalOptions->internal->ai->isManuallyConnected ) {
+			return;
+		}
+
 		if ( aioseo()->core->cache->get( 'ai-access-token-error' ) ) {
 			return;
 		}
 
-		$response = wp_remote_post( $this->getApiUrl() . 'ai/auth/', [
-			'body' => [
+		$response = aioseo()->helpers->wpRemotePost( $this->getApiUrl() . 'ai/auth/', [
+			'body' => wp_json_encode( [
 				'domain' => aioseo()->helpers->getSiteDomain()
-			]
+			] )
 		] );
 
 		if ( is_wp_error( $response ) ) {
@@ -137,10 +170,17 @@ class Ai {
 	 * @return void
 	 */
 	public function scheduleCreditFetchAction() {
-		// If not set up, create a scheduled action to refresh the credits each day.
-		if ( ! aioseo()->actionScheduler->isScheduled( $this->creditFetchAction ) ) {
-			aioseo()->actionScheduler->scheduleRecurrent( $this->creditFetchAction, DAY_IN_SECONDS, DAY_IN_SECONDS, [] );
+		if ( apply_filters( 'aioseo_ai_disabled', false ) ) {
+			aioseo()->actionScheduler->unschedule( $this->creditFetchAction );
+
+			return;
 		}
+
+		if ( aioseo()->actionScheduler->isScheduled( $this->creditFetchAction ) ) {
+			return;
+		}
+
+		aioseo()->actionScheduler->scheduleRecurrent( $this->creditFetchAction, DAY_IN_SECONDS, DAY_IN_SECONDS, [] );
 	}
 
 	/**
@@ -218,6 +258,10 @@ class Ai {
 			aioseo()->internalOptions->internal->ai->credits->license->expires   = intval( $data->license->expires );
 		} else {
 			aioseo()->internalOptions->internal->ai->credits->license->reset();
+		}
+
+		if ( ! empty( $data->costPerFeature ) ) {
+			aioseo()->internalOptions->internal->ai->costPerFeature = json_decode( wp_json_encode( $data->costPerFeature ), true );
 		}
 	}
 

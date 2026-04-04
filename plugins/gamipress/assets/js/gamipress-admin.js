@@ -132,8 +132,8 @@
 
 	$('.gamipress-form').on( 'keyup', 'input#post_name', function() {
 		var field = $(this);
-		var slug = $(this).val();
-		var preview = $(this).next('.cmb2-metabox-description').find('.gamipress-post-name');
+		var slug = field.val();
+		var preview = field.next('.cmb2-metabox-description').find('.gamipress-post-name');
 		var error = gamipress_get_slug_error( slug, current_slug );
 
 		// Update preview element
@@ -166,6 +166,39 @@
 	});
 
 	$('.gamipress-form input#post_name').trigger( 'keyup' );
+
+	// On change singular name, update plural and slug
+	$('.gamipress-form').on( 'keyup', 'input#post_title', function() {
+		var field = $(this);
+		var singular = field.val();
+		var form = field.closest('.gamipress-form');
+		var plural_field = form.find('input#_gamipress_plural_name');
+		var slug_field = form.find('input#post_name');
+
+		// Bail if not plural field found
+		if( plural_field.length === 0 ) {
+			return;
+		}
+
+		// Bail if user does not input letters
+		if( ! /[a-zA-Z]/g.test(singular) ) {
+			return;
+		}
+
+		var plural = singular + 'S';
+
+		// Add the "s" as lowercase if text has any lowercase letter
+		if( /[a-z]/g.test(singular) ) {
+			plural = singular + 's';
+		}
+
+		var slug = plural.toLowerCase().replaceAll(' ', '-');
+
+		// Update plural and slug field
+		plural_field.val( plural );
+		slug_field.val( slug );
+
+	});
 
 	// Edit user rank
     $('body').on('click', '.profile-rank .profile-rank-toggle', function(e) {
@@ -612,6 +645,36 @@
 		$('.gamipress_page_gamipress_add_ons .wp-filter a.current').trigger('click');
 
 	}
+
+	// Default badge
+	$('body').on('click', '.gamipress-badge-builder-default-badge-thumb', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		var $this = $(this);
+		var image = $this.data('image');
+		var post  = $this.data('post');
+
+		$('.gamipress-badge-builder-default-badge-thumb').removeClass('active');
+		$this.addClass('active');
+
+		$.post(
+			ajaxurl,
+			{
+				action: 'gamipress_badge_builder_set_featured_image',
+				nonce: gamipress_admin.nonce,
+				image: image,
+				post_id: post
+			}).done(function (response) {
+
+			if ( ! response || ! response.success )
+				return;
+
+			if (wp && wp.media && wp.media.featuredImage) {
+				wp.media.featuredImage.set( response.data );
+			}
+		});
+	});
 
 	// Hide review notice
     $('body').on('click', '.gamipress-hide-review-notice', function(e) {

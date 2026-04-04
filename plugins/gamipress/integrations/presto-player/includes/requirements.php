@@ -38,6 +38,13 @@ function gamipress_presto_player_requirement_object( $requirement, $requirement_
         $requirement['presto_player_max_percent'] = absint( get_post_meta( $requirement_id, '_gamipress_presto_player_max_percent', true ) );
     }
 
+    if( isset( $requirement['trigger_type'] )
+        && ( $requirement['trigger_type'] === 'gamipress_presto_player_watch_video_platform' ) ) {
+
+        // Platform
+        $requirement['presto_player_platform'] = absint( get_post_meta( $requirement_id, '_gamipress_presto_player_platform', true ) );
+    }
+
     return $requirement;
 }
 add_filter( 'gamipress_requirement_object', 'gamipress_presto_player_requirement_object', 10, 2 );
@@ -55,11 +62,22 @@ function gamipress_presto_player_requirement_ui_fields( $requirement_id, $post_i
     $percent = absint( get_post_meta( $requirement_id, '_gamipress_presto_player_percent', true ) );
     $min_percent = get_post_meta( $requirement_id, '_gamipress_presto_player_min_percent', true );
     $max_percent = get_post_meta( $requirement_id, '_gamipress_presto_player_max_percent', true );
+    $platform_id = get_post_meta( $requirement_id, '_gamipress_presto_player_platform', true );
+    $platforms = gamipress_preto_player_get_platforms();
     ?>
 
     <span class="presto-player-percent"><?php echo __( 'Percent:', 'gamipress' ); ?> <input type="number" min="0" max="100" step="1" value="<?php echo $percent; ?>" placeholder="<?php echo __( 'Percent', 'gamipress' ); ?>" />%</span>
     <span class="presto-player-min-percent"><input type="text" value="<?php echo ( ! empty( $min_percent ) ? absint( $min_percent ) : '' ); ?>" min="0" max="100" step="1" placeholder="Min" />% -</span>
     <span class="presto-player-max-percent"><input type="text" value="<?php echo ( ! empty( $max_percent ) ? absint( $max_percent ) : '' ); ?>" min="0" max="100" step="1" placeholder="Max" />%</span>
+
+    <span class="presto-player-platform">
+        <select>
+            <?php foreach( $platforms as $platform_key => $platform_value ) : ?>
+                <option value="<?php echo $platform_key; ?>" <?php selected( $platform_id, $platform_key ); ?>><?php echo $platform_value; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </span>
+
 
     <?php
 }
@@ -90,6 +108,13 @@ function gamipress_presto_player_ajax_update_requirement( $requirement_id, $requ
         // Min and max percent
         update_post_meta( $requirement_id, '_gamipress_presto_player_min_percent', $requirement['presto_player_min_percent'] );
         update_post_meta( $requirement_id, '_gamipress_presto_player_max_percent', $requirement['presto_player_max_percent'] );
+    }
+
+    if( isset( $requirement['trigger_type'] )
+        && ( $requirement['trigger_type'] === 'gamipress_presto_player_watch_video_platform' ) ) {
+
+        // Platform
+        update_post_meta( $requirement_id, '_gamipress_presto_player_platform', $requirement['presto_player_platform'] );
     }
 }
 add_action( 'gamipress_ajax_update_requirement', 'gamipress_presto_player_ajax_update_requirement', 10, 2 );

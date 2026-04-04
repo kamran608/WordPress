@@ -59,7 +59,8 @@ function gamipress_register_ranks_shortcode() {
 		'fields'      => array_merge( array(
 			'type' => array(
 				'name'              => __( 'Rank Type(s)', 'gamipress' ),
-				'description'       => __( 'Rank type(s) to display.', 'gamipress' ),
+				'tooltip'   		=> __( 'Rank type(s) to display.', 'gamipress' ),
+                'label_cb'  		=> 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'Single or comma-separated list of rank type(s) to display.', 'gamipress' ),
 				'type'              => 'advanced_select',
 				'multiple'          => true,
@@ -71,10 +72,11 @@ function gamipress_register_ranks_shortcode() {
 				'default'           => 'all',
 			),
 			'columns' => array(
-				'name'        => __( 'Columns', 'gamipress' ),
-				'description' => __( 'Columns to divide ranks.', 'gamipress' ),
-				'type' 	=> 'select',
-				'options' => array(
+				'name'		=> __( 'Columns', 'gamipress' ),
+				'tooltip'   => __( 'Columns to divide ranks.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 		=> 'select',
+				'options' 	=> array(
 					'1' => __( '1 Column', 'gamipress' ),
 					'2' => __( '2 Columns', 'gamipress' ),
 					'3' => __( '3 Columns', 'gamipress' ),
@@ -85,10 +87,11 @@ function gamipress_register_ranks_shortcode() {
 				'default' => '1'
 			),
             'columns_small' => array(
-                'name'        => __( 'Columns in small screens', 'gamipress' ),
-                'description' => __( 'Columns to divide ranks in small screens.', 'gamipress' ),
-                'type' 	=> 'select',
-                'options' => array(
+                'name'		=> __( 'Columns in small screens', 'gamipress' ),
+				'tooltip'   => __( 'Columns to divide ranks in small screens.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 		=> 'select',
+                'options' 	=> array(
                     '1' => __( '1 Column', 'gamipress' ),
                     '2' => __( '2 Columns', 'gamipress' ),
                     '3' => __( '3 Columns', 'gamipress' ),
@@ -99,10 +102,11 @@ function gamipress_register_ranks_shortcode() {
                 'default' => '1'
             ),
 			'orderby' => array(
-				'name'        => __( 'Order By', 'gamipress' ),
-				'description' => __( 'Parameter to use for sorting.', 'gamipress' ),
-				'type'        => 'select',
-				'options'      => array(
+				'name'		=> __( 'Order By', 'gamipress' ),
+				'tooltip'   => __( 'Parameter to use for sorting.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'select',
+				'options'	=> array(
 					'priority' 	 		=> __( 'Priority', 'gamipress' ),
 					'ID'         		=> __( 'Rank ID', 'gamipress' ),
 					'title'      		=> __( 'Title', 'gamipress' ),
@@ -114,28 +118,32 @@ function gamipress_register_ranks_shortcode() {
 				'default'     => 'priority',
 			),
 			'order' => array(
-				'name'        => __( 'Order', 'gamipress' ),
-				'description' => __( 'Sort order.', 'gamipress' ),
-				'type'        => 'select',
-				'options'      => array( 'ASC' => __( 'Ascending', 'gamipress' ), 'DESC' => __( 'Descending', 'gamipress' ) ),
-				'default'     => 'DESC',
+				'name'		=> __( 'Order', 'gamipress' ),
+				'tooltip'   => __( 'Sort order.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'select',
+				'options'	=> array( 'ASC' => __( 'Ascending', 'gamipress' ), 'DESC' => __( 'Descending', 'gamipress' ) ),
+				'default'	=> 'DESC',
 			),
 			'current_user' => array(
-				'name'        => __( 'Current User', 'gamipress' ),
-				'description' => __( 'Show the current logged in user ranks.', 'gamipress' ),
-				'type' 		  => 'checkbox',
-				'classes' 	  => 'gamipress-switch',
+				'name'		=> __( 'Current User', 'gamipress' ),
+				'tooltip'   => __( 'Show the current logged in user ranks.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'checkbox',
+				'classes'	=> 'gamipress-switch',
 			),
 			'user_id' => array(
-				'name'        => __( 'User', 'gamipress' ),
-				'description' => __( 'Show a specific user ranks.', 'gamipress' ),
-				'type'        => 'select',
-				'default'     => '',
+				'name'		=> __( 'User', 'gamipress' ),
+				'tooltip'   => __( 'Show a specific user ranks.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'select',
+				'default'	=> '',
 				'options_cb'  => 'gamipress_options_cb_users'
 			),
 			'include' => array(
 				'name'              => __( 'Include', 'gamipress' ),
-				'description'       => __( 'Ranks to include.', 'gamipress' ),
+				'tooltip'   		=> __( 'Ranks to include.', 'gamipress' ),
+                'label_cb'  		=> 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'Comma-separated list of specific rank IDs to include.', 'gamipress' ),
 				'type'              => 'advanced_select',
 				'multiple'          => true,
@@ -149,7 +157,8 @@ function gamipress_register_ranks_shortcode() {
 			),
 			'exclude' => array(
 				'name'              => __( 'Exclude', 'gamipress' ),
-				'description'       => __( 'Ranks to exclude.', 'gamipress' ),
+				'tooltip'   		=> __( 'Ranks to exclude.', 'gamipress' ),
+                'label_cb'  		=> 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'Comma-separated list of specific rank IDs to exclude.', 'gamipress' ),
 				'type'              => 'advanced_select',
 				'multiple'          => true,
@@ -162,10 +171,11 @@ function gamipress_register_ranks_shortcode() {
 				'options_cb'        => 'gamipress_options_cb_posts'
 			),
 			'wpms' => array(
-				'name'        => __( 'Include Multisite Ranks', 'gamipress' ),
-				'description' => __( 'Show ranks from all network sites.', 'gamipress' ),
-				'type' 		  => 'checkbox',
-				'classes' 	  => 'gamipress-switch',
+				'name'		=> __( 'Include Multisite Ranks', 'gamipress' ),
+				'tooltip'   => __( 'Show ranks from all network sites.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'		=> 'checkbox',
+				'classes'	=> 'gamipress-switch',
 			),
 		), $rank_fields ),
 	) );

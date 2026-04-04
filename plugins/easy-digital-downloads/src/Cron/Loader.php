@@ -14,6 +14,9 @@ namespace EDD\Cron;
 defined( 'ABSPATH' ) || exit; // @codeCoverageIgnore
 
 use EDD\EventManagement\SubscriberInterface;
+use EDD\Cron\Schedulers;
+use EDD\Cron\Migrator;
+use EDD\Utils\Transient;
 
 /**
  * Loader Class
@@ -38,11 +41,19 @@ class Loader implements SubscriberInterface {
 	/**
 	 * Add our custom schedules to the cron schedules.
 	 *
+	 * When Action Scheduler is available, EDD schedules are not added here; interval
+	 * lookup is done via Handler::get_schedule_interval() and the edd_cron_schedules filter.
+	 *
 	 * @since 3.3.0
 	 *
+	 * @param array $schedules Existing cron schedules.
 	 * @return array
 	 */
 	public function load_schedules( $schedules ) {
+		if ( Schedulers\Handler::is_using_action_scheduler() ) {
+			return $schedules;
+		}
+
 		foreach ( $this->get_registered_schedules() as $schedule ) {
 			// If this isn't a subclass of Schedule, skip it.
 			if ( ! is_subclass_of( $schedule, 'EDD\Cron\Schedules\Schedule' ) ) {
@@ -61,15 +72,35 @@ class Loader implements SubscriberInterface {
 	}
 
 	/**
+	 * The transient key used to track whether cron events have been registered.
+	 *
+	 * @since 3.6.6
+	 * @var string
+	 */
+	const EVENTS_REGISTERED_TRANSIENT = 'edd_cron_events_registered';
+
+	/**
 	 * Load any cron events we need to.
 	 *
 	 * Cron Events are the 'do_action' events that are fired by WordPress, on a defined schedule.
+	 *
+	 * Uses a transient to avoid checking schedule status on every page load.
+	 * When using Action Scheduler, each check requires database queries against
+	 * the actionscheduler_actions table. The transient ensures we only run these
+	 * checks periodically rather than on every request.
 	 *
 	 * @since 3.3.0
 	 *
 	 * @return void
 	 */
 	public function load_events() {
+		$this->maybe_migrate_to_action_scheduler();
+
+		$transient = new Transient( self::EVENTS_REGISTERED_TRANSIENT, '+1 hour' );
+		if ( false !== $transient->get() ) {
+			return;
+		}
+
 		foreach ( $this->get_registered_events() as $event ) {
 			// If this isn't a subclass of Event, skip it.
 			if ( ! is_subclass_of( $event, 'EDD\Cron\Events\Event' ) ) {
@@ -78,6 +109,23 @@ class Loader implements SubscriberInterface {
 
 			$event->schedule();
 		}
+
+		$transient->set( 1 );
+	}
+
+	/**
+	 * Clear the events registered transient.
+	 *
+	 * Call this when events need to be re-registered, such as after
+	 * plugin activation, deactivation, or upgrade.
+	 *
+	 * @since 3.6.6
+	 *
+	 * @return void
+	 */
+	public static function clear_events_transient() {
+		$transient = new Transient( self::EVENTS_REGISTERED_TRANSIENT, '+1 hour' );
+		$transient->delete();
 	}
 
 	/**
@@ -120,6 +168,94 @@ class Loader implements SubscriberInterface {
 	}
 
 	/**
+	 * Get the registered events.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @return array
+	 */
+	public static function get_registered_events() {
+		$registered_events = array(
+			new Events\DailyEvents(),
+			new Events\WeeklyEvents(),
+			new Events\StripeRateLimitingCleanup(),
+			new Events\LogPruning(),
+		);
+
+		/**
+		 * Filter the registered cron events.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param array $registered_events The currently registered cron events.
+		 *
+		 * Example:
+		 * add_filter( 'edd_cron_events', function( $registered_events ) {
+		 *    $registered_events[] = new MyCustomEvent();
+		 *   return $registered_events;
+		 * } );
+		 *
+		 * @return array
+		 */
+		$registered_events = apply_filters( 'edd_cron_events', $registered_events );
+
+		// Since we have a filter here, if something goes wrong return an empty array.
+		if ( ! is_array( $registered_events ) ) {
+			return array();
+		}
+
+		return $registered_events;
+	}
+
+	/**
+	 * Get the registered components.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @return array
+	 */
+	public static function get_registered_components() {
+		// Register our components.
+		$components_to_register = array(
+			Components\Cart::class,
+			Components\EmailSummaries::class,
+			Components\Exports::class,
+			Components\Notifications::class,
+			Components\Orders::class,
+			Components\Passes::class,
+			Components\Store::class,
+			Components\Stripe::class,
+			Components\EmailSummariesBlurbs::class,
+			Components\NewUser::class,
+			Components\LogPruning::class,
+		);
+
+		/**
+		 * Filter the components to register.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param array $components_to_register The currently registered cron components.
+		 *
+		 * Example:
+		 * add_filter( 'edd_cron_components', function( $components_to_register ) {
+		 *    $components_to_register[] = MyNameSpace\MyClass::class;
+		 *    return $components_to_register;
+		 * } );
+		 *
+		 * @return array
+		 */
+		$components_to_register = apply_filters( 'edd_cron_components', $components_to_register );
+
+		// Since we have a filter here, if something goes wrong return an empty array.
+		if ( ! is_array( $components_to_register ) ) {
+			return array();
+		}
+
+		return $components_to_register;
+	}
+
+	/**
 	 * Get the registered schedules.
 	 *
 	 * @since 3.3.0
@@ -155,88 +291,29 @@ class Loader implements SubscriberInterface {
 	}
 
 	/**
-	 * Get the registered events.
+	 * Maybe migrate cron events to Action Scheduler.
 	 *
-	 * @since 3.3.0
+	 * Runs on 'init' hook at priority 999 to ensure cron events are loaded first.
 	 *
-	 * @return array
+	 * @since 3.6.5
 	 */
-	private function get_registered_events() {
-		$registered_events = array(
-			new Events\DailyEvents(),
-			new Events\WeeklyEvents(),
-			new Events\StripeRateLimitingCleanup(),
-		);
-
-		/**
-		 * Filter the registered cron events.
-		 *
-		 * @since 3.3.0
-		 *
-		 * @param array $registered_events The currently registered cron events.
-		 *
-		 * Example:
-		 * add_filter( 'edd_cron_events', function( $registered_events ) {
-		 *    $registered_events[] = new MyCustomEvent();
-		 *   return $registered_events;
-		 * } );
-		 *
-		 * @return array
-		 */
-		$registered_events = apply_filters( 'edd_cron_events', $registered_events );
-
-		// Since we have a filter here, if something goes wrong return an empty array.
-		if ( ! is_array( $registered_events ) ) {
-			return array();
+	public function maybe_migrate_to_action_scheduler() {
+		// Only run once.
+		if ( edd_has_upgrade_completed( 'migrate_to_action_scheduler' ) ) {
+			return;
 		}
 
-		return $registered_events;
-	}
-
-	/**
-	 * Get the registered components.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @return array
-	 */
-	private function get_registered_components() {
-		// Register our components.
-		$components_to_register = array(
-			Components\Cart::class,
-			Components\EmailSummaries::class,
-			Components\Exports::class,
-			Components\Notifications::class,
-			Components\Orders::class,
-			Components\Passes::class,
-			Components\Store::class,
-			Components\Stripe::class,
-			Components\EmailSummariesBlurbs::class,
-			Components\NewUser::class,
-		);
-
-		/**
-		 * Filter the components to register.
-		 *
-		 * @since 3.3.0
-		 *
-		 * @param array $components_to_register The currently registered cron components.
-		 *
-		 * Example:
-		 * add_filter( 'edd_cron_components', function( $components_to_register ) {
-		 *    $components_to_register[] = MyNameSpace\MyClass::class;
-		 *    return $components_to_register;
-		 * } );
-		 *
-		 * @return array
-		 */
-		$components_to_register = apply_filters( 'edd_cron_components', $components_to_register );
-
-		// Since we have a filter here, if something goes wrong return an empty array.
-		if ( ! is_array( $components_to_register ) ) {
-			return array();
+		// Only run if Action Scheduler is available.
+		if ( ! Schedulers\ActionScheduler::is_available() ) {
+			return;
 		}
 
-		return $components_to_register;
+		// Run the migration.
+		$migration_result = Migrator::migrate_to_action_scheduler();
+
+		// Mark as complete if successful.
+		if ( $migration_result ) {
+			edd_set_upgrade_complete( 'migrate_to_action_scheduler' );
+		}
 	}
 }

@@ -16,6 +16,7 @@ require_once GAMIPRESS_DIR . 'includes/admin/meta-boxes/rank-type.php';
 require_once GAMIPRESS_DIR . 'includes/admin/meta-boxes/ranks.php';
 require_once GAMIPRESS_DIR . 'includes/admin/meta-boxes/requirements.php';
 require_once GAMIPRESS_DIR . 'includes/admin/meta-boxes/requirements-ui.php';
+require_once GAMIPRESS_DIR . 'includes/admin/meta-boxes/default-badge.php';
 require_once GAMIPRESS_DIR . 'includes/admin/meta-boxes/earners.php';
 require_once GAMIPRESS_DIR . 'includes/admin/meta-boxes/logs.php';
 require_once GAMIPRESS_DIR . 'includes/admin/meta-boxes/log-extra-data-ui.php';
@@ -193,6 +194,33 @@ function gamipress_remove_meta_boxes() {
 
 }
 add_action( 'admin_menu', 'gamipress_remove_meta_boxes' );
+
+/**
+ * Filters the admin post thumbnail HTML markup to return.
+ *
+ * @since 2.9.0
+ *
+ * @param string   $content      Admin post thumbnail HTML markup.
+ * @param int      $post_id      Post ID.
+ * @param int|null $thumbnail_id Thumbnail attachment ID, or null if there isn't one.
+ */
+function gamipress_admin_post_thumbnail_html( $content, $post_id, $thumbnail_id ) {
+
+    $post_type = gamipress_get_post_type( $post_id );
+
+    switch( $post_type ) {
+        case 'achievement-type':
+            $content .= '<p class="howto">' . esc_html__( 'This image will be used for all achievements that do not have an image.', 'gamipress' ) . '</p>';
+            break;
+        case 'rank-type':
+            $content .= '<p class="howto">' . esc_html__( 'This image will be used for all ranks that do not have an image.', 'gamipress' ) . '</p>';
+            break;
+    }
+
+    return $content;
+
+}
+add_filter( 'admin_post_thumbnail_html', 'gamipress_admin_post_thumbnail_html', 10, 3 );
 
 // Options callback for select2 fields assigned to posts
 function gamipress_options_cb_posts( $field ) {

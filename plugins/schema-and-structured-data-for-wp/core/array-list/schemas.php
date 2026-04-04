@@ -59,6 +59,7 @@ return array(
                 'CriticReview'             => 'CriticReview',
                 'Certification'            => 'Certification',
                 'Guide'                    => 'Guide',
+                'WebSite'                  => 'WebSite',
         ),
         'Event' => array(
             'Event'                    => 'Event',
@@ -112,7 +113,8 @@ return array(
             'Organization'                      => 'Organization',
             'Project'                           => 'Project', 
             'PsychologicalTreatment'            => 'PsychologicalTreatment',
-            'RentAction'                        => 'RentAction',                                                                                 
-            'ProfilePage'                       => 'ProfilePage'                                                                                 
+            'RentAction'                        => 'RentAction',                                                              
+            'ProfilePage'                       => 'ProfilePage',
+            'SportsTeam'                        => 'SportsTeam'                                                                                 
         )
      );

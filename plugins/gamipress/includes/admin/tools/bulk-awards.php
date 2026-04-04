@@ -37,37 +37,43 @@ function gamipress_bulk_awards_tool_meta_boxes( $meta_boxes ) {
 
             'bulk_award_points' => array(
                 'name' => __( 'Points to Award', 'gamipress' ),
-                'desc' => __( 'Points amount to award (the amount will be added to the current user balance).', 'gamipress' ),
+                'tooltip'   => __( 'Points amount to award (the amount will be added to the current user balance).', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text_small',
                 'default' => '0',
             ),
             'bulk_award_points_type' => array(
                 'name' => __( 'Points Type', 'gamipress' ),
-                'desc' => __( 'Points type of points amount to award.', 'gamipress' ),
+                'tooltip'   => __( 'Points type of points amount to award.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'select',
                 'options' => $points_types_options
             ),
             'bulk_award_points_register_movement' => array(
                 'name' => __( 'Register on user earnings', 'gamipress' ),
-                'desc' => __( 'Check this option to register this balance movement on user earnings.', 'gamipress' ),
+                'tooltip'   => __( 'Check this option to register this balance movement on user earnings.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch'
             ),
             'bulk_award_points_earnings_text' => array(
                 'name' => __( 'Earning entry text', 'gamipress' ),
-                'desc' => __( 'Enter the line text to be displayed on user earnings.', 'gamipress' ),
+                'tooltip'   => __( 'Enter the line text to be displayed on user earnings.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'text',
                 'default' => __( 'Manual balance adjustment', 'gamipress' ),
             ),
             'bulk_award_points_all_users' => array(
                 'name' => __( 'Award to all users', 'gamipress' ),
-                'desc' => __( 'Check this option to award the points amount to all users.', 'gamipress' ),
+                'tooltip'   => __( 'Check this option to award the points amount to all users.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch'
             ),
             'bulk_award_points_users' => array(
                 'name' => __( 'Users to award', 'gamipress' ),
-                'desc' => __( 'Choose users to award this points amount.', 'gamipress' ),
+                'tooltip'   => __( 'Choose users to award this points amount.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'advanced_select',
                 'multiple' => true,
                 'classes' 	        => 'gamipress-user-selector',
@@ -79,7 +85,8 @@ function gamipress_bulk_awards_tool_meta_boxes( $meta_boxes ) {
             ),
             'bulk_award_points_roles' => array(
                 'name' => __( 'Roles to award', 'gamipress' ),
-                'desc' => __( 'Choose roles to award this points amount.', 'gamipress' ),
+                'tooltip'   => __( 'Choose roles to award this points amount.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'advanced_select',
                 'multiple' => true,
                 'classes' 	        => 'gamipress-selector',
@@ -99,7 +106,8 @@ function gamipress_bulk_awards_tool_meta_boxes( $meta_boxes ) {
 
             'bulk_award_achievements' => array(
                 'name' => __( 'Achievements to Award', 'gamipress' ),
-                'desc' => __( 'Choose the achievements to award.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the achievements to award.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'advanced_select',
                 'multiple' => true,
                 'classes' 	        => 'gamipress-post-selector',
@@ -112,13 +120,15 @@ function gamipress_bulk_awards_tool_meta_boxes( $meta_boxes ) {
             ),
             'bulk_award_achievements_all_users' => array(
                 'name' => __( 'Award to all users', 'gamipress' ),
-                'desc' => __( 'Check this option to award the achievements to all users.', 'gamipress' ),
+                'tooltip'   => __( 'Check this option to award the achievements to all users.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch'
             ),
             'bulk_award_achievements_users' => array(
                 'name' => __( 'Users to award', 'gamipress' ),
-                'desc' => __( 'Choose users to award this achievements.', 'gamipress' ),
+                'tooltip'   => __( 'Choose users to award this achievements.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'advanced_select',
                 'multiple' => true,
                 'classes' 	        => 'gamipress-user-selector',
@@ -130,7 +140,8 @@ function gamipress_bulk_awards_tool_meta_boxes( $meta_boxes ) {
             ),
             'bulk_award_achievements_roles' => array(
                 'name' => __( 'Roles to award', 'gamipress' ),
-                'desc' => __( 'Choose roles to award this achievements.', 'gamipress' ),
+                'tooltip'   => __( 'Choose roles to award this achievements.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'advanced_select',
                 'multiple' => true,
                 'classes' 	        => 'gamipress-selector',
@@ -150,8 +161,9 @@ function gamipress_bulk_awards_tool_meta_boxes( $meta_boxes ) {
 
             'bulk_award_rank' => array(
                 'name' => __( 'Rank to Award', 'gamipress' ),
-                'desc' => __( 'Choose the rank to award.', 'gamipress' )
-                . '<br>' . __( '<strong>Important!</strong> Users on higher rank will be downgrade to this rank.', 'gamipress' ),
+                'tooltip'   => __( 'Choose the rank to award.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
+                'desc' => __( '<strong>Important!</strong> Users on higher rank will be downgrade to this rank.', 'gamipress' ),
                 'type' => 'advanced_select',
                 'classes' 	        => 'gamipress-post-selector',
                 'attributes' 	    => array(
@@ -162,13 +174,15 @@ function gamipress_bulk_awards_tool_meta_boxes( $meta_boxes ) {
             ),
             'bulk_award_rank_all_users' => array(
                 'name' => __( 'Award to all users', 'gamipress' ),
-                'desc' => __( 'Check this option to award the rank to all users.', 'gamipress' ),
+                'tooltip'   => __( 'Check this option to award the rank to all users.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'checkbox',
                 'classes' => 'gamipress-switch'
             ),
             'bulk_award_rank_users' => array(
                 'name' => __( 'Users to award', 'gamipress' ),
-                'desc' => __( 'Choose users to award this rank.', 'gamipress' ),
+                'tooltip'   => __( 'Choose users to award this rank.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'advanced_select',
                 'multiple' => true,
                 'classes' 	        => 'gamipress-user-selector',
@@ -180,7 +194,8 @@ function gamipress_bulk_awards_tool_meta_boxes( $meta_boxes ) {
             ),
             'bulk_award_rank_roles' => array(
                 'name' => __( 'Roles to award', 'gamipress' ),
-                'desc' => __( 'Choose roles to award this rank.', 'gamipress' ),
+                'tooltip'   => __( 'Choose roles to award this rank.', 'gamipress' ),
+                'label_cb' => 'cmb_tooltip_label_cb',
                 'type' => 'advanced_select',
                 'multiple' => true,
                 'classes' 	        => 'gamipress-selector',

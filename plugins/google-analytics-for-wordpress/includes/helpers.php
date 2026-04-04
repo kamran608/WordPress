@@ -210,21 +210,21 @@ function monsterinsights_generate_uuid() {
 	return sprintf(
 		'%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 		// 32 bits for "time_low"
-		mt_rand( 0, 0xffff ),
-		mt_rand( 0, 0xffff ),
+		random_int( 0, 0xffff ),
+		random_int( 0, 0xffff ),
 		// 16 bits for "time_mid"
-		mt_rand( 0, 0xffff ),
+		random_int( 0, 0xffff ),
 		// 16 bits for "time_hi_and_version",
 		// four most significant bits holds version number 4
-		mt_rand( 0, 0x0fff ) | 0x4000,
+		random_int( 0, 0x0fff ) | 0x4000,
 		// 16 bits, 8 bits for "clk_seq_hi_res",
 		// 8 bits for "clk_seq_low",
 		// two most significant bits holds zero and one for variant DCE1.1
-		mt_rand( 0, 0x3fff ) | 0x8000,
+		random_int( 0, 0x3fff ) | 0x8000,
 		// 48 bits for "node"
-		mt_rand( 0, 0xffff ),
-		mt_rand( 0, 0xffff ),
-		mt_rand( 0, 0xffff )
+		random_int( 0, 0xffff ),
+		random_int( 0, 0xffff ),
+		random_int( 0, 0xffff )
 	);
 }
 
@@ -1033,8 +1033,13 @@ function monsterinsights_get_onboarding_key() {
 	if ( empty( $key ) ) {
 		$key = wp_generate_password( 32, false );
 		set_transient( 'monsterinsights_onboarding_key', $key, 30 * MINUTE_IN_SECONDS );
+		set_transient( 'monsterinsights_onboarding_user_id', get_current_user_id(), 30 * MINUTE_IN_SECONDS );
 	}
 	return $key;
+}
+
+function monsterinsights_get_onboarding_user_id() {
+	return (int) get_transient( 'monsterinsights_onboarding_user_id' );
 }
 /**
  * Clears the onboarding key
@@ -1043,6 +1048,16 @@ function monsterinsights_get_onboarding_key() {
  */
 function monsterinsights_clear_onboarding_key() {
 	delete_transient( 'monsterinsights_onboarding_key' );
+}
+
+/**
+ * Flag that the Vue 3 localStorage cache registry should be flushed on next page load.
+ *
+ * Sets a transient consumed by admin_scripts() to output an inline script
+ * that removes the 'mi_cache_registry' localStorage key.
+ */
+function monsterinsights_flag_flush_cache_registry() {
+	set_transient( 'monsterinsights_flush_cache_registry', 1, HOUR_IN_SECONDS );
 }
 
 function monsterinsights_get_licensing_url() {
@@ -1062,11 +1077,8 @@ function monsterinsights_get_licensing_url() {
  * @since 6.0.0
  */
 function monsterinsights_perform_remote_request( $action, $body = array(), $headers = array(), $return_format = 'json' ) {
-	$key = '';
-	if ( class_exists( 'MonsterInsights' ) && MonsterInsights() && isset( MonsterInsights()->license ) ) {
-		$key = is_network_admin() ? MonsterInsights()->license->get_network_license_key() : MonsterInsights()->license->get_site_license_key();
-	}
 
+	$key = is_network_admin() ? MonsterInsights()->license->get_network_license_key() : MonsterInsights()->license->get_site_license_key();
 	// Build the body of the request.
 	$query_params = wp_parse_args(
 		$body,
@@ -1082,7 +1094,6 @@ function monsterinsights_perform_remote_request( $action, $body = array(), $head
 	$args = [
 		'headers' => $headers,
 	];
-	// echo add_query_arg( $query_params, monsterinsights_get_licensing_url() ); die;
 	// Perform the query and retrieve the response.
 	$response      = wp_remote_get( add_query_arg( $query_params, monsterinsights_get_licensing_url() ), $args );
 	$response_code = wp_remote_retrieve_response_code( $response );
@@ -2596,4 +2607,61 @@ function monsterinsights_wpconsent_is_cmp_plugin_active() {
 	}
 
 	return false;
+}
+
+/**
+ * Get the eCommerce currency code from the active eCommerce platform.
+ *
+ * Checks for WooCommerce, Easy Digital Downloads, MemberPress, LifterLMS,
+ * Restrict Content Pro, and GiveWP. Falls back to 'USD' if no platform is detected.
+ *
+ * @since 9.4.0
+ *
+ * @return string The 3-letter ISO 4217 currency code.
+ */
+function monsterinsights_get_ecommerce_currency() {
+	// Check WooCommerce first (most common).
+	if ( function_exists( 'get_woocommerce_currency' ) ) {
+		return get_woocommerce_currency();
+	}
+
+	// Check Easy Digital Downloads.
+	if ( function_exists( 'edd_get_currency' ) ) {
+		return edd_get_currency();
+	}
+
+	// Check MemberPress.
+	if ( class_exists( 'MeprOptions' ) ) {
+		$mepr_options = MeprOptions::fetch();
+		if ( ! empty( $mepr_options->currency_code ) ) {
+			return $mepr_options->currency_code;
+		}
+	}
+
+	// Check LifterLMS.
+	if ( function_exists( 'get_lifterlms_currency' ) ) {
+		return get_lifterlms_currency();
+	}
+
+	// Check Restrict Content Pro.
+	if ( function_exists( 'rcp_get_currency' ) ) {
+		return rcp_get_currency();
+	}
+
+	// Check GiveWP.
+	if ( function_exists( 'give_get_currency' ) ) {
+		return give_get_currency();
+	}
+
+	/**
+	 * Filter the eCommerce currency code.
+	 *
+	 * Allows other plugins or custom code to provide the currency code
+	 * when no supported eCommerce platform is detected.
+	 *
+	 * @since 9.4.0
+	 *
+	 * @param string $currency The 3-letter ISO 4217 currency code. Default 'USD'.
+	 */
+	return apply_filters( 'monsterinsights_ecommerce_currency', 'USD' );
 }

@@ -25,7 +25,8 @@ function gamipress_register_site_points_shortcode() {
         'fields'      => array(
             'type' => array(
                 'name'              => __( 'Points Type(s)', 'gamipress' ),
-                'description'       => __( 'Points type(s) to display.', 'gamipress' ),
+                'tooltip'           => __( 'Points type(s) to display.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
                 'shortcode_desc'    => __( 'Single or comma-separated list of points type(s) to display.', 'gamipress' ),
                 'type'              => 'advanced_select',
                 'multiple'          => true,
@@ -37,56 +38,64 @@ function gamipress_register_site_points_shortcode() {
                 'default'           => 'all',
             ),
             'thumbnail' => array(
-                'name'          => __( 'Show Thumbnail', 'gamipress' ),
-                'description'   => __( 'Display the points type featured image.', 'gamipress' ),
-                'type' 	        => 'checkbox',
-                'classes'       => 'gamipress-switch',
-                'default'       => 'yes'
+                'name'      => __( 'Show Thumbnail', 'gamipress' ),
+                'tooltip'   => __( 'Display the points type featured image.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'thumbnail_size' => array(
-                'name'        => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
-                'description' => __( 'The points type featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
-                'type' 	=> 'text',
+                'name'      => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
+                'tooltip'   => __( 'The points type featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
                 'attributes' => array(
                     'type' => 'number',
                 )
             ),
             'label' => array(
-                'name'          => __( 'Show Points Type Label', 'gamipress' ),
-                'description'   => __( 'Display the points type label (singular or plural name, based on the amount of points).', 'gamipress' ),
-                'type' 	        => 'checkbox',
-                'classes'       => 'gamipress-switch',
-                'default'       => 'yes'
+                'name'      => __( 'Show Points Type Label', 'gamipress' ),
+                'tooltip'   => __( 'Display the points type label (singular or plural name, based on the amount of points).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'period' => array(
-                'name'          => __( 'Period', 'gamipress' ),
-                'desc' 	        => __( 'Filter points balance based on a specific period selected. By default "None" that will display site current points balance.', 'gamipress' ),
-                'type' 	        => 'select',
+                'name'      => __( 'Period', 'gamipress' ),
+                'tooltip'   => __( 'Filter points balance based on a specific period selected. By default "None" that will display site current points balance.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
                 'options_cb' 	=> 'gamipress_get_time_periods',
             ),
             'period_start' => array(
-                'name' 	        => __( 'Start Date', 'gamipress' ),
-                'desc' 	        => __( 'Period start date. Leave blank to no filter by a start date (points balance will be filtered only to the end date).', 'gamipress' )
+                'name'      => __( 'Start Date', 'gamipress' ),
+                'tooltip'   => __( 'Period start date. Leave blank to no filter by a start date (points balance will be filtered only to the end date).', 'gamipress' )
                                 . '<br>' . __( 'Accepts any valid PHP date format.', 'gamipress' ) . ' (<a href="https://gamipress.com/docs/advanced/date-fields" target="_blank">' .  __( 'More information', 'gamipress' ) .  '</a>)',
-                'type'          => 'text',
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
             ),
             'period_end' => array(
-                'name' 	        => __( 'End Date', 'gamipress' ),
-                'desc' 	        => __( 'Period end date. Leave blank to no filter by an end date (points balance will be filtered from the start date to today).', 'gamipress' )
+                'name'      => __( 'End Date', 'gamipress' ),
+                'tooltip'   => __( 'Period end date. Leave blank to no filter by an end date (points balance will be filtered from the start date to today).', 'gamipress' )
                                 . '<br>' . __( 'Accepts any valid PHP date format.', 'gamipress' ) . ' (<a href="https://gamipress.com/docs/advanced/date-fields" target="_blank">' .  __( 'More information', 'gamipress' ) .  '</a>)',
-                'type'          => 'text',
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
             ),
             'inline' => array(
-                'name'          => __( 'Inline', 'gamipress' ),
-                'description'   => __( 'Show points balance inline (as text).', 'gamipress' ),
-                'type' 	        => 'checkbox',
-                'classes'       => 'gamipress-switch',
+                'name'      => __( 'Inline', 'gamipress' ),
+                'tooltip'   => __( 'Show points balance inline (as text).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
             ),
             'columns' => array(
-                'name'          => __( 'Columns', 'gamipress' ),
-                'description'   => __( 'Columns to divide each points balance.', 'gamipress' ),
-                'type' 	        => 'select',
-                'options'       => array(
+                'name'      => __( 'Columns', 'gamipress' ),
+                'tooltip'   => __( 'Columns to divide each points balance.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'options'   => array(
                     '1' => __( '1 Column', 'gamipress' ),
                     '2' => __( '2 Columns', 'gamipress' ),
                     '3' => __( '3 Columns', 'gamipress' ),
@@ -97,10 +106,11 @@ function gamipress_register_site_points_shortcode() {
                 'default'       => '1'
             ),
             'columns_small' => array(
-                'name'          => __( 'Columns in small screens', 'gamipress' ),
-                'description'   => __( 'Columns to divide each points balance in small screens.', 'gamipress' ),
-                'type' 	        => 'select',
-                'options'       => array(
+                'name'      => __( 'Columns in small screens', 'gamipress' ),
+                'tooltip'   => __( 'Columns to divide each points balance in small screens.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'options'   => array(
                     '1' => __( '1 Column', 'gamipress' ),
                     '2' => __( '2 Columns', 'gamipress' ),
                     '3' => __( '3 Columns', 'gamipress' ),
@@ -111,28 +121,31 @@ function gamipress_register_site_points_shortcode() {
                 'default'       => '1'
             ),
             'layout' => array(
-                'name'          => __( 'Layout', 'gamipress' ),
-                'description'   => __( 'Layout to show the points.', 'gamipress' ),
-                'type' 		    => 'radio',
-                'options' 	    => gamipress_get_layout_options(),
-                'default' 	    => 'left',
-                'inline' 	    => true,
-                'classes' 	    => 'gamipress-image-options'
+                'name'      => __( 'Layout', 'gamipress' ),
+                'tooltip'   => __( 'Layout to show the points.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'radio',
+                'options'   => gamipress_get_layout_options(),
+                'default'   => 'left',
+                'inline'    => true,
+                'classes'   => 'gamipress-image-options'
             ),
             'align' => array(
-                'name'        => __( 'Alignment', 'gamipress' ),
-                'description' => __( 'Alignment to show the points.', 'gamipress' ),
-                'type' 		  => 'radio',
-                'options' 	  => gamipress_get_alignment_options(),
-                'default' 	  => 'none',
-                'inline' 	  => true,
-                'classes' 	  => 'gamipress-image-options'
+                'name'      => __( 'Alignment', 'gamipress' ),
+                'tooltip'   => __( 'Alignment to show the points.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'radio',
+                'options'   => gamipress_get_alignment_options(),
+                'default'   => 'none',
+                'inline'    => true,
+                'classes'   => 'gamipress-image-options'
             ),
             'wpms' => array(
-                'name'          => __( 'Include Multisite Points', 'gamipress' ),
-                'description'   => __( 'Show points from all network sites.', 'gamipress' ),
-                'type' 	        => 'checkbox',
-                'classes'       => 'gamipress-switch',
+                'name'      => __( 'Include Multisite Points', 'gamipress' ),
+                'tooltip'   => __( 'Show points from all network sites.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
             ),
         ),
     ) );

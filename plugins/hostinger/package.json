@@ -6,20 +6,21 @@
     "auth:gcp": "gcloud auth application-default login",
     "auth:gca": "npx google-artifactregistry-auth",
     "dev": "npm run development",
-    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "development": "npm run sync:cursor-skills && cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
     "prod": "npm run production",
     "watch": "npm run development -- --watch",
-    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "dev:vue-frontend": "webpack --mode development --watch",
-    "build:vue-frontend": "webpack --mode production",
-    "prepare": "husky",
+    "production": "npm run sync:cursor-skills && cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "dev:vue-frontend": "npm run sync:cursor-skills && webpack --mode development --watch",
+    "build:vue-frontend": "npm run sync:cursor-skills && webpack --mode production",
+    "prepare": "npm run sync:cursor-skills && husky",
     "lint:php": "vendor/bin/phpcs",
     "lint:frontend": "eslint vue-frontend/src --config vue-frontend/src/eslint.config.mjs",
     "lint:frontend:fix": "eslint vue-frontend/src --config vue-frontend/src/eslint.config.mjs --fix",
     "test:vue": "vitest --run",
     "test:vue:watch": "vitest --watch",
     "test:vue:ui": "vitest --ui",
-    "test:coverage": "vitest --run --coverage"
+    "test:coverage": "vitest --run --coverage",
+    "sync:cursor-skills": "npx @hostinger/wp-plugin-toolkit sync-cursor-skills"
   },
   "lint-staged": {
     "*.php": [
@@ -33,12 +34,13 @@
     "@babel/core": "^7.23.6",
     "@babel/preset-env": "^7.23.6",
     "@eslint/js": "^9.32.0",
+    "@hostinger/wp-plugin-toolkit": "^1.1.0",
     "@rushstack/eslint-patch": "^1.12.0",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.4.0",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
-    "@vitest/coverage-v8": "^2.1.9",
+    "@vitest/coverage-v8": "^4.0.9",
     "@vue/eslint-config-typescript": "^14.1.3",
     "@vue/test-utils": "^2.4.6",
     "babel-loader": "^10.0.0",
@@ -55,7 +57,7 @@
     "jsdom": "^25.0.1",
     "laravel-mix": "^6.0.49",
     "lint-staged": "^16.1.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "mini-css-extract-plugin": "^2.9.2",
     "null-loader": "^4.0.1",
     "resolve-url-loader": "^5.0.0",
@@ -69,12 +71,12 @@
     "typescript-eslint": "^8.38.0",
     "video.js": "^8.10.0",
     "vite": "^6.0.1",
-    "vitest": "^2.1.8",
+    "vitest": "^4.0.9",
     "vue": "^3.5.17",
     "vue-eslint-parser": "^10.1.4",
     "vue-loader": "^16.8.3",
     "vue-style-loader": "^4.1.3",
-    "webpack": "^5.99.9",
+    "webpack": "^5.105.4",
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
@@ -102,6 +104,8 @@
     ]
   },
   "overrides": {
-    "babel-loader": "^10.0.0"
+    "qs": "^6.14.1",
+    "babel-loader": "^10.0.0",
+    "webpack-dev-server": "^5.2.1"
   }
 }

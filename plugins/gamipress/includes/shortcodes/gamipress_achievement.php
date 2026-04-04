@@ -18,14 +18,15 @@ function gamipress_register_achievement_shortcode() {
 
 	gamipress_register_shortcode( 'gamipress_achievement', array(
 		'name'            	=> __( 'Single Achievement', 'gamipress' ),
-		'description'     	=> __( 'Display a single achievement.', 'gamipress' ),
+        'description'       => __( 'Display a single achievement.', 'gamipress' ),
 		'icon' 	            => 'awards',
 		'group' 	        => 'gamipress',
 		'output_callback' 	=> 'gamipress_achievement_shortcode',
 		'fields'      		=> array(
 			'id' => array(
 				'name'              => __( 'Achievement', 'gamipress' ),
-				'description'       => __( 'The achievement to render.', 'gamipress' ),
+                'tooltip'           => __( 'The achievement to render.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
 				'shortcode_desc'    => __( 'The ID of the achievement to render.', 'gamipress' ),
 				'type'              => 'select',
                 'classes' 	        => 'gamipress-post-selector',
@@ -38,102 +39,116 @@ function gamipress_register_achievement_shortcode() {
 			),
 			'title' => array(
 				'name'              => __( 'Show Title', 'gamipress' ),
-				'description'       => __( 'Display the achievement title.', 'gamipress' ),
+                'tooltip'           => __( 'Display the achievement title.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
 				'type' 		        => 'checkbox',
 				'classes' 	        => 'gamipress-switch',
 				'default'           => 'yes'
 			),
             'title_size' => array(
                 'name'              => __( 'Title Size', 'gamipress' ),
-                'description'       => __( 'The achievement title size.', 'gamipress' ),
+                'tooltip'           => __( 'The achievement title size.', 'gamipress' ),
+                'label_cb'          => 'cmb_tooltip_label_cb',
                 'type' 		        => 'select',
                 'classes' 		    => 'gamipress-font-size',
                 'options' 	        => gamipress_title_size_options(),
                 'default'           => 'h2'
             ),
 			'link' => array(
-				'name'        => __( 'Show Link', 'gamipress' ),
-				'description' => __( 'Add a link on achievement title to the achievement page.', 'gamipress' ),
-				'type' 	        => 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'  => __( 'Show Link', 'gamipress' ),
+                'tooltip'   => __( 'Add a link on achievement title to the achievement page.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'      => 'checkbox',
+				'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
 			'thumbnail' => array(
-				'name'        => __( 'Show Thumbnail', 'gamipress' ),
-				'description' => __( 'Display the achievement featured image.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Thumbnail', 'gamipress' ),
+                'tooltip'   => __( 'Display the achievement featured image.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'thumbnail_size' => array(
-                'name'        => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
-                'description' => __( 'The achievement featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
-                'type' 	=> 'text',
+                'name'      => __( 'Thumbnail Size (in pixels)', 'gamipress' ),
+                'tooltip'   => __( 'The achievement featured image size in pixels. Leave empty to use the image size from settings.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'text',
                 'attributes' => array(
                     'type' => 'number',
                 )
             ),
 			'points_awarded' => array(
-				'name'        => __( 'Show Points Awarded', 'gamipress' ),
-				'description' => __( 'Display the achievement points awarded (on achievements where this setting is set).', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Points Awarded', 'gamipress' ),
+                'tooltip'   => __( 'Display the achievement points awarded (on achievements where this setting is set).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'points_awarded_thumbnail' => array(
-                'name'        => __( 'Show Points Awarded Thumbnail', 'gamipress' ),
-                'description' => __( 'Display the thumbnail of the points awarded.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes'
+                'name'      => __( 'Show Points Awarded Thumbnail', 'gamipress' ),
+                'tooltip'   => __( 'Display the thumbnail of the points awarded.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
 			'excerpt' => array(
-				'name'        => __( 'Show Excerpt', 'gamipress' ),
-				'description' => __( 'Display the achievement short description.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Excerpt', 'gamipress' ),
+                'tooltip'   => __( 'Display the achievement short description.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'times_earned' => array(
-                'name'        => __( 'Show Times Earned', 'gamipress' ),
-                'description' => __( 'Display the times the user has earned this achievement (only for achievements that can be earned more that 1 time).', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes'
+                'name'  => __( 'Show Times Earned', 'gamipress' ),
+                'tooltip'   => __( 'Display the times the user has earned this achievement (only for achievements that can be earned more that 1 time).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'global_times_earned' => array(
-                'name'        => __( 'Show Times Earned By All Users', 'gamipress' ),
-                'description' => __( 'Display the times that all users have earned this achievement.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
+                'name'      => __( 'Show Times Earned By All Users', 'gamipress' ),
+                'tooltip'   => __( 'Display the times that all users have earned this achievement.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
             ),
 			'steps' => array(
-				'name'        => __( 'Show Steps', 'gamipress' ),
-				'description' => __( 'Display the achievement steps.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Steps', 'gamipress' ),
+                'tooltip'   => __( 'Display the achievement steps.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
 			'toggle' => array(
-				'name'        => __( 'Show Steps Toggle', 'gamipress' ),
-				'description' => __( 'Display the achievement steps toggle.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch',
-				'default' => 'yes'
+				'name'      => __( 'Show Steps Toggle', 'gamipress' ),
+                'tooltip'   => __( 'Display the achievement steps toggle.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch',
+				'default'   => 'yes'
 			),
             'heading' => array(
-                'name'        => __( 'Show Steps Heading', 'gamipress' ),
-                'description' => __( 'Display the achievement steps heading text.', 'gamipress' ),
-                'type' 	=> 'checkbox',
-                'classes' => 'gamipress-switch',
-                'default' => 'yes'
+                'name'      => __( 'Show Steps Heading', 'gamipress' ),
+                'tooltip'   => __( 'Display the achievement steps heading text.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type' 	    => 'checkbox',
+                'classes'   => 'gamipress-switch',
+                'default'   => 'yes'
             ),
             'heading_size' => array(
-                'name'              => __( 'Steps Heading Size', 'gamipress' ),
-                'description'       => __( 'The achievement steps heading text size.', 'gamipress' ),
-                'type' 		        => 'select',
-                'classes' 		    => 'gamipress-font-size',
-                'options' 	        => array(
+                'name'      => __( 'Steps Heading Size', 'gamipress' ),
+                'tooltip'   => __( 'The achievement steps heading text size.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'select',
+                'classes'   => 'gamipress-font-size',
+                'options'   => array(
                     'h1'    => __( 'Heading 1', 'gamipress' ),
                     'h2'    => __( 'Heading 2', 'gamipress' ),
                     'h3'    => __( 'Heading 3', 'gamipress' ),
@@ -145,21 +160,24 @@ function gamipress_register_achievement_shortcode() {
                 'default'           => 'h4'
             ),
 			'unlock_button' => array(
-				'name'        => __( 'Show Unlock Button', 'gamipress' ),
-				'description' => __( 'Display the "Unlock using points" (on achievements where unlock with points is allowed).', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch'
+				'name'      => __( 'Show Unlock Button', 'gamipress' ),
+                'tooltip'   => __( 'Display the "Unlock using points" (on achievements where unlock with points is allowed).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch'
 			),
 			'earners' => array(
-				'name'        => __( 'Show Earners', 'gamipress' ),
-				'description' => __( 'Display a list of users that has earned the achievement.', 'gamipress' ),
-				'type' 	=> 'checkbox',
-				'classes' => 'gamipress-switch'
+				'name'      => __( 'Show Earners', 'gamipress' ),
+                'tooltip'   => __( 'Display a list of users that has earned the achievement.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type' 	    => 'checkbox',
+				'classes'   => 'gamipress-switch'
 			),
             'earners_limit' => array(
-                'name'        => __( 'Maximum Earners', 'gamipress' ),
-                'description' => __( 'Set the maximum number of earners to show (0 for no maximum).', 'gamipress' ),
-                'type' => 'text',
+                'name'      => __( 'Maximum Earners', 'gamipress' ),
+                'tooltip'   => __( 'Set the maximum number of earners to show (0 for no maximum).', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'text',
                 'attributes' => array(
                     'type' => 'number',
                     'step' => '1',
@@ -167,22 +185,24 @@ function gamipress_register_achievement_shortcode() {
                 'default' => '0'
             ),
 			'layout' => array(
-				'name'        => __( 'Layout', 'gamipress' ),
-				'description' => __( 'Layout to show the achievement.', 'gamipress' ),
-				'type' 		  => 'radio',
-				'options' 	  => gamipress_get_layout_options(),
-				'default' 	  => 'left',
-				'inline' 	  => true,
-				'classes' 	  => 'gamipress-image-options'
+				'name'      => __( 'Layout', 'gamipress' ),
+                'tooltip'   => __( 'Layout to show the achievement.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+				'type'      => 'radio',
+				'options'   => gamipress_get_layout_options(),
+				'default'   => 'left',
+				'inline'    => true,
+				'classes'   => 'gamipress-image-options'
 			),
             'align' => array(
-                'name'        => __( 'Alignment', 'gamipress' ),
-                'description' => __( 'Alignment to show the achievement.', 'gamipress' ),
-                'type' 		  => 'radio',
-                'options' 	  => gamipress_get_alignment_options(),
-                'default' 	  => 'none',
-                'inline' 	  => true,
-                'classes' 	  => 'gamipress-image-options'
+                'name'      => __( 'Alignment', 'gamipress' ),
+                'tooltip'   => __( 'Alignment to show the achievement.', 'gamipress' ),
+                'label_cb'  => 'cmb_tooltip_label_cb',
+                'type'      => 'radio',
+                'options'   => gamipress_get_alignment_options(),
+                'default'   => 'none',
+                'inline'    => true,
+                'classes'   => 'gamipress-image-options'
             ),
 		),
 	) );
@@ -223,14 +243,16 @@ function gamipress_achievement_shortcode( $atts = array(), $content = '' ) {
     $is_achievement = gamipress_is_achievement( $achievement );
 
     // Return if achievement id not specified
-    if ( empty( $original_atts['id'] ) && ! $is_achievement ) {
+    if ( empty( $original_atts['id'] ) && ! $is_achievement )
         return gamipress_shortcode_error( __( 'Please, provide the achievement ID.', 'gamipress' ), $shortcode );
-    }
 
     // Check if we're dealing with an achievement post
-    if ( ! $is_achievement ) {
+    if ( ! $is_achievement )
         return gamipress_shortcode_error( __( 'The id provided doesn\'t belong to a valid achievement.', 'gamipress' ), $shortcode );
-    }
+
+    // Prevent infinite loop
+    if ( absint( $atts['id'] ) === absint( get_the_ID() ) )
+        return gamipress_shortcode_error( __( 'Please, provide a different achievement ID.', 'gamipress' ), $shortcode );
 
     // ---------------------------
     // Shortcode Processing

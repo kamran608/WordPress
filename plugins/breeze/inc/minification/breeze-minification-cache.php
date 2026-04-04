@@ -252,6 +252,7 @@ class Breeze_MinificationCache {
 			$sites = get_sites(
 				array(
 					'fields' => 'ids',
+					'number' => 0,
 				)
 			);
 			foreach ( $sites as $blog_id ) {
@@ -262,6 +263,8 @@ class Breeze_MinificationCache {
 		} else {
 			self::clear_site_minification( $blog_id );
 		}
+		// Delete the stored minified files code hashes.
+		delete_option( 'breeze_minified_hashes' );
 	}
 
 	public static function clear_site_minification( $blog_id_custom = null ) {

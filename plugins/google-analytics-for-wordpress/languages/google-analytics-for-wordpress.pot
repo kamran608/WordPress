@@ -1,15 +1,15 @@
-# Copyright (C) 2025 MonsterInsights
+# Copyright (C) 2026 MonsterInsights
 # This file is distributed under the GPL v3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Google Analytics for WordPress by MonsterInsights 9.9.0\n"
+"Project-Id-Version: Google Analytics for WordPress by MonsterInsights 10.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/google-analytics-for-wordpress-working-dir\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-14T15:19:31+00:00\n"
+"POT-Creation-Date: 2026-03-31T14:36:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.13.0-alpha\n"
 "X-Domain: google-analytics-for-wordpress\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid " to help you connect with the right audience and high intent customers"
 msgstr ""
 
-msgid " visitors"
+msgid "...and get access to our Site Notes API for total customization!"
 msgstr ""
 
 msgid "...and much more!"
@@ -44,9 +44,6 @@ msgstr ""
 msgid "& Many More!"
 msgstr ""
 
-msgid "#1"
-msgstr ""
-
 msgid "% of Categories"
 msgstr ""
 
@@ -57,16 +54,37 @@ msgstr ""
 msgid "% of Interest"
 msgstr ""
 
+msgid "% of Refund Amount"
+msgstr ""
+
+msgid "% of Refunded Revenue"
+msgstr ""
+
+msgid "% of Refunds"
+msgstr ""
+
+msgid "% of Revenue"
+msgstr ""
+
 msgid "% of Sales"
 msgstr ""
 
 msgid "% of Total"
 msgstr ""
 
+msgid "% of Total Refunds"
+msgstr ""
+
+msgid "% of Transactions"
+msgstr ""
+
 msgid "% of Users"
 msgstr ""
 
 msgid "% of Views"
+msgstr ""
+
+msgid "% of Visitors"
 msgstr ""
 
 msgid "% of Visits"
@@ -76,15 +94,6 @@ msgid "%1$s"
 msgstr ""
 
 msgid "%1$s, %2$s"
-msgstr ""
-
-msgid "%1$s&#37 of your visitors were %2$s"
-msgstr ""
-
-msgid "%1$s&#37 of your visitors were between the ages of %2$s"
-msgstr ""
-
-msgid "%1$s&#37 of your visitors were on a %2$s device."
 msgstr ""
 
 msgid "%1$sAll-in-One SEO%2$s Makes SEO Simple. Gain Valuable Organic Traffic."
@@ -177,9 +186,6 @@ msgstr ""
 msgid "%s Category"
 msgstr ""
 
-msgid "%s Visitors"
-msgstr ""
-
 msgid "%s Year in Review"
 msgstr ""
 
@@ -190,9 +196,6 @@ msgid "%sSelling digital goods or services?%s <br><br> Great! Launch a Performan
 msgstr ""
 
 msgid "%sSelling physical products?%s <br><br> For the best campaign results, we recommend using the %sGoogle Ads%s platform directly, as this app has limited capabilities for e-commerce businesses."
-msgstr ""
-
-msgid "© MonsterInsights, %s MonsterInsights, LLC"
 msgstr ""
 
 msgid "+ Add New Site Note"
@@ -345,12 +348,6 @@ msgstr ""
 msgid "A session is the browsing session of a single user to your site."
 msgstr ""
 
-msgid "A Tip for %s"
-msgstr ""
-
-msgid "A Tip For %s"
-msgstr ""
-
 msgid "A user with the 'manage_options' capability and any user with at least one of these roles will have permission to view and save the settings panel."
 msgstr ""
 
@@ -366,9 +363,12 @@ msgstr ""
 msgid "Abandonments"
 msgstr ""
 
-#: includes/admin/admin.php:141
-#: includes/admin/admin.php:300
+#: includes/admin/admin.php:191
+#: includes/admin/admin.php:342
 msgid "About Us"
+msgstr ""
+
+msgid "Access your report export queue history"
 msgstr ""
 
 msgid "Action"
@@ -377,7 +377,7 @@ msgstr ""
 msgid "activate"
 msgstr ""
 
-#: includes/admin/admin.php:1014
+#: includes/admin/admin.php:1079
 msgid "Activate"
 msgstr ""
 
@@ -397,6 +397,9 @@ msgid "Activate the Performance addon to customize your settings"
 msgstr ""
 
 msgid "Activate WPConsent"
+msgstr ""
+
+msgid "Activating"
 msgstr ""
 
 msgid "Activating Addon"
@@ -445,6 +448,9 @@ msgid "Add Another Link Path"
 msgstr ""
 
 msgid "Add custom colors to categories"
+msgstr ""
+
+msgid "Add custom events to your website for button clicks, images, and more"
 msgstr ""
 
 msgid "Add domain"
@@ -496,9 +502,6 @@ msgid "Adds the Enhanced Link Attribution to improve the accuracy of your In-Pag
 msgstr ""
 
 msgid "Adjust the number of columns displayed when the widget is placed in a wide container."
-msgstr ""
-
-msgid "Ads Tracking"
 msgstr ""
 
 msgid "Advanced"
@@ -576,6 +579,9 @@ msgstr ""
 msgid "AI-Powered Insights"
 msgstr ""
 
+msgid "AI-powered referral sources"
+msgstr ""
+
 msgid "AIOSEO is the #1 SEO WordPress Plugin. Try it free"
 msgstr ""
 
@@ -636,6 +642,9 @@ msgstr ""
 msgid "All your key eCommerce metrics - in one powerful dashboard.%1$sNo guesswork. No coding. No hassle. Just data that drives results."
 msgstr ""
 
+msgid "All Your Website's Tracked Events"
+msgstr ""
+
 msgid "All-in-One SEO is a great product. I have been using it on all my WP sites for several years. I highly recommend it."
 msgstr ""
 
@@ -678,7 +687,13 @@ msgstr ""
 msgid "And more!"
 msgstr ""
 
+msgid "And Much More!"
+msgstr ""
+
 msgid "and much much more..."
+msgstr ""
+
+msgid "Annual Summary"
 msgstr ""
 
 msgid "Anonymize IP Addresses"
@@ -693,6 +708,9 @@ msgid "Appearance"
 msgstr ""
 
 msgid "Apply"
+msgstr ""
+
+msgid "Apply Changes"
 msgstr ""
 
 msgid "April"
@@ -722,7 +740,7 @@ msgstr ""
 msgid "At least 0 item required."
 msgstr ""
 
-msgid "Audience"
+msgid "At least one metric must be selected"
 msgstr ""
 
 msgid "August"
@@ -752,16 +770,22 @@ msgstr ""
 msgid "Automatic Display"
 msgstr ""
 
+msgid "Automatic Media Tracking"
+msgstr ""
+
 msgid "Automatic Placement"
 msgstr ""
 
 msgid "Automatic Recommendations"
 msgstr ""
 
-msgid "Automatic tracking of outbound/external, file download, affiliate, email and telephone links and our simple Custom Link Attribution markup for custom link tracking"
+msgid "Automatic tracking of outbound/external, file download, affiliate, email, and telephone links. Simple Custom Link Attribution markup for custom link tracking."
 msgstr ""
 
 msgid "Automatic Updates"
+msgstr ""
+
+msgid "Automatically add Site Notes when..."
 msgstr ""
 
 msgid "Automatically add the top 5 Posts from the past 30 days to your Curated list of Posts using Custom Dimensions (Pro version required. %1$sUpgrade now%2$s)."
@@ -782,6 +806,9 @@ msgstr ""
 msgid "Automatically monetize your website content with affiliate links added automatically to your content."
 msgstr ""
 
+msgid "Automatically removes PII (Personally Identifiable Information) and helps ensure GDPR compliance."
+msgstr ""
+
 msgid "Automatically set up Google Ads and conversion tracking inside MonsterInsights"
 msgstr ""
 
@@ -800,6 +827,9 @@ msgstr ""
 msgid "Automatically track clicks on your affiliate links, banner ads, and other outbound links with our link tracking."
 msgstr ""
 
+msgid "Automatically works with WooCommerce, Easy Digital Downloads, MemberPress, WPCharitable, MemberMouse, Restrict Content Pro, GiveWP, LifterLMS, C stores with no code or settings required."
+msgstr ""
+
 msgid "Available in PRO version"
 msgstr ""
 
@@ -809,13 +839,28 @@ msgstr ""
 msgid "Average %s Sales"
 msgstr ""
 
-msgid "Average Age"
-msgstr ""
-
 msgid "Average CTR"
 msgstr ""
 
 msgid "Average Order Value"
+msgstr ""
+
+msgid "Average Order Value by day"
+msgstr ""
+
+msgid "Average Order Value by Day"
+msgstr ""
+
+msgid "Average Order Value by hour"
+msgstr ""
+
+msgid "Average Order Value by Hour"
+msgstr ""
+
+msgid "Average Order Value by Location"
+msgstr ""
+
+msgid "Average Order Value by location "
 msgstr ""
 
 msgid "Average Position"
@@ -846,6 +891,10 @@ msgstr ""
 msgid "Average Steps to Purchase"
 msgstr ""
 
+#: lite/includes/emails/summaries.php:782
+msgid "Avg Session Duration"
+msgstr ""
+
 msgid "Avg. % Watched"
 msgstr ""
 
@@ -860,7 +909,7 @@ msgstr ""
 
 #: includes/gutenberg/site-insights/templates/scorecard/class-scorecard-pageviews.php:27
 #: lite/includes/emails/templates/body-summaries-test-plain.php:31
-#: lite/includes/emails/templates/body-summaries-test.php:33
+#: lite/includes/emails/templates/body-summaries-test.php:34
 msgid "Avg. Session Duration"
 msgstr ""
 
@@ -885,6 +934,9 @@ msgstr ""
 msgid "Backup your website's files and databases for free with the #1 backup solution."
 msgstr ""
 
+msgid "Based on Google Analytics traffic data, 20+ advanced themes, and WooCommerce integration."
+msgstr ""
+
 msgid "Based upon your current ads and analytics settings, you may need to use a Consent Management Platform (CMP) plugin. See which %1$splatforms work with MonsterInsights%2$s."
 msgstr ""
 
@@ -898,9 +950,6 @@ msgid "Basic Widget"
 msgstr ""
 
 msgid "Be Notified About Important Website Events"
-msgstr ""
-
-msgid "Become a WordPress expert in %s. Join our amazing communities and take your website to the next level."
 msgstr ""
 
 msgid "Beginner's Guide to Google Analytics: How Does it Work?"
@@ -927,9 +976,6 @@ msgstr ""
 msgid "Border"
 msgstr ""
 
-msgid "Bounce"
-msgstr ""
-
 msgid "Bounce %s Percentage"
 msgstr ""
 
@@ -937,9 +983,9 @@ msgid "Bounce rate"
 msgstr ""
 
 #: includes/gutenberg/site-insights/templates/scorecard/class-scorecard-pageviews.php:36
-#: lite/includes/emails/summaries.php:785
+#: lite/includes/emails/summaries.php:786
 #: lite/includes/emails/templates/body-summaries-test-plain.php:32
-#: lite/includes/emails/templates/body-summaries-test.php:34
+#: lite/includes/emails/templates/body-summaries-test.php:35
 msgid "Bounce Rate"
 msgstr ""
 
@@ -1039,6 +1085,9 @@ msgstr ""
 msgid "Can't load errors. Error: %1$s, %2$s"
 msgstr ""
 
+msgid "Can't load overview data. Error: %1$s, %2$s. Please try again in a few minutes. If the issue persists, please %3$scontact our support%4$s team."
+msgstr ""
+
 msgid "Can't load pages."
 msgstr ""
 
@@ -1076,8 +1125,8 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:522
-#: includes/admin/site-notes/Controller.php:768
+#: includes/admin/site-notes/Controller.php:524
+#: includes/admin/site-notes/Controller.php:1142
 msgid "Category"
 msgstr ""
 
@@ -1195,7 +1244,7 @@ msgstr ""
 msgid "City"
 msgstr ""
 
-msgid "Claim your 30 Day Free Trial"
+msgid "City Breakdown"
 msgstr ""
 
 msgid "Click %1$sExport Settings%2$s to export a file with your MonsterInsights settings."
@@ -1262,7 +1311,7 @@ msgstr ""
 msgid "Complete documentation on usage tracking is available %1$shere%2$s."
 msgstr ""
 
-msgid "Complete eCommerce tracking for WooCommerce, Easy Digital Downloads and MemberPress stores with no code or settings required"
+msgid "Complete Overview report, Publisher reports, and 6+ eCommerce reports."
 msgstr ""
 
 msgid "Complete Setup without Upgrading"
@@ -1277,16 +1326,10 @@ msgstr ""
 msgid "Compliant"
 msgstr ""
 
-msgid "Congrats"
-msgstr ""
-
 msgid "Congrats!"
 msgstr ""
 
 msgid "Congrats! All-in-One SEO Installed."
-msgstr ""
-
-msgid "Congrats! This year your website had "
 msgstr ""
 
 msgid "Congratulations, your site is now using Google Analytics!"
@@ -1412,7 +1455,16 @@ msgstr ""
 msgid "Country / Region Report"
 msgstr ""
 
+msgid "Country Breakdown"
+msgstr ""
+
 msgid "Country Report"
+msgstr ""
+
+msgid "Country, state and city breakdown"
+msgstr ""
+
+msgid "Country, state, and city breakdown"
 msgstr ""
 
 msgid "Coupon Name"
@@ -1427,6 +1479,9 @@ msgstr ""
 msgid "Coupons Report"
 msgstr ""
 
+msgid "Create a Custom View"
+msgstr ""
+
 msgid "Create a membership website. Works automatically with MonsterInsights, no coding needed."
 msgstr ""
 
@@ -1434,6 +1489,9 @@ msgid "Create a New Pretty Link"
 msgstr ""
 
 msgid "Create a new Site Note that you have installed MonsterInsights"
+msgstr ""
+
+msgid "Create a Recipe"
 msgstr ""
 
 msgid "Create amazing email marketing campaigns with drag and drop simplicity. Exclusive Offer: Save 20%."
@@ -1454,6 +1512,9 @@ msgstr ""
 msgid "Create New Pretty Link"
 msgstr ""
 
+msgid "Create Recipe"
+msgstr ""
+
 msgid "Create your own categories, add colors, and export your site notes with MonsterInsights Pro."
 msgstr ""
 
@@ -1466,7 +1527,7 @@ msgstr ""
 msgid "Cross domain tracking makes it possible for Analytics to see sessions on two related sites as a single session. More info on specific setup steps can be found in our %1$sknowledge base%2$s."
 msgstr ""
 
-msgid "Cross-domain tracking, anonymization of IP addresses, and automatic exclusion of administrators from tracking"
+msgid "Cross-domain tracking, anonymization of IP addresses, automatic exclusion of administrators from tracking."
 msgstr ""
 
 msgid "CTR"
@@ -1510,6 +1571,9 @@ msgstr ""
 msgid "Custom Dimensions show you popular categories, best time to publish, focus keywords, etc."
 msgstr ""
 
+msgid "Custom Events Report"
+msgstr ""
+
 msgid "Custom Google Analytics Link Tracking"
 msgstr ""
 
@@ -1525,6 +1589,30 @@ msgstr ""
 msgid "Customize targeting rules to get specific feedback on certain pages or products"
 msgstr ""
 
+msgid "Daily %s Purchases"
+msgstr ""
+
+msgid "Daily %s Refund Amount"
+msgstr ""
+
+msgid "Daily %s Refunds"
+msgstr ""
+
+msgid "Daily %s Revenue"
+msgstr ""
+
+msgid "Daily Purchases Analysis"
+msgstr ""
+
+msgid "Daily refund trends"
+msgstr ""
+
+msgid "Daily Refund Trends"
+msgstr ""
+
+msgid "Daily Revenue Breakdown"
+msgstr ""
+
 msgid "Dark"
 msgstr ""
 
@@ -1537,7 +1625,7 @@ msgstr ""
 msgid "Data Being Collected"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:520
+#: includes/admin/site-notes/Controller.php:522
 msgid "Date"
 msgstr ""
 
@@ -1557,6 +1645,9 @@ msgid "Date Range"
 msgstr ""
 
 msgid "Date Ranges & Selections"
+msgstr ""
+
+msgid "Day"
 msgstr ""
 
 msgid "Day-by-day Breakdowns"
@@ -1601,6 +1692,9 @@ msgstr ""
 msgid "Deleting Exception"
 msgstr ""
 
+msgid "Demo mode - no actions performed"
+msgstr ""
+
 msgid "Demographics"
 msgstr ""
 
@@ -1631,19 +1725,16 @@ msgstr ""
 msgid "Device Breakdown"
 msgstr ""
 
-msgid "Device Type"
+msgid "Device currently driving the majority"
 msgstr ""
 
 msgid "Device Types"
 msgstr ""
 
-msgid "Did you know over 25 million websites use our plugins?"
+msgid "Devices"
 msgstr ""
 
-msgid "Did you know that using internal links can give you huge SEO gains? Get the scoop on internal links and how to build them in our guide."
-msgstr ""
-
-msgid "Did you know you might have direct traffic that's getting counted wrong by Google Analytics? Learn how to track it correctly in our direct traffic guide."
+msgid "Did you know over 10 million websites use our plugins?"
 msgstr ""
 
 #: lite/includes/admin/reports/report-dimensions.php:22
@@ -1660,6 +1751,12 @@ msgid "Disabled %1$s- Hide reports and dashboard widget.%2$s"
 msgstr ""
 
 msgid "Disconnect MonsterInsights"
+msgstr ""
+
+msgid "Discover peak shopping hours and optimize your store operations and marketing timing for maximum conversions."
+msgstr ""
+
+msgid "Discover when customers are most likely to buy and time promotions better."
 msgstr ""
 
 msgid "Dismiss"
@@ -1690,9 +1787,6 @@ msgid "Display Method"
 msgstr ""
 
 msgid "Display Options"
-msgstr ""
-
-msgid "Display Popular Posts based on your actual traffic data from Google Analytics and choose from over 20 advanced themes. Display Popular WooCommerce products using widgets or Gutenberg blocks."
 msgstr ""
 
 msgid "Display Price"
@@ -1728,6 +1822,9 @@ msgstr ""
 msgid "Download as PDF"
 msgstr ""
 
+msgid "Download completed exports anytime"
+msgstr ""
+
 msgid "Download Failed"
 msgstr ""
 
@@ -1761,13 +1858,13 @@ msgstr ""
 msgid "Dynamic Popular Posts & Popular Products"
 msgstr ""
 
+msgid "E-commerce"
+msgstr ""
+
 msgid "Each dimension needs to have an id set."
 msgstr ""
 
 msgid "Easily add title tags, meta descriptions, keywords, and everything else you need for proper on-page SEO optimization."
-msgstr ""
-
-msgid "Easily add your Google Ads, Microsoft Ads, or Meta Pixel to your website to track your campaign  performance. Works automatically with WooCommerce, Easy Digital Downloads, MemberPress, GiveWP, and LifterLMS integrations."
 msgstr ""
 
 msgid "Easily analyze your responses and export data"
@@ -1786,6 +1883,12 @@ msgid "Easily See Which Videos Are Most Popular."
 msgstr ""
 
 msgid "Easily sell digital products like ebooks, plugins, and courses with WordPress. Built-in payment processing, coupons, shopping cart, detailed reporting, and more."
+msgstr ""
+
+msgid "Easily track campaign performance for Meta, Google, Microsoft, Snapchat, LinkedIn, TikTok, and Pinterest campaigns."
+msgstr ""
+
+msgid "Easily unlock integrations with the most popular automation plugin for WordPress."
 msgstr ""
 
 msgid "Easy Affiliate"
@@ -1825,7 +1928,7 @@ msgstr ""
 msgid "eCommerce Funnel Report"
 msgstr ""
 
-msgid "ECommerce Purchases"
+msgid "eCommerce Purchases"
 msgstr ""
 
 msgid "eCommerce Report"
@@ -2019,6 +2122,9 @@ msgstr ""
 msgid "Error importing settings"
 msgstr ""
 
+msgid "Error loading overview data"
+msgstr ""
+
 msgid "Error loading report data"
 msgstr ""
 
@@ -2040,7 +2146,22 @@ msgstr ""
 msgid "EU Compliance (GDPR Friendly)"
 msgstr ""
 
+msgid "EU Compliance & PII Protection"
+msgstr ""
+
 msgid "EU Compliance Addon"
+msgstr ""
+
+msgid "Event Count"
+msgstr ""
+
+msgid "Event Name"
+msgstr ""
+
+msgid "Events"
+msgstr ""
+
+msgid "Events Count"
 msgstr ""
 
 msgid "Events Tracking"
@@ -2050,6 +2171,9 @@ msgid "Events Tracking is enabled the moment you set up MonsterInsights"
 msgstr ""
 
 msgid "Ever wonder:"
+msgstr ""
+
+msgid "Everything You Need to Hit Your On-Page SEO Goals"
 msgstr ""
 
 msgid "Example: %s"
@@ -2096,6 +2220,12 @@ msgstr ""
 msgid "Export all of your site notes"
 msgstr ""
 
+msgid "Export failed."
+msgstr ""
+
+msgid "Export failed. Please try again."
+msgstr ""
+
 msgid "Export PDF eCommerce Report"
 msgstr ""
 
@@ -2106,6 +2236,9 @@ msgid "Export PDF Report"
 msgstr ""
 
 msgid "Export PDF Reports"
+msgstr ""
+
+msgid "Export report data to CSV and XML"
 msgstr ""
 
 msgid "Export Settings"
@@ -2120,10 +2253,10 @@ msgstr ""
 msgid "Export to PDF"
 msgstr ""
 
-msgid "Extensions of Files to Track as Downloads"
+msgid "Export your reports and access your full report export history with MonsterInsights Pro."
 msgstr ""
 
-msgid "Facebook Group"
+msgid "Extensions of Files to Track as Downloads"
 msgstr ""
 
 msgid "Failed to fetch Google Ads settings."
@@ -2162,9 +2295,6 @@ msgstr ""
 msgid "Feedback submitted will include your analytics data & insights provided so we can improve. Thank you!"
 msgstr ""
 
-msgid "Female"
-msgstr ""
-
 msgid "File Download Tracking"
 msgstr ""
 
@@ -2189,10 +2319,16 @@ msgstr ""
 msgid "Find out which products get left behind most often - and take action to recover lost sales and boost conversions."
 msgstr ""
 
+msgid "Find which days drive the most revenue and plan campaigns with confidence."
+msgstr ""
+
+msgid "Find Your Peak Sales Hours"
+msgstr ""
+
 msgid "Finish Setup & Exit Wizard"
 msgstr ""
 
-#: lite/includes/emails/summaries.php:715
+#: lite/includes/emails/summaries.php:716
 msgid "First Contentful Paint"
 msgstr ""
 
@@ -2206,12 +2342,6 @@ msgid "First Page"
 msgstr ""
 
 msgid "Focus Keywords"
-msgstr ""
-
-msgid "Follow MonsterInsights on social media to stay up to date with latest updates, trends, and tutorials on how to make the most out of analytics."
-msgstr ""
-
-msgid "Follow Us!"
 msgstr ""
 
 msgid "For the week of March 18 to March 24, 2024, your website received 6,424 visitors. Comparing this to the previous week, March 11 to March 17, 2024, when you had 6,658 visitors, there was decrease of 234 visotors (-3.51%)."
@@ -2238,6 +2368,9 @@ msgstr ""
 msgid "Form Name or ID"
 msgstr ""
 
+msgid "Form Submissions"
+msgstr ""
+
 msgid "Form Tracking"
 msgstr ""
 
@@ -2252,6 +2385,9 @@ msgid "Forms Report"
 msgstr ""
 
 msgid "Forms Reporting"
+msgstr ""
+
+msgid "Forms Submitted"
 msgstr ""
 
 msgid "Forms Tracking"
@@ -2276,6 +2412,9 @@ msgid "GA4 Measurement ID can't be empty"
 msgstr ""
 
 msgid "Gain insights into how popular and engaging your videos are on your website with completion rates, watch time, and more. Works automatically with embedded YouTube, Vimeo, and HTML5 videos."
+msgstr ""
+
+msgid "GDPR Compliance"
 msgstr ""
 
 msgid "GDPR Guide"
@@ -2334,13 +2473,13 @@ msgstr ""
 msgid "Get insights about your website by simply asking"
 msgstr ""
 
-#: includes/admin/admin.php:394
+#: includes/admin/admin.php:436
 #: includes/admin/notifications/notification-upgrade-eu-traffic.php:86
 #: includes/admin/notifications/notification-upgrade-for-custom-dimensions.php:31
 #: includes/admin/notifications/notification-upgrade-for-email-summaries.php:36
 #: includes/admin/notifications/notification-upgrade-for-events-reporting.php:31
 #: includes/admin/notifications/notification-upgrade-for-post-templates.php:31
-#: includes/admin/reports/abstract-report.php:536
+#: includes/admin/reports/abstract-report.php:541
 msgid "Get MonsterInsights Pro"
 msgstr ""
 
@@ -2395,9 +2534,6 @@ msgstr ""
 msgid "Get the reports and stats that matter right inside your WordPress Dashboard."
 msgstr ""
 
-msgid "Get weekly traffic reports directly in your inbox."
-msgstr ""
-
 msgid "Getting Started"
 msgstr ""
 
@@ -2416,7 +2552,7 @@ msgstr ""
 msgid "Goal:"
 msgstr ""
 
-#: includes/admin/admin.php:121
+#: includes/admin/admin.php:163
 msgid "Google Ads"
 msgstr ""
 
@@ -2441,6 +2577,9 @@ msgstr ""
 msgid "Google Analytics Help Guide: Collect Campaign Data with Custom URLs"
 msgstr ""
 
+msgid "Google Analytics Setup"
+msgstr ""
+
 msgid "Google Analytics Tracking"
 msgstr ""
 
@@ -2451,6 +2590,9 @@ msgid "Google Authentication"
 msgstr ""
 
 msgid "Google News Sitemap"
+msgstr ""
+
+msgid "Google Performance"
 msgstr ""
 
 msgid "Google Search Console"
@@ -2469,6 +2611,9 @@ msgid "Guide and Checklist for Advanced Insights"
 msgstr ""
 
 msgid "Guides & Resources"
+msgstr ""
+
+msgid "Harness the power of AI to optimize your content, drive organic traffic, and outrank competitors."
 msgstr ""
 
 msgid "Have a conversation with Google Analytics."
@@ -2526,13 +2671,34 @@ msgstr ""
 msgid "Hostname"
 msgstr ""
 
+msgid "Hour"
+msgstr ""
+
+msgid "Hourly %s Purchases"
+msgstr ""
+
+msgid "Hourly %s Revenue"
+msgstr ""
+
+msgid "Hourly Purchases Analysis"
+msgstr ""
+
+msgid "Hourly Revenue Breakdown"
+msgstr ""
+
+msgid "How did visitors find your website?"
+msgstr ""
+
+msgid "How did your forms perform?"
+msgstr ""
+
+msgid "How did your site perform in Google Search"
+msgstr ""
+
 msgid "How many page views did I get last month?"
 msgstr ""
 
 msgid "How many visits did I get last week?"
-msgstr ""
-
-msgid "How to Add WordPress Internal Links to Improve Your SEO"
 msgstr ""
 
 msgid "How to Connect to Google Analytics"
@@ -2566,6 +2732,15 @@ msgstr ""
 msgid "Ideally, you should diagnose and find slow user interactions in the field to optimize them."
 msgstr ""
 
+msgid "Identify geographic patterns in refunds to optimize your shipping, return policies, and customer service by region."
+msgstr ""
+
+msgid "Identify refund trends by location to improve policies and customer service."
+msgstr ""
+
+msgid "Identify which days of the week generate the most revenue and optimize your marketing campaigns accordingly."
+msgstr ""
+
 msgid "If enabled MonsterInsights will send some information about your WordPress site like what plugins and themes you use and which MonsterInsights settings you use to us so that we can improve our product. For a complete list of what we send and what we use it for, %1$svisit our website.%2$s"
 msgstr ""
 
@@ -2590,6 +2765,9 @@ msgstr ""
 msgid "Import Export"
 msgstr ""
 
+msgid "Import failed."
+msgstr ""
+
 msgid "Import Settings"
 msgstr ""
 
@@ -2599,7 +2777,7 @@ msgstr ""
 msgid "Import/Export"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:523
+#: includes/admin/site-notes/Controller.php:525
 msgid "Important"
 msgstr ""
 
@@ -2633,6 +2811,15 @@ msgstr ""
 msgid "In order for the MonsterInsights Google AMP addon to work properly, you need to install the WordPress AMP plugin by Automattic. %1$s%2$s Plugin%3$s | %4$sLearn More%5$s"
 msgstr ""
 
+msgid "In order to use Custom Dimensions features, upgrade to MonsterInsights Pro"
+msgstr ""
+
+msgid "In order to use Forms tracking features, upgrade to MonsterInsights Pro"
+msgstr ""
+
+msgid "In order to use the PPC Ads Pixel Tracking, upgrade to MonsterInsights Pro"
+msgstr ""
+
 msgid "In order to use these features, please ask your webmaster to install the necessary addon."
 msgstr ""
 
@@ -2649,9 +2836,6 @@ msgid "Included"
 msgstr ""
 
 msgid "Includes Multiple layouts including cookie banners, cookie popups, and more, so you can create a beautiful cookie consent notice with just a few clicks."
-msgstr ""
-
-msgid "Includes the complete Overview report, Publisher reports and 6 different eCommerce reports"
 msgstr ""
 
 msgid "Increase Engagement and Unlock New Insights About Your Site."
@@ -2679,10 +2863,10 @@ msgid "Insert your sharedcount API key found in your %1$sSettings%2$s panel. Aft
 msgstr ""
 
 #: includes/admin/admin.php:55
-#: includes/admin/admin.php:69
-#: includes/admin/admin.php:236
-#: includes/admin/admin.php:239
-#: includes/admin/admin.php:280
+#: includes/admin/admin.php:105
+#: includes/admin/admin.php:278
+#: includes/admin/admin.php:281
+#: includes/admin/admin.php:322
 msgid "Insights"
 msgstr ""
 
@@ -2696,6 +2880,9 @@ msgid "Install & Activate Easy Digital Downloads"
 msgstr ""
 
 msgid "Install & Activate Stripe Payment Gateway"
+msgstr ""
+
+msgid "Install & Activate Uncanny Automator"
 msgstr ""
 
 msgid "Install & Activate UserFeedback"
@@ -2725,8 +2912,8 @@ msgstr ""
 msgid "Install MonsterInsights"
 msgstr ""
 
-#: includes/admin/admin.php:894
-#: includes/admin/admin.php:1016
+#: includes/admin/admin.php:941
+#: includes/admin/admin.php:1081
 msgid "Install Now"
 msgstr ""
 
@@ -2769,7 +2956,13 @@ msgstr ""
 msgid "Installation Failed. Please refresh and try again."
 msgstr ""
 
+msgid "Installed & Activated"
+msgstr ""
+
 msgid "Installed & Active"
+msgstr ""
+
+msgid "Installing"
 msgstr ""
 
 msgid "Installing & Activating"
@@ -2859,7 +3052,16 @@ msgstr ""
 msgid "It's easy to double your traffic and sales when you know exactly how people find and use your website. MonsterInsights Pro shows you the stats that matter!"
 msgstr ""
 
-msgid "Items per page:"
+msgid "Items Sold"
+msgstr ""
+
+msgid "Items Sold by Day"
+msgstr ""
+
+msgid "Items sold by hour"
+msgstr ""
+
+msgid "Items Sold by Hour"
 msgstr ""
 
 msgid "Jack Brown"
@@ -2868,7 +3070,7 @@ msgstr ""
 msgid "January"
 msgstr ""
 
-msgid "January 1, %1$s - December 31, %2$s"
+msgid "January 1, 2025 - December 31, 2025"
 msgstr ""
 
 msgid "Joel Steinmann"
@@ -2877,16 +3079,7 @@ msgstr ""
 msgid "Join 2,000,000+ Professionals who use AIOSEO to Improve Their Website Search Rankings."
 msgstr ""
 
-msgid "Join Now...It’s Free!"
-msgstr ""
-
-msgid "Join our Communities!"
-msgstr ""
-
 msgid "Join Our Community"
-msgstr ""
-
-msgid "Join our team of WordPress experts and other motivated website owners in the WPBeginner Engage Facebook Group."
 msgstr ""
 
 msgid "July"
@@ -2901,10 +3094,19 @@ msgstr ""
 msgid "Keep track of important website events with Site Notes. Site Notes can help you track and monitor changes to your website traffic, clicks, or conversion rates over a period of time."
 msgstr ""
 
+msgid "Key event"
+msgstr ""
+
+msgid "Keywords"
+msgstr ""
+
 msgid "Know More"
 msgstr ""
 
 msgid "Know where your buyers are coming from - search, social, email, referral, or paid. Focus your efforts where they count."
+msgstr ""
+
+msgid "Know Where Your Customers Buy"
 msgstr ""
 
 msgid "Label"
@@ -3003,6 +3205,9 @@ msgstr ""
 msgid "Learn about Conversion Tracking"
 msgstr ""
 
+msgid "Learn how"
+msgstr ""
+
 msgid "Learn how to insert the Popular Posts Widget into a Sidebar. To style this widget use the Customize Design panel above."
 msgstr ""
 
@@ -3039,8 +3244,8 @@ msgstr ""
 msgid "Learn how visitors arrive to your website and which are the most engaged or profitable."
 msgstr ""
 
-#: includes/admin/admin.php:529
-#: includes/admin/admin.php:1020
+#: includes/admin/admin.php:571
+#: includes/admin/admin.php:1085
 #: includes/admin/common.php:659
 #: includes/admin/common.php:685
 #: includes/admin/common.php:717
@@ -3062,16 +3267,22 @@ msgstr ""
 msgid "Learn more about updating WordPress"
 msgstr ""
 
-msgid "Leave a five star review!"
+msgid "Least Popular Month"
+msgstr ""
+
+msgid "Least Visited Month"
+msgstr ""
+
+msgid "Leave a Five Star Review!"
 msgstr ""
 
 msgid "Left"
 msgstr ""
 
-msgid "Let’s get to know your visitors a little better, shall we?"
+msgid "Let's get you set up."
 msgstr ""
 
-msgid "Let's get you set up."
+msgid "Let's take a look at how your website performed."
 msgstr ""
 
 msgid "Level-up Your eCommerce store with %1$sMonsterInsights"
@@ -3113,6 +3324,9 @@ msgstr ""
 msgid "Lite vs Pro"
 msgstr ""
 
+msgid "LLM Visits"
+msgstr ""
+
 msgid "Loading Google Ads..."
 msgstr ""
 
@@ -3138,6 +3352,9 @@ msgid "Loading Themes"
 msgstr ""
 
 msgid "Local SEO"
+msgstr ""
+
+msgid "Location"
 msgstr ""
 
 msgid "Logged In"
@@ -3167,14 +3384,11 @@ msgstr ""
 msgid "Make your MonsterInsights campaign links prettier with Pretty Links!"
 msgstr ""
 
-#: includes/admin/admin.php:1008
+#: includes/admin/admin.php:1073
 msgid "Make Your Website Analytics Compliant with Privacy Laws"
 msgstr ""
 
 msgid "Make your website more compliant with privacy regulations like GDPR, CCPA, and PECR."
-msgstr ""
-
-msgid "Male"
 msgstr ""
 
 msgid "Manage all your affiliate links with features designed to help make bloggers more money."
@@ -3195,6 +3409,9 @@ msgstr ""
 msgid "March"
 msgstr ""
 
+msgid "Mark as important"
+msgstr ""
+
 msgid "May"
 msgstr ""
 
@@ -3204,7 +3421,7 @@ msgstr ""
 msgid "Measurement Protocol API Secret"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:524
+#: includes/admin/site-notes/Controller.php:526
 msgid "Media"
 msgstr ""
 
@@ -3233,9 +3450,6 @@ msgid "Minimum Word Count to Display Multiple Widgets"
 msgstr ""
 
 msgid "Minor only %1$s- Get bugfixes and security updates, but not major features.%2$s"
-msgstr ""
-
-msgid "minutes"
 msgstr ""
 
 msgid "Miscellaneous"
@@ -3284,9 +3498,6 @@ msgid "MonsterInsights has detected that your site is running an outdated, insec
 msgstr ""
 
 msgid "MonsterInsights has detected that your site is running an outdated, insecure version of PHP (%1$s), which could be putting your site at risk for being hacked. WordPress stopped supporting your PHP version in April, 2019. Updating to the recommended version (PHP %2$s) only takes a few minutes and will make your website significantly faster and more secure."
-msgstr ""
-
-msgid "MonsterInsights have partnered with SEMRush, the powerful all-in-one marketing toolkit that helps you get competitive <br>intelligence on SEO, paid traffic, social media, and more."
 msgstr ""
 
 msgid "MonsterInsights is brought to you by the same team that's behind the largest WordPress resource site, WPBeginner, the most popular lead-generation software, OptinMonster, and the best WordPress forms plugin, WPForms."
@@ -3346,6 +3557,9 @@ msgstr ""
 msgid "MonsterInsights, the #1 WordPress Analytics Plugin, helps you connect your website with Google Analytics, so you can see how people find and use your website. Over 3 million website owners use MonsterInsights to see the stats that matter and grow their business."
 msgstr ""
 
+msgid "Monthly Email Summaries"
+msgstr ""
+
 msgid "More advanced features"
 msgstr ""
 
@@ -3355,10 +3569,10 @@ msgstr ""
 msgid "More Information & Examples"
 msgstr ""
 
-msgid "Most of your visitors viewed your website from their <strong>%s</strong> device."
+msgid "Most Popular Categories"
 msgstr ""
 
-msgid "Most Popular Categories"
+msgid "Most Popular Month"
 msgstr ""
 
 msgid "Most Popular Post"
@@ -3368,6 +3582,9 @@ msgid "Most Popular Product"
 msgstr ""
 
 msgid "Most Popular Times"
+msgstr ""
+
+msgid "Most Visited Month"
 msgstr ""
 
 msgid "Multiple Entries"
@@ -3392,6 +3609,9 @@ msgid "New Conversation"
 msgstr ""
 
 msgid "New Customers"
+msgstr ""
+
+msgid "New posts or pages are published"
 msgstr ""
 
 msgid "New Releases"
@@ -3457,6 +3677,9 @@ msgstr ""
 msgid "No data currently for the Pages report"
 msgstr ""
 
+msgid "No data currently for the Product Feed report"
+msgstr ""
+
 msgid "No data currently for the report"
 msgstr ""
 
@@ -3496,10 +3719,16 @@ msgstr ""
 msgid "No more confusing or incomplete reports. Track what matters - directly from your dashboard."
 msgstr ""
 
+msgid "No notes to export."
+msgstr ""
+
 msgid "No Notifications"
 msgstr ""
 
 msgid "No options available"
+msgstr ""
+
+msgid "No orders tracked during this time period."
 msgstr ""
 
 msgid "No outbound link clicks detected for this time period."
@@ -3515,6 +3744,12 @@ msgid "No records found."
 msgstr ""
 
 msgid "No referral traffic currently."
+msgstr ""
+
+msgid "No refunds tracked during this time period."
+msgstr ""
+
+msgid "No spending data for this time period."
 msgstr ""
 
 msgid "No Styles %1$s- Use your own CSS.%2$s"
@@ -3533,6 +3768,15 @@ msgid "No-Code-Needed Tracking Features"
 msgstr ""
 
 msgid "No, cancel!"
+msgstr ""
+
+msgid "No. 1 Form"
+msgstr ""
+
+msgid "No. of clicks"
+msgstr ""
+
+msgid "No. of Transactions"
 msgstr ""
 
 msgid "None"
@@ -3560,7 +3804,7 @@ msgstr ""
 msgid "Note: You will be transfered to %1$s.com to complete the setup wizard."
 msgstr ""
 
-#: includes/admin/admin.php:531
+#: includes/admin/admin.php:573
 #: lite/includes/admin/dashboard-widget.php:150
 msgid "Note: You will be transfered to MonsterInsights.com to complete the setup wizard."
 msgstr ""
@@ -3581,11 +3825,21 @@ msgstr ""
 msgid "Number of Comments"
 msgstr ""
 
-#: lite/includes/emails/summaries.php:793
+msgid "Number of Engaged Sessions"
+msgstr ""
+
+msgid "Number of Events"
+msgstr ""
+
+#: lite/includes/emails/summaries.php:794
 msgid "Number of Pages"
 msgstr ""
 
 msgid "Number of Posts"
+msgstr ""
+
+#: lite/includes/emails/summaries.php:774
+msgid "Number of Sessions"
 msgstr ""
 
 msgid "Number of times your website appeared in search results"
@@ -3623,10 +3877,7 @@ msgstr ""
 msgid "One Powerful Dashboard"
 msgstr ""
 
-msgid "One-click Complete eCommerce tracking"
-msgstr ""
-
-msgid "One-Click Enhanced eCommerce"
+msgid "One-click eCommerce Tracking"
 msgstr ""
 
 msgid "One-click Form Events Tracking"
@@ -3728,9 +3979,6 @@ msgstr ""
 msgid "Oops! We can't verify deauthentication. Error: %1$s, %2$s. Please try again in a few minutes. If the issue persists, please %3$scontact our support%4$s team."
 msgstr ""
 
-msgid "Opportunity"
-msgstr ""
-
 msgid "Optimize Your Pages For Higher Rankings With TruSEO Score."
 msgstr ""
 
@@ -3752,10 +4000,25 @@ msgstr ""
 msgid "Or manually enter GA4 Measurement ID (limited functionality)"
 msgstr ""
 
-msgid "Order Popular Posts by comments or shares with 3 simple theme choices."
+msgid "Order by comments or shares, 3 simple theme choices."
 msgstr ""
 
 msgid "Order Totals"
+msgstr ""
+
+msgid "Orders by Location"
+msgstr ""
+
+msgid "Orders by Location Report"
+msgstr ""
+
+msgid "Orders Using Coupon"
+msgstr ""
+
+msgid "Organic Search"
+msgstr ""
+
+msgid "Organic Search referral sources"
 msgstr ""
 
 msgid "Other Addons"
@@ -3794,7 +4057,7 @@ msgstr ""
 msgid "Over the years, we found that in order to get the most out of Google Analytics, you needed a full time developer who could implement custom tracking, so that Google Analytics would integrate with things like WooCommerce, and track things which Google doesn't by default, like outbound links."
 msgstr ""
 
-#: lite/includes/emails/summaries.php:712
+#: lite/includes/emails/summaries.php:713
 msgid "Overall Score"
 msgstr ""
 
@@ -3808,10 +4071,10 @@ msgstr ""
 msgid "Overview Report"
 msgstr ""
 
-msgid "Overview Report Synopsis"
+msgid "Overview Report Synopsis."
 msgstr ""
 
-msgid "Overview Reports for the last 30 days."
+msgid "Overview reports for the last 30 days."
 msgstr ""
 
 msgid "Page"
@@ -3834,9 +4097,9 @@ msgstr ""
 #: lite/includes/emails/templates/body-summaries-plain.php:62
 #: lite/includes/emails/templates/body-summaries-test-plain.php:30
 #: lite/includes/emails/templates/body-summaries-test-plain.php:98
-#: lite/includes/emails/templates/body-summaries-test.php:32
-#: lite/includes/emails/templates/body-summaries-test.php:149
-#: lite/includes/emails/templates/body-summaries.php:120
+#: lite/includes/emails/templates/body-summaries-test.php:33
+#: lite/includes/emails/templates/body-summaries-test.php:248
+#: lite/includes/emails/templates/body-summaries.php:220
 msgid "Page Views"
 msgstr ""
 
@@ -3885,6 +4148,15 @@ msgid "Path has to start with a / and have no spaces"
 msgstr ""
 
 msgid "PDF Exporting"
+msgstr ""
+
+msgid "Peak shopping hours"
+msgstr ""
+
+msgid "Peak Shopping Hours"
+msgstr ""
+
+msgid "Per Average Visitor"
 msgstr ""
 
 msgid "per year"
@@ -3958,7 +4230,7 @@ msgstr ""
 msgid "Please set up custom dimension \"%s\" for this report to work."
 msgstr ""
 
-#: includes/admin/admin.php:526
+#: includes/admin/admin.php:568
 msgid "Please Setup Website Analytics to See Audience Insights"
 msgstr ""
 
@@ -3974,6 +4246,9 @@ msgstr ""
 msgid "Plugin Updates"
 msgstr ""
 
+msgid "Plugins are updated"
+msgstr ""
+
 msgid "Plus Subscription Activated"
 msgstr ""
 
@@ -3983,7 +4258,7 @@ msgstr ""
 msgid "Popular marketing campaign"
 msgstr ""
 
-#: includes/admin/admin.php:104
+#: includes/admin/admin.php:146
 msgid "Popular Posts"
 msgstr ""
 
@@ -4011,13 +4286,22 @@ msgstr ""
 msgid "Post Types"
 msgstr ""
 
+msgid "Posts or pages are updated"
+msgstr ""
+
 msgid "Powered by MonsterInsights"
 msgstr ""
 
 msgid "PPC Addon Successfully Activated"
 msgstr ""
 
+msgid "PPC Ads"
+msgstr ""
+
 msgid "PPC Pixel Tracking"
+msgstr ""
+
+msgid "PPC Tracking"
 msgstr ""
 
 msgid "Preparing setup wizard..."
@@ -4059,7 +4343,7 @@ msgstr ""
 msgid "Privacy Guard"
 msgstr ""
 
-#: includes/admin/admin.php:1009
+#: includes/admin/admin.php:1074
 msgid "Privacy laws like GDPR, CCPA, and others require user consent before you can track visitors. Our sister plugin, WPConsent, helps you add a smart cookie consent banner for better privacy compliance with Google Analytics."
 msgstr ""
 
@@ -4087,7 +4371,13 @@ msgstr ""
 msgid "Product Count"
 msgstr ""
 
+msgid "Product Feed"
+msgstr ""
+
 msgid "Product Name"
+msgstr ""
+
+msgid "Product Sales by month"
 msgstr ""
 
 msgid "Product Sales Report"
@@ -4097,6 +4387,9 @@ msgid "Products"
 msgstr ""
 
 msgid "Products Abandoned"
+msgstr ""
+
+msgid "Products Refunded"
 msgstr ""
 
 msgid "Provide Feedback"
@@ -4115,9 +4408,6 @@ msgid "Publisher %1$s(Blog)%2$s"
 msgstr ""
 
 msgid "Publisher Reports"
-msgstr ""
-
-msgid "Publisher, eCommerce, Search Console, Custom Dimensions, Forms and Real-Time with custom date period selection"
 msgstr ""
 
 #: lite/includes/admin/reports/report-publisher.php:22
@@ -4139,7 +4429,25 @@ msgstr ""
 msgid "Purchases"
 msgstr ""
 
+msgid "Purchases by day"
+msgstr ""
+
+msgid "Purchases by Geography"
+msgstr ""
+
+msgid "Purchases by hour"
+msgstr ""
+
+msgid "Purchases by location"
+msgstr ""
+
+msgid "Purchases by Location Report"
+msgstr ""
+
 msgid "PushEngage"
+msgstr ""
+
+msgid "Qty"
 msgstr ""
 
 msgid "Quantity"
@@ -4208,6 +4516,9 @@ msgstr ""
 msgid "Realtime Reports"
 msgstr ""
 
+msgid "Receive weekly traffic reports and key insights directly in your inbox."
+msgstr ""
+
 msgid "Recent"
 msgstr ""
 
@@ -4241,7 +4552,7 @@ msgstr ""
 msgid "Redo"
 msgstr ""
 
-msgid "Referrals"
+msgid "Referral Source"
 msgstr ""
 
 msgid "Refresh Addons"
@@ -4260,6 +4571,57 @@ msgid "Refreshing License"
 msgstr ""
 
 msgid "Refreshing Report"
+msgstr ""
+
+msgid "Refund Amount"
+msgstr ""
+
+msgid "Refund Amount Analysis"
+msgstr ""
+
+msgid "Refund Amount by Geography"
+msgstr ""
+
+msgid "Refund percentages"
+msgstr ""
+
+msgid "Refund Percentages"
+msgstr ""
+
+msgid "Refunded products"
+msgstr ""
+
+msgid "Refunded products by location"
+msgstr ""
+
+msgid "Refunded revenue"
+msgstr ""
+
+msgid "Refunded revenue by location"
+msgstr ""
+
+msgid "Refunds"
+msgstr ""
+
+msgid "Refunds by Geo"
+msgstr ""
+
+msgid "Refunds by Geo Report"
+msgstr ""
+
+msgid "Refunds by Geography"
+msgstr ""
+
+msgid "Refunds by Geography Report"
+msgstr ""
+
+msgid "Refunds by Location"
+msgstr ""
+
+msgid "Refunds Report"
+msgstr ""
+
+msgid "Remove from important"
 msgstr ""
 
 msgid "Remove Media"
@@ -4283,11 +4645,15 @@ msgstr ""
 msgid "Report Details"
 msgstr ""
 
+msgid "Report Export"
+msgstr ""
+
 msgid "Report Unavailable"
 msgstr ""
 
-#: includes/admin/admin.php:62
-#: includes/admin/admin.php:284
+#: includes/admin/admin.php:66
+#: includes/admin/admin.php:73
+#: includes/admin/admin.php:326
 msgid "Reports"
 msgstr ""
 
@@ -4318,6 +4684,9 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
+msgid "Retry failed exports with one click"
+msgstr ""
+
 msgid "Returning"
 msgstr ""
 
@@ -4336,13 +4705,31 @@ msgstr ""
 msgid "Revenue Abandoned"
 msgstr ""
 
+msgid "Revenue by day"
+msgstr ""
+
+msgid "Revenue by Geography"
+msgstr ""
+
+msgid "Revenue by hour"
+msgstr ""
+
+msgid "Revenue by location"
+msgstr ""
+
 msgid "Revenue by traffic source"
 msgstr ""
 
 msgid "Revenue Changes"
 msgstr ""
 
+msgid "Revenue Refunded"
+msgstr ""
+
 msgid "Revenue Tools"
+msgstr ""
+
+msgid "Revenue Trends"
 msgstr ""
 
 msgid "Revenue/Sales"
@@ -4361,6 +4748,9 @@ msgid "Rules"
 msgstr ""
 
 msgid "Run Audit"
+msgstr ""
+
+msgid "Run Setup Wizard"
 msgstr ""
 
 msgid "Run the Easy Digital Downloads wizard to start selling your digital products."
@@ -4411,7 +4801,7 @@ msgstr ""
 msgid "Scroll Tracking"
 msgstr ""
 
-msgid "Scroll tracking as well as tracking on Google Accelerated Mobile Pages (AMP)"
+msgid "Scroll tracking as well as tracking on Google Accelerated Mobile Pages (AMP)."
 msgstr ""
 
 msgid "Search Addons"
@@ -4484,9 +4874,6 @@ msgstr ""
 msgid "See how your store is performing."
 msgstr ""
 
-msgid "See how your website performed this year and find tips along the way to help grow even more in %s!"
-msgstr ""
-
 msgid "See our top recommended plugins and extensions to help you make more money from your eCommerce store."
 msgstr ""
 
@@ -4505,22 +4892,43 @@ msgstr ""
 msgid "See the Metrics That Actually Grow Your Store"
 msgstr ""
 
-msgid "See the top %sTraffic Sources%s and %sTop Pages%s for the Month of %s in the Overview Report to replicate your success."
+msgid "See what custom events are happening on your website"
 msgstr ""
 
 msgid "See What Your Website Visitors Are %1$sReally%2$s Thinking!"
 msgstr ""
 
+msgid "See Where Refunds Happen Most"
+msgstr ""
+
+msgid "See where your sales come from and optimize your marketing by location."
+msgstr ""
+
 msgid "See Which AI Sources are Making You Money."
 msgstr ""
 
+msgid "See which cities and countries make up your store's refunds."
+msgstr ""
+
+msgid "See which cities and countries make up your store's sales."
+msgstr ""
+
 msgid "See which countries your visitors come from."
+msgstr ""
+
+msgid "See which days are most profitable for your store."
+msgstr ""
+
+msgid "See which hours are most profitable for your store."
 msgstr ""
 
 msgid "See which products are abandoned the most."
 msgstr ""
 
 msgid "See which products are left the most so that that you can optimize and increase your sales."
+msgstr ""
+
+msgid "See which products are most frequently refunded."
 msgstr ""
 
 msgid "See which products are the most popular with your customers."
@@ -4533,6 +4941,12 @@ msgid "See Who And What is Happening on Your Website in Realtime."
 msgstr ""
 
 msgid "See who and which forms are converting the best on your website, so that you can optimize and make more money. Works automatically with WPForms, Formidable Forms, Gravity Forms, and all other WordPress forms."
+msgstr ""
+
+msgid "See your custom events and performance"
+msgstr ""
+
+msgid "See Your Most Profitable Days"
 msgstr ""
 
 msgid "See your Top Landing Pages"
@@ -4578,7 +4992,7 @@ msgstr ""
 msgid "Select the position of the badge in your website’s footer."
 msgstr ""
 
-msgid "Select up to 7 metrics"
+msgid "Select up to 5 metrics"
 msgstr ""
 
 msgid "Sell digital products with zero transaction fees - keep 100% of your revenue with secure file delivery, customer management, and detailed sales reports"
@@ -4611,7 +5025,7 @@ msgstr ""
 msgid "September"
 msgstr ""
 
-#: lite/includes/emails/summaries.php:717
+#: lite/includes/emails/summaries.php:718
 msgid "Server Response Time"
 msgstr ""
 
@@ -4637,7 +5051,7 @@ msgstr ""
 #: includes/gutenberg/site-insights/templates/scorecard/class-scorecard-sessions.php:27
 #: includes/gutenberg/site-insights/templates/scorecard/class-scorecard-top10countries.php:56
 #: lite/includes/emails/templates/body-summaries-test-plain.php:28
-#: lite/includes/emails/templates/body-summaries-test.php:30
+#: lite/includes/emails/templates/body-summaries-test.php:31
 msgid "Sessions"
 msgstr ""
 
@@ -4669,6 +5083,9 @@ msgstr ""
 msgid "Set Up"
 msgstr ""
 
+msgid "Set up conversion tracking to measure your campaign performance."
+msgstr ""
+
 msgid "Set up Custom Dimensions"
 msgstr ""
 
@@ -4687,8 +5104,8 @@ msgstr ""
 msgid "Set Up WPConsent"
 msgstr ""
 
-#: includes/admin/admin.php:66
-#: includes/admin/admin.php:387
+#: includes/admin/admin.php:102
+#: includes/admin/admin.php:429
 msgid "Settings"
 msgstr ""
 
@@ -4759,8 +5176,14 @@ msgstr ""
 msgid "Site Health Notifications"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:521
+#: includes/admin/site-notes/Controller.php:523
 msgid "Site Note"
+msgstr ""
+
+msgid "Site note categories help you keep track of related site notes so that you can see how particular types of events affect your website."
+msgstr ""
+
+msgid "Site Note Category"
 msgstr ""
 
 msgid "Site note category is added successfully."
@@ -4772,7 +5195,7 @@ msgstr ""
 msgid "Site note is updated successfully."
 msgstr ""
 
-#: includes/admin/admin.php:86
+#: includes/admin/admin.php:128
 msgid "Site Notes"
 msgstr ""
 
@@ -4830,9 +5253,6 @@ msgstr ""
 msgid "Smash Balloon - Instagram"
 msgstr ""
 
-msgid "So, where did all of these visitors come from?"
-msgstr ""
-
 msgid "Social"
 msgstr ""
 
@@ -4840,6 +5260,9 @@ msgid "Social Media Integration"
 msgstr ""
 
 msgid "Social Media Report"
+msgstr ""
+
+msgid "Social Media Visits"
 msgstr ""
 
 msgid "Social Networks"
@@ -4878,6 +5301,24 @@ msgstr ""
 msgid "Special Offers"
 msgstr ""
 
+msgid "Spend by Day"
+msgstr ""
+
+msgid "Spend by Day Report"
+msgstr ""
+
+msgid "Spend by Hour"
+msgstr ""
+
+msgid "Spend by Hour Report"
+msgstr ""
+
+msgid "Spending by Day of Week"
+msgstr ""
+
+msgid "Spending by Hour of Day"
+msgstr ""
+
 msgid "Standard Analytics & Reports"
 msgstr ""
 
@@ -4890,7 +5331,7 @@ msgstr ""
 msgid "Start a conversation with %s"
 msgstr ""
 
-#: includes/admin/routes.php:771
+#: includes/admin/routes.php:813
 msgid "Start accepting one-time and recurring payments on your WordPress site without setting up a shopping cart. No code required."
 msgstr ""
 
@@ -4904,6 +5345,12 @@ msgid "Start Setup"
 msgstr ""
 
 msgid "Start the easy point-and-click onboarding to start collecting payments."
+msgstr ""
+
+msgid "State"
+msgstr ""
+
+msgid "State Breakdown"
 msgstr ""
 
 msgid "State/Region"
@@ -4945,9 +5392,6 @@ msgstr ""
 msgid "Step-by-Step Purchase Paths"
 msgstr ""
 
-msgid "Still Calculating..."
-msgstr ""
-
 msgid "Stop guessing about what content your visitors are interested in. MonsterInsights Publisher Report shows you exactly which content gets the most visits, so you can analyze and optimize it for higher conversions."
 msgstr ""
 
@@ -4969,13 +5413,16 @@ msgstr ""
 msgid "Sun"
 msgstr ""
 
-#: includes/admin/admin.php:377
-#: includes/admin/admin.php:380
-#: includes/admin/admin.php:942
+#: includes/admin/admin.php:419
+#: includes/admin/admin.php:422
+#: includes/admin/admin.php:1000
 msgid "Support"
 msgstr ""
 
 msgid "Support & Docs"
+msgstr ""
+
+msgid "Supports WPForms, Ninja Forms, Contact Form 7, Gravity Forms, and all standard HTML forms."
 msgstr ""
 
 msgid "Switch to AIOSEO"
@@ -5169,14 +5616,14 @@ msgstr ""
 msgid "The value entered does not match the required format"
 msgstr ""
 
-msgid "The websites that link back to your website"
-msgstr ""
-
 #: lite/includes/popular-posts/class-popular-posts-widget-sidebar.php:260
 msgid "Theme Preview"
 msgstr ""
 
 msgid "There are two ways to manual include the widget in your posts."
+msgstr ""
+
+msgid "There aren't any categories. Go ahead and create one!"
 msgstr ""
 
 msgid "There aren't any pinned conversations"
@@ -5266,6 +5713,9 @@ msgstr ""
 msgid "This is a demo report. The demo report will replaced after the first sale is tracked."
 msgstr ""
 
+msgid "This is a sample report. %1$sInstall the Exceptions Report addon or upgrade to Agency%2$s to unlock for your website."
+msgstr ""
+
 msgid "This is a sample report. %1$sUpgrade to Pro%2$s to unlock for your website."
 msgstr ""
 
@@ -5346,10 +5796,7 @@ msgstr ""
 msgid "Time on Page"
 msgstr ""
 
-msgid "Time Spent on Site"
-msgstr ""
-
-#: lite/includes/emails/summaries.php:714
+#: lite/includes/emails/summaries.php:715
 msgid "Time to Interactive"
 msgstr ""
 
@@ -5408,6 +5855,24 @@ msgstr ""
 msgid "Top 11 Important Google Analytics Metrics to Track"
 msgstr ""
 
+msgid "Top 5 Countries"
+msgstr ""
+
+msgid "Top 5 Landing Pages"
+msgstr ""
+
+msgid "Top 5 Most Clicked Keywords"
+msgstr ""
+
+msgid "Top 5 Pages"
+msgstr ""
+
+msgid "Top 5 Products"
+msgstr ""
+
+msgid "Top 5 referrals"
+msgstr ""
+
 msgid "Top 50 Google Search Terms"
 msgstr ""
 
@@ -5428,6 +5893,9 @@ msgstr ""
 msgid "Top Countries"
 msgstr ""
 
+msgid "Top Country"
+msgstr ""
+
 msgid "Top days"
 msgstr ""
 
@@ -5443,6 +5911,9 @@ msgstr ""
 msgid "Top hours"
 msgstr ""
 
+msgid "Top Key Words"
+msgstr ""
+
 msgid "Top Landing Pages"
 msgstr ""
 
@@ -5455,7 +5926,13 @@ msgstr ""
 msgid "Top Pages"
 msgstr ""
 
+msgid "Top Pages Name"
+msgstr ""
+
 msgid "Top Posts/Pages"
+msgstr ""
+
+msgid "Top Product Feeds"
 msgstr ""
 
 msgid "Top Products"
@@ -5470,13 +5947,16 @@ msgstr ""
 msgid "Top Regions"
 msgstr ""
 
+msgid "Total / Average"
+msgstr ""
+
 msgid "Total Add to Carts"
 msgstr ""
 
 msgid "Total Add/Remove"
 msgstr ""
 
-#: lite/includes/emails/summaries.php:713
+#: lite/includes/emails/summaries.php:714
 msgid "Total Blocking Time"
 msgstr ""
 
@@ -5497,10 +5977,28 @@ msgstr ""
 msgid "Total Page Views"
 msgstr ""
 
+msgid "Total Pages Viewed"
+msgstr ""
+
+msgid "Total refunds"
+msgstr ""
+
+msgid "Total Refunds"
+msgstr ""
+
+msgid "Total refunds by location"
+msgstr ""
+
+msgid "Total Refunds Tracking"
+msgstr ""
+
 msgid "Total Removed from Cart"
 msgstr ""
 
 msgid "Total Revenue"
+msgstr ""
+
+msgid "Total Revenue Generated"
 msgstr ""
 
 msgid "Total Sessions"
@@ -5515,10 +6013,16 @@ msgstr ""
 msgid "Track all of your form conversion rates"
 msgstr ""
 
-msgid "Track and measure by the Author, Post Type, Category, Tag, SEO Score, Focus Keyword, Logged-in User, User ID and Published Time of each post and page"
+msgid "Track and analyze refunds to identify problematic products and improve your return policies."
+msgstr ""
+
+msgid "Track by Author, Post Type, Category, Tag, SEO Score, Focus Keyword, Logged-in User, User ID, and Published Time."
 msgstr ""
 
 msgid "Track complete sales funnels - from traffic source to purchase, see exactly what converts your visitors into paying customers"
+msgstr ""
+
+msgid "Track engagement and key metrics for all videos that are hosted on YouTube, Vimeo, or uploaded as HTML5."
 msgstr ""
 
 msgid "Track every step - from add to cart, to checkout, to completed order - so you can spot where shoppers drop off and fix friction points. No setup needed."
@@ -5536,7 +6040,16 @@ msgstr ""
 msgid "Track how your users interact with videos on your website."
 msgstr ""
 
+msgid "Track Key Events"
+msgstr ""
+
+msgid "Track performance of your product feeds and shopping campaigns."
+msgstr ""
+
 msgid "Track purchases"
+msgstr ""
+
+msgid "Track Refunds and Lost Revenue"
 msgstr ""
 
 msgid "Tracking Code Installed"
@@ -5546,6 +6059,9 @@ msgid "Traffic"
 msgstr ""
 
 msgid "Traffic Changes"
+msgstr ""
+
+msgid "Traffic coming from Social Media platforms"
 msgstr ""
 
 msgid "Traffic Details"
@@ -5572,7 +6088,22 @@ msgstr ""
 msgid "Traffic Tools"
 msgstr ""
 
+msgid "Traffic, Landing Pages, Geography, Devices, Publisher, eCommerce, Search Console, Custom Dimensions, Forms, and Real-Time reports with custom date ranges and comparisons"
+msgstr ""
+
+msgid "Transaction Percentages"
+msgstr ""
+
+msgid "Transaction share by day"
+msgstr ""
+
+msgid "Transaction share by hour"
+msgstr ""
+
 msgid "Transactions"
+msgstr ""
+
+msgid "Transactions by Location"
 msgstr ""
 
 msgid "Trash"
@@ -5588,9 +6119,6 @@ msgid "TruSEO Score gives you a more in-depth analysis into your optimization ef
 msgstr ""
 
 msgid "Try it out today, for free."
-msgstr ""
-
-msgid "Try our other popular WordPress plugins to grow your website in %s."
 msgstr ""
 
 msgid "Tue"
@@ -5615,6 +6143,12 @@ msgid "Uncover which traffic sources are creating engagement and sales from your
 msgstr ""
 
 msgid "Understand exactly why visitors left your website, what convinced them to make a purchase, why they signed up for a newsletter, and more with real verbatim feedback"
+msgstr ""
+
+msgid "Understand refund patterns and spot issues before they impact profits."
+msgstr ""
+
+msgid "Understand where your customers are located and optimize your marketing strategies for different geographic regions."
 msgstr ""
 
 msgid "Understand Your Customers%1$sLike Never Before"
@@ -5644,10 +6178,13 @@ msgstr ""
 msgid "Unique Impressions"
 msgstr ""
 
-msgid "Unknown"
+msgid "Units Sold"
 msgstr ""
 
 msgid "Unlock better search results for your website.  Perfect for any information or eCommerce store to help users find exactly what content and products they’re looking for."
+msgstr ""
+
+msgid "Unlock limitless possibilities with %s"
 msgstr ""
 
 msgid "Unlock powerful insights with the Dimensions addon!"
@@ -5671,21 +6208,23 @@ msgstr ""
 msgid "Unpin"
 msgstr ""
 
-#: includes/admin/exclude-page-metabox.php:146
+#: includes/admin/exclude-page-metabox.php:142
 msgid "Upgrade"
 msgstr ""
 
 msgid "Upgrade & Unlock"
 msgstr ""
 
+#: lite/includes/emails/templates/body-summaries-test.php:138
+#: lite/includes/emails/templates/body-summaries.php:106
 msgid "Upgrade and Unlock"
 msgstr ""
 
-#: includes/admin/admin.php:898
+#: includes/admin/admin.php:945
 #: includes/admin/notifications/notification-upgrade-for-form-conversion.php:31
 #: includes/admin/notifications/notification-upgrade-for-search-console.php:32
 #: includes/admin/notifications/notification-upgrade-to-pro-five-hundred-session.php:44
-#: includes/admin/reports/abstract-report.php:533
+#: includes/admin/reports/abstract-report.php:538
 #: lite/includes/admin/woocommerce-marketing.php:79
 msgid "Upgrade Now"
 msgstr ""
@@ -5703,13 +6242,10 @@ msgstr ""
 msgid "Upgrade to MonsterInsights Pro and unlock all the awesome features."
 msgstr ""
 
-msgid "Upgrade to MonsterInsights Pro to Unlock Additional Actionable Insights"
-msgstr ""
-
 msgid "Upgrade to MonsterInsights Pro to Unlock More Actionable Insights"
 msgstr ""
 
-#: includes/admin/admin.php:158
+#: includes/admin/admin.php:200
 #: includes/admin/notifications/notification-upgrade-to-pro-high-traffic.php:41
 #: includes/admin/notifications/notification-upgrade-to-pro.php:33
 msgid "Upgrade to Pro"
@@ -5733,6 +6269,9 @@ msgstr ""
 msgid "Upgrade to Pro and Unlock Popular Products"
 msgstr ""
 
+msgid "Upgrade to PRO to easily import your site notes from Google Analytics."
+msgstr ""
+
 msgid "Upgrade to Pro to get the complete ExactMetrics experience including 1 click tracking integrations for your favorite WordPress plugins and insightful reports backed by our legendary support team."
 msgstr ""
 
@@ -5752,6 +6291,9 @@ msgid "Upgrade today to the %1$sPro plan%2$s and %1$ssave 60%% off%2$s (Discount
 msgstr ""
 
 msgid "Uploading file..."
+msgstr ""
+
+msgid "URL"
 msgstr ""
 
 msgid "URL Builder"
@@ -5811,7 +6353,7 @@ msgstr ""
 msgid "User Journeys"
 msgstr ""
 
-#: includes/admin/admin.php:135
+#: includes/admin/admin.php:177
 msgid "UserFeedback"
 msgstr ""
 
@@ -5822,6 +6364,9 @@ msgid "UserFeedback lets you easily collect feedback from your website in real t
 msgstr ""
 
 msgid "Users (% of step 1)"
+msgstr ""
+
+msgid "Users are viewing on %s"
 msgstr ""
 
 msgid "Users that have at least one of these roles will be able to view and save the settings panel."
@@ -5875,6 +6420,9 @@ msgstr ""
 msgid "Verifying License..."
 msgstr ""
 
+msgid "Video / Media Tracking"
+msgstr ""
+
 msgid "Video %s Plays"
 msgstr ""
 
@@ -5888,6 +6436,9 @@ msgid "Video Tracking"
 msgstr ""
 
 msgid "Videos Plays, Average Duration, and Completions"
+msgstr ""
+
+msgid "View"
 msgstr ""
 
 msgid "View %s Report"
@@ -5905,6 +6456,11 @@ msgid "View All Download Links Report"
 msgstr ""
 
 msgid "View all MonsterInsights addons"
+msgstr ""
+
+#: lite/includes/emails/templates/body-summaries-test.php:273
+#: lite/includes/emails/templates/body-summaries.php:246
+msgid "View All Pages"
 msgstr ""
 
 msgid "View all Pro features"
@@ -5926,6 +6482,12 @@ msgid "View All Referral Sources"
 msgstr ""
 
 msgid "View All Reports"
+msgstr ""
+
+msgid "View Campaigns"
+msgstr ""
+
+msgid "View Channels"
 msgstr ""
 
 msgid "View Countries Report"
@@ -5958,6 +6520,9 @@ msgstr ""
 msgid "View Item"
 msgstr ""
 
+msgid "View Landing Pages"
+msgstr ""
+
 msgid "View notifications"
 msgstr ""
 
@@ -5979,6 +6544,9 @@ msgstr ""
 msgid "View settings"
 msgstr ""
 
+msgid "View Source / Medium"
+msgstr ""
+
 msgid "View Surveys"
 msgstr ""
 
@@ -5997,7 +6565,7 @@ msgstr ""
 msgid "View Top Conversions Sources Report"
 msgstr ""
 
-msgid "View Top Landing/Exit Pages, Top Links, Demographics & Interests data and more"
+msgid "View Top Landing/Exit Pages, Top Links, Demographics & Interests, and more."
 msgstr ""
 
 msgid "Views"
@@ -6009,13 +6577,13 @@ msgstr ""
 msgid "Visit Website"
 msgstr ""
 
-msgid "Visit WPBeginner"
-msgstr ""
-
 msgid "Visit your Overview Report"
 msgstr ""
 
 msgid "Visitor Insights"
+msgstr ""
+
+msgid "Visitors"
 msgstr ""
 
 msgid "Visitors by Month"
@@ -6037,9 +6605,6 @@ msgid "Want to easily sell digital products? MonsterInsights recommends %1$sEasy
 msgstr ""
 
 msgid "Want to see page-specific stats?"
-msgstr ""
-
-msgid "Want to See your Competitor's Top Keywords?"
 msgstr ""
 
 msgid "Want to track your eCommerce sales data for your WooCommerce, MemberPress, or Easy Digital Downloads store with MonsterInsights? In this guide, we’ll show you how to enable eCommerce tracking in Google Analytics in just a few clicks."
@@ -6119,22 +6684,25 @@ msgstr ""
 msgid "Welcome to the all-new ExactMetrics"
 msgstr ""
 
+msgid "What did visitors do on your website?"
+msgstr ""
+
+msgid "What did your customers buy?"
+msgstr ""
+
 msgid "What do you think about Our AI Insights?"
 msgstr ""
 
 msgid "What do you think about this feature?"
 msgstr ""
 
-msgid "What is Direct Traffic in Google Analytics? (GA4 Updates)"
-msgstr ""
-
-msgid "What keywords visitors searched for to find your site"
-msgstr ""
-
 msgid "What was my most popular marketing campaign last week?"
 msgstr ""
 
 msgid "What was the bounce rate from last week?"
+msgstr ""
+
+msgid "What you'll see"
 msgstr ""
 
 msgid "What’s in the %1$s?"
@@ -6149,10 +6717,16 @@ msgstr ""
 msgid "Where do customers drop off in the checkout?"
 msgstr ""
 
+msgid "Where Users Came From"
+msgstr ""
+
 msgid "Which campaigns actually drive revenue?"
 msgstr ""
 
 msgid "Which category best describes your website?"
+msgstr ""
+
+msgid "Which device your visitors used?"
 msgstr ""
 
 msgid "Which website features would you like to enable?"
@@ -6191,9 +6765,6 @@ msgstr ""
 msgid "With MonsterInsights Pro, you can easily measure individual affiliate performance inside Google Analytics, no coding needed. Track clicks, revenue, and more."
 msgstr ""
 
-msgid "Women"
-msgstr ""
-
 msgid "WooCommerce"
 msgstr ""
 
@@ -6206,7 +6777,7 @@ msgstr ""
 msgid "WordPress Admin Area Reports"
 msgstr ""
 
-msgid "WordPress Tutorials by WPBeginner"
+msgid "WordPress is updated"
 msgstr ""
 
 msgid "WordPress Updates"
@@ -6227,9 +6798,6 @@ msgstr ""
 msgid "WP Simple Pay"
 msgstr ""
 
-msgid "WPBeginner is the largest free WordPress resource site for beginners and non-techy users."
-msgstr ""
-
 msgid "WPConsent includes an easy-to-use website scanner will automatically detect and list popular services used on your website"
 msgstr ""
 
@@ -6245,17 +6813,11 @@ msgstr ""
 msgid "WPForms is already installed"
 msgstr ""
 
-msgid "WPForms, Ninja Forms, Contact Form 7, Gravity Forms and any other WordPress form plugin"
-msgstr ""
-
 msgid "Write Review"
 msgstr ""
 
 #: lite/includes/admin/reports/report-year-in-review.php:22
 msgid "Year in Review"
-msgstr ""
-
-msgid "Year In Review %s!"
 msgstr ""
 
 msgid "Yes"
@@ -6325,7 +6887,7 @@ msgstr ""
 msgid "You can view this only in the PRO version"
 msgstr ""
 
-msgid "You had "
+msgid "You have unsaved changes"
 msgstr ""
 
 msgid "You Might Also Like"
@@ -6361,9 +6923,6 @@ msgstr ""
 msgid "You Successfully Unlocked the most powerful Analytics plugin"
 msgstr ""
 
-msgid "You Top 5 Countries"
-msgstr ""
-
 msgid "You will be taken to the MonsterInsights website where you'll need to connect your Analytics account."
 msgstr ""
 
@@ -6373,24 +6932,21 @@ msgstr ""
 msgid "You've disconnected your site from MonsterInsights. Your site is no longer being tracked by Google Analytics and you won't see reports anymore."
 msgstr ""
 
-msgid "Your %s Analytics Report"
+msgid "Your #1 Coupon"
 msgstr ""
 
 msgid "Your %s Year in Review is still calculating. Please check back later to see how your website performed last year."
 msgstr ""
 
-msgid "Your <strong>%1$s</strong> visitors came from <strong>%2$s</strong> different countries."
-msgstr ""
-
 msgid "Your license has expired."
 msgstr ""
 
-#: includes/admin/admin.php:557
+#: includes/admin/admin.php:599
 msgid "Your license key for MonsterInsights has been disabled. Please use a different key."
 msgstr ""
 
-#: includes/admin/admin.php:559
-#: includes/admin/api-auth.php:311
+#: includes/admin/admin.php:601
+#: includes/admin/api-auth.php:312
 msgid "Your license key for MonsterInsights is invalid. The key no longer exists or the user associated with the key has been deleted. Please use a different key."
 msgstr ""
 
@@ -6418,15 +6974,6 @@ msgstr ""
 msgid "Your site is connected to MonsterInsights!"
 msgstr ""
 
-msgid "Your Top 5 Keywords"
-msgstr ""
-
-msgid "Your Top 5 Pages"
-msgstr ""
-
-msgid "Your Top 5 Referrals"
-msgstr ""
-
 msgid "Your Website"
 msgstr ""
 
@@ -6436,7 +6983,1199 @@ msgstr ""
 msgid "Yup, we know a thing or two about building awesome products that customers love."
 msgstr ""
 
+msgid "Zero Code Pixel Tracking"
+msgstr ""
+
 msgid "Zero Code PPC Tracking"
+msgstr ""
+
+msgid "(not set)"
+msgstr ""
+
+msgid "& Save 50% OFF!"
+msgstr ""
+
+msgid "%1$s - %2$s"
+msgstr ""
+
+msgid "%d Steps"
+msgstr ""
+
+msgid "%s - Steps"
+msgstr ""
+
+msgid "%s Conversion Rate"
+msgstr ""
+
+msgid "50% off"
+msgstr ""
+
+msgid "A funnel with at least two steps is required."
+msgstr ""
+
+msgid "Activate Addon"
+msgstr ""
+
+msgid "Activate the %s Addon"
+msgstr ""
+
+msgid "Activating…"
+msgstr ""
+
+msgid "Activation failed"
+msgstr ""
+
+msgid "Activation Failed"
+msgstr ""
+
+msgid "Active Users"
+msgstr ""
+
+msgid "Active Users (% of Step 1)"
+msgstr ""
+
+msgid "Add New Filter"
+msgstr ""
+
+msgid "Add New Site Note"
+msgstr ""
+
+msgid "Add Step"
+msgstr ""
+
+msgid "Add to Carts"
+msgstr ""
+
+msgid "Add View"
+msgstr ""
+
+msgid "Addon Activation Error"
+msgstr ""
+
+msgid "Addon activation failed"
+msgstr ""
+
+msgid "Addon Activation Failed"
+msgstr ""
+
+msgid "Addon Deactivation Error"
+msgstr ""
+
+msgid "Addon deactivation failed"
+msgstr ""
+
+msgid "Addon Deactivation Failed"
+msgstr ""
+
+msgid "Addon Installation Error"
+msgstr ""
+
+msgid "Addon installation failed"
+msgstr ""
+
+msgid "Addon Installation Failed"
+msgstr ""
+
+msgid "AJAX request failed"
+msgstr ""
+
+msgid "All in One SEO (TruSEO Score)"
+msgstr ""
+
+msgid "Already purchased?"
+msgstr ""
+
+msgid "An error occurred while dismissing the notification."
+msgstr ""
+
+msgid "An error occurred while fetching notifications."
+msgstr ""
+
+msgid "An error occurred."
+msgstr ""
+
+msgid "An unexpected error occurred"
+msgstr ""
+
+msgid "An unexpected error occurred while fetching addons."
+msgstr ""
+
+msgid "An unknown error occurred during license verification."
+msgstr ""
+
+msgid "An unknown error occurred while deactivating license."
+msgstr ""
+
+msgid "An unknown error occurred while deactivating your expired license."
+msgstr ""
+
+msgid "An unknown error occurred while fetching license."
+msgstr ""
+
+msgid "An unknown error occurred while getting your upgrade link."
+msgstr ""
+
+msgid "An unknown error occurred while validating license."
+msgstr ""
+
+#: includes/api/class-monsterinsights-api-overview.php:267
+msgid "An unknown error occurred."
+msgstr ""
+
+msgid "Analytics Dashboard"
+msgstr ""
+
+msgid "AOV"
+msgstr ""
+
+msgid "Applied"
+msgstr ""
+
+msgid "Apply Filter"
+msgstr ""
+
+msgid "Are you sure you want to delete %1$s%2$s%3$s?"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Area Chart"
+msgstr ""
+
+msgid "Average Order Value (AOV)"
+msgstr ""
+
+msgid "Bar Chart"
+msgstr ""
+
+msgid "Blank Dashboard"
+msgstr ""
+
+msgid "Bonus:"
+msgstr ""
+
+msgid "Browser"
+msgstr ""
+
+msgid "Campaign - Content"
+msgstr ""
+
+msgid "Campaign - Medium"
+msgstr ""
+
+msgid "Campaign - Name"
+msgstr ""
+
+msgid "Campaign - Source"
+msgstr ""
+
+msgid "Campaign - Term"
+msgstr ""
+
+msgid "Can't load authentication details. Error: %1$s, %2$s."
+msgstr ""
+
+msgid "Can't load errors."
+msgstr ""
+
+msgid "Can't save settings. Error: %1$s, %2$s."
+msgstr ""
+
+msgid "Cart Abandon Rate %"
+msgstr ""
+
+msgid "Channel Group"
+msgstr ""
+
+msgid "Channel Grouping"
+msgstr ""
+
+msgid "Choose Funnel"
+msgstr ""
+
+msgid "Choose Type"
+msgstr ""
+
+msgid "Clear All"
+msgstr ""
+
+msgid "Clear All Filters"
+msgstr ""
+
+msgid "Collapse"
+msgstr ""
+
+msgid "column"
+msgstr ""
+
+msgid "columns"
+msgstr ""
+
+msgid "Compare period"
+msgstr ""
+
+msgid "Complete Upgrade"
+msgstr ""
+
+msgid "Completion Rates"
+msgstr ""
+
+msgid "Condition"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "Content"
+msgstr ""
+
+msgid "Copied!"
+msgstr ""
+
+msgid "Could not activate the addon."
+msgstr ""
+
+msgid "Could not deactivate the addon."
+msgstr ""
+
+msgid "Could not find addon to activate."
+msgstr ""
+
+msgid "Could not install the addon."
+msgstr ""
+
+msgid "Could not install the plugin."
+msgstr ""
+
+msgid "Could not install WPForms."
+msgstr ""
+
+msgid "Could not retrieve addon data."
+msgstr ""
+
+msgid "Coupon"
+msgstr ""
+
+msgid "Coupon Used %"
+msgstr ""
+
+msgid "Create a New Dashboard"
+msgstr ""
+
+msgid "Create custom analytics dashboards with drag and drop simplicity."
+msgstr ""
+
+msgid "Create Funnel"
+msgstr ""
+
+msgid "Create multiple views to group insights together"
+msgstr ""
+
+msgid "Create New Funnel"
+msgstr ""
+
+msgid "Create Note"
+msgstr ""
+
+msgid "Creating export..."
+msgstr ""
+
+msgid "Creating new dashboard..."
+msgstr ""
+
+msgid "Creating..."
+msgstr ""
+
+msgid "Current"
+msgstr ""
+
+msgid "Current Period"
+msgstr ""
+
+msgid "Custom dates:"
+msgstr ""
+
+msgid "Custom Report"
+msgstr ""
+
+msgid "Customize Breakdown"
+msgstr ""
+
+msgid "Customize Metrics"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Data Error"
+msgstr ""
+
+msgid "Day of Week"
+msgstr ""
+
+msgid "Deactivation failed"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "Delete %s"
+msgstr ""
+
+msgid "Delete Card"
+msgstr ""
+
+msgid "Demo Data"
+msgstr ""
+
+msgid "Device"
+msgstr ""
+
+msgid "Device Category"
+msgstr ""
+
+msgid "Direct Sessions"
+msgstr ""
+
+msgid "Dismiss Notification Network Error"
+msgstr ""
+
+msgid "Easily view historical data and discover trends"
+msgstr ""
+
+msgid "eCommerce Dashboard"
+msgstr ""
+
+msgid "eCommerce Data"
+msgstr ""
+
+msgid "eCommerce Log"
+msgstr ""
+
+msgid "ECommerce Purchases"
+msgstr ""
+
+msgid "Edit Breakdown"
+msgstr ""
+
+msgid "Email Sessions"
+msgstr ""
+
+msgid "Empty response from server when trying to get upgrade link."
+msgstr ""
+
+msgid "Enter event name"
+msgstr ""
+
+msgid "Enter page path"
+msgstr ""
+
+msgid "Error de-authenticating"
+msgstr ""
+
+msgid "Error Deactivating Expired License"
+msgstr ""
+
+msgid "Error Deactivating License"
+msgstr ""
+
+msgid "Error Deleting View"
+msgstr ""
+
+msgid "Error Fetching Addons"
+msgstr ""
+
+msgid "Error Fetching Categories"
+msgstr ""
+
+msgid "Error Fetching License"
+msgstr ""
+
+msgid "Error Fetching Metrics"
+msgstr ""
+
+msgid "Error Fetching Remote Gtag"
+msgstr ""
+
+msgid "Error Fetching Site Notes"
+msgstr ""
+
+msgid "Error getting auth redirect"
+msgstr ""
+
+msgid "Error getting re-auth redirect"
+msgstr ""
+
+msgid "Error Getting Upgrade Link"
+msgstr ""
+
+msgid "Error loading auth details"
+msgstr ""
+
+msgid "Error loading chart data"
+msgstr ""
+
+msgid "Error loading custom dimensions data"
+msgstr ""
+
+msgid "Error loading data"
+msgstr ""
+
+msgid "Error Loading Data"
+msgstr ""
+
+msgid "Error loading demographics data"
+msgstr ""
+
+msgid "Error loading devices data"
+msgstr ""
+
+msgid "Error loading eCommerce data"
+msgstr ""
+
+msgid "Error loading form submissions data"
+msgstr ""
+
+msgid "Error loading funnel data"
+msgstr ""
+
+msgid "Error loading marketing campaigns data"
+msgstr ""
+
+msgid "Error loading overview data."
+msgstr ""
+
+msgid "Error loading pages data"
+msgstr ""
+
+msgid "Error Loading Settings"
+msgstr ""
+
+msgid "Error loading table data"
+msgstr ""
+
+msgid "Error Loading Templates"
+msgstr ""
+
+msgid "Error Loading Views"
+msgstr ""
+
+msgid "Error Saving Settings"
+msgstr ""
+
+msgid "Error Saving Site Note"
+msgstr ""
+
+msgid "Error Saving View"
+msgstr ""
+
+msgid "Error updating Measurement Protocol Secret"
+msgstr ""
+
+msgid "Error Updating Metrics"
+msgstr ""
+
+msgid "Error Updating Order"
+msgstr ""
+
+msgid "Error updating V4 code"
+msgstr ""
+
+msgid "Error Validating License"
+msgstr ""
+
+msgid "Error verifying auth"
+msgstr ""
+
+msgid "Error Verifying License"
+msgstr ""
+
+msgid "Error: Report container not found."
+msgstr ""
+
+msgid "Event"
+msgstr ""
+
+msgid "Export CSV"
+msgstr ""
+
+msgid "Export Excel"
+msgstr ""
+
+msgid "Export failed"
+msgstr ""
+
+msgid "Export Failed"
+msgstr ""
+
+msgid "Export Started"
+msgstr ""
+
+msgid "Exporting..."
+msgstr ""
+
+msgid "Failed to activate"
+msgstr ""
+
+msgid "Failed to activate addon. Please try from the Addons page."
+msgstr ""
+
+msgid "Failed to create export. Please try again."
+msgstr ""
+
+msgid "Failed to create funnel. Please try again."
+msgstr ""
+
+msgid "Failed to delete custom view"
+msgstr ""
+
+msgid "Failed to delete filter. Please try again."
+msgstr ""
+
+msgid "Failed to delete funnel. Please try again."
+msgstr ""
+
+msgid "Failed to fetch categories."
+msgstr ""
+
+msgid "Failed to fetch site notes."
+msgstr ""
+
+msgid "Failed to generate PDF. See console for details."
+msgstr ""
+
+msgid "Failed to install"
+msgstr ""
+
+msgid "Failed to load custom views"
+msgstr ""
+
+msgid "Failed to load dashboard data"
+msgstr ""
+
+msgid "Failed to load templates"
+msgstr ""
+
+msgid "Failed to save custom view"
+msgstr ""
+
+msgid "Failed to save filter. Please try again."
+msgstr ""
+
+msgid "Failed to update filter. Please try again."
+msgstr ""
+
+msgid "Failed to update funnel. Please try again."
+msgstr ""
+
+msgid "Failed to update view order"
+msgstr ""
+
+msgid "Fetch Metrics Error"
+msgstr ""
+
+msgid "Fetch Notifications Network Error"
+msgstr ""
+
+msgid "Fetch Settings Error"
+msgstr ""
+
+msgid "Filter \"%s\" has been saved successfully."
+msgstr ""
+
+msgid "Filter \"%s\" has been updated successfully."
+msgstr ""
+
+msgid "Filter deleted successfully."
+msgstr ""
+
+msgid "Filters Applied:"
+msgstr ""
+
+msgid "Focus Keyword"
+msgstr ""
+
+msgid "Form ID"
+msgstr ""
+
+msgid "Form Submit Date"
+msgstr ""
+
+msgid "Friday"
+msgstr ""
+
+msgid "Funnel \"%s\" has been created successfully."
+msgstr ""
+
+msgid "Funnel \"%s\" has been updated successfully."
+msgstr ""
+
+msgid "Funnel deleted successfully."
+msgstr ""
+
+msgid "Funnel Name"
+msgstr ""
+
+msgid "Funnel Steps (Min 2)"
+msgstr ""
+
+msgid "Funnels"
+msgstr ""
+
+msgid "Get Better Insights. Take Action. "
+msgstr ""
+
+msgid "Go to Addons Page"
+msgstr ""
+
+msgid "Grow FASTER!"
+msgstr ""
+
+msgid "has been successfully activated. The page will reload in a moment to complete the setup."
+msgstr ""
+
+msgid "Highlight your businesses most important metrics"
+msgstr ""
+
+msgid "Improve Your Conversion Rate With Insights Into Which Content Works Best"
+msgstr ""
+
+msgid "Increase Engagement and Unlock New Insights About Your Site"
+msgstr ""
+
+msgid "Increase Sales and Make More Money With Enhanced eCommerce Insights"
+msgstr ""
+
+msgid "Info Card"
+msgstr ""
+
+msgid "Information"
+msgstr ""
+
+msgid "Install the %s Addon"
+msgstr ""
+
+msgid "Installation failed"
+msgstr ""
+
+msgid "Installation Failed"
+msgstr ""
+
+msgid "Internal server error occurred"
+msgstr ""
+
+msgid "Invalid response format"
+msgstr ""
+
+msgid "Invalid response structure for fetchAddons"
+msgstr ""
+
+msgid "Items Purchased"
+msgstr ""
+
+msgid "Join over 3 million owners and start making data-driven decisions to grow your business."
+msgstr ""
+
+msgid "Key Event Rate"
+msgstr ""
+
+msgid "Key Events"
+msgstr ""
+
+msgid "Key Metrics"
+msgstr ""
+
+msgid "Line Chart"
+msgstr ""
+
+msgid "Load More"
+msgstr ""
+
+msgid "Loading"
+msgstr ""
+
+msgid "Loading funnel data..."
+msgstr ""
+
+msgid "Loading templates..."
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "Loading…"
+msgstr ""
+
+msgid "Manage Funnels"
+msgstr ""
+
+msgid "Marketer Dashboard"
+msgstr ""
+
+msgid "Marketing Campaigns"
+msgstr ""
+
+msgid "Medium"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "MonsterInsights Lite users get "
+msgstr ""
+
+msgid "My Custom View"
+msgstr ""
+
+msgid "My New View"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "New Dashboard"
+msgstr ""
+
+msgid "New View"
+msgstr ""
+
+#: includes/gutenberg/site-insights/templates/graph/class-graph-newvsreturning.php:45
+#: includes/gutenberg/site-insights/templates/graph/class-graph-newvsreturning.php:83
+#: includes/gutenberg/site-insights/templates/scorecard/class-scorecard-newvsreturning.php:33
+msgid "New vs Returning"
+msgstr ""
+
+msgid "No data available"
+msgstr ""
+
+msgid "No funnel data for this period"
+msgstr ""
+
+msgid "No funnels found"
+msgstr ""
+
+msgid "No results found"
+msgstr ""
+
+msgid "No saved filters found"
+msgstr ""
+
+msgid "No template provided"
+msgstr ""
+
+msgid "No view to save"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Oops! There was an error, your settings were not saved. Please try again. If the issue persists, please %1$scontact our support%2$s team."
+msgstr ""
+
+msgid "Oops! There was an error, your settings were not saved. Please try again. If the issue persists, please %1$scontact our support%2$s team. Error: %3$s"
+msgstr ""
+
+msgid "Oops! There was an issue deactivating your expired license, please try again. If the issue persists, please %1$scontact our support team%2$s."
+msgstr ""
+
+msgid "Oops! There was an issue fetching your license details, please try again. If the issue persists, please %1$scontact our support team%2$s."
+msgstr ""
+
+msgid "Oops! There was an issue getting your upgrade link, please try again. If the issue persists, please %1$scontact our support team%2$s."
+msgstr ""
+
+msgid "Oops! We can't authenticate. Error: %1$s, %2$s."
+msgstr ""
+
+msgid "Oops! We can't reauthenticate. Error: %1$s, %2$s."
+msgstr ""
+
+msgid "Oops! We can't verify credentials. Error: %1$s, %2$s."
+msgstr ""
+
+msgid "Oops! We can't verify deauthentication. Error: %1$s, %2$s."
+msgstr ""
+
+msgid "Operating System"
+msgstr ""
+
+msgid "Orders"
+msgstr ""
+
+msgid "Organic Sessions"
+msgstr ""
+
+msgid "OS"
+msgstr ""
+
+msgid "Overall Conversion Rate"
+msgstr ""
+
+msgid "Page - Landing Page"
+msgstr ""
+
+msgid "Page - Title"
+msgstr ""
+
+msgid "Page %1$d of %2$d"
+msgstr ""
+
+msgid "Page Insights"
+msgstr ""
+
+msgid "Page Location"
+msgstr ""
+
+msgid "Page Path"
+msgstr ""
+
+#: lite/includes/emails/templates/body-summaries-plain.php:62
+#: lite/includes/emails/templates/body-summaries-test-plain.php:98
+#: lite/includes/emails/templates/body-summaries-test.php:245
+#: lite/includes/emails/templates/body-summaries.php:217
+msgid "Page Title"
+msgstr ""
+
+msgid "Pageviews / User"
+msgstr ""
+
+msgid "Paid Media Sessions"
+msgstr ""
+
+msgid "Pie Chart"
+msgstr ""
+
+msgid "Please %1$scontact our support%2$s team for assistance. Error: %3$s"
+msgstr ""
+
+msgid "Please check with your site administrator that your role is included in the MonsterInsights permissions settings."
+msgstr ""
+
+msgid "Please enter a name for this filter."
+msgstr ""
+
+msgid "Please select at least one dimension with a value."
+msgstr ""
+
+msgid "Please wait…"
+msgstr ""
+
+msgid "Plugin Installation Error"
+msgstr ""
+
+msgid "Plugin installation failed"
+msgstr ""
+
+#. Keep or adjust error context as needed
+#. Keep or adjust error context
+msgid "Plugin Installation Failed"
+msgstr ""
+
+msgid "Post Type"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Previous Period"
+msgstr ""
+
+msgid "Publisher Dashboard"
+msgstr ""
+
+msgid "Query String"
+msgstr ""
+
+msgid "Rank Math SEO Score"
+msgstr ""
+
+msgid "Realtime"
+msgstr ""
+
+msgid "Received no data from API."
+msgstr ""
+
+msgid "Received no or invalid data for metrics."
+msgstr ""
+
+msgid "Referral Sessions"
+msgstr ""
+
+msgid "Referrals"
+msgstr ""
+
+msgid "Region"
+msgstr ""
+
+msgid "regular price, automatically applied at checkout."
+msgstr ""
+
+msgid "Rename Widget"
+msgstr ""
+
+msgid "Renew Now"
+msgstr ""
+
+msgid "Renew your license"
+msgstr ""
+
+msgid "Reporting API credentials are not available."
+msgstr ""
+
+msgid "Returning Users"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "SAVE 50% Coupon Code"
+msgstr ""
+
+msgid "Save Filter"
+msgstr ""
+
+msgid "Save Filter As"
+msgstr ""
+
+msgid "Saved Filters"
+msgstr ""
+
+msgid "Saving..."
+msgstr ""
+
+msgid "Security Error"
+msgstr ""
+
+msgid "Security nonce is missing"
+msgstr ""
+
+msgid "See a Demo"
+msgstr ""
+
+msgid "Select a funnel to view data"
+msgstr ""
+
+msgid "Select how you want to break down your data:"
+msgstr ""
+
+msgid "Select..."
+msgstr ""
+
+msgid "SEO Score"
+msgstr ""
+
+msgid "SEO Score (Generic)"
+msgstr ""
+
+msgid "Session Key Event Rate"
+msgstr ""
+
+msgid "Share with your team or export as beautiful PDFs"
+msgstr ""
+
+msgid "Show Compact View"
+msgstr ""
+
+msgid "Show Comparison"
+msgstr ""
+
+msgid "Show Extended View"
+msgstr ""
+
+msgid "Small Business Dashboard"
+msgstr ""
+
+msgid "Social Sessions"
+msgstr ""
+
+msgid "Start and end dates are required."
+msgstr ""
+
+msgid "Start building your dashboard by dragging widgets here"
+msgstr ""
+
+msgid "State / Region"
+msgstr ""
+
+msgid "Success!"
+msgstr ""
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Table"
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Term"
+msgstr ""
+
+msgid "The %s addon is installed but not active. Activate it to unlock these insights with your real data."
+msgstr ""
+
+msgid "The %s addon is required to view this data. Install and activate it from the Addons page to unlock these insights."
+msgstr ""
+
+msgid "The requested resource was not found"
+msgstr ""
+
+msgid "There aren't any site notes. Go ahead and create one!"
+msgstr ""
+
+msgid "There was an error saving your settings. Please try again."
+msgstr ""
+
+msgid "This is a Pro Feature"
+msgstr ""
+
+msgid "Thursday"
+msgstr ""
+
+msgid "Totals"
+msgstr ""
+
+msgid "Track Every Type of Web Form and Gain Visibility Into Your Customer Journey"
+msgstr ""
+
+msgid "Traffic Source"
+msgstr ""
+
+msgid "Transaction Campaign"
+msgstr ""
+
+msgid "Transaction Date"
+msgstr ""
+
+msgid "Transaction ID"
+msgstr ""
+
+msgid "Transaction medium"
+msgstr ""
+
+msgid "Transaction Source"
+msgstr ""
+
+msgid "Try Again"
+msgstr ""
+
+msgid "Tuesday"
+msgstr ""
+
+msgid "Unable to get authentication token. Please refresh the page."
+msgstr ""
+
+msgid "Unlock all reports, integrations, insights, and more with ExactMetrics Pro. See how little upgrading costs"
+msgstr ""
+
+msgid "Upgrade to %1$s to unlock deeper insights, advanced tracking, and powerful integrations so you never miss what's driving results. %2$sLearn more about %1$s%3$s"
+msgstr ""
+
+msgid "Upgrade to %s"
+msgstr ""
+
+msgid "Upgrade to ExactMetrics Pro"
+msgstr ""
+
+msgid "Upgrade to Plus"
+msgstr ""
+
+msgid "Use bar charts, line graphs, and scorecards"
+msgstr ""
+
+#: lite/includes/emails/templates/body-summaries-test-plain.php:29
+#: lite/includes/emails/templates/body-summaries-test.php:32
+msgid "Users"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "View full report"
+msgstr ""
+
+#: lite/includes/emails/templates/body-summaries-test-plain.php:25
+#: lite/includes/emails/templates/body-summaries-test.php:28
+msgid "View Full Report"
+msgstr ""
+
+msgid "View not found"
+msgstr ""
+
+msgid "vs. Previous %s Days"
+msgstr ""
+
+msgid "vs. Previous 30 Days"
+msgstr ""
+
+msgid "vs. Previous Day"
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "We're sorry, this feature is not available on your plan. Please upgrade to the Pro plan to unlock all these awesome features."
+msgstr ""
+
+msgid "Wednesday"
+msgstr ""
+
+msgid "What's in the %s?"
+msgstr ""
+
+msgid "WordPress AJAX is not available"
+msgstr ""
+
+msgid "Works automatically with all eCommerce, forms, and custom dimensions"
+msgstr ""
+
+msgid "WPForms Installation Error"
+msgstr ""
+
+msgid "WPForms installation failed"
+msgstr ""
+
+msgid "WPForms Installation Failed"
+msgstr ""
+
+msgid "Yoast SEO Score"
+msgstr ""
+
+msgid "You appear to be offline. Please check your connection."
+msgstr ""
+
+msgid "You do not have permission to access this resource"
+msgstr ""
+
+#: includes/admin/notification-event.php:257
+#: lite/includes/emails/summaries.php:691
+msgid "You don't have permission to view MonsterInsights reports."
+msgstr ""
+
+msgid "You're viewing sample data. Upgrade to %s to unlock real analytics and save your custom dashboards."
+msgstr ""
+
+msgid "Your Custom View is Empty"
+msgstr ""
+
+msgid "Your export is being processed. You will receive a notification when it is ready."
+msgstr ""
+
+msgid "Your MonsterInsights license has expired or has an error. Some reports may not load correctly."
+msgstr ""
+
+msgid "Your Saved Filters"
+msgstr ""
+
+msgid "Your Saved Funnels"
+msgstr ""
+
+msgid "Your settings have been saved successfully."
 msgstr ""
 
 #: src/blocks/site-insights/edit/components/Table.js:67
@@ -7431,6 +9170,18 @@ msgctxt "google-analytics-for-wordpress"
 msgid "Your headline would be more likely to get clicks if it had more uncommon words."
 msgstr ""
 
+msgid "An error occurred while fetching insights data."
+msgstr ""
+
+msgid "Please connect to MonsterInsights to view reports."
+msgstr ""
+
+msgid "Toggle analytics insights"
+msgstr ""
+
+msgid "Upgrade to see detailed page-specific analytics and more."
+msgstr ""
+
 #. Plugin Name of the plugin
 #: googleanalytics.php
 msgid "Google Analytics for WordPress by MonsterInsights"
@@ -7449,9 +9200,8 @@ msgstr ""
 #. Author of the plugin
 #: googleanalytics.php
 #: includes/admin/admin.php:55
-#: includes/admin/admin.php:66
-#: includes/admin/eea-compliance.php:208
-#: includes/admin/wp-site-health.php:35
+#: includes/admin/admin.php:102
+#: includes/admin/eea-compliance.php:213
 #: includes/emails/class-emails.php:255
 #: lite/includes/admin/dashboard-widget.php:99
 #: lite/includes/admin/wp-site-health.php:231
@@ -7474,7 +9224,7 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: googleanalytics.php:407
+#: googleanalytics.php:415
 #, php-format
 msgid "Please %1$suninstall%2$s the MonsterInsights Lite Plugin. Your Pro version of MonsterInsights may not work as expected until the Lite version is uninstalled."
 msgstr ""
@@ -7483,284 +9233,288 @@ msgstr ""
 msgid "NEW"
 msgstr ""
 
-#: includes/admin/admin.php:62
-#: includes/admin/admin.php:69
-#: includes/admin/admin.php:284
+#: includes/admin/admin.php:65
+msgid "Overview Report:"
+msgstr ""
+
+#: includes/admin/admin.php:73
+#: includes/admin/admin.php:105
+#: includes/admin/admin.php:326
 msgid "General Reports:"
 msgstr ""
 
-#: includes/admin/admin.php:86
+#: includes/admin/admin.php:128
 msgid "Site Notes:"
 msgstr ""
 
 #. translators: Icon
-#: includes/admin/admin.php:92
+#: includes/admin/admin.php:134
 msgid "AI Insights:"
 msgstr ""
 
 #. translators: Icon
-#: includes/admin/admin.php:92
+#: includes/admin/admin.php:134
 #, php-format
 msgid "%s AI Insights"
 msgstr ""
 
 #. translators: Placeholder adds a svg icon
-#: includes/admin/admin.php:100
+#: includes/admin/admin.php:142
 msgid "Conversations AI:"
 msgstr ""
 
 #. translators: Placeholder adds a svg icon
-#: includes/admin/admin.php:100
+#: includes/admin/admin.php:142
 #, php-format
 msgid "%s Conversations AI"
 msgstr ""
 
-#: includes/admin/admin.php:104
+#: includes/admin/admin.php:146
 msgid "Popular Posts:"
 msgstr ""
 
-#: includes/admin/admin.php:109
+#: includes/admin/admin.php:151
 msgid "User Journey:"
 msgstr ""
 
-#: includes/admin/admin.php:109
+#: includes/admin/admin.php:151
 msgid "User Journey"
 msgstr ""
 
-#: includes/admin/admin.php:118
-#: includes/admin/admin.php:292
+#: includes/admin/admin.php:160
+#: includes/admin/admin.php:334
 msgid "SEO"
 msgstr ""
 
-#: includes/admin/admin.php:124
+#: includes/admin/admin.php:166
 msgid "Tools:"
 msgstr ""
 
-#: includes/admin/admin.php:124
+#: includes/admin/admin.php:166
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/admin.php:129
-#: includes/admin/admin.php:295
+#: includes/admin/admin.php:171
+#: includes/admin/admin.php:337
 msgid "Addons:"
 msgstr ""
 
-#: includes/admin/admin.php:129
-#: includes/admin/admin.php:295
+#: includes/admin/admin.php:171
+#: includes/admin/admin.php:337
 msgid "Addons"
 msgstr ""
 
-#: includes/admin/admin.php:134
+#: includes/admin/admin.php:176
 msgid "UserFeedback:"
 msgstr ""
 
-#: includes/admin/admin.php:141
-#: includes/admin/admin.php:300
+#: includes/admin/admin.php:184
+msgid "Privacy Compliance:"
+msgstr ""
+
+#: includes/admin/admin.php:185
+msgid "Privacy Compliance"
+msgstr ""
+
+#: includes/admin/admin.php:191
+#: includes/admin/admin.php:342
 msgid "About Us:"
 msgstr ""
 
-#: includes/admin/admin.php:145
-msgid "WPConsent:"
-msgstr ""
-
-#: includes/admin/admin.php:146
-msgid "WPConsent"
-msgstr ""
-
-#: includes/admin/admin.php:158
+#: includes/admin/admin.php:200
 msgid "Upgrade to Pro:"
 msgstr ""
 
-#: includes/admin/admin.php:171
+#: includes/admin/admin.php:213
 msgid "Earth Day"
 msgstr ""
 
-#: includes/admin/admin.php:179
+#: includes/admin/admin.php:221
 msgid "Cinco De Mayo!"
 msgstr ""
 
-#: includes/admin/admin.php:187
+#: includes/admin/admin.php:229
 msgid "Upgrade to GA4"
 msgstr ""
 
-#: includes/admin/admin.php:195
+#: includes/admin/admin.php:237
 msgid "Summer Sale"
 msgstr ""
 
-#: includes/admin/admin.php:203
+#: includes/admin/admin.php:245
 msgid "Fortune Cookie Day"
 msgstr ""
 
-#: includes/admin/admin.php:211
+#: includes/admin/admin.php:253
 msgid "Halloween Sale"
 msgstr ""
 
-#: includes/admin/admin.php:280
-#: includes/admin/admin.php:282
+#: includes/admin/admin.php:322
+#: includes/admin/admin.php:324
 msgid "Network Settings:"
 msgstr ""
 
-#: includes/admin/admin.php:282
-#: includes/admin/admin.php:385
+#: includes/admin/admin.php:324
+#: includes/admin/admin.php:427
 msgid "Network Settings"
 msgstr ""
 
-#: includes/admin/admin.php:292
+#: includes/admin/admin.php:334
 msgid "SEO:"
 msgstr ""
 
-#: includes/admin/admin.php:372
+#: includes/admin/admin.php:414
 msgid "MonsterInsights Knowledge Base"
 msgstr ""
 
-#: includes/admin/admin.php:372
+#: includes/admin/admin.php:414
 msgid "Documentation"
 msgstr ""
 
 #. Translators: Placeholders add a link to the wordpress.org repository.
-#: includes/admin/admin.php:467
+#: includes/admin/admin.php:509
 #, php-format
-msgid "Please rate %1$sMonsterInsights%2$s on %3$s %4$sWordPress.org%5$s to help us spread the word."
+msgid "Please rate %1$sMonsterInsights%2$s %3$s on %4$sWordPress.org%5$s to help us spread the word."
 msgstr ""
 
-#: includes/admin/admin.php:498
+#: includes/admin/admin.php:540
 msgid "Urgent: Your Website is Not Tracking Any Google Analytics Data!"
 msgstr ""
 
-#: includes/admin/admin.php:499
+#: includes/admin/admin.php:541
 msgid "Google Analytics 3 (UA) and support was sunset on July 1, 2023. Your website is currently NOT tracking any analytics. </br>Create or connect a new Google Analytics 4 property immediately to start tracking."
 msgstr ""
 
-#: includes/admin/admin.php:509
+#: includes/admin/admin.php:551
 msgid "Learn How to Create a GA4 Property"
 msgstr ""
 
-#: includes/admin/admin.php:512
+#: includes/admin/admin.php:554
 msgid "Connect a Property"
 msgstr ""
 
-#: includes/admin/admin.php:527
+#: includes/admin/admin.php:569
 msgid "Please Connect Your Website to MonsterInsights"
 msgstr ""
 
-#: includes/admin/admin.php:532
+#: includes/admin/admin.php:574
 msgid "MonsterInsights, the #1 WordPress Analytics Plugin, helps you easily connect your website to Google Analytics, so that you can see how people find and use your website. Over 3 million website owners use MonsterInsights to see the stats that matter and grow their business."
 msgstr ""
 
 #. Translators: Adds a link to retrieve the license.
-#: includes/admin/admin.php:543
+#: includes/admin/admin.php:585
 #, php-format
 msgid "Warning: No valid license key has been entered for MonsterInsights. You are currently not getting updates, and are not able to view reports. %1$sPlease click here to enter your license key and begin receiving updates and reports.%2$s"
 msgstr ""
 
 #. Translators: Adds a link to the license renewal.
-#: includes/admin/admin.php:555
+#: includes/admin/admin.php:597
 #, php-format
 msgid "Your license key for MonsterInsights has expired. %1$sPlease click here to renew your license key.%2$s"
 msgstr ""
 
 #. Translators: Adds a link to renew license.
-#: includes/admin/admin.php:564
+#: includes/admin/admin.php:606
 #, php-format
 msgid "Your network license key for MonsterInsights has expired. %1$sPlease click here to renew your license key.%2$s"
 msgstr ""
 
-#: includes/admin/admin.php:566
+#: includes/admin/admin.php:608
 msgid "Your network license key for MonsterInsights has been disabled. Please use a different key."
 msgstr ""
 
-#: includes/admin/admin.php:568
+#: includes/admin/admin.php:610
 msgid "Your network license key for MonsterInsights is invalid. The key no longer exists or the user associated with the key has been deleted. Please use a different key."
 msgstr ""
 
 #. Translators: Placeholders add the PHP version, a link to the MonsterInsights blog and a line break.
-#: includes/admin/admin.php:590
+#: includes/admin/admin.php:632
 #, php-format
 msgid "Your site is running an outdated, insecure version of PHP (%1$s), which could be putting your site at risk for being hacked.%4$sWordPress stopped supporting your PHP version in April, 2019.%4$sUpdating PHP only takes a few minutes and will make your website significantly faster and more secure.%4$s%2$sLearn more about updating PHP%3$s"
 msgstr ""
 
 #. Translators: Placeholders add the PHP version, a link to the MonsterInsights blog and a line break.
-#: includes/admin/admin.php:593
+#: includes/admin/admin.php:635
 #, php-format
 msgid "Your site is running an outdated, insecure version of PHP (%1$s), which could be putting your site at risk for being hacked.%4$sWordPress stopped supporting your PHP version in November, 2019.%4$sUpdating PHP only takes a few minutes and will make your website significantly faster and more secure.%4$s%2$sLearn more about updating PHP%3$s"
 msgstr ""
 
 #. Translators: Placeholders add the PHP version, a link to the MonsterInsights blog and a line break.
-#: includes/admin/admin.php:596
+#: includes/admin/admin.php:638
 #, php-format
 msgid "Your site is running an outdated, insecure version of PHP (%1$s), which could be putting your site at risk for being hacked.%4$sWordPress is working towards discontinuing support for your PHP version.%4$sUpdating PHP only takes a few minutes and will make your website significantly faster and more secure.%4$s%2$sLearn more about updating PHP%3$s"
 msgstr ""
 
 #. Translators: Placeholders add links to the settings panel.
-#: includes/admin/admin.php:674
+#: includes/admin/admin.php:716
 #, php-format
 msgid "Important: You are currently using manual GA4 Measurement ID output. We highly recommend %1$sauthenticating with MonsterInsights%2$s so that you can access our new reporting area and take advantage of new MonsterInsights features."
 msgstr ""
 
 #. Translators: Placeholders add links to the settings panel.
-#: includes/admin/admin.php:679
+#: includes/admin/admin.php:721
 #, php-format
 msgid "Click %1$shere%2$s to reauthenticate to be able to access reports. For more information why this is required, see our %3$sblog post%4$s."
 msgstr ""
 
 #. Translators: Placeholders add a link to the MonsterInsights website.
-#: includes/admin/admin.php:726
-#: includes/admin/admin.php:778
+#: includes/admin/admin.php:768
+#: includes/admin/admin.php:820
 #, php-format
 msgid "%1$sGet MonsterInsights Pro%2$s"
 msgstr ""
 
-#: includes/admin/admin.php:733
+#: includes/admin/admin.php:775
 msgid "Save <span>50%</span> Off MonsterInsights Pro"
 msgstr ""
 
-#: includes/admin/admin.php:744
+#: includes/admin/admin.php:786
 msgid "Add eCommerce Analytics to your WooCommerce Store"
 msgstr ""
 
-#: includes/admin/admin.php:745
+#: includes/admin/admin.php:787
 msgid "Unlock all of our advanced eCommerce features specifically designed to help your store make more money.."
 msgstr ""
 
-#: includes/admin/admin.php:746
+#: includes/admin/admin.php:788
 msgid "MonsterInsights Pro users instantly gain access to valuable insights such as average order value, conversion rates, as well as marketing performance with UTM tracking."
 msgstr ""
 
-#: includes/admin/admin.php:747
+#: includes/admin/admin.php:789
 msgid "And by upgrading, Pro users also get enhanced tracking for Forms, User Journeys, PPC Pixels, Custom UserID tracking, SEO Reports, and much more."
 msgstr ""
 
-#: includes/admin/admin.php:748
+#: includes/admin/admin.php:790
 msgid "Start making better data-driven decisions today!"
 msgstr ""
 
 #. Translators: Adds a link to the settings panel.
-#: includes/admin/admin.php:794
+#: includes/admin/admin.php:836
 #, php-format
 msgid "Warning: MonsterInsights found cross-domain settings in the custom code field and converted them to the new settings structure.  %1$sPlease click here to review and remove the code no longer needed.%2$s"
 msgstr ""
 
 #. translators: Placeholders add a link to an article.
-#: includes/admin/admin.php:871
+#: includes/admin/admin.php:913
 #, php-format
 msgid "Your Measurement Protocol API Secret is currently left blank. To see more advanced analytics please enter a Measurement API Secret. %1$sLearn how to find your API Secret%2$s."
 msgstr ""
 
 #. translators: Placeholders link to addons page.
-#: includes/admin/admin.php:904
+#: includes/admin/admin.php:951
 #, php-format
 msgid "We've detected you have our %1$sMonsterInsights Ads%2$s addon activated. Please activate our %3$sPPC Tracking%4$s addon for more advanced features and powerful integrations."
 msgstr ""
 
-#: includes/admin/admin.php:947
+#: includes/admin/admin.php:1005
 msgid "Docs"
 msgstr ""
 
-#: includes/admin/admin.php:952
+#: includes/admin/admin.php:1010
 msgid "Free Plugins"
 msgstr ""
 
-#: includes/admin/admin.php:959
+#: includes/admin/admin.php:1017
 #, php-format
 msgid "Made with %1$s by the MonsterInsights Team"
 msgstr ""
@@ -7773,12 +9527,40 @@ msgstr ""
 msgid "You are not allowed to activate plugins"
 msgstr ""
 
-#: includes/admin/ajax.php:181
+#: includes/admin/ajax.php:186
 msgid "You are not allowed to deactivate plugins"
 msgstr ""
 
-#: includes/admin/ajax.php:339
+#: includes/admin/ajax.php:344
 msgid "Invalid site key."
+msgstr ""
+
+#: includes/admin/ajax.php:470
+#: includes/admin/ajax.php:523
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/admin/ajax.php:479
+#: includes/admin/ajax.php:499
+#: includes/admin/ajax.php:532
+msgid "Missing required cache parameters."
+msgstr ""
+
+#: includes/admin/ajax.php:483
+#: includes/admin/ajax.php:536
+msgid "Invalid cache group."
+msgstr ""
+
+#: includes/admin/ajax.php:488
+msgid "Data payload too large."
+msgstr ""
+
+#: includes/admin/ajax.php:495
+msgid "Invalid JSON in data parameter."
+msgstr ""
+
+#: includes/admin/ajax.php:585
+msgid "Cache miss."
 msgstr ""
 
 #: includes/admin/api-auth.php:90
@@ -7787,85 +9569,85 @@ msgid "You don't have the correct WordPress user permissions to authenticate int
 msgstr ""
 
 #: includes/admin/api-auth.php:105
-#: includes/admin/api-auth.php:875
+#: includes/admin/api-auth.php:877
 msgid "Cannot authenticate. Please enter a valid, active license key for MonsterInsights Pro into the settings page."
 msgstr ""
 
 #: includes/admin/api-auth.php:113
 #: includes/admin/api-auth.php:121
-#: includes/admin/api-auth.php:882
-#: includes/admin/api-auth.php:890
+#: includes/admin/api-auth.php:884
+#: includes/admin/api-auth.php:892
 #, php-format
 msgid "Oops! There has been an error authenticating. Please try again in a few minutes. If the problem persists, please %1$scontact our support%2$s team."
 msgstr ""
 
-#: includes/admin/api-auth.php:296
+#: includes/admin/api-auth.php:297
 #, php-format
 msgid "You don't have the correct WordPress user permissions to re-authenticate into MonsterInsights. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s."
 msgstr ""
 
-#: includes/admin/api-auth.php:319
-#: includes/admin/api-auth.php:329
+#: includes/admin/api-auth.php:320
+#: includes/admin/api-auth.php:330
 #, php-format
 msgid "Oops! There was a problem while re-authenticating. Please try to complete the MonsterInsights %1$ssetup wizard%2$s again. If the problem persists, please %3$scontact our support%4$s team."
 msgstr ""
 
-#: includes/admin/api-auth.php:463
+#: includes/admin/api-auth.php:465
 #, php-format
 msgid "You don't have the correct user permissions to verify the MonsterInsights license you are trying to use. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s."
 msgstr ""
 
-#: includes/admin/api-auth.php:478
-#: includes/admin/api-auth.php:486
-#: includes/admin/api-auth.php:498
+#: includes/admin/api-auth.php:480
+#: includes/admin/api-auth.php:488
+#: includes/admin/api-auth.php:500
 #, php-format
 msgid "Please enter a valid license within the MonsterInsights settings panel. You can check your license by logging into your MonsterInsights account by %1$sclicking here%2$s."
 msgstr ""
 
-#: includes/admin/api-auth.php:508
+#: includes/admin/api-auth.php:510
 msgid "Successfully verified."
 msgstr ""
 
-#: includes/admin/api-auth.php:512
-#: includes/admin/api-auth.php:526
+#: includes/admin/api-auth.php:514
+#: includes/admin/api-auth.php:528
 #, php-format
 msgid "Oops! There has been an error while trying to verify your license. Please try again or contact our support team by %1$sclicking here%2$s."
 msgstr ""
 
-#: includes/admin/api-auth.php:563
+#: includes/admin/api-auth.php:565
 #, php-format
 msgid "You don't have the correct WordPress user permissions to deauthenticate into MonsterInsights. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s."
 msgstr ""
 
-#: includes/admin/api-auth.php:578
-#: includes/admin/api-auth.php:588
+#: includes/admin/api-auth.php:580
+#: includes/admin/api-auth.php:590
 #, php-format
 msgid "Could not disconnect as you are not currently authenticated properly. Please try to authenticate again with our MonsterInsights %1$ssetup wizard%2$s.  If you are still having problems, please %3$scontact our support%4$s team."
 msgstr ""
 
-#: includes/admin/api-auth.php:602
+#: includes/admin/api-auth.php:604
 #, php-format
 msgid "Could not disconnect your account, as you are not currently authenticated properly. Please try to authenticate again with our %1$sMonsterInsights setup wizard%2$s.  If you are still having problems, please %3$scontact our support%4$s team."
 msgstr ""
 
-#: includes/admin/api-auth.php:621
+#: includes/admin/api-auth.php:623
 msgid "Successfully deauthenticated."
 msgstr ""
 
-#: includes/admin/api-auth.php:624
+#: includes/admin/api-auth.php:626
 msgid "Successfully force deauthenticated."
 msgstr ""
 
-#: includes/admin/api-auth.php:628
+#: includes/admin/api-auth.php:630
 #, php-format
 msgid "Oops! There has been an error while trying to deauthenticate. Please try again. If the issue persists, please %1$scontact our support%2$s team."
 msgstr ""
 
-#: includes/admin/api-auth.php:843
+#: includes/admin/api-auth.php:845
 msgid "Website & Google Analytics Timezone Mismatch"
 msgstr ""
 
-#: includes/admin/api-auth.php:846
+#: includes/admin/api-auth.php:848
 #, php-format
 msgid "We detected your Google Analytics property is set to a different timezone than your website. This may slightly impact your stats, especially when comparing day over day performance. You may want to adjust your website's time zone %1$shere%2$s."
 msgstr ""
@@ -7921,18 +9703,22 @@ msgstr ""
 msgid "Skip %s Deactivate"
 msgstr ""
 
-#: includes/admin/class-monsterinsights-onboarding.php:324
+#: includes/admin/class-monsterinsights-onboarding.php:340
 #: includes/connect.php:100
 #: includes/connect.php:123
 msgid "Please enter your license key to connect."
 msgstr ""
 
-#: includes/admin/class-monsterinsights-onboarding.php:332
+#: includes/admin/class-monsterinsights-onboarding.php:348
 msgid "Failed to generate connect URL."
 msgstr ""
 
-#: includes/admin/class-monsterinsights-onboarding.php:476
+#: includes/admin/class-monsterinsights-onboarding.php:492
 msgid "There was an error connecting to the remote key API. Please try again later."
+msgstr ""
+
+#: includes/admin/class-monsterinsights-usage-tracking.php:281
+msgid "Once Weekly"
 msgstr ""
 
 #. Translators: Placeholders are for links to fix the issue.
@@ -7993,31 +9779,31 @@ msgstr ""
 msgid "See how your website performed this year and find tips along the way to help grow even more in 2024!"
 msgstr ""
 
-#: includes/admin/eea-compliance.php:190
+#: includes/admin/eea-compliance.php:195
 msgid "MonsterInsights EEA Compliance Check"
 msgstr ""
 
-#: includes/admin/eea-compliance.php:205
+#: includes/admin/eea-compliance.php:210
 msgid "Check EEA Compliance with MonsterInsights"
 msgstr ""
 
-#: includes/admin/eea-compliance.php:211
+#: includes/admin/eea-compliance.php:216
 msgid "New privacy regulations will soon require you to receive consent from website visitors located inside an EEA country in order to use Google Ads or interest, demographics or location data (Google Analytics Signals). Use the MonsterInsights compliance checker to see if your site requires consent."
 msgstr ""
 
-#: includes/admin/eea-compliance.php:215
+#: includes/admin/eea-compliance.php:220
 msgid "Check Now"
 msgstr ""
 
-#: includes/admin/exclude-page-metabox.php:122
+#: includes/admin/exclude-page-metabox.php:118
 msgid "Exclude page from Google Analytics Tracking"
 msgstr ""
 
-#: includes/admin/exclude-page-metabox.php:126
+#: includes/admin/exclude-page-metabox.php:122
 msgid "Toggle to prevent Google Analytics from tracking this page."
 msgstr ""
 
-#: includes/admin/exclude-page-metabox.php:141
+#: includes/admin/exclude-page-metabox.php:137
 msgid "This is a PRO feature."
 msgstr ""
 
@@ -8045,13 +9831,8 @@ msgstr ""
 msgid "Dismiss this notice"
 msgstr ""
 
-#: includes/admin/notification-event.php:257
-#: lite/includes/emails/summaries.php:690
-msgid "You don't have permission to view MonsterInsights reports."
-msgstr ""
-
 #. Translators: Readable time to display
-#: includes/admin/notifications.php:315
+#: includes/admin/notifications.php:317
 #, php-format
 msgid "%1$s ago"
 msgstr ""
@@ -8373,72 +10154,72 @@ msgstr ""
 msgid "No data found"
 msgstr ""
 
-#: includes/admin/reports/abstract-report.php:194
+#: includes/admin/reports/abstract-report.php:215
 msgid "Whoops! No data found for this date range"
 msgstr ""
 
 #. translators: Placeholders add a link to the Setup Wizard page.
-#: includes/admin/reports/abstract-report.php:364
+#: includes/admin/reports/abstract-report.php:369
 #, php-format
 msgid "You must be properly authenticated with MonsterInsights to use our reports. Please use our %1$ssetup wizard%2$s to get started."
 msgstr ""
 
 #. Translators: Placeholders add the license level and the report title.
-#: includes/admin/reports/abstract-report.php:464
+#: includes/admin/reports/abstract-report.php:469
 #, php-format
 msgid "You currently have a %1$s level license, but this report requires at least a %2$s level license to view the %3$s. Please upgrade to view this report."
 msgstr ""
 
-#: includes/admin/reports/abstract-report.php:478
+#: includes/admin/reports/abstract-report.php:483
 msgid "Ready to Get Analytics Super-Powers?"
 msgstr ""
 
-#: includes/admin/reports/abstract-report.php:480
+#: includes/admin/reports/abstract-report.php:485
 msgid "(And Crush Your Competition?)"
 msgstr ""
 
 #. Translators: License level and smiley.
-#: includes/admin/reports/abstract-report.php:486
+#: includes/admin/reports/abstract-report.php:491
 #, php-format
 msgid "Hey there! It looks like you've got the %1$s license installed on your site. That's awesome! %s"
 msgstr ""
 
 #. Translators: Placeholders add the report title and license level.
-#: includes/admin/reports/abstract-report.php:493
+#: includes/admin/reports/abstract-report.php:498
 #, php-format
 msgid "Do you want to access to %1$s reporting right now%2$s in your WordPress Dashboard? That comes with the %3$s level%4$s of our paid packages. You'll need to upgrade your license to get instant access."
 msgstr ""
 
 #. Translators: Placeholdes add links to the account area and a guide.
-#: includes/admin/reports/abstract-report.php:500
+#: includes/admin/reports/abstract-report.php:505
 #, php-format
 msgid "It's easy! To upgrade, navigate to %1$sMy Account%2$s on MonsterInsights.com, go to the licenses tab, and click upgrade. We also have a %3$sstep by step guide%4$s with pictures of this process."
 msgstr ""
 
-#: includes/admin/reports/abstract-report.php:504
-#: includes/admin/reports/abstract-report.php:527
+#: includes/admin/reports/abstract-report.php:509
+#: includes/admin/reports/abstract-report.php:532
 msgid "If you have any questions, don't hesitate to reach out. We're here to help."
 msgstr ""
 
 #. Translators: Placeholder adds a smiley face.
-#: includes/admin/reports/abstract-report.php:509
+#: includes/admin/reports/abstract-report.php:514
 #, php-format
 msgid "Hey there! %s It looks like you've got the free version of MonsterInsights installed on your site. That's awesome!"
 msgstr ""
 
 #. Translators: Placeholders make the text bold, add the license level and add a link to upgrade.
-#: includes/admin/reports/abstract-report.php:516
+#: includes/admin/reports/abstract-report.php:521
 #, php-format
 msgid "Do you you want to access to %1$s reporting right now%2$s in your WordPress Dashboard? That comes with %3$s level%4$s of our paid packages. To get instant access, you'll want to buy a MonsterInsights license, which also gives you access to powerful addons, expanded reporting (including the ability to use custom date ranges), comprehensive tracking features (like UserID tracking) and access to our world-class support team."
 msgstr ""
 
 #. Translators: Placeholders make the text bold, add the license level and add a link to upgrade.
-#: includes/admin/reports/abstract-report.php:523
+#: includes/admin/reports/abstract-report.php:528
 #, php-format
 msgid "Upgrading is easy! To upgrade, navigate to %1$ssour pricing page%2$s, purchase the required license, and then follow the %3$sinstructions in the email receipt%4$s to upgrade. It only takes a few minutes to unlock the most powerful, yet easy to use analytics tracking system for WordPress."
 msgstr ""
 
-#: includes/admin/reports/abstract-report.php:570
+#: includes/admin/reports/abstract-report.php:575
 msgid "Please ask your webmaster to enable this addon."
 msgstr ""
 
@@ -8451,198 +10232,214 @@ msgstr ""
 msgid "Hey - we noticed you've been using %1$s for a while - that's great! Could you do us a BIG favor and give it a 5-star review on WordPress to help us spread the word and boost our motivation?"
 msgstr ""
 
-#: includes/admin/routes.php:359
+#: includes/admin/routes.php:210
+#: includes/ppc/google/class-monsterinsights-google-ads.php:271
+msgid "You do not have permission to update this setting."
+msgstr ""
+
+#: includes/admin/routes.php:397
 msgid "The best WordPress eCommerce plugin for selling digital downloads. Start selling eBooks, software, music, digital art, and more within minutes. Accept payments, manage subscriptions, advanced access control, and more."
 msgstr ""
 
-#: includes/admin/routes.php:393
-#: includes/admin/routes.php:738
+#: includes/admin/routes.php:431
+#: includes/admin/routes.php:780
 msgid "Top-rated WordPress donation and fundraising plugin. Over 10,000+ non-profit organizations and website owners use Charitable to create fundraising campaigns and raise more money online."
 msgstr ""
 
-#: includes/admin/routes.php:405
-#: includes/admin/routes.php:749
+#: includes/admin/routes.php:443
+#: includes/admin/routes.php:791
 msgid "Future proof your WordPress customizations with the most popular code snippet management plugin for WordPress. Trusted by over 1,500,000+ websites for easily adding code to WordPress right from the admin area."
 msgstr ""
 
-#: includes/admin/routes.php:428
-#: includes/admin/routes.php:760
+#: includes/admin/routes.php:466
+#: includes/admin/routes.php:802
 msgid "Leading WordPress backup & site migration plugin. Over 1,500,000+ smart website owners use Duplicator to make reliable and secure WordPress backups to protect their websites. It also makes website migration really easy."
 msgstr ""
 
-#: includes/admin/routes.php:477
+#: includes/admin/routes.php:519
 msgid "The #1 affiliate management plugin for WordPress. Easily create an affiliate program for your eCommerce store or membership site within minutes and start growing your sales with the power of referral marketing."
 msgstr ""
 
-#: includes/admin/routes.php:490
+#: includes/admin/routes.php:532
 msgid "The #1 Stripe payments plugin for WordPress. Start accepting one-time and recurring payments on your WordPress site without setting up a shopping cart. No code required."
 msgstr ""
 
-#: includes/admin/routes.php:502
-#: includes/admin/routes.php:727
+#: includes/admin/routes.php:544
+#: includes/admin/routes.php:769
 msgid "A simple & powerful event calendar plugin for WordPress that comes with all the event management features including payments, scheduling, timezones, ticketing, recurring events, and more."
 msgstr ""
 
-#: includes/admin/routes.php:514
+#: includes/admin/routes.php:556
 msgid "The best drag & drop WordPress form builder. Easily create beautiful contact forms, surveys, payment forms, and more with our 1000+ form templates. Trusted by over 6 million websites as the best forms plugin."
 msgstr ""
 
-#: includes/admin/routes.php:526
+#: includes/admin/routes.php:568
 msgid "Ask visitors questions about how they use your website or what features can make you more money."
 msgstr ""
 
-#: includes/admin/routes.php:538
+#: includes/admin/routes.php:580
 msgid "The original WordPress SEO plugin and toolkit that improves your website’s search rankings. Comes with all the SEO features like Local SEO, WooCommerce SEO, sitemaps, SEO optimizer, schema, and more."
 msgstr ""
 
-#: includes/admin/routes.php:550
+#: includes/admin/routes.php:592
 msgid "Stripe Payment Gateway for WooCommerce is an integrated solution that lets you accept payments on your online store for web and mobile."
 msgstr ""
 
-#: includes/admin/routes.php:565
+#: includes/admin/routes.php:607
 msgid "Improve your WordPress email deliverability and make sure that your website emails reach user’s inbox with the #1 SMTP plugin for WordPress. Over 3 million websites use it to fix WordPress email issues."
 msgstr ""
 
-#: includes/admin/routes.php:575
+#: includes/admin/routes.php:617
 msgid "The fastest drag & drop landing page builder for WordPress. Create custom landing pages without writing code, connect them with your CRM, collect subscribers, and grow your audience. Trusted by 1 million sites."
 msgstr ""
 
-#: includes/admin/routes.php:586
+#: includes/admin/routes.php:628
 msgid "Turn your website visitors into brand ambassadors! Easily grow your email list, website traffic, and social media followers with the most powerful giveaways & contests plugin for WordPress."
 msgstr ""
 
-#: includes/admin/routes.php:597
+#: includes/admin/routes.php:639
 msgid "Boost your sales and conversions by up to 15% with real-time social proof notifications. TrustPulse helps you show live user activity and purchases to help convince other users to purchase."
 msgstr ""
 
-#: includes/admin/routes.php:610
-#: includes/admin/routes.php:716
+#: includes/admin/routes.php:652
+#: includes/admin/routes.php:758
 msgid "The most advanced WordPress search plugin. Customize your WordPress search algorithm, reorder search results, track search metrics, and everything you need to leverage search to grow your business."
 msgstr ""
 
-#: includes/admin/routes.php:622
+#: includes/admin/routes.php:664
 msgid "Easily display Instagram content on your WordPress site without writing any code. Comes with multiple templates, ability to show content from multiple accounts, hashtags, and more. Trusted by 1 million websites."
 msgstr ""
 
-#: includes/admin/routes.php:636
+#: includes/admin/routes.php:678
 msgid "Easily display Facebook content on your WordPress site without writing any code. Comes with multiple templates, ability to embed albums, group content, reviews, live videos, comments, and reactions."
 msgstr ""
 
-#: includes/admin/routes.php:650
+#: includes/admin/routes.php:692
 msgid "Easily display YouTube videos on your WordPress site without writing any code. Comes with multiple layouts, ability to embed live streams, video filtering, ability to combine multiple channel videos, and more."
 msgstr ""
 
-#: includes/admin/routes.php:665
+#: includes/admin/routes.php:707
 msgid "Easily display Twitter content in WordPress without writing any code. Comes with multiple layouts, ability to combine multiple Twitter feeds, Twitter card support, tweet moderation, and more."
 msgstr ""
 
-#: includes/admin/routes.php:680
+#: includes/admin/routes.php:722
 msgid "Connect with your visitors after they leave your website with the leading web push notification software. Over 10,000+ businesses worldwide use PushEngage to send 15 billion notifications each month."
 msgstr ""
 
-#: includes/admin/routes.php:691
+#: includes/admin/routes.php:733
 msgid "Automate everything with the #1 no-code Automation tool for WordPress."
 msgstr ""
 
-#: includes/admin/routes.php:705
+#: includes/admin/routes.php:747
 msgid "Pretty Links helps you shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!"
 msgstr ""
 
-#: includes/admin/routes.php:783
+#: includes/admin/routes.php:825
 msgid "Advanced Coupons for WooCommerce (Free Version) gives WooCommerce store owners extra coupon features so they can market their stores better."
 msgstr ""
 
-#: includes/admin/routes.php:796
+#: includes/admin/routes.php:838
 msgid "See what your analytics software isn’t telling you with powerful UserFeedback surveys."
 msgstr ""
 
-#: includes/admin/routes.php:917
+#: includes/admin/routes.php:861
+msgid "Instantly get more subscribers, leads, and sales with the #1 conversion optimization toolkit. Create high converting popups, announcement bars, spin a wheel, and more with smart targeting and personalization."
+msgstr ""
+
+#: includes/admin/routes.php:972
 #, php-format
 msgid "Oops! Please enter a valid Google Analytics 4 Measurement ID. %1$sLearn how to find your Measurement ID%2$s."
 msgstr ""
 
-#: includes/admin/routes.php:992
+#: includes/admin/routes.php:1047
 msgid "Please upload a valid .json file"
 msgstr ""
 
-#: includes/admin/routes.php:1000
+#: includes/admin/routes.php:1055
 msgid "Please select a valid file to upload."
 msgstr ""
 
-#: includes/admin/routes.php:1050
+#: includes/admin/routes.php:1116
+#: includes/admin/routes.php:1788
 #, php-format
 msgid "Oops! You don not have permissions to view MonsterInsights reporting. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s."
 msgstr ""
 
-#: includes/admin/routes.php:1069
+#: includes/admin/routes.php:1135
+#: includes/admin/routes.php:1806
 #, php-format
 msgid "Oops! You cannot view MonsterInsights reports because you are not licensed. Please try again in a few minutes. If the issue continues, please %1$scontact our support%2$s team."
 msgstr ""
 
-#: includes/admin/routes.php:1075
-#: includes/admin/routes.php:1489
+#: includes/admin/routes.php:1141
+#: includes/admin/routes.php:1555
+#: includes/admin/routes.php:1812
 msgid "Add your license"
 msgstr ""
 
-#: includes/admin/routes.php:1084
+#: includes/admin/routes.php:1150
+#: includes/admin/routes.php:1821
 #, php-format
 msgid "Oops! We had a problem due to a license key error. Please try again in a few minutes. If the problem persists, please %1$scontact our support%2$s team."
 msgstr ""
 
-#: includes/admin/routes.php:1104
+#: includes/admin/routes.php:1170
+#: includes/admin/routes.php:1841
 #, php-format
 msgid "You need to authenticate into MonsterInsights before viewing reports. Please run our %1$ssetup wizard%2$s."
 msgstr ""
 
-#: includes/admin/routes.php:1116
+#: includes/admin/routes.php:1182
 #, php-format
 msgid "Oops! We ran into a problem displaying this report. Please %1$scontact our support%2$s team if this issue persists."
 msgstr ""
 
-#: includes/admin/routes.php:1181
-#: includes/admin/routes.php:1530
-#: includes/admin/routes.php:1584
+#: includes/admin/routes.php:1247
+#: includes/admin/routes.php:1596
+#: includes/admin/routes.php:1650
+#: includes/admin/routes.php:1956
+#: includes/admin/routes.php:1999
 #, php-format
 msgid "Oops! We encountered an error while generating your reports. Please wait a few minutes and try again. If the issue persists, please %1$scontact our support%2$s team."
 msgstr ""
 
-#: includes/admin/routes.php:1196
+#: includes/admin/routes.php:1262
 msgid "Oops! You are not allowed to install plugins. Please contact your website administrator for further assistance."
 msgstr ""
 
-#: includes/admin/routes.php:1204
+#: includes/admin/routes.php:1270
 msgid "Missing plugin name."
 msgstr ""
 
-#: includes/admin/routes.php:1210
+#: includes/admin/routes.php:1276
 msgid "Plugin already installed."
 msgstr ""
 
-#: includes/admin/routes.php:1370
+#: includes/admin/routes.php:1436
 msgid "Homepage"
 msgstr ""
 
-#: includes/admin/routes.php:1460
+#: includes/admin/routes.php:1526
 #, php-format
-msgid "Oops! You don not have permissions to view or access Popular Posts. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s."
+msgid "Oops! You do not have permissions to view or access Popular Posts. Please check with your site administrator that your role is included in the MonsterInsights permissions settings. %1$sClick here for more information%2$s."
 msgstr ""
 
-#: includes/admin/routes.php:1483
+#: includes/admin/routes.php:1549
 #, php-format
 msgid "Oops! We could not find a valid license key for MonsterInsights. Please %1$senter a valid license key%2$s to view this report."
 msgstr ""
 
-#: includes/admin/routes.php:1498
+#: includes/admin/routes.php:1564
 #, php-format
 msgid "Oops! We could not find a valid license key. Please enter a valid license key to view this report. You can find your license by logging into your %1$sMonsterInsights account%2$s."
 msgstr ""
 
-#: includes/admin/routes.php:1518
+#: includes/admin/routes.php:1584
 #, php-format
 msgid "You need to authenticate into MonsterInsights before viewing reports. Please complete the setup by going through our %1$ssetup wizard%2$s."
 msgstr ""
 
-#: includes/admin/setup-checklist.php:330
+#: includes/admin/setup-checklist.php:332
 msgid "You don't have permission to perform this action."
 msgstr ""
 
@@ -8658,56 +10455,110 @@ msgstr ""
 msgid "There was an error grabbing data from SharedCount, please check the API Key"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:112
-#: includes/admin/site-notes/Controller.php:156
+#: includes/admin/site-notes/Controller.php:114
+#: includes/admin/site-notes/Controller.php:158
 msgid "You don't have permission to view notes."
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:186
+#: includes/admin/site-notes/Controller.php:188
 msgid "You don't have permission to view notes categories."
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:231
-#: includes/admin/site-notes/Controller.php:348
-#: includes/admin/site-notes/Controller.php:386
-#: includes/admin/site-notes/Controller.php:424
-#: includes/admin/site-notes/Controller.php:462
+#: includes/admin/site-notes/Controller.php:233
+#: includes/admin/site-notes/Controller.php:350
+#: includes/admin/site-notes/Controller.php:388
+#: includes/admin/site-notes/Controller.php:426
+#: includes/admin/site-notes/Controller.php:464
 msgid "You don't have permission to update notes."
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:281
+#: includes/admin/site-notes/Controller.php:283
 msgid "You don't have permission to update categories."
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:292
+#: includes/admin/site-notes/Controller.php:294
 msgid "Please add a category name"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:301
+#: includes/admin/site-notes/Controller.php:303
 msgid "You can't exceed the 200 characters length for each site note."
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:359
+#: includes/admin/site-notes/Controller.php:361
 msgid "Please choose a site note to trash!"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:397
+#: includes/admin/site-notes/Controller.php:399
 msgid "Please choose a site note(s) to restore!"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:435
+#: includes/admin/site-notes/Controller.php:437
 msgid "Please choose a site note(s) to delete!"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:473
+#: includes/admin/site-notes/Controller.php:475
 msgid "Please choose a category to delete!"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:533
+#: includes/admin/site-notes/Controller.php:535
 msgid "NA"
 msgstr ""
 
-#: includes/admin/site-notes/Controller.php:757
+#: includes/admin/site-notes/Controller.php:569
+#: includes/admin/site-notes/Controller.php:723
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:582
+msgid "No annotations data provided."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:593
+msgid "You must be properly authenticated with MonsterInsights to export annotations."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:666
+msgid "Annotations exported successfully."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:682
+msgid "You must be properly authenticated with MonsterInsights to delete annotations."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:738
+msgid "You must be properly authenticated with MonsterInsights to import annotations."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:782
+msgid "No annotations found to import."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:816
+#, php-format
+msgid "Skipped annotation with empty title (ID: %s)"
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:830
+#, php-format
+msgid "Failed to import annotation \"%s\": %s"
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:848
+#, php-format
+msgid "Successfully imported %d annotations."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:857
+#, php-format
+msgid "%d annotations were skipped (already exist)."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:864
+#, php-format
+msgid "%d annotations could not be imported."
+msgstr ""
+
+#: includes/admin/site-notes/Controller.php:1131
 msgid "Add a Site Note"
 msgstr ""
 
@@ -8727,28 +10578,8 @@ msgstr ""
 msgid "Your Site Note Cannot be Empty"
 msgstr ""
 
-#: includes/admin/site-notes/Database.php:185
+#: includes/admin/site-notes/Database.php:187
 msgid "Note not found"
-msgstr ""
-
-#: includes/admin/tracking.php:281
-msgid "Once Weekly"
-msgstr ""
-
-#: includes/admin/wp-site-health.php:10
-msgid "MonsterInsights Dual Tracking"
-msgstr ""
-
-#: includes/admin/wp-site-health.php:32
-msgid "Enable Google Analytics 4"
-msgstr ""
-
-#: includes/admin/wp-site-health.php:38
-msgid "Starting July 1, 2023, Google's Universal Analytics (GA3) will not accept any new traffic or event data. Upgrade to Google Analytics 4 today to be prepared for the sunset."
-msgstr ""
-
-#: includes/admin/wp-site-health.php:42
-msgid "Set Up Dual Tracking"
 msgstr ""
 
 #. Translators: Placeholder gets replaced with the error message.
@@ -8797,6 +10628,30 @@ msgstr ""
 
 #: includes/api-request.php:509
 msgid "Reason: The API was unreachable because no external hosts are allowed on this site."
+msgstr ""
+
+#: includes/api/class-monsterinsights-api-token.php:79
+msgid "Site is not authenticated with MonsterInsights."
+msgstr ""
+
+#: includes/api/class-monsterinsights-api-token.php:125
+msgid "You do not have permission to access this data."
+msgstr ""
+
+#: includes/api/class-monsterinsights-api-token.php:256
+msgid "OpenSSL extension is required for secure API tokens."
+msgstr ""
+
+#: includes/api/class-monsterinsights-api-token.php:265
+msgid "Failed to encode token payload."
+msgstr ""
+
+#: includes/api/class-monsterinsights-api-token.php:278
+msgid "Failed to generate secure IV."
+msgstr ""
+
+#: includes/api/class-monsterinsights-api-token.php:294
+msgid "Failed to encrypt token payload."
 msgstr ""
 
 #: includes/compatibility-check.php:263
@@ -8868,25 +10723,25 @@ msgstr ""
 msgid "Sent from %s"
 msgstr ""
 
-#: includes/frontend/frontend.php:300
+#: includes/frontend/frontend.php:327
 msgid "Tracking is Disabled for Administrators"
 msgstr ""
 
 #. Translators: %s is the link to the article where more details about tracking are listed.
-#: includes/frontend/frontend.php:313
+#: includes/frontend/frontend.php:340
 #, php-format
 msgid "To keep stats accurate, we do not load Google Analytics scripts for admin users. %1$sLearn More &raquo;%2$s"
 msgstr ""
 
-#: includes/frontend/tracking/class-tracking-gtag.php:194
+#: includes/frontend/tracking/class-tracking-gtag.php:211
 msgid "Note: MonsterInsights is not currently configured on this site. The site owner needs to authenticate with Google Analytics in the MonsterInsights settings panel."
 msgstr ""
 
-#: includes/frontend/tracking/class-tracking-gtag.php:197
+#: includes/frontend/tracking/class-tracking-gtag.php:214
 msgid "Note: MonsterInsights does not track you as a logged-in site administrator to prevent site owners from accidentally skewing their own Google Analytics data."
 msgstr ""
 
-#: includes/frontend/tracking/class-tracking-gtag.php:200
+#: includes/frontend/tracking/class-tracking-gtag.php:217
 msgid "Note: The site owner has disabled Google Analytics tracking for your user role."
 msgstr ""
 
@@ -11327,12 +13182,6 @@ msgstr ""
 msgid "Gender Breakdown"
 msgstr ""
 
-#: includes/gutenberg/site-insights/templates/graph/class-graph-newvsreturning.php:45
-#: includes/gutenberg/site-insights/templates/graph/class-graph-newvsreturning.php:83
-#: includes/gutenberg/site-insights/templates/scorecard/class-scorecard-newvsreturning.php:33
-msgid "New vs Returning"
-msgstr ""
-
 #: includes/gutenberg/site-insights/templates/graph/class-graph-newvsreturning.php:50
 #: includes/gutenberg/site-insights/templates/graph/class-graph-newvsreturning.php:105
 #: includes/gutenberg/site-insights/templates/scorecard/class-scorecard-newvsreturning.php:89
@@ -11386,12 +13235,12 @@ msgid "United States"
 msgstr ""
 
 #: includes/helpers.php:479
-#: includes/helpers.php:2179
+#: includes/helpers.php:2190
 msgid "Canada"
 msgstr ""
 
 #: includes/helpers.php:480
-#: includes/helpers.php:2224
+#: includes/helpers.php:2235
 msgid "United Kingdom"
 msgstr ""
 
@@ -11432,7 +13281,7 @@ msgid "Antarctica"
 msgstr ""
 
 #: includes/helpers.php:490
-#: includes/helpers.php:2172
+#: includes/helpers.php:2183
 msgid "Antigua and Barbuda"
 msgstr ""
 
@@ -11449,7 +13298,7 @@ msgid "Aruba"
 msgstr ""
 
 #: includes/helpers.php:494
-#: includes/helpers.php:2173
+#: includes/helpers.php:2184
 msgid "Australia"
 msgstr ""
 
@@ -11474,7 +13323,7 @@ msgid "Bangladesh"
 msgstr ""
 
 #: includes/helpers.php:500
-#: includes/helpers.php:2174
+#: includes/helpers.php:2185
 msgid "Barbados"
 msgstr ""
 
@@ -11487,7 +13336,7 @@ msgid "Belgium"
 msgstr ""
 
 #: includes/helpers.php:503
-#: includes/helpers.php:2175
+#: includes/helpers.php:2186
 msgid "Belize"
 msgstr ""
 
@@ -11516,7 +13365,7 @@ msgid "Bosnia and Herzegovina"
 msgstr ""
 
 #: includes/helpers.php:510
-#: includes/helpers.php:2176
+#: includes/helpers.php:2187
 msgid "Botswana"
 msgstr ""
 
@@ -11545,7 +13394,7 @@ msgid "Burkina Faso"
 msgstr ""
 
 #: includes/helpers.php:517
-#: includes/helpers.php:2177
+#: includes/helpers.php:2188
 msgid "Burundi"
 msgstr ""
 
@@ -11554,7 +13403,7 @@ msgid "Cambodia"
 msgstr ""
 
 #: includes/helpers.php:519
-#: includes/helpers.php:2178
+#: includes/helpers.php:2189
 msgid "Cameroon"
 msgstr ""
 
@@ -11647,7 +13496,7 @@ msgid "Djibouti"
 msgstr ""
 
 #: includes/helpers.php:542
-#: includes/helpers.php:2180
+#: includes/helpers.php:2191
 msgid "Dominica"
 msgstr ""
 
@@ -11696,7 +13545,7 @@ msgid "Faroe Islands"
 msgstr ""
 
 #: includes/helpers.php:554
-#: includes/helpers.php:2181
+#: includes/helpers.php:2192
 msgid "Fiji"
 msgstr ""
 
@@ -11725,7 +13574,7 @@ msgid "Gabon"
 msgstr ""
 
 #: includes/helpers.php:561
-#: includes/helpers.php:2184
+#: includes/helpers.php:2195
 msgid "Gambia"
 msgstr ""
 
@@ -11742,7 +13591,7 @@ msgid "Greece"
 msgstr ""
 
 #: includes/helpers.php:565
-#: includes/helpers.php:2185
+#: includes/helpers.php:2196
 msgid "Ghana"
 msgstr ""
 
@@ -11755,7 +13604,7 @@ msgid "Greenland"
 msgstr ""
 
 #: includes/helpers.php:568
-#: includes/helpers.php:2182
+#: includes/helpers.php:2193
 msgid "Grenada"
 msgstr ""
 
@@ -11784,7 +13633,7 @@ msgid "Guinea-Bissau"
 msgstr ""
 
 #: includes/helpers.php:575
-#: includes/helpers.php:2183
+#: includes/helpers.php:2194
 msgid "Guyana"
 msgstr ""
 
@@ -11817,7 +13666,7 @@ msgid "Iceland"
 msgstr ""
 
 #: includes/helpers.php:583
-#: includes/helpers.php:2187
+#: includes/helpers.php:2198
 #: includes/popular-posts/class-popular-posts-themes.php:296
 msgid "India"
 msgstr ""
@@ -11835,7 +13684,7 @@ msgid "Iraq"
 msgstr ""
 
 #: includes/helpers.php:587
-#: includes/helpers.php:2186
+#: includes/helpers.php:2197
 msgid "Ireland"
 msgstr ""
 
@@ -11852,7 +13701,7 @@ msgid "Italy"
 msgstr ""
 
 #: includes/helpers.php:591
-#: includes/helpers.php:2188
+#: includes/helpers.php:2199
 msgid "Jamaica"
 msgstr ""
 
@@ -11873,12 +13722,12 @@ msgid "Kazakhstan"
 msgstr ""
 
 #: includes/helpers.php:596
-#: includes/helpers.php:2189
+#: includes/helpers.php:2200
 msgid "Kenya"
 msgstr ""
 
 #: includes/helpers.php:597
-#: includes/helpers.php:2190
+#: includes/helpers.php:2201
 msgid "Kiribati"
 msgstr ""
 
@@ -11903,12 +13752,12 @@ msgid "Lebanon"
 msgstr ""
 
 #: includes/helpers.php:603
-#: includes/helpers.php:2191
+#: includes/helpers.php:2202
 msgid "Lesotho"
 msgstr ""
 
 #: includes/helpers.php:604
-#: includes/helpers.php:2192
+#: includes/helpers.php:2203
 msgid "Liberia"
 msgstr ""
 
@@ -11941,7 +13790,7 @@ msgid "Madagascar"
 msgstr ""
 
 #: includes/helpers.php:612
-#: includes/helpers.php:2193
+#: includes/helpers.php:2204
 msgid "Malawi"
 msgstr ""
 
@@ -11958,12 +13807,12 @@ msgid "Mali"
 msgstr ""
 
 #: includes/helpers.php:616
-#: includes/helpers.php:2194
+#: includes/helpers.php:2205
 msgid "Malta"
 msgstr ""
 
 #: includes/helpers.php:617
-#: includes/helpers.php:2195
+#: includes/helpers.php:2206
 msgid "Marshall Islands"
 msgstr ""
 
@@ -11976,7 +13825,7 @@ msgid "Mauritania"
 msgstr ""
 
 #: includes/helpers.php:620
-#: includes/helpers.php:2196
+#: includes/helpers.php:2207
 msgid "Mauritius"
 msgstr ""
 
@@ -11989,7 +13838,7 @@ msgid "Mexico"
 msgstr ""
 
 #: includes/helpers.php:623
-#: includes/helpers.php:2197
+#: includes/helpers.php:2208
 msgid "Micronesia"
 msgstr ""
 
@@ -12026,12 +13875,12 @@ msgid "Myanmar"
 msgstr ""
 
 #: includes/helpers.php:632
-#: includes/helpers.php:2199
+#: includes/helpers.php:2210
 msgid "Namibia"
 msgstr ""
 
 #: includes/helpers.php:633
-#: includes/helpers.php:2200
+#: includes/helpers.php:2211
 msgid "Nauru"
 msgstr ""
 
@@ -12052,7 +13901,7 @@ msgid "New Caledonia"
 msgstr ""
 
 #: includes/helpers.php:638
-#: includes/helpers.php:2198
+#: includes/helpers.php:2209
 msgid "New Zealand"
 msgstr ""
 
@@ -12065,7 +13914,7 @@ msgid "Niger"
 msgstr ""
 
 #: includes/helpers.php:641
-#: includes/helpers.php:2201
+#: includes/helpers.php:2212
 msgid "Nigeria"
 msgstr ""
 
@@ -12094,12 +13943,12 @@ msgid "Oman"
 msgstr ""
 
 #: includes/helpers.php:648
-#: includes/helpers.php:2202
+#: includes/helpers.php:2213
 msgid "Pakistan"
 msgstr ""
 
 #: includes/helpers.php:649
-#: includes/helpers.php:2203
+#: includes/helpers.php:2214
 msgid "Palau"
 msgstr ""
 
@@ -12112,7 +13961,7 @@ msgid "Panama"
 msgstr ""
 
 #: includes/helpers.php:652
-#: includes/helpers.php:2204
+#: includes/helpers.php:2215
 msgid "Papua New Guinea"
 msgstr ""
 
@@ -12125,7 +13974,7 @@ msgid "Peru"
 msgstr ""
 
 #: includes/helpers.php:655
-#: includes/helpers.php:2205
+#: includes/helpers.php:2216
 msgid "Philippines"
 msgstr ""
 
@@ -12166,7 +14015,7 @@ msgid "Russian Federation"
 msgstr ""
 
 #: includes/helpers.php:665
-#: includes/helpers.php:2206
+#: includes/helpers.php:2217
 msgid "Rwanda"
 msgstr ""
 
@@ -12223,17 +14072,17 @@ msgid "Serbia"
 msgstr ""
 
 #: includes/helpers.php:679
-#: includes/helpers.php:2213
+#: includes/helpers.php:2224
 msgid "Seychelles"
 msgstr ""
 
 #: includes/helpers.php:680
-#: includes/helpers.php:2214
+#: includes/helpers.php:2225
 msgid "Sierra Leone"
 msgstr ""
 
 #: includes/helpers.php:681
-#: includes/helpers.php:2207
+#: includes/helpers.php:2218
 msgid "Singapore"
 msgstr ""
 
@@ -12246,7 +14095,7 @@ msgid "Slovenia"
 msgstr ""
 
 #: includes/helpers.php:684
-#: includes/helpers.php:2215
+#: includes/helpers.php:2226
 msgid "Solomon Islands"
 msgstr ""
 
@@ -12255,7 +14104,7 @@ msgid "Somalia"
 msgstr ""
 
 #: includes/helpers.php:686
-#: includes/helpers.php:2216
+#: includes/helpers.php:2227
 msgid "South Africa"
 msgstr ""
 
@@ -12268,7 +14117,7 @@ msgid "South Korea"
 msgstr ""
 
 #: includes/helpers.php:689
-#: includes/helpers.php:2217
+#: includes/helpers.php:2228
 msgid "South Sudan"
 msgstr ""
 
@@ -12281,7 +14130,7 @@ msgid "Sri Lanka"
 msgstr ""
 
 #: includes/helpers.php:692
-#: includes/helpers.php:2218
+#: includes/helpers.php:2229
 msgid "Sudan"
 msgstr ""
 
@@ -12294,7 +14143,7 @@ msgid "Svalbard and Jan Mayen Islands"
 msgstr ""
 
 #: includes/helpers.php:695
-#: includes/helpers.php:2211
+#: includes/helpers.php:2222
 msgid "Swaziland"
 msgstr ""
 
@@ -12319,7 +14168,7 @@ msgid "Tajikistan"
 msgstr ""
 
 #: includes/helpers.php:701
-#: includes/helpers.php:2221
+#: includes/helpers.php:2232
 msgid "Tanzania"
 msgstr ""
 
@@ -12340,12 +14189,12 @@ msgid "Tokelau"
 msgstr ""
 
 #: includes/helpers.php:706
-#: includes/helpers.php:2222
+#: includes/helpers.php:2233
 msgid "Tonga"
 msgstr ""
 
 #: includes/helpers.php:707
-#: includes/helpers.php:2219
+#: includes/helpers.php:2230
 msgid "Trinidad and Tobago"
 msgstr ""
 
@@ -12366,12 +14215,12 @@ msgid "Turks and Caicos Islands"
 msgstr ""
 
 #: includes/helpers.php:712
-#: includes/helpers.php:2223
+#: includes/helpers.php:2234
 msgid "Tuvalu"
 msgstr ""
 
 #: includes/helpers.php:713
-#: includes/helpers.php:2226
+#: includes/helpers.php:2237
 msgid "Uganda"
 msgstr ""
 
@@ -12396,7 +14245,7 @@ msgid "Uzbekistan"
 msgstr ""
 
 #: includes/helpers.php:719
-#: includes/helpers.php:2227
+#: includes/helpers.php:2238
 msgid "Vanuatu"
 msgstr ""
 
@@ -12433,12 +14282,12 @@ msgid "Yemen"
 msgstr ""
 
 #: includes/helpers.php:728
-#: includes/helpers.php:2228
+#: includes/helpers.php:2239
 msgid "Zambia"
 msgstr ""
 
 #: includes/helpers.php:729
-#: includes/helpers.php:2229
+#: includes/helpers.php:2240
 msgid "Zimbabwe"
 msgstr ""
 
@@ -12446,39 +14295,43 @@ msgstr ""
 msgid "Unknown Country"
 msgstr ""
 
-#: includes/helpers.php:1589
+#: includes/helpers.php:1600
 #, php-format
 msgid "%1$sWe noticed you're using a caching plugin or caching from your hosting provider.%2$s Be sure to clear the cache to ensure the tracking appears on all pages and posts. %3$s(See this guide on how to clear cache)%4$s."
 msgstr ""
 
 #. Translators: The placeholders are for making the "We have detected multiple tracking codes" text bold & adding a link to support.
-#: includes/helpers.php:1652
+#: includes/helpers.php:1663
 #, php-format
 msgid "%1$sWe have detected multiple tracking codes%2$s! You should remove non-MonsterInsights ones. If you need help finding them please %3$sread this article%4$s."
 msgstr ""
 
-#: includes/helpers.php:2208
+#: includes/helpers.php:2219
 msgid "St Kitts and Nevis"
 msgstr ""
 
-#: includes/helpers.php:2209
+#: includes/helpers.php:2220
 msgid "St Lucia"
 msgstr ""
 
-#: includes/helpers.php:2210
+#: includes/helpers.php:2221
 msgid "St Vincent and the Grenadines"
 msgstr ""
 
-#: includes/helpers.php:2212
+#: includes/helpers.php:2223
 msgid "Samoa"
 msgstr ""
 
-#: includes/helpers.php:2220
+#: includes/helpers.php:2231
 msgid "The Bahamas"
 msgstr ""
 
-#: includes/helpers.php:2225
+#: includes/helpers.php:2236
 msgid "United States of America"
+msgstr ""
+
+#: includes/overview/class-monsterinsights-overview-ajax.php:30
+msgid "You do not have permission to view this data."
 msgstr ""
 
 #: includes/popular-posts/class-popular-posts-themes.php:146
@@ -12692,6 +14545,35 @@ msgstr ""
 #: includes/popular-posts/class-popular-posts-themes.php:787
 #: includes/popular-posts/class-popular-posts-themes.php:829
 msgid "Technically Awesome Code Comment Black T-Shirt"
+msgstr ""
+
+#: includes/ppc/google/class-monsterinsights-google-ads.php:129
+#, php-format
+msgid "To use this feature, please connect to MonsterInsights. <a href=\"%s\">Click here to connect.</a>"
+msgstr ""
+
+#: includes/ppc/google/class-monsterinsights-google-ads.php:173
+msgid "Google Ads experience reset successfully."
+msgstr ""
+
+#: includes/ppc/google/class-monsterinsights-google-ads.php:196
+msgid "Conversion tracking id not found."
+msgstr ""
+
+#: includes/ppc/google/class-monsterinsights-google-ads.php:277
+msgid "Invalid request."
+msgstr ""
+
+#: includes/ppc/google/class-monsterinsights-google-ads.php:302
+msgid "You do not have permission to view these settings."
+msgstr ""
+
+#: includes/ppc/google/class-monsterinsights-google-ads.php:318
+msgid "You do not have permission to check conversions."
+msgstr ""
+
+#: includes/tracking/class-monsterinsights-tracking.php:109
+msgid "MonsterInsights is not connected."
 msgstr ""
 
 #: lite/includes/admin/dashboard-widget.php:141
@@ -12944,23 +14826,15 @@ msgstr ""
 msgid "MonsterInsights Summary - %s"
 msgstr ""
 
-#: lite/includes/emails/summaries.php:716
+#: lite/includes/emails/summaries.php:717
 msgid "Benchmarks"
 msgstr ""
 
-#: lite/includes/emails/summaries.php:773
-msgid "Number of Sessions"
-msgstr ""
-
-#: lite/includes/emails/summaries.php:777
+#: lite/includes/emails/summaries.php:778
 msgid "Number of Page Views"
 msgstr ""
 
-#: lite/includes/emails/summaries.php:781
-msgid "Avg Session Duration"
-msgstr ""
-
-#: lite/includes/emails/summaries.php:789
+#: lite/includes/emails/summaries.php:790
 msgid "Number of Blog Posts"
 msgstr ""
 
@@ -12971,8 +14845,8 @@ msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-plain.php:17
 #: lite/includes/emails/templates/body-summaries-test-plain.php:52
-#: lite/includes/emails/templates/body-summaries-test.php:53
-#: lite/includes/emails/templates/body-summaries.php:19
+#: lite/includes/emails/templates/body-summaries-test.php:58
+#: lite/includes/emails/templates/body-summaries.php:24
 msgid "An update is available for MonsterInsights."
 msgstr ""
 
@@ -12988,8 +14862,8 @@ msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-plain.php:42
 #: lite/includes/emails/templates/body-summaries-test-plain.php:77
-#: lite/includes/emails/templates/body-summaries-test.php:108
-#: lite/includes/emails/templates/body-summaries.php:75
+#: lite/includes/emails/templates/body-summaries-test.php:156
+#: lite/includes/emails/templates/body-summaries.php:124
 msgid "Analytics Stats"
 msgstr ""
 
@@ -13000,16 +14874,9 @@ msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-plain.php:60
 #: lite/includes/emails/templates/body-summaries-test-plain.php:96
-#: lite/includes/emails/templates/body-summaries-test.php:142
-#: lite/includes/emails/templates/body-summaries.php:113
+#: lite/includes/emails/templates/body-summaries-test.php:234
+#: lite/includes/emails/templates/body-summaries.php:206
 msgid "Your Top 5 Viewed Pages"
-msgstr ""
-
-#: lite/includes/emails/templates/body-summaries-plain.php:62
-#: lite/includes/emails/templates/body-summaries-test-plain.php:98
-#: lite/includes/emails/templates/body-summaries-test.php:148
-#: lite/includes/emails/templates/body-summaries.php:119
-msgid "Page Title"
 msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-plain.php:67
@@ -13019,8 +14886,8 @@ msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-plain.php:71
 #: lite/includes/emails/templates/body-summaries-test-plain.php:107
-#: lite/includes/emails/templates/body-summaries-test.php:177
-#: lite/includes/emails/templates/body-summaries.php:150
+#: lite/includes/emails/templates/body-summaries-test.php:292
+#: lite/includes/emails/templates/body-summaries.php:266
 msgid "What's New at MonsterInsights"
 msgstr ""
 
@@ -13035,84 +14902,69 @@ msgid "See All Resources:"
 msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-test-plain.php:17
-#: lite/includes/emails/templates/body-summaries-test.php:19
+#: lite/includes/emails/templates/body-summaries-test.php:20
 msgid "Your Monthly Website Analytics Summary"
 msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-test-plain.php:19
-#: lite/includes/emails/templates/body-summaries-test.php:21
+#: lite/includes/emails/templates/body-summaries-test.php:22
 msgid "Here's a quick overview of your website's performance over the last month. Check out your key stats and top pages below."
 msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-test-plain.php:21
-#: lite/includes/emails/templates/body-summaries-test.php:23
+#: lite/includes/emails/templates/body-summaries-test.php:24
 msgid "Track key metrics"
 msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-test-plain.php:22
-#: lite/includes/emails/templates/body-summaries-test.php:24
+#: lite/includes/emails/templates/body-summaries-test.php:25
 msgid "Identify top content"
 msgstr ""
 
 #: lite/includes/emails/templates/body-summaries-test-plain.php:23
-#: lite/includes/emails/templates/body-summaries-test.php:25
+#: lite/includes/emails/templates/body-summaries-test.php:26
 msgid "Improve user engagement"
 msgstr ""
 
-#: lite/includes/emails/templates/body-summaries-test-plain.php:25
-#: lite/includes/emails/templates/body-summaries-test.php:27
-msgid "View Full Report"
-msgstr ""
-
-#: lite/includes/emails/templates/body-summaries-test-plain.php:29
-#: lite/includes/emails/templates/body-summaries-test.php:31
-msgid "Users"
-msgstr ""
-
-#: lite/includes/emails/templates/body-summaries-test.php:55
-#: lite/includes/emails/templates/body-summaries.php:21
+#: lite/includes/emails/templates/body-summaries-test.php:61
+#: lite/includes/emails/templates/body-summaries.php:27
 msgid "Upgrade to the latest version"
 msgstr ""
 
-#: lite/includes/emails/templates/body-summaries-test.php:69
-#: lite/includes/emails/templates/body-summaries.php:36
+#: lite/includes/emails/templates/body-summaries-test.php:81
+#: lite/includes/emails/templates/body-summaries.php:49
 msgid "MonsterInsights Dashboard"
 msgstr ""
 
-#: lite/includes/emails/templates/body-summaries-test.php:133
-#: lite/includes/emails/templates/body-summaries.php:103
+#: lite/includes/emails/templates/body-summaries-test.php:216
+#: lite/includes/emails/templates/body-summaries.php:187
 msgid "See My Analytics"
 msgstr ""
 
-#: lite/includes/emails/templates/body-summaries-test.php:167
-#: lite/includes/emails/templates/body-summaries.php:139
-msgid "View All Pages"
-msgstr ""
-
-#: lite/includes/emails/templates/body-summaries-test.php:192
-#: lite/includes/emails/templates/body-summaries.php:165
+#: lite/includes/emails/templates/body-summaries-test.php:318
+#: lite/includes/emails/templates/body-summaries.php:292
 msgid "Continue Reading"
 msgstr ""
 
-#: lite/includes/emails/templates/body-summaries-test.php:200
-#: lite/includes/emails/templates/body-summaries.php:174
+#: lite/includes/emails/templates/body-summaries-test.php:333
+#: lite/includes/emails/templates/body-summaries.php:308
 msgid "See All Resources"
 msgstr ""
 
 #. translators: Placeholders adds wrapping span tags and links to settings page.
-#: lite/includes/emails/templates/footer-summaries-test.php:28
-#: lite/includes/emails/templates/footer-summaries.php:28
+#: lite/includes/emails/templates/footer-summaries-test.php:42
+#: lite/includes/emails/templates/footer-summaries.php:42
 #, php-format
-msgid "%1$sThis email was auto-genetrated and sent from MonsterInsights.%2$s Learn how to %3$s disable it%4$s."
+msgid "%1$sThis email was auto-generated and sent from MonsterInsights.%2$s Learn how to %3$s disable it%4$s."
 msgstr ""
 
-#: lite/includes/emails/templates/header-summaries-test.php:554
-#: lite/includes/emails/templates/header-summaries.php:554
+#: lite/includes/emails/templates/header-summaries-test.php:82
+#: lite/includes/emails/templates/header-summaries.php:82
 msgid "Monthly Traffic Summary"
 msgstr ""
 
-#: lite/includes/emails/templates/header-summaries-test.php:558
-#: lite/includes/emails/templates/header-summaries.php:558
+#: lite/includes/emails/templates/header-summaries-test.php:88
+#: lite/includes/emails/templates/header-summaries.php:88
 msgid "It's your Monthly Website Analytics Summary"
 msgstr ""
 

@@ -12,8 +12,9 @@ use Exception;
 use WC_Order;
 use WC_Order_Item_Product;
 use WooCommerce\PayPalCommerce\Button\Session\CartData;
+use WooCommerce\PayPalCommerce\Settings\Data\PaymentSettings;
+use WooCommerce\PayPalCommerce\Settings\Data\SettingsModel;
 use WooCommerce\PayPalCommerce\Vendor\Inpsyde\Modularity\Module\ExecutableModule;
-use WooCommerce\PayPalCommerce\Vendor\Inpsyde\Modularity\Module\ExtendingModule;
 use WooCommerce\PayPalCommerce\Vendor\Inpsyde\Modularity\Module\ModuleClassNameIdTrait;
 use WooCommerce\PayPalCommerce\Vendor\Inpsyde\Modularity\Module\ServiceModule;
 use WooCommerce\PayPalCommerce\Vendor\Psr\Container\ContainerInterface;
@@ -23,7 +24,7 @@ use WooCommerce\PayPalCommerce\WcGateway\Settings\Settings;
 /**
  * Class CompatModule
  */
-class CompatModule implements ServiceModule, ExtendingModule, ExecutableModule
+class CompatModule implements ServiceModule, ExecutableModule
 {
     use ModuleClassNameIdTrait;
     /**
@@ -32,13 +33,6 @@ class CompatModule implements ServiceModule, ExtendingModule, ExecutableModule
     public function services(): array
     {
         return require __DIR__ . '/../services.php';
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public function extensions(): array
-    {
-        return require __DIR__ . '/../extensions.php';
     }
     /**
      * {@inheritDoc}
@@ -60,6 +54,7 @@ class CompatModule implements ServiceModule, ExtendingModule, ExecutableModule
         $this->migrate_pay_later_settings($c);
         $this->migrate_smart_button_settings($c);
         $this->migrate_three_d_secure_setting();
+        $this->migrate_capture_on_status_change();
         $this->fix_page_builders();
         $this->exclude_cache_plugins_js_minification($c);
         $is_nyp_active = $c->get('compat.nyp.is_supported_plugin_version_active');
@@ -72,6 +67,42 @@ class CompatModule implements ServiceModule, ExtendingModule, ExecutableModule
         }
         add_action('woocommerce_paypal_payments_gateway_migrate', static fn() => delete_transient('ppcp_has_ppec_subscriptions'));
         $this->legacy_ui_card_payment_mapping($c);
+        /**
+         * Automatically enable Pay Later messaging for Canadian stores during plugin update.
+         *
+         * This action runs during plugin updates to automatically enable Pay Later messaging for stores
+         * that meet the following criteria:
+         * - Store Country is set as Canada
+         * - The "Stay updated" checkbox is enabled
+         *
+         * When all conditions are met, this will:
+         * - Enable Pay Later messaging
+         * - Enable Pay Later Payment Method
+         * - Add default messaging locations (product, cart, checkout) to existing selections
+         *
+         * @hook woocommerce_paypal_payments_gateway_migrate
+         */
+        add_action('woocommerce_paypal_payments_gateway_migrate', static function () use ($c) {
+            // Check if the "Stay updated" checkbox is enabled (checked in either old or new UI).
+            $settings_model = $c->get('settings.data.settings');
+            assert($settings_model instanceof SettingsModel);
+            $settings = $c->get('wcgateway.settings');
+            assert($settings instanceof Settings);
+            // Store Country is set as Canada.
+            if ($c->get('api.shop.country') !== 'CA' || !$settings_model->get_stay_updated()) {
+                return;
+            }
+            // Enable Pay Later messaging.
+            $selected_locations = $settings->has('pay_later_messaging_locations') ? $settings->get('pay_later_messaging_locations') : array();
+            $settings->set('pay_later_messaging_enabled', \true);
+            $settings->set('pay_later_messaging_locations', array_unique(array_merge($selected_locations, array('product', 'cart', 'checkout'))));
+            $settings->persist();
+            // Enable Pay Later Payment Method.
+            $payment_settings = $c->get('settings.data.payment');
+            assert($payment_settings instanceof PaymentSettings);
+            $payment_settings->set_paylater_enabled(\true);
+            $payment_settings->save();
+        });
         return \true;
     }
     /**
@@ -82,18 +113,8 @@ class CompatModule implements ServiceModule, ExtendingModule, ExecutableModule
      */
     private function initialize_ppec_compat_layer(ContainerInterface $container): void
     {
-        // Process PPEC subscription renewals through PayPal Payments.
         $handler = $container->get('compat.ppec.subscriptions-handler');
         $handler->maybe_hook();
-        // Settings.
-        $ppec_import = $container->get('compat.ppec.settings_importer');
-        $ppec_import->maybe_hook();
-        // Inbox note inviting merchant to disable PayPal Express Checkout.
-        add_action('woocommerce_init', function () {
-            if (is_admin() && is_callable(array(WC(), 'is_wc_admin_active')) && WC()->is_wc_admin_active() && class_exists('Automattic\WooCommerce\Admin\Notes\Notes')) {
-                \WooCommerce\PayPalCommerce\Compat\PPEC\DeactivateNote::init();
-            }
-        });
     }
     /**
      * Sets up the 3rd party plugins compatibility layer for PayPal tracking.
@@ -246,6 +267,24 @@ class CompatModule implements ServiceModule, ExtendingModule, ExecutableModule
         });
     }
     /**
+     * Migrates the "capture on status change" setting from the legacy UI.
+     *
+     * The migration will be done on plugin update if it hasn't already done.
+     */
+    protected function migrate_capture_on_status_change(): void
+    {
+        add_action('woocommerce_paypal_payments_gateway_migrate_on_update', static function () {
+            $legacy_settings = (array) get_option('woocommerce-ppcp-settings') ?: array();
+            $payment_settings = (array) get_option('woocommerce-ppcp-data-payment') ?: array();
+            // Noop if the legacy setting does not exist, or the setting was already migrated.
+            if (!isset($legacy_settings['capture_on_status_change']) || isset($payment_settings['capture_on_status_change'])) {
+                return;
+            }
+            $payment_settings['capture_on_status_change'] = $legacy_settings['capture_on_status_change'];
+            update_option('woocommerce-ppcp-data-payment', $payment_settings);
+        });
+    }
+    /**
      * Changes the button rendering place for page builders
      * that do not work well with our default places.
      *
@@ -369,7 +408,7 @@ class CompatModule implements ServiceModule, ExtendingModule, ExecutableModule
                         continue;
                     }
                     foreach ($wc_order->get_items() as $wc_order_item) {
-                        if (!is_a($wc_order_item, WC_Order_Item_Product::class)) {
+                        if (!$wc_order_item instanceof WC_Order_Item_Product) {
                             continue;
                         }
                         $product_id = $wc_order_item->get_variation_id() ?: $wc_order_item->get_product_id();

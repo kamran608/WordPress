@@ -33,11 +33,19 @@ final class MonsterInsights_Auth {
 	}
 
 	public function is_manual() {
+		if ( empty( $this->profile['manual'] ) ) {
+			return false;
+		}
+
 		$manual_code = $this->profile['manual'];
 		return monsterinsights_is_valid_v4_id( $manual_code );
 	}
 
 	public function is_network_manual( $type = false ) {
+		if ( empty( $this->network['manual'] ) ) {
+			return false;
+		}
+
 		$manual_code = $this->network['manual'];
 		return monsterinsights_is_valid_v4_id( $manual_code );
 	}
@@ -94,6 +102,8 @@ final class MonsterInsights_Auth {
 		if ( $needs_update ) {
 			update_option( 'monsterinsights_over_time', $over_time, false );
 		}
+		monsterinsights_update_option( 'site_notes_import_synced', 0 );
+		monsterinsights_update_option( 'site_notes_export_synced', 0 );
 	}
 
 	public function set_network_analytics_profile( $data = array() ) {
@@ -241,11 +251,11 @@ final class MonsterInsights_Auth {
 	public function get_network_v4_id() {
 		return ! empty( $this->network['v4'] ) ? monsterinsights_is_valid_v4_id( $this->network['v4'] ) : '';
 	}
-	
+
 	public function get_site_hash() {
 		return ! empty( $this->profile['site_hash'] ) ? $this->profile['site_hash'] : '';
 	}
-	
+
 	public function get_network_site_hash() {
 		return ! empty( $this->network['site_hash'] ) ? $this->network['site_hash'] : '';
 	}
