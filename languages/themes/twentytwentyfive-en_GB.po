@@ -76,7 +76,7 @@ msgctxt "Color name"
 msgid "Base"
 msgstr "Base"
 
-#: functions.php:76
+#: functions.php:84
 msgid "Checkmark"
 msgstr "Checkmark"
 
@@ -151,7 +151,7 @@ msgctxt "Custom template name"
 msgid "Page No Title"
 msgstr "Page No Title"
 
-#: functions.php:106
+#: functions.php:114
 msgid "A collection of full page layouts."
 msgstr "A collection of full-page layouts."
 
