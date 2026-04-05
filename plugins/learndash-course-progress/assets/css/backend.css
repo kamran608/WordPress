@@ -1,0 +1,39 @@
+.lcp-setting-wrap {
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    max-width: 700px;
+    margin-top: 40px;
+}
+
+.lcp-setting-wrap h1 {
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.lcp-setting-wrap pre {
+    background: #f6f7f7;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.lcp-setting-wrap hr {
+    margin: 20px 0;
+    border-top: 1px solid #eee;
+}
+
+.lcp-setting-wrap .form-table th {
+    width: 180px;
+    font-weight: 600;
+}
+
+.lcp-setting-wrap .form-table td {
+    padding: 12px 0;
+}
+
+.lcp-setting-wrap .button-primary {
+    padding: 6px 18px;
+    border-radius: 6px;
+}
